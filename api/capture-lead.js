@@ -65,7 +65,12 @@ async function saveLeadToSupabase({ name, dob, email, mobile, birthNum, destNum,
 // Helper: send Brevo transactional email
 // ---------------------------------------------------------------------------
 async function sendBrevoEmail({ name, dob, email, birthNum, destNum, nameNum }) {
-  const reportUrl =
+  const analyserUrl =
+    `https://namealigned.com/analyzer.html` +
+    `?name=${encodeURIComponent(name || '')}` +
+    `&dob=${encodeURIComponent(dob || '')}`;
+
+  const paidReportUrl =
     `https://namealigned.com/report.html` +
     `?name=${encodeURIComponent(name || '')}` +
     `&dob=${encodeURIComponent(dob || '')}`;
@@ -163,7 +168,7 @@ async function sendBrevoEmail({ name, dob, email, birthNum, destNum, nameNum }) 
           <!-- CTA: View free report -->
           <tr>
             <td style="padding:0 48px 16px;text-align:center;">
-              <a href="${reportUrl}"
+              <a href="${analyserUrl}"
                  style="display:inline-block;padding:14px 36px;
                         background:linear-gradient(135deg,#7c3aed,#a855f7);
                         color:#ffffff;text-decoration:none;border-radius:8px;
@@ -183,7 +188,7 @@ async function sendBrevoEmail({ name, dob, email, birthNum, destNum, nameNum }) 
           <!-- CTA: Paid report -->
           <tr>
             <td style="padding:12px 48px 16px;text-align:center;">
-              <a href="${reportUrl.replace('report.html', 'report.html')}"
+              <a href="${paidReportUrl}"
                  style="display:inline-block;padding:16px 40px;
                         background:linear-gradient(135deg,#f0b429,#f5d060);
                         color:#1a0533;text-decoration:none;border-radius:8px;
