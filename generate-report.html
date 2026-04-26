@@ -1175,6 +1175,37 @@
     9:'Lucky numbers for your combination: 1, 3, 5, 9. These amplify Mars energy and support your humanitarian drive.',
   };
 
+  // ── IDEAL SCORE PROFILER ──────────────────────────────────────
+  // Finds the highest-achievable alignment score for this person's
+  // birth and destiny numbers, and which nameNum + compound achieves it.
+
+  function computeIdealProfile(bNum, dNum){
+    var bf=FRIENDLY[bNum]||[], df=FRIENDLY[dNum]||[];
+    var best={nameNum:0,maxScore:0,targetCompounds:[],bothFriendly:false,preferred:false};
+
+    for(var n=1;n<=9;n++){
+      var bothF=bf.indexOf(n)>=0 && df.indexOf(n)>=0;
+      var oneF =bf.indexOf(n)>=0 || df.indexOf(n)>=0;
+      var pref =PREFERRED.indexOf(n)>=0;
+      var base=15;
+      if(bothF) base+=35; else if(oneF) base+=15;
+      if(pref)  base+=22;
+
+      // Collect all 'g' compounds that reduce to n
+      var goodCompounds=[];
+      Object.keys(CD).forEach(function(raw){
+        var r=parseInt(raw);
+        if(CD[raw].q==='g' && reduce(r)===n) goodCompounds.push(r);
+      });
+
+      var scoreWithGood = goodCompounds.length ? Math.min(98,base+25) : base;
+      if(scoreWithGood > best.maxScore){
+        best={nameNum:n,maxScore:scoreWithGood,targetCompounds:goodCompounds,bothFriendly:bothF,preferred:pref};
+      }
+    }
+    return best;
+  }
+
   // ── PHONETIC NAME VARIANT ENGINE ─────────────────────────────
   // Generates look-alike, sound-alike variants of each word in the name.
   // Rules: double a vowel, elongate end, insert 'i' before vowel (diphthong),
@@ -1245,6 +1276,7 @@
   }
 
   function generateScoredNameVariants(inputName, currentPct){
+    var ideal=computeIdealProfile(birthNum,destNum);
     var parts=inputName.trim().split(/\s+/);
     var seen=new Set([inputName.toLowerCase()]);
     var allCandidates=[];
@@ -1256,36 +1288,34 @@
       wordVars.forEach(function(variant){
         var newParts=parts.slice();
         newParts[idx]=variant;
-        // Preserve original casing style: capitalise first letter of each part
         newParts=newParts.map(function(p){
           return p.charAt(0).toUpperCase()+p.slice(1);
         });
         var fullName=newParts.join(' ');
         var lc=fullName.toLowerCase();
-        if(!seen.has(lc)){
-          seen.add(lc);
-          allCandidates.push(fullName);
-        }
+        if(!seen.has(lc)){ seen.add(lc); allCandidates.push(fullName); }
       });
     });
 
-    // Score every candidate
+    // Score every candidate; flag those hitting ideal nameNum
     var results=[];
     allCandidates.forEach(function(fullName){
       var info=getNameNum(fullName);
       var score=compatPct(info.reduced,info.raw,birthNum,destNum);
-      results.push({name:fullName,num:info.reduced,raw:info.raw,score:score,planet:getPlanet(info.reduced)});
+      var hitsIdeal=(info.reduced===ideal.nameNum && ideal.targetCompounds.indexOf(info.raw)>=0);
+      results.push({name:fullName,num:info.reduced,raw:info.raw,score:score,
+                    planet:getPlanet(info.reduced),hitsIdeal:hitsIdeal});
     });
 
-    // Sort: improved scores first, then by score descending
+    // Sort: ideal-hitting first, then improved, then by score
     results.sort(function(a,b){
+      if(b.hitsIdeal!==a.hitsIdeal) return b.hitsIdeal?1:-1;
       var aImp=a.score>currentPct?1:0, bImp=b.score>currentPct?1:0;
       if(bImp!==aImp) return bImp-aImp;
       return b.score-a.score;
     });
 
-    // Return top 6
-    return results.slice(0,6);
+    return {variants:results.slice(0,6), ideal:ideal};
   }
 
   function buildNameAnalysis(){
@@ -1304,39 +1334,90 @@
       '</p>';
     }
 
-    var variants = generateScoredNameVariants(name, pct);
+    var result = generateScoredNameVariants(name, pct);
+    var variants = result.variants;
+    var ideal   = result.ideal;
     var lcMsg = LUCKY_NUMS_MSG[birthNum]||'';
+
+    // Best-achievable banner
+    var bestAchievable = ideal.maxScore;
+    var bestVariantScore = variants.length ? variants[0].score : pct;
+    var canHit97 = (bestAchievable >= 97);
+    var phoneticsHitIdeal = variants.some(function(v){return v.hitsIdeal;});
+
+    var achievableBannerHtml =
+      '<div style="display:flex;align-items:center;gap:1rem;flex-wrap:wrap;'+
+        'padding:1rem 1.25rem;border-radius:var(--r);margin-bottom:1.25rem;'+
+        'background:'+(canHit97?'linear-gradient(135deg,rgba(240,180,41,.12),rgba(240,180,41,.06))':'var(--gold-l)')+';'+
+        'border:1.5px solid var(--gold-b);">'+
+        '<div style="flex:1;min-width:160px;">'+
+          '<div style="font-size:11px;font-family:sans-serif;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--gold);margin-bottom:3px;">Best achievable for your numbers</div>'+
+          '<div style="font-size:13px;font-family:sans-serif;color:var(--text2);line-height:1.6;">'+
+            'Target name number: <strong>'+ideal.nameNum+'</strong> ('+getPlanet(ideal.nameNum)+') — '+
+            (ideal.bothFriendly?'friendly to <strong>both</strong> your Moolank &amp; Bhagyank':'friendly to one of your core numbers')+
+            (ideal.preferred?' · preferred number':'')+'.<br>'+
+            (ideal.targetCompounds.length?
+              'Auspicious compound targets: '+ideal.targetCompounds.slice(0,4).map(function(c){
+                return c+'<span style="color:var(--text3);"> ('+CD[c].l.split(' ·')[0]+')</span>';
+              }).join(', ')+'.':
+              'Any compound that reduces to '+ideal.nameNum+'.')+
+          '</div>'+
+        '</div>'+
+        '<div style="text-align:center;padding:.5rem 1.25rem;background:'+(canHit97?'var(--gold)':'var(--gold-l)')+';'+
+          'border-radius:var(--r);border:1px solid var(--gold-b);">'+
+          '<div style="font-size:28px;font-weight:normal;font-family:sans-serif;color:'+(canHit97?'#1a0533':'var(--gold)')+';">'+bestAchievable+'%</div>'+
+          '<div style="font-size:10px;font-family:sans-serif;color:'+(canHit97?'#3b0764':'var(--text3)')+';text-transform:uppercase;letter-spacing:.06em;">max possible</div>'+
+        '</div>'+
+      '</div>'+
+      (phoneticsHitIdeal?
+        '<div style="background:var(--green-bg);border:1.5px solid #b0d48a;border-radius:var(--r);padding:.75rem 1.1rem;margin-bottom:1rem;font-size:13px;font-family:sans-serif;color:var(--green);">'+
+          '✦ A look-alike spelling below reaches the maximum '+bestAchievable+'% — highlighted with a ★'+
+        '</div>':
+        (bestVariantScore>pct?
+          '<div style="background:var(--gold-l);border:1px solid var(--gold-b);border-radius:var(--r);padding:.75rem 1.1rem;margin-bottom:1rem;font-size:13px;font-family:sans-serif;color:var(--text2);">'+
+            'The best phonetic variant found reaches <strong>'+bestVariantScore+'%</strong>. '+
+            'To reach '+bestAchievable+'%, a slightly different spelling (not just a sound-alike tweak) may be needed — a numerologist can suggest one.'+
+          '</div>':
+          '<div style="background:var(--gold-l);border:1px solid var(--gold-b);border-radius:var(--r);padding:.75rem 1.1rem;margin-bottom:1rem;font-size:13px;font-family:sans-serif;color:var(--text2);">'+
+            'Your name is already well-optimised. Variants below are for reference.'+
+          '</div>'
+        )
+      );
 
     var variantsHtml = variants.length ?
       '<div style="display:flex;flex-direction:column;gap:.85rem;">'+
-        variants.map(function(v,i){
+        variants.map(function(v){
           var vcd=CD[v.raw];
           var improved=v.score>pct;
+          var isIdeal=v.hitsIdeal;
+          var scoreColor=isIdeal?'var(--gold)':improved?'var(--green)':'var(--text3)';
           var scoreDiff=v.score-pct;
-          var scoreColor=improved?'var(--green)':'var(--gold)';
-          var scoreLabel=improved?('+'+scoreDiff+'%'):(v.score+'%');
-          var borderStyle=improved?'border:1.5px solid #b0d48a;background:var(--green-bg)':'border:1px solid var(--gold-b);background:var(--gold-l)';
-          return '<div style="'+borderStyle+';border-radius:var(--r);padding:1rem 1.25rem;display:flex;align-items:center;gap:1rem;">'+
+          var bg=isIdeal?'background:linear-gradient(135deg,rgba(240,180,41,.18),rgba(240,180,41,.08));border:2px solid var(--gold)':
+                 improved?'background:var(--green-bg);border:1.5px solid #b0d48a':
+                          'background:var(--gold-l);border:1px solid var(--gold-b)';
+          return '<div style="'+bg+';border-radius:var(--r);padding:1rem 1.25rem;display:flex;align-items:center;gap:1rem;">'+
             '<div style="text-align:center;min-width:48px;">'+
               '<div style="font-size:28px;color:var(--gold);line-height:1;">'+v.num+'</div>'+
               '<div style="font-size:9px;font-family:sans-serif;color:var(--text3);text-transform:uppercase;letter-spacing:.06em;">'+v.planet+'</div>'+
             '</div>'+
             '<div style="flex:1;">'+
-              '<div style="font-size:17px;margin-bottom:3px;">'+v.name+'</div>'+
+              '<div style="font-size:17px;margin-bottom:3px;">'+(isIdeal?'★ ':'')+v.name+'</div>'+
               '<div style="font-size:12px;font-family:sans-serif;color:var(--text2);">'+
-                'Compound '+v.raw+(vcd?' · '+vcd.l.slice(0,32)+(vcd.l.length>32?'…':''):'')+
+                'Compound '+v.raw+(vcd?' · '+vcd.l.slice(0,36)+(vcd.l.length>36?'…':''):'')+
               '</div>'+
             '</div>'+
-            '<div style="text-align:right;min-width:72px;">'+
-              '<div style="font-size:15px;font-family:sans-serif;font-weight:700;color:'+scoreColor+';">'+v.score+'%</div>'+
-              (improved?
-                '<div style="font-size:11px;font-family:sans-serif;color:var(--green);">↑ '+scoreLabel+' vs current</div>':
-                '<div style="font-size:11px;font-family:sans-serif;color:var(--text3);">vs current '+pct+'%</div>')+
+            '<div style="text-align:right;min-width:80px;">'+
+              '<div style="font-size:16px;font-family:sans-serif;font-weight:700;color:'+scoreColor+';">'+v.score+'%</div>'+
+              (isIdeal?
+                '<div style="font-size:11px;font-family:sans-serif;color:var(--gold);">★ Max score</div>':
+               improved?
+                '<div style="font-size:11px;font-family:sans-serif;color:var(--green);">↑ +'+scoreDiff+'% vs current</div>':
+                '<div style="font-size:11px;font-family:sans-serif;color:var(--text3);">current '+pct+'%</div>')+
             '</div>'+
           '</div>';
         }).join('')+
       '</div>' :
-      '<p style="font-size:13px;font-family:sans-serif;color:var(--text2);">Your name is already highly optimised. No variants with significantly higher scores were found.</p>';
+      '<p style="font-size:13px;font-family:sans-serif;color:var(--text2);">Your name is already highly optimised.</p>';
 
     section.innerHTML=
       '<div class="grid-2" style="gap:1.5rem;margin-bottom:1.5rem;">'+
