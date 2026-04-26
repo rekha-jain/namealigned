@@ -34,8 +34,8 @@ async function saveLeadToSupabase({ name, dob, email, mobile, birthNum, destNum,
   const response = await fetch(url, {
     method: 'POST',
     headers: {
-      apikey: process.env.SUPABASE_ANON_KEY,
-      Authorization: `Bearer ${process.env.SUPABASE_ANON_KEY}`,
+      apikey: process.env.SUPABASE_SERVICE_KEY,
+      Authorization: `Bearer ${process.env.SUPABASE_SERVICE_KEY}`,
       'Content-Type': 'application/json',
       Prefer: 'return=representation',
     },
