@@ -1,0 +1,653 @@
+/* ═══════════════════════════════════════════════════════════════
+   NUMEROLOGY.LIFE — Shared Stylesheet v3
+   Galaxy / Cosmic theme — user-chosen direction:
+   • Deep space midnight #03090f — like looking into the Milky Way
+   • Teal-cyan nebula shimmer — cosmic, otherworldly, unique
+   • Stellar gold #f0b429 — brighter, more radiant than old muted gold
+   • Nebula gradients on html background — no image needed
+   • Glassmorphism cards — teal-tinted glass over deep space
+   • Playfair Display headings + DM Sans body
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ── GOOGLE FONTS ────────────────────────────────────────────── */
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap');
+
+/* ── RESET ───────────────────────────────────────────────────── */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+/* ── DESIGN TOKENS ───────────────────────────────────────────── */
+:root{
+  /* ── Deep space background layers */
+  --bg:       #03090f;              /* deep space — near-black midnight */
+  --bg2:      #060d18;              /* section bg — slightly lifted */
+  --card:     rgba(6,182,212,.07);  /* glassmorphism card — teal-tinted */
+  --card2:    rgba(6,182,212,.13);  /* hover / elevated card */
+  --card-solid: #071525;            /* solid card for inputs/forms */
+
+  /* ── Stellar Gold — radiant, brighter than old muted #f0b429 */
+  --gold:     #f0b429;
+  --gold-d:   #d4991a;              /* pressed/hover */
+  --gold-l:   rgba(240,180,41,.10); /* tinted backgrounds */
+  --gold-b:   rgba(240,180,41,.28); /* borders */
+  --gold-glow:rgba(240,180,41,.50); /* CTA shadow glow */
+
+  /* ── Cosmic Teal — the nebula accent colour */
+  --teal:     #06b6d4;
+  --teal-l:   rgba(6,182,212,.10);
+  --teal-b:   rgba(6,182,212,.25);
+  --teal-glow:rgba(6,182,212,.35);
+
+  /* ── Text — cool star-white, not warm */
+  --text:     #e8f4ff;              /* star white */
+  --text2:    #7ec8e3;              /* nebula blue — secondary */
+  --text3:    #3d6b80;              /* deep nebula — muted */
+
+  /* ── Semantic — adjusted for dark cosmic bg */
+  --green:    #34d399;  --green-bg: rgba(52,211,153,.12);
+  --amber:    #f0b429;  --amber-bg: rgba(240,180,41,.12);
+  --red:      #f87171;  --red-bg:   rgba(248,113,113,.12);
+  --blue:     #38bdf8;  --blue-bg:  rgba(56,189,248,.12);
+
+  /* ── Borders — teal-tinted glass edges */
+  --border:   rgba(6,182,212,.12);
+  --border2:  rgba(6,182,212,.28);
+
+  /* ── Radius */
+  --r:  10px;
+  --rl: 16px;
+
+  /* ── Nav height */
+  --nav-h: 64px;
+
+  /* ── Font stacks */
+  --font-serif: 'Playfair Display', Georgia, serif;
+  --font-sans:  'DM Sans', system-ui, -apple-system, sans-serif;
+}
+
+/* ── BASE ────────────────────────────────────────────────────── */
+html{
+  scroll-behavior: smooth;
+  /* Nebula background — fixed so it stays as you scroll */
+  background-color: var(--bg);
+  background-image:
+    radial-gradient(ellipse 100% 55% at 50% -5%,  rgba(14,116,144,.32) 0%, transparent 62%),
+    radial-gradient(ellipse 55%  38% at 90%  75%,  rgba(99,102,241,.18) 0%, transparent 55%),
+    radial-gradient(ellipse 42%  30% at  5%  80%,  rgba(6,182,212,.14)  0%, transparent 50%);
+  background-attachment: fixed;
+}
+body{
+  font-family: var(--font-sans);
+  font-size: 16px;
+  background: transparent;      /* html carries the nebula, body is clear */
+  color: var(--text);
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ── TYPOGRAPHY ─────────────────────────────────────────────── */
+h1,h2,h3,h4{
+  font-family: var(--font-serif);
+  font-weight: 600;
+  line-height: 1.2;
+  color: var(--text);
+}
+h1{font-size: clamp(28px,5vw,52px)}
+h2{font-size: clamp(22px,3.5vw,36px)}
+h3{font-size: clamp(17px,2.5vw,22px)}
+h4{font-size: 16px}
+p{line-height:1.75; font-size:16px}
+a{color:var(--gold);text-decoration:none;transition:color .2s}
+a:hover{color:#e8cc6a;text-decoration:none}
+strong{font-weight:600}
+
+/* ── LAYOUT ─────────────────────────────────────────────────── */
+.container   {max-width:1100px;margin:0 auto;padding:0 1.5rem}
+.container-sm{max-width:760px;margin:0 auto;padding:0 1.5rem}
+.section     {padding:5rem 0}
+.section-sm  {padding:3rem 0}
+.section-eyebrow{font-size:11px;letter-spacing:.18em;text-transform:uppercase;
+                  color:var(--gold);font-family:var(--font-sans);margin-bottom:.75rem}
+
+/* ── NAVBAR ─────────────────────────────────────────────────── */
+.nav{
+  position:sticky;top:0;z-index:200;
+  background: rgba(3,9,15,.88);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--teal-b);
+  height: var(--nav-h);
+}
+.nav-inner{display:flex;align-items:center;justify-content:space-between;height:100%}
+.nav-logo{
+  font-family: var(--font-serif);
+  font-size:18px;letter-spacing:.04em;
+  color:var(--text);display:flex;align-items:center;gap:8px;
+}
+.nav-logo span{color:var(--gold)}
+.nav-links{display:flex;align-items:center;gap:1.75rem;list-style:none}
+.nav-links a{
+  font-size:13px;font-family:var(--font-sans);
+  letter-spacing:.06em;color:var(--text2);
+  text-transform:uppercase;font-weight:500;
+  transition:color .2s;
+}
+.nav-links a:hover{color:var(--gold)}
+.nav-cta{
+  background: var(--gold) !important;
+  color: #03090f !important;
+  padding:8px 20px;border-radius:20px;
+  font-weight:600;letter-spacing:.04em;
+  box-shadow: 0 0 12px var(--gold-glow);
+  transition: all .25s ease !important;
+}
+.nav-cta:hover{
+  background: var(--gold-d) !important;
+  box-shadow: 0 4px 22px var(--gold-glow) !important;
+  transform: translateY(-1px);
+}
+.nav-hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:4px}
+.nav-hamburger span{width:22px;height:2px;background:var(--text);border-radius:2px;transition:all .3s}
+.nav-mobile{
+  display:none;position:absolute;top:var(--nav-h);left:0;right:0;
+  background: rgba(3,9,15,.97);
+  border-bottom:1px solid var(--teal-b);
+  padding:1rem 1.5rem;flex-direction:column;gap:.75rem;
+  backdrop-filter:blur(16px);
+}
+.nav-mobile a{font-size:14px;color:var(--text2);padding:.4rem 0;border-bottom:1px solid var(--border)}
+.nav-mobile.open{display:flex}
+@media(max-width:700px){.nav-links{display:none}.nav-hamburger{display:flex}}
+
+/* ── BUTTONS ─────────────────────────────────────────────────
+   Research:
+   • Primary: Gold bg + dark text → WCAG AAA, premium positioning
+   • Secondary: Orange → highest CRO conversion data
+   • Gold glow on hover → luxury/spiritual premium feel
+   ─────────────────────────────────────────────────────────── */
+.btn{
+  display:inline-block;
+  padding:13px 32px;
+  border-radius:var(--r);
+  font-size:15px;
+  font-family: var(--font-sans);
+  font-weight: 600;
+  letter-spacing:.04em;
+  cursor:pointer;
+  border:none;
+  text-align:center;
+  transition: all .25s ease;
+  text-decoration:none !important;
+}
+
+/* Primary — Stellar Gold CTA */
+.btn-gold{
+  background: linear-gradient(135deg, var(--gold), #f5d060);
+  color: #03090f;
+  box-shadow: 0 2px 12px var(--gold-glow);
+}
+.btn-gold:hover{
+  background: linear-gradient(135deg, var(--gold-d), var(--gold));
+  box-shadow: 0 6px 28px var(--gold-glow);
+  transform: translateY(-2px);
+  color: #03090f;
+}
+
+/* Secondary — Teal cosmic CTA */
+.btn-teal{
+  background: linear-gradient(135deg, var(--teal), #22d3ee);
+  color: #03090f;
+  box-shadow: 0 2px 12px var(--teal-glow);
+}
+.btn-teal:hover{
+  box-shadow: 0 6px 28px var(--teal-glow);
+  transform: translateY(-2px);
+  color: #03090f;
+}
+
+/* Ghost — outline gold */
+.btn-outline-gold{
+  background: transparent;
+  border: 1.5px solid var(--gold);
+  color: var(--gold);
+}
+.btn-outline-gold:hover{
+  background: var(--gold-l);
+  box-shadow: 0 4px 18px var(--gold-glow);
+  color: var(--gold);
+}
+
+/* Glassmorphism primary */
+.btn-primary{
+  background: var(--card);
+  color: var(--text);
+  border: 1px solid var(--teal-b);
+  backdrop-filter: blur(8px);
+}
+.btn-primary:hover{
+  background: var(--card2);
+  border-color: var(--gold-b);
+  color: var(--text);
+}
+
+/* Ghost dark */
+.btn-outline{
+  background: transparent;
+  border: 1.5px solid var(--border2);
+  color: var(--text2);
+}
+.btn-outline:hover{
+  border-color: var(--teal-b);
+  color: var(--teal);
+}
+
+/* Keep orange as alias for gold for any old references */
+.btn-orange{ background: linear-gradient(135deg,var(--gold),#f5d060); color:#03090f; box-shadow:0 2px 12px var(--gold-glow); }
+.btn-orange:hover{ box-shadow:0 6px 28px var(--gold-glow); transform:translateY(-2px); color:#03090f; }
+
+/* Sizes */
+.btn-lg{padding:16px 42px;font-size:17px}
+.btn-sm{padding:8px 20px;font-size:13px}
+.btn-full{width:100%;display:block}
+
+/* ── CARDS ──────────────────────────────────────────────────── */
+.card{
+  background: var(--card);
+  border: 1px solid var(--teal-b);
+  border-radius: var(--rl);
+  padding: 1.75rem;
+  box-shadow: 0 4px 24px rgba(0,0,0,.4), inset 0 1px 0 rgba(6,182,212,.08);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  transition: border-color .2s, box-shadow .2s, transform .2s;
+}
+.card:hover{
+  border-color: var(--gold-b);
+  box-shadow: 0 8px 32px rgba(0,0,0,.5), 0 0 0 1px var(--gold-b);
+  transform: translateY(-2px);
+}
+.card-sm{padding:1.25rem}
+.card-title{
+  font-size:11px;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--gold);margin-bottom:1.25rem;font-family:var(--font-sans);
+}
+
+/* ── SECTION LABEL ──────────────────────────────────────────── */
+.sec-label{
+  font-size:11px;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--gold);margin:1.75rem 0 .875rem;
+  font-family:var(--font-sans);
+  display:flex;align-items:center;gap:10px;
+}
+.sec-label::after{content:'';flex:1;height:1px;background:var(--gold-b)}
+.divider{border:none;border-top:1px solid var(--border);margin:2rem 0}
+
+/* ── BADGE ──────────────────────────────────────────────────── */
+.badge{
+  display:inline-block;padding:3px 12px;border-radius:20px;
+  font-size:11px;font-family:var(--font-sans);
+  font-weight:600;letter-spacing:.06em;text-transform:uppercase;
+}
+.badge-gold  {background:var(--gold-l);  color:var(--gold);   border:1px solid var(--gold-b)}
+.badge-green {background:var(--green-bg);color:var(--green)}
+.badge-blue  {background:var(--blue-bg); color:var(--blue)}
+.badge-purple{background:var(--purple-l);color:var(--purple); border:1px solid var(--purple-b)}
+
+/* ── FORM ELEMENTS ──────────────────────────────────────────── */
+.fg{display:flex;flex-direction:column;gap:6px}
+label{font-size:13px;color:var(--text2);font-family:var(--font-sans);letter-spacing:.03em}
+input,select,textarea{
+  width:100%;padding:12px 15px;
+  border:1px solid var(--teal-b);
+  border-radius:var(--r);
+  font-size:15px;font-family:var(--font-sans);
+  color:var(--text);
+  background: var(--card-solid);
+  outline:none;
+  transition:border-color .2s,box-shadow .2s,background .2s;
+}
+input::placeholder,textarea::placeholder{color:var(--text3)}
+select option{background:#071525;color:var(--text)}
+input:focus,select:focus,textarea:focus{
+  border-color: var(--teal);
+  box-shadow: 0 0 0 3px var(--teal-l), 0 0 12px rgba(6,182,212,.20);
+  background: var(--card-solid);
+  outline: none;
+}
+select option{background:var(--card2);color:var(--text)}
+textarea{resize:vertical;min-height:68px}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:540px){.form-grid{grid-template-columns:1fr}}
+.full{grid-column:1/-1}
+.err-box{
+  background:var(--red-bg);border:1px solid rgba(224,96,96,.3);
+  border-radius:var(--r);padding:.85rem 1rem;
+  font-family:var(--font-sans);font-size:13px;color:var(--red);margin:.5rem 0;
+}
+
+/* ── HERO SECTIONS ──────────────────────────────────────────── */
+.hero-dark{
+  background: transparent;  /* html nebula shows through */
+  color: var(--text);
+  text-align:center;padding:5rem 1.5rem 4rem;
+  position:relative;overflow:hidden;
+}
+/* Teal nebula crown glow */
+.hero-dark::before{
+  content:'';position:absolute;inset:0;
+  background: radial-gradient(ellipse 85% 55% at 50% -5%,
+              rgba(14,116,144,.30) 0%, transparent 65%);
+  pointer-events:none;
+}
+/* Stellar gold shimmer — like a star burning in the hero centre */
+.hero-dark::after{
+  content:'';position:absolute;inset:0;
+  background: radial-gradient(ellipse 40% 30% at 50% 40%,
+              rgba(240,180,41,.06) 0%, transparent 60%);
+  pointer-events:none;
+}
+.hero-sym{font-size:28px;letter-spacing:14px;opacity:.5;margin-bottom:16px;position:relative;color:var(--gold)}
+.hero-eyebrow{
+  font-size:11px;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--gold);margin-bottom:12px;
+  font-family:var(--font-sans);font-weight:500;position:relative;
+}
+.hero-h1{
+  font-family: var(--font-serif);
+  font-size:clamp(28px,5vw,56px);line-height:1.12;
+  color:var(--text);position:relative;margin-bottom:16px;
+}
+.hero-h1 em{color:var(--gold);font-style:italic}
+.hero-sub{
+  font-size:clamp(14px,2vw,18px);color:var(--text2);
+  font-style:italic;max-width:600px;margin:0 auto 2rem;position:relative;
+  font-family:var(--font-sans);font-weight:300;
+}
+.hero-line{width:48px;height:1px;background:var(--gold);margin:16px auto;position:relative;opacity:.6}
+
+/* ── GRID LAYOUTS ────────────────────────────────────────────── */
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:2rem}
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem}
+.grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:1.5rem}
+@media(max-width:900px){.grid-4{grid-template-columns:1fr 1fr}}
+@media(max-width:700px){.grid-3{grid-template-columns:1fr 1fr}.grid-2{grid-template-columns:1fr}}
+@media(max-width:500px){.grid-3,.grid-4{grid-template-columns:1fr}}
+
+/* ── STAT BOXES ─────────────────────────────────────────────── */
+.stat-box{text-align:center;padding:1.5rem}
+.stat-num{
+  font-family:var(--font-serif);
+  font-size:44px;color:var(--gold);line-height:1;margin-bottom:6px;
+}
+.stat-label{font-size:13px;color:var(--text2);font-family:var(--font-sans)}
+
+/* ── FEATURE CARDS ───────────────────────────────────────────── */
+.feat-card{
+  background:var(--card);border:1px solid var(--teal-b);
+  border-radius:var(--rl);padding:1.5rem;
+  backdrop-filter:blur(8px);
+  transition:box-shadow .25s,border-color .25s,transform .25s;
+}
+.feat-card:hover{
+  border-color:var(--gold-b);
+  box-shadow:0 8px 32px rgba(0,0,0,.4), 0 0 20px var(--teal-glow);
+  transform:translateY(-2px);
+}
+.feat-icon{font-size:28px;margin-bottom:.75rem}
+.feat-title{font-size:16px;margin-bottom:.5rem;font-family:var(--font-serif)}
+.feat-desc{font-size:14px;color:var(--text2);font-family:var(--font-sans);line-height:1.7}
+
+/* ── TESTIMONIALS ────────────────────────────────────────────── */
+.testi-card{
+  background: var(--card2);
+  border:1px solid var(--gold-b);
+  border-radius:var(--rl);padding:1.75rem;position:relative;
+  box-shadow:0 4px 24px rgba(0,0,0,.2);
+}
+.testi-card::before{
+  content:'❝';position:absolute;top:.75rem;left:1.25rem;
+  font-size:32px;color:var(--gold);opacity:.3;line-height:1;
+  font-family:Georgia,serif;
+}
+.testi-quote{
+  font-size:14px;font-style:italic;color:var(--text2);
+  line-height:1.8;margin-bottom:1rem;padding-top:.25rem;
+}
+.testi-name{font-size:13px;font-family:var(--font-sans);color:var(--text);font-weight:600}
+.testi-loc{font-size:11px;color:var(--text3);font-family:var(--font-sans)}
+.testi-stars{color:var(--gold);font-size:14px;margin-bottom:.75rem;letter-spacing:2px}
+
+/* ── PRICING ─────────────────────────────────────────────────── */
+.price-card{
+  background:var(--card);border:2px solid var(--border);
+  border-radius:var(--rl);padding:2rem;text-align:center;position:relative;
+  transition:border-color .2s,box-shadow .2s;
+}
+.price-card:hover{border-color:var(--gold-b);box-shadow:0 8px 40px rgba(240,180,41,.12)}
+.price-card.featured{
+  border-color:var(--gold);
+  box-shadow:0 0 0 1px var(--gold), 0 12px 48px rgba(240,180,41,.2);
+}
+.price-badge{
+  position:absolute;top:-13px;left:50%;transform:translateX(-50%);
+  background:var(--gold);color:#03090f;
+  font-size:10px;font-family:var(--font-sans);
+  letter-spacing:.1em;text-transform:uppercase;font-weight:700;
+  padding:4px 16px;border-radius:20px;white-space:nowrap;
+}
+.price-name{
+  font-size:12px;font-family:var(--font-sans);color:var(--text3);
+  letter-spacing:.1em;text-transform:uppercase;margin-bottom:.5rem;
+}
+.price-amount{
+  font-family:var(--font-serif);
+  font-size:52px;line-height:1;margin-bottom:4px;color:var(--text);
+}
+.price-amount sup{font-size:22px;vertical-align:top;margin-top:10px;display:inline-block;color:var(--gold)}
+.price-note{font-size:12px;color:var(--text3);font-family:var(--font-sans);margin-bottom:1.5rem}
+.price-features{
+  list-style:none;text-align:left;
+  font-family:var(--font-sans);font-size:14px;color:var(--text2);
+  line-height:2.2;margin-bottom:1.75rem;
+}
+.price-features li::before{content:'✓  ';color:var(--green);font-weight:700}
+.price-features li.no{color:var(--text3)}
+.price-features li.no::before{content:'—  ';color:var(--text3)}
+
+/* ── FAQ ─────────────────────────────────────────────────────── */
+.faq-item{border-bottom:1px solid var(--border);padding:1.25rem 0}
+.faq-q{
+  font-size:15px;cursor:pointer;
+  display:flex;justify-content:space-between;align-items:center;gap:1rem;
+  user-select:none;font-family:var(--font-sans);font-weight:500;
+  color:var(--text);
+}
+.faq-q::after{
+  content:'＋';font-size:18px;color:var(--gold);
+  flex-shrink:0;transition:transform .25s;
+}
+.faq-item.open .faq-q::after{transform:rotate(45deg)}
+.faq-a{
+  font-size:14px;color:var(--text2);font-family:var(--font-sans);
+  line-height:1.8;max-height:0;overflow:hidden;
+  transition:max-height .35s ease,padding .25s ease;
+}
+.faq-item.open .faq-a{max-height:400px;padding-top:.875rem}
+
+/* ── BLOG CARDS ─────────────────────────────────────────────── */
+.blog-card{
+  background:var(--card);border:1px solid var(--border);
+  border-radius:var(--rl);overflow:hidden;
+  transition:box-shadow .25s,border-color .25s,transform .25s;
+}
+.blog-card:hover{
+  border-color:var(--gold-b);
+  box-shadow:0 8px 32px rgba(0,0,0,.3);
+  transform:translateY(-3px);
+}
+.blog-card-img{
+  height:180px;
+  background: linear-gradient(135deg, #03090f 0%, #1e1a38 50%, #060d18 100%);
+  display:flex;align-items:center;justify-content:center;font-size:44px;
+  position:relative;overflow:hidden;
+}
+.blog-card-img::after{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse at 50% 0%, rgba(240,180,41,.15) 0%, transparent 70%);
+}
+.blog-card-body{padding:1.25rem}
+.blog-cat{
+  font-size:10px;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--gold);font-family:var(--font-sans);font-weight:600;margin-bottom:.5rem;
+}
+.blog-title{
+  font-size:16px;margin-bottom:.5rem;color:var(--text);
+  font-family:var(--font-serif);line-height:1.3;
+  transition:color .2s;
+}
+.blog-card:hover .blog-title{color:var(--gold)}
+.blog-meta{font-size:11px;color:var(--text3);font-family:var(--font-sans)}
+.blog-excerpt{font-size:13.5px;color:var(--text2);font-family:var(--font-sans);line-height:1.65;margin:.5rem 0}
+
+/* ── FOOTER ──────────────────────────────────────────────────── */
+.footer{
+  background: linear-gradient(180deg, var(--bg2) 0%, var(--bg) 100%);
+  border-top:1px solid var(--gold-b);
+  color:var(--text2);padding:4rem 0 1.75rem;
+}
+.footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:2.5rem;margin-bottom:2.5rem}
+@media(max-width:700px){.footer-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:440px){.footer-grid{grid-template-columns:1fr}}
+.footer-brand{
+  font-family:var(--font-serif);font-size:20px;
+  color:var(--text);margin-bottom:.75rem;
+}
+.footer-tagline{font-size:13px;line-height:1.7;color:var(--text3);font-style:italic}
+.footer-col-title{
+  font-size:10px;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--gold);margin-bottom:.875rem;font-family:var(--font-sans);font-weight:600;
+}
+.footer-links{list-style:none;display:flex;flex-direction:column;gap:.6rem}
+.footer-links a{
+  font-size:13.5px;color:var(--text3);
+  font-family:var(--font-sans);transition:color .2s;
+}
+.footer-links a:hover{color:var(--text)}
+.footer-bottom{
+  border-top:1px solid var(--border);padding-top:1.25rem;
+  display:flex;justify-content:space-between;align-items:center;
+  flex-wrap:wrap;gap:.5rem;
+  font-size:12px;font-family:var(--font-sans);color:var(--text3);
+}
+.footer-bottom a{color:var(--text3);transition:color .2s}
+.footer-bottom a:hover{color:var(--text2)}
+
+/* ── CHIPS ───────────────────────────────────────────────────── */
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{
+  background:var(--card2);border:1px solid var(--border2);
+  border-radius:20px;padding:4px 14px;
+  font-size:12px;font-family:var(--font-sans);color:var(--text2);
+}
+
+/* ── SPINNER / LOADING ───────────────────────────────────────── */
+.spinner{
+  width:34px;height:34px;
+  border:2.5px solid var(--border2);
+  border-top-color:var(--gold);
+  border-radius:50%;
+  animation:spin .9s linear infinite;margin:0 auto 1rem;
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* ── EMAIL CAPTURE BANNER ────────────────────────────────────── */
+.email-banner{
+  background: linear-gradient(135deg, var(--bg2) 0%, var(--card) 100%);
+  border:1px solid var(--gold-b);
+  border-radius:var(--rl);padding:2.5rem;
+  color:var(--text);text-align:center;
+  box-shadow:0 0 40px rgba(240,180,41,.08);
+}
+.email-banner h3{
+  font-family:var(--font-serif);font-size:24px;margin-bottom:.5rem;
+}
+.email-banner p{font-size:14px;color:var(--text2);margin-bottom:1.5rem}
+.email-row{display:flex;gap:8px;max-width:440px;margin:0 auto;flex-wrap:wrap}
+.email-row input{
+  flex:1;min-width:180px;
+  background:var(--card2);border-color:var(--border2);color:var(--text);
+}
+.email-row input::placeholder{color:var(--text3)}
+.email-row input:focus{border-color:var(--gold);background:var(--card)}
+
+/* ── NUM GRID (analysis results) ────────────────────────────── */
+.num-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px}
+.nc{
+  background:var(--gold-l);border:1px solid var(--gold-b);
+  border-radius:var(--r);padding:1rem;text-align:center;
+  transition:border-color .2s,background .2s;
+}
+.nc:hover{background:rgba(240,180,41,.16);border-color:var(--gold)}
+.nc .nl{font-size:10px;color:var(--text3);font-family:var(--font-sans);letter-spacing:.06em;text-transform:uppercase;margin-bottom:5px}
+.nc .nv{font-size:34px;color:var(--text);line-height:1;font-family:var(--font-serif)}
+.nc .ns{font-size:11px;color:var(--gold);margin-top:4px;font-family:var(--font-sans)}
+
+/* ── PROGRESS BAR ────────────────────────────────────────────── */
+.progress-wrap{background:var(--border2);border-radius:4px;height:5px;overflow:hidden}
+.progress-bar{
+  height:100%;
+  background:linear-gradient(90deg, var(--gold-d), var(--gold));
+  border-radius:4px;transition:width .4s ease;
+  box-shadow:0 0 8px var(--gold-glow);
+}
+
+/* ── STICKY CTA STRIP (mobile) ───────────────────────────────── */
+.sticky-cta{
+  display:none;position:fixed;bottom:0;left:0;right:0;
+  background: rgba(3,9,15,.96);
+  backdrop-filter:blur(12px);
+  color:var(--text);padding:12px 1.5rem;z-index:150;
+  align-items:center;justify-content:space-between;gap:12px;
+  border-top:1px solid var(--gold-b);
+}
+@media(max-width:700px){.sticky-cta{display:flex}}
+.sticky-cta-text{font-size:13px;font-family:var(--font-sans)}
+.sticky-cta-text strong{display:block;font-size:15px;color:var(--text)}
+.sticky-cta-text span{color:var(--text3);font-size:12px}
+
+/* ── ATTR / LUCKY ATTRIBUTE ITEMS ────────────────────────────── */
+.attr-label{font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:var(--text3);font-family:var(--font-sans)}
+.attr-val{font-size:13px;color:var(--text);font-family:var(--font-sans);margin-top:2px}
+
+/* ── PURPLE ACCENT HELPERS ───────────────────────────────────── */
+.text-purple{color:var(--purple)}
+.bg-purple-l{background:var(--purple-l);border:1px solid var(--purple-b)}
+
+/* ── ORANGE ACCENT HELPERS ───────────────────────────────────── */
+.text-orange{color:var(--orange)}
+
+/* ── UTILITY ─────────────────────────────────────────────────── */
+.text-center{text-align:center}
+.text-gold  {color:var(--gold)}
+.text-muted {color:var(--text2);font-family:var(--font-sans)}
+.text-serif {font-family:var(--font-serif)}
+.mt-1{margin-top:.5rem}.mt-2{margin-top:1rem}.mt-3{margin-top:1.5rem}.mt-4{margin-top:2rem}
+.mb-1{margin-bottom:.5rem}.mb-2{margin-bottom:1rem}.mb-3{margin-bottom:1.5rem}
+.gap-2{gap:1rem}.gap-3{gap:1.5rem}
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)}
+
+/* ── SELECTION COLOUR ────────────────────────────────────────── */
+::selection{background:var(--gold-l);color:var(--text)}
+
+/* ── SCROLLBAR (Webkit) ──────────────────────────────────────── */
+::-webkit-scrollbar{width:6px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--gold-b);border-radius:3px}
+::-webkit-scrollbar-thumb:hover{background:var(--gold)}
+
+/* ── PRINT ───────────────────────────────────────────────────── */
+@media print{
+  .nav,.footer,.sticky-cta,.no-print{display:none!important}
+  body{background:#fff;color:#000}
+  .card,.testi-card{border:1px solid #ddd;box-shadow:none}
+}

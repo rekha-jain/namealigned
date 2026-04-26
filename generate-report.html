@@ -1,0 +1,1154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Your Numerology Report | NameAligned.com</title>
+<meta name="description" content="Your personalised Chaldean numerology destiny report — core numbers, 3-year forecast, career domains, relationship compass and remedies."/>
+<link rel="stylesheet" href="assets/style.css"/>
+<style>
+/* ── LOADER OVERLAY ─────────────────────────────────────────── */
+#loaderOverlay{
+  position:fixed;inset:0;z-index:9999;
+  background:#03090f;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  transition:opacity .6s ease;
+}
+#loaderOverlay.hidden{opacity:0;pointer-events:none;}
+.loader-moon{font-size:52px;display:block;animation:moonSpin 2s linear infinite;margin-bottom:1.5rem;}
+@keyframes moonSpin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+.loader-title{font-size:22px;color:#f0ece0;margin-bottom:.5rem;text-align:center;}
+.loader-status{font-size:13px;color:#b0a898;font-family:sans-serif;font-style:italic;margin-bottom:2rem;text-align:center;min-height:20px;transition:opacity .3s;}
+.loader-progress-wrap{width:260px;background:rgba(255,255,255,.12);border-radius:4px;height:5px;overflow:hidden;margin-bottom:2.5rem;}
+.loader-progress-bar{height:100%;background:var(--gold);border-radius:4px;width:0%;transition:width .4s ease;}
+.loader-sym{font-size:14px;letter-spacing:16px;opacity:.3;color:#b0a898;}
+
+/* ── INVALID SESSION ────────────────────────────────────────── */
+#invalidSession{display:none;}
+
+/* ── REPORT (hidden until load done) ───────────────────────── */
+#reportWrap{display:none;}
+
+/* ── REPORT HERO ────────────────────────────────────────────── */
+.rpt-hero{
+  background:linear-gradient(135deg,#03090f,#071525);
+  color:#f0ece0;padding:4rem 1.5rem 3.5rem;text-align:center;position:relative;overflow:hidden;
+}
+.rpt-hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 0%,rgba(240,180,41,.22) 0%,transparent 65%);}
+.rpt-eyebrow{font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:#b0a898;margin-bottom:10px;font-family:sans-serif;position:relative;}
+.rpt-hero h1{font-size:clamp(24px,4.5vw,46px);color:#f0ece0;position:relative;margin-bottom:10px;}
+.rpt-hero h1 em{color:var(--gold);font-style:normal;}
+.rpt-hero-meta{font-size:13px;color:#7a7265;font-family:sans-serif;position:relative;margin-top:.5rem;}
+.rpt-hero-sym{font-size:22px;letter-spacing:14px;opacity:.35;margin-bottom:14px;position:relative;}
+.rpt-line{width:48px;height:1px;background:var(--gold);margin:14px auto;position:relative;}
+
+/* ── SECTION WRAPPER ────────────────────────────────────────── */
+.rpt-section{padding:3rem 0 2rem;}
+.rpt-section:first-of-type{padding-top:2.5rem;}
+
+/* ── CORE NUMBERS ───────────────────────────────────────────── */
+.core-num-card{
+  background:var(--card);border:1px solid var(--border);border-radius:var(--rl);
+  padding:1.75rem 1.5rem;text-align:center;
+  box-shadow:0 2px 18px rgba(0,0,0,.05);
+  transition:box-shadow .2s,border-color .2s;
+}
+.core-num-card:hover{border-color:var(--gold-b);box-shadow:0 6px 28px rgba(240,180,41,.12);}
+.core-num-big{font-size:56px;color:var(--gold);line-height:1;margin-bottom:4px;}
+.core-num-label{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--text3);font-family:sans-serif;margin-bottom:.5rem;}
+.core-num-planet{font-size:13px;color:var(--text2);font-family:sans-serif;margin-bottom:.75rem;}
+.core-num-planet strong{color:var(--text);}
+.core-num-meaning{font-size:13px;color:var(--text2);font-style:italic;line-height:1.65;font-family:sans-serif;}
+
+/* ── ALIGNMENT BANNER ───────────────────────────────────────── */
+.align-banner{
+  border-radius:var(--rl);padding:1.5rem 2rem;
+  display:flex;align-items:center;gap:1.25rem;flex-wrap:wrap;
+}
+.align-banner.aligned{background:var(--green-bg);border:1.5px solid #b0d48a;}
+.align-banner.neutral{background:var(--amber-bg);border:1.5px solid #e8c77a;}
+.align-banner.misaligned{background:var(--red-bg);border:1.5px solid #f5aaaa;}
+.align-icon{font-size:32px;flex-shrink:0;}
+.align-text{flex:1;}
+.align-title{font-size:17px;margin-bottom:4px;}
+.align-title.aligned{color:var(--green);}
+.align-title.neutral{color:var(--amber);}
+.align-title.misaligned{color:var(--red);}
+.align-desc{font-size:13px;font-family:sans-serif;line-height:1.7;}
+.align-desc.aligned{color:#3b6d11;}
+.align-desc.neutral{color:#7a4a0a;}
+.align-desc.misaligned{color:#7a1e1e;}
+.align-pct-badge{
+  font-size:28px;font-weight:normal;padding:.5rem 1.25rem;
+  border-radius:var(--r);font-family:sans-serif;
+}
+.align-pct-badge.aligned{background:#c6e9a0;color:var(--green);}
+.align-pct-badge.neutral{background:rgba(240,180,41,.18);color:var(--gold);}
+.align-pct-badge.misaligned{background:rgba(163,45,45,.18);color:var(--red);}
+
+/* ── LUCKY ATTRS ────────────────────────────────────────────── */
+.attr-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:1rem;}
+@media(max-width:860px){.attr-grid{grid-template-columns:repeat(3,1fr);}}
+@media(max-width:500px){.attr-grid{grid-template-columns:1fr 1fr;}}
+.attr-card{
+  background:var(--gold-l);border:1px solid var(--gold-b);border-radius:var(--r);
+  padding:1.1rem;text-align:center;
+}
+.attr-icon{font-size:24px;margin-bottom:.5rem;}
+.attr-label{font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);font-family:sans-serif;margin-bottom:.3rem;}
+.attr-value{font-size:13px;color:var(--text);line-height:1.45;}
+
+/* ── FORECAST ────────────────────────────────────────────────── */
+.forecast-card{
+  background:var(--card);border:1px solid var(--border);border-radius:var(--rl);
+  overflow:hidden;margin-bottom:1.5rem;
+  box-shadow:0 2px 14px rgba(0,0,0,.04);
+}
+.forecast-hdr{
+  background:#03090f;padding:1.1rem 1.5rem;
+  display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.5rem;
+}
+.forecast-year-label{font-size:15px;color:#f0ece0;}
+.forecast-year-label strong{font-size:20px;color:var(--gold);}
+.forecast-badges{display:flex;gap:.5rem;flex-wrap:wrap;}
+.forecast-badge{background:rgba(240,180,41,.22);color:#f0ece0;font-size:11px;font-family:sans-serif;padding:3px 11px;border-radius:20px;}
+.forecast-body{padding:1.5rem;}
+.forecast-theme{font-size:13px;color:var(--text3);font-family:sans-serif;font-style:italic;margin-bottom:1.25rem;padding-bottom:1rem;border-bottom:1px solid var(--gold-b);}
+.forecast-insights{display:grid;grid-template-columns:1fr 1fr;gap:.75rem;margin-bottom:1.25rem;}
+@media(max-width:600px){.forecast-insights{grid-template-columns:1fr;}}
+.fi-card{background:var(--gold-l);border-radius:var(--r);padding:.85rem;}
+.fi-label{font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--gold);font-family:sans-serif;margin-bottom:.4rem;}
+.fi-text{font-size:12.5px;font-family:sans-serif;color:var(--text2);line-height:1.65;}
+.forecast-do-avoid{display:grid;grid-template-columns:1fr 1fr;gap:.75rem;margin-bottom:1.25rem;}
+@media(max-width:600px){.forecast-do-avoid{grid-template-columns:1fr;}}
+.fda{border-radius:var(--r);padding:.85rem 1rem;}
+.fda.do{background:var(--green-bg);}
+.fda.avoid{background:var(--red-bg);}
+.fda-label{font-size:9.5px;font-family:sans-serif;font-weight:700;text-transform:uppercase;letter-spacing:.06em;margin-bottom:.5rem;}
+.fda.do .fda-label{color:var(--green);}
+.fda.avoid .fda-label{color:var(--red);}
+.fda ul{padding-left:16px;font-size:12px;font-family:sans-serif;line-height:1.9;color:var(--text);}
+.forecast-remedy{background:var(--gold-l);border:1px solid var(--gold-b);border-radius:var(--r);padding:.85rem 1rem;}
+.forecast-remedy-label{font-size:9.5px;font-family:sans-serif;font-weight:700;color:var(--gold);text-transform:uppercase;letter-spacing:.06em;margin-bottom:.4rem;}
+.forecast-remedy-text{font-size:12.5px;font-family:sans-serif;color:var(--text2);}
+.forecast-chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:.85rem;}
+
+/* ── CAREER ──────────────────────────────────────────────────── */
+.career-col{background:var(--card);border:1px solid var(--border);border-radius:var(--rl);padding:1.5rem;}
+.career-col-hdr{display:flex;align-items:center;gap:.6rem;margin-bottom:1rem;}
+.career-col-num{width:36px;height:36px;border-radius:50%;background:var(--gold);color:#fff;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0;}
+.career-domain{border-bottom:1px solid var(--gold-b);padding:.65rem 0;display:flex;gap:.75rem;align-items:flex-start;}
+.career-domain:last-child{border-bottom:none;}
+.career-domain-icon{font-size:18px;flex-shrink:0;margin-top:1px;}
+.career-domain-text{}
+.career-domain-name{font-size:14px;margin-bottom:2px;}
+.career-domain-desc{font-size:12px;font-family:sans-serif;color:var(--text2);}
+
+/* ── RELATIONSHIP ────────────────────────────────────────────── */
+.compat-group{margin-bottom:1.5rem;}
+.compat-group-label{font-size:11px;letter-spacing:.1em;text-transform:uppercase;font-family:sans-serif;font-weight:700;margin-bottom:.75rem;display:flex;align-items:center;gap:.5rem;}
+.compat-group-label.best{color:var(--green);}
+.compat-group-label.good{color:var(--amber);}
+.compat-group-label.avoid{color:var(--red);}
+.compat-cards{display:flex;flex-wrap:wrap;gap:.75rem;}
+.compat-card{
+  background:var(--card);border:1px solid var(--border);border-radius:var(--r);
+  padding:.85rem 1rem;flex:1;min-width:140px;max-width:200px;
+}
+.compat-card.best{border-color:#b0d48a;background:var(--green-bg);}
+.compat-card.good{border-color:#e8c77a;background:var(--amber-bg);}
+.compat-card.avoid{border-color:#f5aaaa;background:var(--red-bg);}
+.compat-num{font-size:28px;color:var(--text);line-height:1;margin-bottom:3px;}
+.compat-card.best .compat-num{color:var(--green);}
+.compat-card.good .compat-num{color:var(--amber);}
+.compat-card.avoid .compat-num{color:var(--red);}
+.compat-planet{font-size:11px;font-family:sans-serif;color:var(--text3);margin-bottom:.4rem;}
+.compat-note{font-size:12px;font-family:sans-serif;color:var(--text2);line-height:1.55;}
+
+/* ── REMEDIES ────────────────────────────────────────────────── */
+.remedy-card{
+  background:var(--card);border:1px solid var(--border);border-radius:var(--r);
+  padding:1.25rem 1.5rem;
+  display:flex;align-items:flex-start;gap:1rem;
+  transition:border-color .2s,box-shadow .2s;
+  cursor:pointer;
+}
+.remedy-card:hover{border-color:var(--gold-b);box-shadow:0 4px 18px rgba(240,180,41,.1);}
+.remedy-check{
+  width:22px;height:22px;border:2px solid var(--gold);border-radius:5px;
+  flex-shrink:0;margin-top:2px;display:flex;align-items:center;justify-content:center;
+  font-size:13px;color:transparent;transition:all .2s;
+}
+.remedy-card.checked .remedy-check{background:var(--gold);color:#fff;}
+.remedy-num{width:32px;height:32px;border-radius:50%;background:var(--gold-l);border:1px solid var(--gold-b);display:flex;align-items:center;justify-content:center;font-size:13px;color:var(--gold);font-family:sans-serif;flex-shrink:0;margin-top:1px;}
+.remedy-text{font-size:14px;line-height:1.65;color:var(--text);}
+
+/* ── NAME ANALYSIS ───────────────────────────────────────────── */
+.name-analysis-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;}
+@media(max-width:620px){.name-analysis-grid{grid-template-columns:1fr;}}
+.name-variant{
+  background:var(--gold-l);border:1px solid var(--gold-b);border-radius:var(--r);
+  padding:1rem 1.25rem;display:flex;align-items:center;gap:.85rem;
+}
+.name-variant-num{font-size:28px;color:var(--gold);width:44px;text-align:center;flex-shrink:0;}
+.name-variant-info{}
+.name-variant-name{font-size:16px;margin-bottom:3px;}
+.name-variant-meta{font-size:12px;font-family:sans-serif;color:var(--text2);}
+
+/* ── DOWNLOAD & SHARE ────────────────────────────────────────── */
+.email-confirm{
+  background:var(--green-bg);border:1.5px solid #b0d48a;border-radius:var(--r);
+  padding:1rem 1.5rem;display:flex;align-items:center;gap:.85rem;font-family:sans-serif;
+}
+.email-confirm-icon{font-size:22px;}
+.email-confirm-text{font-size:13.5px;color:var(--green);line-height:1.5;}
+
+.share-wa{
+  display:inline-flex;align-items:center;gap:.5rem;
+  background:#25D366;color:#fff;border-radius:var(--r);
+  padding:11px 22px;font-family:sans-serif;font-size:14px;font-weight:600;
+  text-decoration:none;transition:background .2s;
+}
+.share-wa:hover{background:#1ebe5a;text-decoration:none;color:#fff;}
+
+/* ── UPSELL CARDS ────────────────────────────────────────────── */
+.upsell-card{
+  background:var(--card);border:1.5px solid var(--border);border-radius:var(--rl);
+  padding:1.75rem;text-align:center;
+  transition:border-color .2s,box-shadow .2s;
+}
+.upsell-card:hover{border-color:var(--gold-b);box-shadow:0 6px 28px rgba(240,180,41,.1);}
+.upsell-icon{font-size:36px;margin-bottom:.75rem;}
+.upsell-title{font-size:17px;margin-bottom:.4rem;}
+.upsell-desc{font-size:13px;color:var(--text2);font-family:sans-serif;line-height:1.7;margin-bottom:1.25rem;}
+
+/* ── PRINT ───────────────────────────────────────────────────── */
+@media print{
+  .nav,.footer,.sticky-cta,.no-print{display:none!important;}
+  #loaderOverlay{display:none!important;}
+  #reportWrap{display:block!important;}
+  body{background:var(--bg);}
+  .rpt-hero{background:#03090f!important;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+  .forecast-card,.core-num-card,.career-col{break-inside:avoid;}
+  .rpt-section{padding:1.5rem 0 1rem;}
+  .btn-print{display:none!important;}
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════════════════
+     LOADER OVERLAY
+═══════════════════════════════════════════════════════════ -->
+<div id="loaderOverlay">
+  <span class="loader-moon">☽</span>
+  <div class="loader-title">Reading the cosmos for you…</div>
+  <div class="loader-status" id="loaderStatus">Calculating your Chaldean chart…</div>
+  <div class="loader-progress-wrap">
+    <div class="loader-progress-bar" id="loaderBar"></div>
+  </div>
+  <div class="loader-sym">☽ ✦ ☉ ✦ ☿</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     INVALID SESSION
+═══════════════════════════════════════════════════════════ -->
+<div id="invalidSession">
+  <nav class="nav">
+    <div class="container nav-inner">
+      <a href="index.html" class="nav-logo">☽ <span>Numerology</span>.life</a>
+      <ul class="nav-links">
+        <li><a href="analyzer.html">Free Analysis</a></li>
+        <li><a href="blog/index.html">Blog</a></li>
+        <li><a href="report.html" class="nav-cta">Get Report →</a></li>
+      </ul>
+      <div class="nav-hamburger" id="navHamburgerInvalid"><span></span><span></span><span></span></div>
+    </div>
+    <div class="nav-mobile" id="navMobileInvalid">
+      <a href="index.html">Home</a>
+      <a href="analyzer.html">Free Analysis</a>
+      <a href="report.html">Get Your Report</a>
+    </div>
+  </nav>
+  <div style="min-height:70vh;display:flex;align-items:center;justify-content:center;padding:3rem 1.5rem;text-align:center;">
+    <div>
+      <div style="font-size:56px;margin-bottom:1.25rem;opacity:.5;">☽</div>
+      <h1 style="font-size:26px;margin-bottom:.75rem;color:var(--text);">Session not found</h1>
+      <p style="font-size:15px;color:var(--text2);font-family:sans-serif;max-width:420px;margin:0 auto 2rem;line-height:1.7;">This report link appears to be invalid or has expired. Please complete your payment to receive your personalised numerology report.</p>
+      <a href="report.html" class="btn btn-primary btn-lg">Get Your Report for ₹199 →</a>
+      <p style="font-size:12px;color:var(--text3);font-family:sans-serif;margin-top:1rem;">If you've already paid, please check your email for the direct link or <a href="mailto:support@namealigned.com">contact support</a>.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     MAIN REPORT
+═══════════════════════════════════════════════════════════ -->
+<div id="reportWrap">
+
+<nav class="nav">
+  <div class="container nav-inner">
+    <a href="index.html" class="nav-logo">☽ <span>Numerology</span>.life</a>
+    <ul class="nav-links">
+      <li><a href="analyzer.html">Free Analysis</a></li>
+      <li><a href="blog/index.html">Blog</a></li>
+      <li><a href="report.html">About</a></li>
+      <li><a href="#download" class="nav-cta no-print">Download PDF →</a></li>
+    </ul>
+    <div class="nav-hamburger" id="navHamburger"><span></span><span></span><span></span></div>
+  </div>
+  <div class="nav-mobile" id="navMobile">
+    <a href="index.html">Home</a>
+    <a href="analyzer.html">Free Analysis</a>
+    <a href="blog/index.html">Blog</a>
+    <a href="#download">Download PDF</a>
+  </div>
+</nav>
+
+<!-- ── REPORT HERO ─────────────────────────────────────────── -->
+<div class="rpt-hero">
+  <div class="rpt-hero-sym">☽ ✦ ☉ ✦ ☿</div>
+  <div class="rpt-eyebrow">Chaldean Numerology · Personal Destiny Report</div>
+  <h1>Your Complete Numerology Report<br><em id="heroName"></em></h1>
+  <div class="rpt-line"></div>
+  <p class="rpt-hero-meta">Generated on <span id="heroDate"></span> &nbsp;·&nbsp; Payment ID: <span id="heroPayId"></span></p>
+</div>
+
+<!-- ── BODY ─────────────────────────────────────────────────── -->
+<div class="container" style="padding-bottom:4rem;">
+
+  <!-- ─ 1. CORE NUMBERS ──────────────────────────────────────── -->
+  <div class="rpt-section">
+    <div class="sec-label">Your Core Chaldean Numbers</div>
+    <div class="grid-3" id="coreNumbersGrid">
+      <!-- Injected by JS -->
+    </div>
+  </div>
+
+  <hr class="divider"/>
+
+  <!-- ─ 2. ALIGNMENT BANNER ──────────────────────────────────── -->
+  <div class="rpt-section" style="padding-top:0;">
+    <div class="sec-label">Name Alignment Status</div>
+    <div class="align-banner" id="alignBanner">
+      <!-- Injected by JS -->
+    </div>
+  </div>
+
+  <hr class="divider"/>
+
+  <!-- ─ 3. LUCKY ATTRIBUTES ──────────────────────────────────── -->
+  <div class="rpt-section" style="padding-top:0;">
+    <div class="sec-label">Lucky Attributes — Moolank <span id="birthNumLabel"></span></div>
+    <div class="attr-grid" id="attrsGrid">
+      <!-- Injected by JS -->
+    </div>
+  </div>
+
+  <hr class="divider"/>
+
+  <!-- ─ 4. 3-YEAR FORECAST ───────────────────────────────────── -->
+  <div class="rpt-section" style="padding-top:0;">
+    <div class="sec-label">3-Year Personal Year Forecast</div>
+    <p style="font-size:13px;color:var(--text2);font-family:sans-serif;margin-bottom:1.5rem;">Your Personal Year number changes every January — it governs the overarching energy, opportunities and lessons of each year. Below are your next three cycles.</p>
+    <div id="forecastContainer">
+      <!-- Injected by JS -->
+    </div>
+  </div>
+
+  <hr class="divider"/>
+
+  <!-- ─ 5. CAREER & WEALTH ───────────────────────────────────── -->
+  <div class="rpt-section" style="padding-top:0;">
+    <div class="sec-label">Career &amp; Wealth Domains</div>
+    <p style="font-size:13px;color:var(--text2);font-family:sans-serif;margin-bottom:1.5rem;">Your Moolank shapes your natural work style and raw talent; your Bhagyank shows the domains where destiny compounds your effort into wealth.</p>
+    <div class="grid-2" id="careerGrid">
+      <!-- Injected by JS -->
+    </div>
+  </div>
+
+  <hr class="divider"/>
+
+  <!-- ─ 6. RELATIONSHIP COMPASS ──────────────────────────────── -->
+  <div class="rpt-section" style="padding-top:0;">
+    <div class="sec-label">Relationship Compass</div>
+    <p style="font-size:13px;color:var(--text2);font-family:sans-serif;margin-bottom:1.5rem;">Compatibility in Chaldean numerology is determined by the interplay of planetary rulers. Your Moolank <strong id="birthNumRel"></strong> is ruled by <strong id="birthPlanetRel"></strong>. Here is how each number interacts with your energy.</p>
+    <div id="compatContainer">
+      <!-- Injected by JS -->
+    </div>
+  </div>
+
+  <hr class="divider"/>
+
+  <!-- ─ 7. REMEDIES ─────────────────────────────────────────── -->
+  <div class="rpt-section" style="padding-top:0;">
+    <div class="sec-label">Remedies &amp; Planetary Activation</div>
+    <p style="font-size:13px;color:var(--text2);font-family:sans-serif;margin-bottom:1.25rem;">Tick each remedy as you adopt it. These practices are calibrated specifically to your planetary ruler and are most effective when done consistently.</p>
+    <div id="remediesGrid" style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+      <!-- Injected by JS -->
+    </div>
+  </div>
+
+  <hr class="divider"/>
+
+  <!-- ─ 8. NAME ANALYSIS ─────────────────────────────────────── -->
+  <div class="rpt-section" style="padding-top:0;">
+    <div class="sec-label">Name Analysis &amp; Optimisation</div>
+    <div id="nameAnalysisSection">
+      <!-- Injected by JS -->
+    </div>
+  </div>
+
+  <hr class="divider"/>
+
+  <!-- ─ 9. DOWNLOAD ─────────────────────────────────────────── -->
+  <div class="rpt-section no-print" style="padding-top:0;" id="download">
+    <div class="sec-label">Download Your Report</div>
+    <div class="card" style="text-align:center;max-width:540px;margin:0 auto;">
+      <div style="font-size:36px;margin-bottom:.75rem;">📄</div>
+      <h3 style="font-size:20px;margin-bottom:.5rem;">Save this report as a PDF</h3>
+      <p style="font-size:13px;color:var(--text2);font-family:sans-serif;line-height:1.7;margin-bottom:1.5rem;">Print a beautifully formatted version of your complete numerology report — all sections, formatted cleanly for printing or saving as PDF. Works on all devices.</p>
+      <button class="btn btn-primary btn-lg btn-print" onclick="window.print()">⬇ Download PDF</button>
+      <p style="font-size:12px;color:var(--text3);font-family:sans-serif;margin-top:.85rem;">In your browser's print dialog, choose "Save as PDF" as the destination.</p>
+    </div>
+  </div>
+
+  <hr class="divider no-print"/>
+
+  <!-- ─ 10. SHARE / SAVE ─────────────────────────────────────── -->
+  <div class="rpt-section no-print" style="padding-top:0;">
+    <div class="sec-label">Share &amp; Save</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;">
+      <div class="card">
+        <div style="font-size:28px;margin-bottom:.75rem;">📧</div>
+        <h4 style="font-size:16px;margin-bottom:.5rem;">Report emailed</h4>
+        <div class="email-confirm">
+          <span class="email-confirm-icon">✓</span>
+          <div class="email-confirm-text">Your full report has been sent to <strong id="emailConfirm"></strong>.<br>Check your inbox (and spam folder if needed).</div>
+        </div>
+        <p style="font-size:12px;color:var(--text3);font-family:sans-serif;margin-top:.75rem;">Didn't receive it? <a href="mailto:support@namealigned.com">Contact support</a> with your payment ID.</p>
+      </div>
+      <div class="card">
+        <div style="font-size:28px;margin-bottom:.75rem;">💬</div>
+        <h4 style="font-size:16px;margin-bottom:.5rem;">Share via WhatsApp</h4>
+        <p style="font-size:13px;color:var(--text2);font-family:sans-serif;line-height:1.65;margin-bottom:1rem;">Share your key numerology numbers with a friend or family member.</p>
+        <a id="waShareBtn" href="#" class="share-wa" target="_blank" rel="noopener">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+          Share on WhatsApp
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider no-print"/>
+
+  <!-- ─ 11. UPSELL / NEXT STEPS ─────────────────────────────── -->
+  <div class="rpt-section no-print" style="padding-top:0;">
+    <div class="sec-label">Your Next Steps</div>
+    <div class="grid-2">
+      <div class="upsell-card">
+        <div class="upsell-icon">🔮</div>
+        <h3 class="upsell-title">Consult a Numerology Expert</h3>
+        <p class="upsell-desc">Go deeper with a live 45-minute one-on-one session. Our certified Chaldean numerologists provide personalised guidance on name corrections, business naming, relationship timing and life path strategy.</p>
+        <span class="badge badge-gold" style="margin-bottom:1rem;">Coming Soon</span>
+        <p style="font-size:12px;color:var(--text3);font-family:sans-serif;">Join the waitlist and get early access pricing.</p>
+        <div style="margin-top:1rem;">
+          <a href="mailto:support@namealigned.com?subject=Expert Consultation Waitlist" class="btn btn-outline-gold btn-sm">Join Waitlist →</a>
+        </div>
+      </div>
+      <div class="upsell-card">
+        <div class="upsell-icon">🎁</div>
+        <h3 class="upsell-title">Share with a Friend</h3>
+        <p class="upsell-desc">Know someone curious about their destiny? Share the free Chaldean name analyser — it takes 30 seconds and reveals their core numbers instantly. A thoughtful gift that costs nothing.</p>
+        <div style="margin-top:1rem;display:flex;flex-direction:column;gap:.75rem;">
+          <a id="referralWa" href="#" class="share-wa" target="_blank" rel="noopener" style="justify-content:center;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+            Share Free Analyser
+          </a>
+          <a href="analyzer.html" class="btn btn-outline btn-sm" style="text-align:center;">Open Free Analyser →</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /container -->
+
+<!-- ── FOOTER ─────────────────────────────────────────────────── -->
+<footer class="footer no-print">
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <div class="footer-brand">☽ NameAligned.com</div>
+        <p class="footer-tagline">Ancient Chaldean wisdom,<br>made accessible for the modern seeker.</p>
+      </div>
+      <div>
+        <div class="footer-col-title">Explore</div>
+        <ul class="footer-links">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="analyzer.html">Free Analyser</a></li>
+          <li><a href="report.html">Full Report</a></li>
+          <li><a href="blog/index.html">Blog</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="footer-col-title">Learn</div>
+        <ul class="footer-links">
+          <li><a href="#">Chaldean vs Pythagorean</a></li>
+          <li><a href="#">Moolank Guide</a></li>
+          <li><a href="#">Planet Rulers</a></li>
+          <li><a href="#">Name Correction</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="footer-col-title">Support</div>
+        <ul class="footer-links">
+          <li><a href="mailto:support@namealigned.com">Email Support</a></li>
+          <li><a href="#">Privacy Policy</a></li>
+          <li><a href="#">Refund Policy</a></li>
+          <li><a href="#">Terms of Use</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 NameAligned.com · All rights reserved</span>
+      <span>Secured by Razorpay &nbsp;·&nbsp; ☽ Made with intention</span>
+    </div>
+  </div>
+</footer>
+
+</div><!-- /reportWrap -->
+
+<script src="assets/numerology.js"></script>
+<script>
+(function(){
+  'use strict';
+
+  // ── HELPERS ───────────────────────────────────────────────────
+  function qs(id){return document.getElementById(id);}
+  function el(tag,cls,html){var e=document.createElement(tag);if(cls)e.className=cls;if(html!=null)e.innerHTML=html;return e;}
+
+  // ── PARSE URL PARAMS ──────────────────────────────────────────
+  var params=new URLSearchParams(window.location.search);
+  var paymentId  = params.get('paymentId')||'';
+  var rawName    = params.get('name')||'';
+  var dob        = params.get('dob')||'';
+  var email      = params.get('email')||'';
+  var pBirthNum  = parseInt(params.get('birthNum'))||0;
+  var pDestNum   = parseInt(params.get('destNum'))||0;
+  var pNameNum   = parseInt(params.get('nameNum'))||0;
+  var pPct       = parseInt(params.get('pct'))||0;
+
+  // Validate session
+  if(!paymentId){
+    qs('loaderOverlay').classList.add('hidden');
+    qs('invalidSession').style.display='block';
+    return;
+  }
+
+  // Compute missing values from JS engine
+  var name = decodeURIComponent(rawName);
+  var birthNum = pBirthNum || (dob ? getBirthNum(dob) : 1);
+  var destNum  = pDestNum  || (dob ? getDestinyNum(dob) : 1);
+  var nameInfo = getNameNum(name);
+  var nameNum  = pNameNum  || nameInfo.reduced;
+  var nameRaw  = nameInfo.raw;
+  var pct      = pPct      || (dob ? compatPct(nameNum, nameRaw, birthNum, destNum) : 50);
+
+  var birthPlanet = getPlanet(birthNum);
+  var destPlanet  = getPlanet(destNum);
+  var namePlanet  = getPlanet(nameNum);
+
+  var TODAY = new Date();
+  var CURRENT_YEAR = TODAY.getFullYear();
+
+  // ── LOADER SEQUENCE ──────────────────────────────────────────
+  var msgs = [
+    'Calculating your Chaldean chart\u2026',
+    'Mapping planetary influences\u2026',
+    'Preparing your 3-year forecast\u2026',
+    'Compiling name alignment\u2026',
+    'Report ready \u2713'
+  ];
+  var bar = qs('loaderBar');
+  var statusEl = qs('loaderStatus');
+  var msgIndex = 0;
+  var duration = 4000; // ms
+  var steps = msgs.length;
+  var interval = duration / steps;
+
+  function advanceLoader(){
+    if(msgIndex < msgs.length){
+      statusEl.style.opacity='0';
+      setTimeout(function(){
+        statusEl.textContent = msgs[msgIndex];
+        statusEl.style.opacity='1';
+        bar.style.width = (((msgIndex+1)/steps)*100)+'%';
+        msgIndex++;
+      },200);
+    }
+  }
+  advanceLoader();
+  var loaderTimer = setInterval(function(){
+    advanceLoader();
+    if(msgIndex >= msgs.length){
+      clearInterval(loaderTimer);
+      setTimeout(function(){
+        qs('loaderOverlay').classList.add('hidden');
+        setTimeout(function(){qs('loaderOverlay').style.display='none';},650);
+        qs('reportWrap').style.display='block';
+        buildReport();
+      },600);
+    }
+  }, interval);
+
+  // ── BUILD REPORT ──────────────────────────────────────────────
+  function buildReport(){
+    // Hero
+    var displayName = name || 'Your';
+    qs('heroName').textContent = displayName;
+    qs('heroDate').textContent = TODAY.toLocaleDateString('en-IN',{day:'numeric',month:'long',year:'numeric'});
+    qs('heroPayId').textContent = paymentId;
+    qs('emailConfirm').textContent = email || 'your registered email';
+
+    buildCoreNumbers();
+    buildAlignmentBanner();
+    buildLuckyAttrs();
+    buildForecast();
+    buildCareer();
+    buildRelationship();
+    buildRemedies();
+    buildNameAnalysis();
+    buildShareButtons();
+  }
+
+  // ── 1. CORE NUMBERS ──────────────────────────────────────────
+  var CORE_MEANINGS = {
+    1:'Natural leader with solar authority. Driven by originality, independence and the urge to initiate. Sun energy confers visibility and recognition.',
+    2:'Intuitive and emotionally perceptive. Moon energy gifts empathy, creativity and the ability to build deep partnerships.',
+    3:'Expansive communicator blessed by Jupiter. Abundance flows through teaching, sharing and creative expression.',
+    4:'Builder and strategist under Rahu\'s influence. Discipline and innovation combine to create lasting foundations.',
+    5:'Quicksilver mind ruled by Mercury. Adaptability, wit and communication open every door.',
+    6:'Venus-ruled and harmony-seeking. Beauty, balance and loyal relationships are life\'s central gifts.',
+    7:'Ketu\'s mystic. Deep intuition, spiritual insight and non-attachment create unusual wisdom.',
+    8:'Saturn\'s discipline meets worldly ambition. Authority, perseverance and material mastery define the path.',
+    9:'Mars-powered humanitarian. Courage, energy and service to a higher cause bring ultimate fulfilment.',
+  };
+
+  function buildCoreNumbers(){
+    var grid = qs('coreNumbersGrid');
+    var nums = [
+      {num:birthNum, label:'Moolank (Birth Number)', planet:birthPlanet, meaning:CORE_MEANINGS[birthNum]||''},
+      {num:destNum,  label:'Bhagyank (Destiny Number)', planet:destPlanet, meaning:CORE_MEANINGS[destNum]||''},
+      {num:nameNum,  label:'Name Number (Chaldean)', planet:namePlanet, meaning:CORE_MEANINGS[nameNum]||''},
+    ];
+    nums.forEach(function(n){
+      var card = el('div','core-num-card');
+      card.innerHTML=
+        '<div class="core-num-label">'+n.label+'</div>'+
+        '<div class="core-num-big">'+n.num+'</div>'+
+        '<div class="core-num-planet">Ruled by <strong>'+n.planet+'</strong></div>'+
+        '<div class="core-num-meaning">'+n.meaning+'</div>';
+      grid.appendChild(card);
+    });
+    qs('birthNumLabel').textContent = birthNum;
+  }
+
+  // ── 2. ALIGNMENT BANNER ───────────────────────────────────────
+  function buildAlignmentBanner(){
+    var status = getAlignmentStatus(pct);
+    var banner = qs('alignBanner');
+    banner.className = 'align-banner '+status;
+
+    var icon, title, desc;
+    if(status==='aligned'){
+      icon='✦';
+      title='Strong Alignment — Your Name Works For You';
+      desc='Your name number '+nameNum+' ('+namePlanet+') resonates strongly with your birth and destiny energies. '+
+           'The compound energy of your name amplifies your natural strengths. No corrections are needed.';
+    } else if(status==='neutral'){
+      icon='◈';
+      title='Moderate Alignment — Name Correction Suggested';
+      desc='Your name number shows partial harmony with your core numbers. A minor spelling adjustment could significantly '+
+           'strengthen the energetic alignment and remove friction in wealth and relationship domains.';
+    } else {
+      icon='⚠';
+      title='Misalignment — Name Correction Recommended';
+      desc='Your current name number creates resistance against your birth and destiny energies. This can manifest as repeated '+
+           'obstacles, delayed success or relationship friction. A Chaldean-calibrated name adjustment is strongly advised.';
+    }
+
+    banner.innerHTML=
+      '<div class="align-icon">'+icon+'</div>'+
+      '<div class="align-text">'+
+        '<div class="align-title '+status+'">'+title+'</div>'+
+        '<div class="align-desc '+status+'">'+desc+'</div>'+
+      '</div>'+
+      '<div class="align-pct-badge '+status+'">'+pct+'%</div>';
+  }
+
+  // ── 3. LUCKY ATTRIBUTES ───────────────────────────────────────
+  var ATTR_ICONS={color:'🎨',gem:'💎',day:'📅',metal:'⚙',element:'🌿'};
+  var ATTR_LABELS={color:'Lucky Colours',gem:'Power Gemstone',day:'Favourable Day',metal:'Metal',element:'Element'};
+
+  function buildLuckyAttrs(){
+    var attrs = PLANET_ATTRS[birthNum]||{};
+    var grid = qs('attrsGrid');
+    var keys=['color','gem','day','metal','element'];
+    keys.forEach(function(k){
+      var card=el('div','attr-card');
+      card.innerHTML=
+        '<div class="attr-icon">'+ATTR_ICONS[k]+'</div>'+
+        '<div class="attr-label">'+ATTR_LABELS[k]+'</div>'+
+        '<div class="attr-value">'+(attrs[k]||'—')+'</div>';
+      grid.appendChild(card);
+    });
+  }
+
+  // ── 4. 3-YEAR FORECAST ────────────────────────────────────────
+  var FORECAST_INSIGHTS = {
+    1:{
+      career:'A year of bold new beginnings in your professional life. Initiating projects, launching ventures and stepping into leadership roles are strongly favoured. Your Moolank supports a pioneering stance.',
+      love:'Single? This year sparks the first chapter of a significant connection. Coupled? Channel the "new beginning" energy into refreshing your partnership with shared goals.',
+      wealth:'Invest in yourself and your ventures now — seeds planted this year yield compounding returns. Avoid sitting on decisions; action is rewarded in a Personal Year 1.',
+      health:'High-energy year that can burn out adrenal reserves. Protect sleep, build a morning routine and schedule recovery weeks. Sun energy thrives in consistent rhythms.'
+    },
+    2:{
+      career:'Collaboration over solo effort. Partnerships, negotiations and behind-the-scenes work mature into tangible outcomes. Patience is your most powerful professional tool.',
+      love:'The most relationship-rich Personal Year. Emotional bonds deepen. This is the year to commit, reconcile or invest meaningfully in the people closest to you.',
+      wealth:'Wealth grows through co-operative ventures and patient accumulation rather than bold moves. Joint investments and resource-sharing are especially favoured.',
+      health:'Emotional sensitivity peaks — boundary-setting protects your nervous system. Rest, water, intuitive eating and creative outlets are therapeutic.'
+    },
+    3:{
+      career:'Expansion, visibility and communication define this year. Media appearances, public speaking, education and creative outputs bring professional breakthroughs.',
+      love:'Joy and playfulness return to relationships. Social connections multiply. A high-energy, socially rich year where love is amplified by shared laughter.',
+      wealth:'Multiple income streams activate simultaneously. This is your breakthrough wealth window — launch, invest and diversify. Jupiter multiplies what you put in.',
+      health:'Creative output can deplete nervous reserves. One recovery week per quarter is essential. Gut health and liver need support — prioritise nourishing foods.'
+    },
+    4:{
+      career:'Foundation-building year. Slow, methodical progress. Systems, structures and processes established now support the next four years. Do not rush outcomes.',
+      love:'Commitment and reliability are what partners seek from you. A year to invest in long-term relationship structures — cohabitation, marriage, family planning.',
+      wealth:'Cautious, conservative financial management is rewarded. Avoid speculation. Build emergency reserves and invest in tangible, stable assets.',
+      health:'Routine and structure are your medicine. Skeletal health, posture and sleep cycles need attention. Consistency in exercise beats intensity.'
+    },
+    5:{
+      career:'Change, disruption and dynamic movement. New roles, locations or industries become available. Embrace calculated risk — staying static is the real risk.',
+      love:'Freedom and adventure characterise this year. Relationships need breathing room. New romantic encounters can be exhilarating but may lack permanence.',
+      wealth:'Variable income patterns. Multiple short-term opportunities appear. Stay adaptable and keep a cash reserve to capitalise on unexpected openings.',
+      health:'Restlessness and over-stimulation are the year\'s hazards. Grounding practices — nature, breathwork, reduced screen time — are essential countermeasures.'
+    },
+    6:{
+      career:'Responsibility and service define this year. Roles in care, management, counselling, design or team leadership are especially fulfilling and financially rewarding.',
+      love:'The most domestically and romantically rich year of the nine-year cycle. Deepening commitment, family expansion and healing of past relationship wounds all feature strongly.',
+      wealth:'Wealth through service and creativity. Home investments and family-oriented financial planning yield excellent returns. Avoid frivolous spending.',
+      health:'Others\'s needs can deplete your own wellbeing. Schedule non-negotiable self-care. Heart and circulatory health deserve extra attention.'
+    },
+    7:{
+      career:'Retreat and mastery over visibility. A year of research, skill-deepening and spiritual inquiry. The insights you gain now power the next outward cycle.',
+      love:'Solitude and inner work have priority. Relationships may feel tested as you turn inward. Quality over quantity in all connections.',
+      wealth:'Financial gains come slowly but surely through expertise and niche positioning. Avoid speculative ventures; focus on long-term value creation.',
+      health:'Rest and reflection are restorative medicine this year. Meditation, time in nature, and reduced digital consumption dramatically improve clarity and energy.'
+    },
+    8:{
+      career:'Power, ambition and recognition converge. Executive roles, financial leadership and public authority are within reach. This is a landmark professional year.',
+      love:'Ambition and career can overshadow relationships — be intentional about creating space for intimacy. Partners need to see they matter as much as success.',
+      wealth:'The strongest wealth year of the nine-year cycle. Major investments, promotions and financial milestones are all distinctly possible. Think and act big.',
+      health:'Work pressure can manifest as musculoskeletal tension and blood pressure issues. Regular exercise — especially resistance training — is highly beneficial.'
+    },
+    9:{
+      career:'Completion and release. Endings of projects, roles or phases that no longer serve your evolution. What closes now creates space for next year\'s bold new beginning.',
+      love:'Relationships that have run their course may naturally conclude. Those that survive are meant to last. Forgiveness and closure are this year\'s greatest gifts.',
+      wealth:'Harvest the results of the past eight years. Avoid starting major new financial ventures. Clear debts, restructure portfolios and consolidate gains.',
+      health:'Emotional clearing is as important as physical health. Therapy, journalling and conscious release of old patterns dramatically increase vitality.'
+    }
+  };
+
+  var YEAR_PLANET_REMEDIES={
+    1:'Rise with the sun on Sundays — face East for 10 minutes of morning light. Wear gold or orange to amplify Solar energy in your Personal Year 1.',
+    2:'Journal emotions each Monday evening. Keep a pearl or moonstone near your bed. Drink water from a silver vessel to strengthen Moon energy.',
+    3:'Wear yellow on Thursdays. Share knowledge generously — Jupiter\'s blessings multiply through teaching. Keep citrine on your desk.',
+    4:'Meditate daily on your key goals. Wear deep blue or grey. Structure and discipline are your amplifiers — honour Saturn\'s precision.',
+    5:'Wear emerald green on Wednesdays. Speak and write with precision. Mercury rewards clarity and speed of communication this year.',
+    6:'Wear pale pink or white on Fridays. Spend Fridays in creative or beautiful surroundings. Offer fresh white flowers in your home weekly.',
+    7:'20 minutes of daily meditation — Ketu rewards inner stillness above all. Visit a body of water weekly. Wear violet or silver-grey.',
+    8:'Build and honour daily routines without exception — Saturn above all rewards discipline. Donate iron or black sesame on Saturdays.',
+    9:'Exercise on Tuesdays — Mars responds to physical action. Wear red or copper. Offer red flowers weekly to honour the cycle\'s completion.',
+  };
+
+  function buildForecast(){
+    var container = qs('forecastContainer');
+    for(var i=0;i<3;i++){
+      var yr = CURRENT_YEAR + i;
+      var pyNum = getPersonalYear(dob, yr);
+      var theme = YEAR_THEMES[pyNum]||'';
+      var planet = getPlanet(pyNum);
+      var insights = FORECAST_INSIGHTS[pyNum]||FORECAST_INSIGHTS[1];
+      var remedy = YEAR_PLANET_REMEDIES[pyNum]||'';
+      var attrs = PLANET_ATTRS[pyNum]||{};
+
+      var isCurrentYear = (i===0);
+      var yearLabel = isCurrentYear ? 'Current Year' : (i===1 ? 'Next Year' : 'Year After');
+
+      var card = el('div','forecast-card');
+      card.innerHTML=
+        '<div class="forecast-hdr">'+
+          '<div class="forecast-year-label"><strong>'+yr+'</strong> &nbsp;— '+yearLabel+'</div>'+
+          '<div class="forecast-badges">'+
+            '<span class="forecast-badge">Personal Year '+pyNum+'</span>'+
+            '<span class="forecast-badge">'+planet+'</span>'+
+          '</div>'+
+        '</div>'+
+        '<div class="forecast-body">'+
+          '<div class="forecast-theme">'+theme+'</div>'+
+          '<div class="forecast-insights">'+
+            '<div class="fi-card"><div class="fi-label">Career &amp; Business</div><div class="fi-text">'+insights.career+'</div></div>'+
+            '<div class="fi-card"><div class="fi-label">Love &amp; Relationships</div><div class="fi-text">'+insights.love+'</div></div>'+
+            '<div class="fi-card"><div class="fi-label">Wealth &amp; Finance</div><div class="fi-text">'+insights.wealth+'</div></div>'+
+            '<div class="fi-card"><div class="fi-label">Health &amp; Energy</div><div class="fi-text">'+insights.health+'</div></div>'+
+          '</div>'+
+          buildDoAvoid(pyNum, yr)+
+          '<div class="forecast-remedy">'+
+            '<div class="forecast-remedy-label">Remedy &amp; Planetary Activation · '+yr+'</div>'+
+            '<div class="forecast-remedy-text">'+remedy+'</div>'+
+          '</div>'+
+          '<div class="forecast-chips">'+
+            (attrs.color?'<span class="chip">Lucky colour: '+attrs.color+'</span>':'')+
+            (attrs.day?'<span class="chip">Power day: '+attrs.day+'</span>':'')+
+            '<span class="chip">Personal Year: '+pyNum+'</span>'+
+            (attrs.gem?'<span class="chip">Stone: '+attrs.gem+'</span>':'')+
+          '</div>'+
+        '</div>';
+      container.appendChild(card);
+    }
+  }
+
+  var DO_ACTIONS={
+    1:['Launch public-facing ventures early in the year','Invest in yourself — courses, brand, visibility','Step into leadership; don\'t wait for permission'],
+    2:['Deepen key partnerships with honesty and care','Listen more than you speak in negotiations','Let collaborative wins build your reputation'],
+    3:['Embrace creative and communication projects','Expand your network intentionally this year','Share knowledge publicly — teach, write, speak'],
+    4:['Build systems that will serve you for years','Invest in education and skill mastery','Honour commitments with unwavering reliability'],
+    5:['Say yes to unexpected opportunities quickly','Diversify income streams and skill sets','Travel or relocate if drawn — Mercury rewards motion'],
+    6:['Invest in home and family relationships','Take on mentoring or leadership of a team','Create beauty — art, design, hospitality all flourish'],
+    7:['Set aside daily time for solitude and study','Deepen expertise in your chosen field','Trust intuition over external validation'],
+    8:['Pursue promotions and high-value projects assertively','Make major financial decisions from strength, not fear','Build authoritative presence and public credibility'],
+    9:['Complete unfinished projects and honour old debts','Forgive — yourself and others — to clear the path','Donate and give generously; Karma compounds now'],
+  };
+  var AVOID_ACTIONS={
+    1:['Waiting for the "perfect" moment to launch','Suppressing leadership instincts from self-doubt','Letting others define your worth or direction'],
+    2:['Forcing outcomes before they\'re ready','Sacrificing self-worth for the sake of harmony','Making major solo financial moves this year'],
+    3:['Scattering energy across too many projects','Staying silent when you have something to say','Financial decisions made from optimism alone'],
+    4:['Rushing timelines that need slow building','Shortcuts that undermine long-term foundations','Resisting structure — Saturn does not reward rebels'],
+    5:['Clinging to situations past their expiry date','Overcommitting to long-term obligations mid-year','Impulsive financial decisions fuelled by restlessness'],
+    6:['Neglecting your own needs while serving others','Refusing responsibility when it\'s yours to carry','Financial overspending driven by aesthetic desires'],
+    7:['Forcing social situations that drain you','Making large public-facing moves in a retreat year','Suppressing intuitive warnings with logical override'],
+    8:['Arrogance that alienates allies at the peak','Letting ambition hollow out key relationships','Financial overreach driven by ego, not strategy'],
+    9:['Starting major new ventures before the cycle closes','Hoarding what is meant to be released','Carrying resentments forward into the new cycle'],
+  };
+
+  function buildDoAvoid(pyNum, yr){
+    var dos  = DO_ACTIONS[pyNum]||[];
+    var avds = AVOID_ACTIONS[pyNum]||[];
+    return '<div class="forecast-do-avoid">'+
+      '<div class="fda do">'+
+        '<div class="fda-label">✓ Do in '+yr+'</div>'+
+        '<ul>'+dos.map(function(d){return'<li>'+d+'</li>';}).join('')+'</ul>'+
+      '</div>'+
+      '<div class="fda avoid">'+
+        '<div class="fda-label">✗ Avoid in '+yr+'</div>'+
+        '<ul>'+avds.map(function(d){return'<li>'+d+'</li>';}).join('')+'</ul>'+
+      '</div>'+
+    '</div>';
+  }
+
+  // ── 5. CAREER ─────────────────────────────────────────────────
+  var CAREER_ICONS=['🏛','⚖','🎓','🔬','📊','✈','💻','🌿','💰','🎨','🏥','⚔'];
+  var CAREER_DESC={
+    'Leadership & Management':'Natural authority and strategic vision make you an exceptional team leader and organisational builder.',
+    'Government & Politics':'Sun energy and Moolank 1 create affinity for public service, governance and policy-making roles.',
+    'Entrepreneurship':'Independence and initiative define your approach — you thrive when you own the vision and the risk.',
+    'Armed Forces':'Discipline, hierarchy and protective service align deeply with your number\'s planetary authority.',
+    'Gold & Gemstone Trade':'Sun energy creates strong commercial affinity for precious metals, gems and luxury goods.',
+    'Hospitality & Food':'Moon energy brings warmth, nurturing instinct and deep satisfaction in creating comfort for others.',
+    'Counselling & Psychology':'Deep empathy and intuitive listening make you a natural healer of emotional and psychological pain.',
+    'Nursing & Caregiving':'Your compassionate intelligence and practical care instinct create exceptional caregivers.',
+    'Arts & Music':'Moon\'s creative sensitivity finds fullest expression in artistic and musical disciplines.',
+    'Real Estate':'Your number brings strong commercial instinct for property, land and long-term tangible assets.',
+    'Education & Teaching':'Jupiter\'s expansive wisdom finds highest expression in transmitting knowledge and expanding minds.',
+    'Law & Justice':'Bhagyank 3 brings strong Jupiter energy — justice, ethics and principled argument are natural domains.',
+    'Banking & Finance':'Your numbers create a powerful affinity for managing, growing and multiplying financial resources.',
+    'Philosophy':'The deep thinker in you thrives in philosophical inquiry and the pursuit of fundamental truth.',
+    'Spirituality & Religion':'Jupiter\'s higher wisdom manifests beautifully in spiritual teaching, religious leadership and guidance.',
+    'Engineering & Architecture':'Systematic thinking, structural reasoning and long-term problem solving define Rahu\'s 4 energy.',
+    'IT & Technology':'Your number\'s analytical precision and love of systems makes technology a natural career domain.',
+    'Research & Analysis':'Methodical investigation and pattern recognition are core strengths of your planetary configuration.',
+    'Logistics':'Operational precision and large-scale coordination align with your organisational strengths.',
+    'Real Estate Development':'Long-term construction projects and large-scale development suit your building-focused energy.',
+    'Media & Journalism':'Mercury\'s speed and wit make media, reporting and storytelling natural career expressions.',
+    'Sales & Marketing':'The art of persuasive communication and human connection is where your Mercury energy shines.',
+    'Travel & Tourism':'Restlessness and curiosity make travel-related industries energetically aligned with your number.',
+    'Stock Trading':'Mercury\'s speed and pattern-recognition make financial markets a compelling and profitable arena.',
+    'Digital Startups':'Your adaptability and tech-forward thinking make the fast-moving startup ecosystem ideal territory.',
+    'Fashion & Design':'Venus energy creates exceptional aesthetic sensibility — beauty, fashion and design are natural domains.',
+    'Entertainment & Film':'Creative expression, glamour and storytelling are all amplified by Venus\'s artistic gifts.',
+    'Cosmetics & Beauty':'Your Venus-ruled number has innate affinity for beauty products, wellness and personal transformation.',
+    'Social Work':'Venus energy channels beautifully into compassionate service and community-building roles.',
+    'Research & Science':'Ketu\'s detached intellect and love of invisible truths make rigorous research a high calling.',
+    'Writing & Literature':'Your introspective depth and precise observation translate into powerful, enduring written work.',
+    'Astrology & Mysticism':'Ketu\'s mystical energy makes you a natural student and teacher of esoteric and metaphysical systems.',
+    'Finance & Banking':'Saturn\'s discipline and long-term thinking combine to create exceptional financial leadership.',
+    'Law & Courts':'Saturn\'s sense of justice and authority create powerful legal thinkers and respected practitioners.',
+    'Mining & Heavy Industry':'Your Saturn-ruled number aligns with industries that require sustained effort and work with raw earth.',
+    'Import/Export':'Global trade, logistics and cross-border commerce suit your strategic commercial instincts.',
+    'Real Estate Investment':'Patience, discipline and long-term thinking make real estate investment exceptionally aligned.',
+    'Military & Defense':'Mars energy gives you strategic drive, physical courage and natural leadership under pressure.',
+    'Surgery & Medicine':'Mars precision and fearlessness in high-stakes situations make surgical and medical roles natural.',
+    'Sports & Athletics':'Mars is the planet of physical power — competitive athletics and sports leadership are home ground.',
+    'Politics':'Your number brings charisma, strategic will and the drive to lead and transform at scale.',
+    'Social Activism & NGO':'Mars energy channelled into passionate advocacy and social transformation creates powerful change-makers.',
+  };
+
+  function buildCareer(){
+    var grid = qs('careerGrid');
+    var cols=[
+      {num:birthNum, planet:birthPlanet, label:'Moolank '+birthNum+' Career Domains', domains:CAREER_DOMAINS[birthNum]||[]},
+      {num:destNum,  planet:destPlanet,  label:'Bhagyank '+destNum+' Career Domains', domains:CAREER_DOMAINS[destNum]||[]},
+    ];
+    cols.forEach(function(col){
+      var c=el('div','career-col');
+      var icons=['🏛','📊','🎓','✈','💻','🎨','🔬','💰','⚖'];
+      var hdr=
+        '<div class="career-col-hdr">'+
+          '<div class="career-col-num">'+col.num+'</div>'+
+          '<div>'+
+            '<div style="font-size:15px;">'+col.label+'</div>'+
+            '<div style="font-size:12px;color:var(--text3);font-family:sans-serif;">Ruled by '+col.planet+'</div>'+
+          '</div>'+
+        '</div>';
+      var domains=col.domains.map(function(d,i){
+        return '<div class="career-domain">'+
+          '<div class="career-domain-icon">'+(icons[i%icons.length])+'</div>'+
+          '<div class="career-domain-text">'+
+            '<div class="career-domain-name">'+d+'</div>'+
+            '<div class="career-domain-desc">'+(CAREER_DESC[d]||'A natural domain aligned with your planetary ruler.')+'</div>'+
+          '</div>'+
+        '</div>';
+      }).join('');
+      c.innerHTML=hdr+domains;
+      grid.appendChild(c);
+    });
+  }
+
+  // ── 6. RELATIONSHIP ───────────────────────────────────────────
+  var COMPAT_NOTES={
+    1:'Solar confidence resonates — a naturally energising pairing.',
+    2:'Lunar sensitivity balances your drive; emotional depth shared.',
+    3:'Jupiter\'s optimism creates an expansive, growth-oriented bond.',
+    4:'Rahu\'s unconventional energy can either fascinate or frustrate.',
+    5:'Mercury\'s agility brings wit and intellectual chemistry.',
+    6:'Venus softens edges and creates a harmonious domestic life.',
+    7:'Ketu\'s mystical detachment is calming but can feel elusive.',
+    8:'Saturn\'s discipline creates a stable, goal-aligned partnership.',
+    9:'Mars brings passion, courage and a shared drive for impact.',
+  };
+
+  function buildRelationship(){
+    qs('birthNumRel').textContent = birthNum;
+    qs('birthPlanetRel').textContent = birthPlanet;
+
+    var compat = COMPAT_PARTNERS[birthNum]||{best:[],good:[],avoid:[]};
+    var container = qs('compatContainer');
+
+    [
+      {key:'best',label:'Best Match',icon:'★'},
+      {key:'good',label:'Good Match',icon:'◈'},
+      {key:'avoid',label:'Approach With Care',icon:'△'},
+    ].forEach(function(grp){
+      var nums = compat[grp.key]||[];
+      if(!nums.length) return;
+      var g=el('div','compat-group');
+      g.innerHTML='<div class="compat-group-label '+grp.key+'">'+grp.icon+' '+grp.label+'</div>';
+      var cards=el('div','compat-cards');
+      nums.forEach(function(n){
+        var planet=getPlanet(n);
+        var card=el('div','compat-card '+grp.key);
+        card.innerHTML=
+          '<div class="compat-num">'+n+'</div>'+
+          '<div class="compat-planet">'+planet+'</div>'+
+          '<div class="compat-note">'+(COMPAT_NOTES[n]||'Unique energetic dynamic.')+'</div>';
+        cards.appendChild(card);
+      });
+      g.appendChild(cards);
+      container.appendChild(g);
+    });
+  }
+
+  // ── 7. REMEDIES ───────────────────────────────────────────────
+  function buildRemedies(){
+    var remedies = REMEDIES[birthNum]||[];
+    var grid = qs('remediesGrid');
+    remedies.forEach(function(r,i){
+      var card=el('div','remedy-card');
+      card.setAttribute('role','checkbox');
+      card.setAttribute('aria-checked','false');
+      card.innerHTML=
+        '<div class="remedy-check" aria-hidden="true">✓</div>'+
+        '<div class="remedy-num">'+(i+1)+'</div>'+
+        '<div class="remedy-text">'+r+'</div>';
+      card.addEventListener('click',function(){
+        card.classList.toggle('checked');
+        card.setAttribute('aria-checked', card.classList.contains('checked')?'true':'false');
+      });
+      grid.appendChild(card);
+    });
+  }
+
+  // ── 8. NAME ANALYSIS ─────────────────────────────────────────
+  var LUCKY_NUMS_MSG={
+    1:'Numbers 1, 2, 4, 9 are most harmonious with your birth and destiny configuration.',
+    2:'Numbers 1, 2, 7 resonate most deeply with your Moon-influenced chart.',
+    3:'Numbers 1, 3, 6, 9 align with Jupiter\'s generous expansive frequency.',
+    4:'Numbers 1, 2, 4, 8 provide the most stable energetic foundation for your name.',
+    5:'Numbers 1, 3, 5, 9 carry Mercury\'s quicksilver energy aligned to your core.',
+    6:'Numbers 3, 6, 9 create the most harmonious resonance with your Venus energy.',
+    7:'Numbers 1, 2, 7 support Ketu\'s introspective and spiritually attuned path.',
+    8:'Numbers 2, 4, 6, 8 align with Saturn\'s methodical, disciplined frequency.',
+    9:'Numbers 1, 3, 5, 9 amplify Mars energy and support your humanitarian drive.',
+  };
+
+  function generateNameVariants(n){
+    var name = n.trim();
+    var parts = name.split(/\s+/);
+    var first = parts[0]||name;
+    var rest = parts.slice(1).join(' ');
+    var v=[];
+
+    // Variant 1: add 'a' to first name if ends consonant
+    var v1=first;
+    if(!/[aeiouAEIOU]$/.test(first)) v1=first+'a';
+    else v1=first.replace(/.$/, function(c){ return c.toUpperCase()==='A'?c+'h':c;});
+    v.push((v1+(rest?' '+rest:'')).trim());
+
+    // Variant 2: double last vowel of first name
+    var v2=first.replace(/([aeiouAEIOU])(?=[^aeiouAEIOU]*$)/,function(m){return m+m;});
+    v.push((v2+(rest?' '+rest:'')).trim());
+
+    // Variant 3: change 'i'→'ee' or add suffix 'h' for male names / 'a' otherwise
+    var v3=first;
+    if(/i$/i.test(first)) v3=first.replace(/i$/i,'ee');
+    else if(/ee$/i.test(first)) v3=first.replace(/ee$/i,'i');
+    else v3=first+(rest?'':(/[aeiouAEIOU]$/.test(first)?'h':'i'));
+    v.push((v3+(rest?' '+rest:'')).trim());
+
+    // Deduplicate and cap at 3
+    var seen=new Set();seen.add(name.toLowerCase());
+    var result=[];
+    v.forEach(function(vv){
+      if(!seen.has(vv.toLowerCase())){seen.add(vv.toLowerCase());result.push(vv);}
+    });
+    while(result.length<3) result.push(result[result.length-1]||name);
+    return result.slice(0,3);
+  }
+
+  function buildNameAnalysis(){
+    var section = qs('nameAnalysisSection');
+    var status = getAlignmentStatus(pct);
+    var harmonises = status==='aligned';
+    var cdEntry = CD[nameRaw];
+
+    var compoundNote='';
+    if(cdEntry){
+      compoundNote='<p style="font-size:13px;font-family:sans-serif;color:var(--text2);line-height:1.7;margin-top:.75rem;">'+
+        'Your name\'s compound number is <strong>'+nameRaw+'</strong> — <em>'+cdEntry.l+'</em>. '+
+        (cdEntry.q==='g'?'This is a highly auspicious compound number that amplifies success and positive outcomes.':
+         cdEntry.q==='b'?'This compound carries challenging vibrations. A correction to a more auspicious compound is advisable.':
+         'This compound number carries a neutral quality — stable but without strong momentum either way.')+
+      '</p>';
+    }
+
+    var variants=generateNameVariants(name);
+    var variantNums = variants.map(function(v){
+      var info=getNameNum(v); return {name:v, num:info.reduced, raw:info.raw, planet:getPlanet(info.reduced)};
+    });
+
+    var lcMsg = LUCKY_NUMS_MSG[birthNum]||'';
+
+    section.innerHTML=
+      '<div class="grid-2" style="gap:1.5rem;margin-bottom:1.5rem;">'+
+        '<div class="card">'+
+          '<div class="card-title">Current Name Analysis</div>'+
+          '<div style="display:flex;align-items:center;gap:1rem;margin-bottom:.75rem;">'+
+            '<div style="font-size:48px;color:var(--gold);line-height:1;">'+nameNum+'</div>'+
+            '<div>'+
+              '<div style="font-size:16px;">'+name+'</div>'+
+              '<div style="font-size:13px;color:var(--text2);font-family:sans-serif;">Chaldean value: '+nameRaw+' → reduces to '+nameNum+'</div>'+
+              '<div style="font-size:13px;color:var(--text2);font-family:sans-serif;">Ruled by <strong>'+namePlanet+'</strong></div>'+
+            '</div>'+
+          '</div>'+
+          (cdEntry?'<div style="background:var(--gold-l);border:1px solid var(--gold-b);border-radius:var(--r);padding:.75rem 1rem;font-size:12.5px;font-family:sans-serif;color:var(--text2);">'+
+            '<strong style="color:var(--gold);">Compound '+nameRaw+':</strong> '+cdEntry.l+
+          '</div>':'')+ compoundNote+
+        '</div>'+
+        '<div class="card">'+
+          '<div class="card-title">Alignment Verdict</div>'+
+          '<div class="align-banner '+status+'" style="margin-bottom:.75rem;padding:1rem 1.25rem;">'+
+            '<div class="align-text">'+
+              '<div class="align-title '+status+'">'+(harmonises?'✦ Harmonious':'⚠ Correction Advised')+'</div>'+
+              '<div class="align-desc '+status+'">'+(harmonises?
+                'Your name\'s vibrational frequency resonates with your core numbers. The current spelling is energetically supportive.':
+                'Your name creates vibrational friction against your birth and destiny energies. The adjustments below are calculated to significantly improve alignment.')+
+              '</div>'+
+            '</div>'+
+            '<div class="align-pct-badge '+status+'">'+pct+'%</div>'+
+          '</div>'+
+          '<p style="font-size:13px;font-family:sans-serif;color:var(--text2);line-height:1.7;">'+lcMsg+'</p>'+
+        '</div>'+
+      '</div>'+
+      '<div class="sec-label" style="margin-top:0;">'+
+        (harmonises?'Your Name is Well-Aligned — Alternative Spellings for Reference':'Recommended Name Spellings — Chaldean Optimised')+
+      '</div>'+
+      '<p style="font-size:13px;font-family:sans-serif;color:var(--text2);margin-bottom:1.25rem;line-height:1.7;">'+
+        (harmonises?
+          'Your current name is already aligned. The variants below show how minor spelling changes shift compound numbers — useful for branding or business names.':
+          'These spelling variants alter the compound Chaldean value of your name, shifting it toward more auspicious vibrations. Consult a numerologist before making a legal name change.')+
+      '</p>'+
+      '<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;">'+
+        variantNums.map(function(v,i){
+          var vcd=CD[v.raw];
+          return '<div class="name-variant">'+
+            '<div class="name-variant-num">'+v.num+'</div>'+
+            '<div class="name-variant-info">'+
+              '<div class="name-variant-name">'+v.name+'</div>'+
+              '<div class="name-variant-meta">'+v.planet+' · Compound '+v.raw+
+                (vcd?' · '+vcd.l.slice(0,28)+(vcd.l.length>28?'…':''):'')+
+              '</div>'+
+            '</div>'+
+          '</div>';
+        }).join('')+
+      '</div>';
+  }
+
+  // ── 9. SHARE BUTTONS ─────────────────────────────────────────
+  function buildShareButtons(){
+    var pyNum = getPersonalYear(dob, CURRENT_YEAR);
+    var summary='I just received my personalised Chaldean Numerology Report from NameAligned.com!'+
+      '\n\nMoolank: '+birthNum+' ('+birthPlanet+')'+
+      '\nBhagyank: '+destNum+' ('+destPlanet+')'+
+      '\nPersonal Year '+CURRENT_YEAR+': '+pyNum+' — '+YEAR_THEMES[pyNum]+
+      '\n\nGet your free analysis: https://namealigned.com/analyzer.html';
+
+    var waUrl='https://wa.me/?text='+encodeURIComponent(summary);
+    qs('waShareBtn').href=waUrl;
+
+    var referralMsg='Hey! I just checked my numerology numbers — it\'s surprisingly accurate. '+
+      'Try the free Chaldean analyser: https://namealigned.com/analyzer.html';
+    qs('referralWa').href='https://wa.me/?text='+encodeURIComponent(referralMsg);
+  }
+
+  // Invalid session nav toggle
+  var ham2=document.getElementById('navHamburgerInvalid');
+  var mob2=document.getElementById('navMobileInvalid');
+  if(ham2&&mob2) ham2.addEventListener('click',function(){mob2.classList.toggle('open');});
+
+})();
+</script>
+</body>
+</html>

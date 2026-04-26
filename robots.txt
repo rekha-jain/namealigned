@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+
+# Block internal/utility pages from indexing
+Disallow: /generate-report.html
+
+Sitemap: https://namealigned.com/sitemap.xml

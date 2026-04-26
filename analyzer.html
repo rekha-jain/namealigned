@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Free Numerology Name Analysis — Chaldean System | NameAligned.com</title>
+<meta name="description" content="Get your free Chaldean numerology analysis. Name alignment score, lucky colours, career domains, relationship compass, personal year preview and remedies — all free."/>
+<link rel="stylesheet" href="assets/style.css"/>
+<style>
+.tool-wrap{max-width:760px;margin:0 auto;padding:2rem 1rem 5rem}
+.step-tabs{display:flex;background:var(--bg2);border-bottom:1px solid var(--gold-b);position:sticky;top:var(--nav-h);z-index:99}
+.step-tab{flex:1;padding:14px 8px;text-align:center;font-size:11px;font-family:sans-serif;letter-spacing:.07em;text-transform:uppercase;color:var(--text3);border-bottom:2px solid transparent;cursor:pointer;transition:all .2s;user-select:none}
+.step-tab.active{color:var(--gold);border-bottom-color:var(--gold)}
+.step-tab.done{color:var(--green)}
+.step-tab .sn{display:inline-block;width:20px;height:20px;border-radius:50%;border:1px solid currentColor;font-size:10px;line-height:20px;text-align:center;margin-right:5px}
+.align-hero{text-align:center;padding:2rem 1.25rem 1.75rem;border-radius:var(--rl);margin-bottom:1.25rem;border:1px solid transparent}
+.align-hero.is-aligned{background:linear-gradient(135deg,rgba(42,122,42,.12),rgba(42,122,42,.06));border-color:#2a7a2a}
+.align-hero.is-neutral{background:linear-gradient(135deg,rgba(240,180,41,.10),rgba(240,180,41,.05));border-color:var(--gold-b)}
+.align-hero.is-misaligned{background:linear-gradient(135deg,rgba(163,45,45,.12),rgba(163,45,45,.06));border-color:#c05050}
+.ah-eyebrow{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--text3);font-family:sans-serif;margin-bottom:8px}
+.ah-name{font-size:26px;letter-spacing:.05em;color:var(--text);margin-bottom:14px;font-weight:normal}
+.ah-badge{display:inline-flex;align-items:center;gap:7px;padding:7px 22px;border-radius:30px;font-size:12px;font-family:sans-serif;font-weight:700;letter-spacing:.1em;text-transform:uppercase;border:2px solid currentColor;margin-bottom:10px}
+.ah-badge.aligned{color:#2a7a2a;border-color:#2a7a2a;background:rgba(42,122,42,.07)}
+.ah-badge.neutral{color:var(--amber);border-color:var(--amber);background:rgba(133,79,11,.07)}
+.ah-badge.misaligned{color:var(--red);border-color:var(--red);background:rgba(163,45,45,.07)}
+.pct-ring{display:inline-flex;flex-direction:column;align-items:center;justify-content:center;width:76px;height:76px;border-radius:50%;border:3px solid currentColor;flex-shrink:0}
+.pct-ring.high{color:#2a7a2a;background:rgba(42,122,42,.08)}
+.pct-ring.mid{color:var(--amber);background:rgba(133,79,11,.08)}
+.pct-ring.low{color:var(--red);background:rgba(163,45,45,.08)}
+.pct-ring .pr-val{font-size:20px;font-family:sans-serif;font-weight:700;line-height:1.1}
+.pct-ring .pr-lbl{font-size:9px;font-family:sans-serif;letter-spacing:.04em;text-transform:uppercase;opacity:.7}
+.lb-row{display:flex;align-items:flex-end;gap:3px;flex-wrap:wrap;margin-bottom:10px}
+.lb-tile{display:flex;flex-direction:column;align-items:center}
+.lb-char{width:36px;height:36px;display:flex;align-items:center;justify-content:center;font-size:14px;font-family:sans-serif;font-weight:700;border:1.5px solid var(--gold-b);border-radius:8px;background:var(--card);color:var(--text)}
+.lb-val{font-size:11px;color:var(--gold);font-family:sans-serif;margin-top:3px;font-weight:600;text-align:center;width:36px}
+.lb-op{font-size:13px;color:var(--text3);padding:0 1px;align-self:flex-end;padding-bottom:14px;font-family:sans-serif}
+.lb-space{width:16px;align-self:flex-end;padding-bottom:14px}
+.lb-eq-row{font-family:sans-serif;font-size:13px;color:var(--text2);margin-top:10px;display:flex;align-items:center;flex-wrap:wrap;gap:6px}
+.lb-raw{font-size:22px;font-weight:bold;color:var(--text)}
+.lb-reduced{font-size:22px;font-weight:bold;color:var(--gold)}
+.lb-cpill{padding:3px 11px;border-radius:20px;font-size:11px;font-family:sans-serif;font-weight:600}
+.lb-cpill.g{background:var(--green-bg);color:var(--green)}.lb-cpill.b{background:var(--red-bg);color:var(--red)}.lb-cpill.n{background:var(--gold-l);color:var(--gold)}
+.step-check{background:var(--card);border:1px solid var(--border);border-radius:var(--rl);padding:1rem 1.25rem;margin-bottom:10px;display:flex;align-items:flex-start;gap:14px}
+.sc-num{width:32px;height:32px;min-width:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-family:sans-serif;font-weight:700;margin-top:1px}
+.sc-num.pass{background:var(--green);color:#fff}.sc-num.partial{background:var(--amber-bg);color:var(--amber);border:2px solid #e0b070}.sc-num.fail{background:var(--red-bg);color:var(--red);border:2px solid #e8a0a0}.sc-num.info{background:var(--blue);color:#fff}
+.sc-body{flex:1}.sc-title{font-size:13px;color:var(--text);font-family:sans-serif;font-weight:600;margin-bottom:3px}.sc-detail{font-size:12px;color:var(--text2);font-family:sans-serif;line-height:1.55}
+.sc-tag{display:inline-block;padding:2px 11px;border-radius:20px;font-size:10px;font-family:sans-serif;font-weight:700;letter-spacing:.07em;text-transform:uppercase;margin-top:6px}
+.sc-tag.pass{background:var(--green-bg);color:var(--green)}.sc-tag.partial{background:var(--amber-bg);color:var(--amber)}.sc-tag.fail{background:var(--red-bg);color:var(--red)}.sc-tag.neutral{background:var(--gold-l);color:var(--gold)}
+.loshu-wrap{display:flex;gap:2rem;align-items:flex-start;flex-wrap:wrap}
+.loshu-grid{display:grid;grid-template-columns:repeat(3,52px);gap:4px}
+.lc{width:52px;height:52px;display:flex;align-items:center;justify-content:center;font-size:17px;font-family:'Georgia',serif;border-radius:6px;border:1px solid var(--gold-b)}
+.lc.present{background:var(--gold-l);color:var(--text);font-weight:bold}
+.lc.missing{background:var(--card2);color:var(--text3);text-decoration:line-through}
+.attr-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(148px,1fr));gap:8px}
+.attr-item{background:var(--gold-l);border:1px solid var(--gold-b);border-radius:var(--r);padding:.65rem .9rem;display:flex;align-items:center;gap:9px}
+.attr-label{font-size:9px;letter-spacing:.07em;text-transform:uppercase;color:var(--text3);font-family:sans-serif;margin-bottom:2px}
+.attr-val{font-size:12.5px;color:var(--text);font-family:sans-serif}
+.py-mini-row{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+@media(max-width:440px){.py-mini-row{grid-template-columns:1fr}}
+.py-mini{border-radius:var(--r);background:var(--gold-l);border:1px solid var(--gold-b);padding:.75rem 1rem}
+.py-mini-year{font-size:10px;font-family:sans-serif;color:var(--text3);letter-spacing:.06em;text-transform:uppercase;margin-bottom:3px}
+.py-mini-num{font-size:22px;color:var(--text);line-height:1.1;margin-bottom:2px}
+.py-mini-planet{font-size:11px;color:var(--gold);font-family:sans-serif;margin-bottom:4px}
+.py-mini-theme{font-size:11px;color:var(--text2);font-family:sans-serif;line-height:1.5}
+.compat-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:.5rem}
+@media(max-width:480px){.compat-3{grid-template-columns:1fr}}
+.compat-col{border-radius:var(--r);padding:.7rem 1rem}
+.compat-col.best{background:var(--green-bg);border:1px solid #b2d48a}
+.compat-col.good{background:var(--gold-l);border:1px solid var(--gold-b)}
+.compat-col.caution{background:var(--red-bg);border:1px solid #f7c1c1}
+.compat-col-hd{font-size:9.5px;letter-spacing:.07em;text-transform:uppercase;font-family:sans-serif;font-weight:700;margin-bottom:6px}
+.compat-col.best .compat-col-hd{color:var(--green)}.compat-col.good .compat-col-hd{color:var(--amber)}.compat-col.caution .compat-col-hd{color:var(--red)}
+.compat-nums{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:5px}
+.compat-np{display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:50%;font-family:sans-serif;font-size:13px;font-weight:700}
+.compat-col.best .compat-np{background:rgba(42,122,42,.18);color:var(--green);border:1.5px solid #b2d48a}
+.compat-col.good .compat-np{background:rgba(240,180,41,.15);color:var(--amber);border:1.5px solid #d4c070}
+.compat-col.caution .compat-np{background:rgba(163,45,45,.18);color:var(--red);border:1.5px solid #f7c1c1}
+.compat-sub{font-size:10.5px;font-family:sans-serif;line-height:1.5}
+.compat-col.best .compat-sub{color:var(--green)}.compat-col.good .compat-sub{color:var(--amber)}.compat-col.caution .compat-sub{color:var(--red)}
+.remedy-item{display:flex;align-items:flex-start;gap:9px;padding:.55rem .9rem;background:var(--gold-l);border-radius:var(--r);border:1px solid var(--gold-b);margin-bottom:6px}
+.remedy-dot{width:5px;height:5px;border-radius:50%;background:var(--gold);flex-shrink:0;margin-top:6px}
+.remedy-text{font-size:12.5px;font-family:sans-serif;color:var(--text);line-height:1.6}
+.sug-card{background:var(--card);border:1.5px solid var(--border);border-radius:var(--rl);padding:1.25rem;margin-bottom:12px;cursor:pointer;transition:border-color .2s,box-shadow .2s;position:relative}
+.sug-card:hover{border-color:var(--gold);box-shadow:0 3px 16px rgba(240,180,41,.13)}
+.sug-card.selected{border-color:var(--gold);background:var(--gold-l)}
+.sug-sel-mark{position:absolute;top:13px;right:14px;font-size:17px;color:var(--gold);display:none}
+.sug-card.selected .sug-sel-mark{display:block}
+.sug-name{font-size:22px;color:var(--text);margin-bottom:8px}
+.sug-checks{display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-top:8px}
+@media(max-width:420px){.sug-checks{grid-template-columns:1fr}}
+.sci{display:flex;align-items:center;gap:5px;padding:4px 8px;border-radius:6px;font-size:11px;font-family:sans-serif}
+.sci.pass{background:var(--green-bg);color:var(--green)}.sci.partial{background:var(--amber-bg);color:var(--amber)}.sci.fail{background:var(--red-bg);color:var(--red)}
+/* upgrade CTA */
+.upgrade-card{background:linear-gradient(135deg,#03090f,#060d18);border-radius:var(--rl);padding:2.5rem;text-align:center;margin-top:2rem;color:#f0ece0}
+.upgrade-card h3{font-size:22px;margin-bottom:.5rem}
+.upgrade-card p{font-size:14px;color:#b0a898;margin-bottom:1.5rem;font-style:italic}
+.upgrade-features{display:flex;flex-wrap:wrap;justify-content:center;gap:.5rem;margin-bottom:1.5rem}
+.upgrade-feat{background:rgba(240,180,41,.15);border:1px solid rgba(240,180,41,.3);border-radius:20px;padding:4px 14px;font-size:12px;font-family:sans-serif;color:#f0ece0}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="container nav-inner">
+    <a href="index.html" class="nav-logo">☽ <span>Numerology</span>.life</a>
+    <ul class="nav-links">
+      <li><a href="analyzer.html" style="color:var(--gold)">Free Analysis</a></li>
+      <li><a href="blog/index.html">Blog</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="report.html" class="nav-cta">Full Report ₹199</a></li>
+    </ul>
+    <div class="nav-hamburger" id="navHamburger"><span></span><span></span><span></span></div>
+  </div>
+  <div class="nav-mobile" id="navMobile">
+    <a href="index.html">Home</a>
+    <a href="report.html">Full Report ₹199</a>
+    <a href="blog/index.html">Blog</a>
+  </div>
+</nav>
+
+<!-- Step tabs -->
+<div class="step-tabs" id="stepTabs">
+  <div class="step-tab active" id="tab1"><span class="sn">1</span>Details</div>
+  <div class="step-tab" id="tab2"><span class="sn">2</span>Analysis</div>
+  <div class="step-tab" id="tab3" style="opacity:.4;pointer-events:none"><span class="sn">3</span>Full Report</div>
+</div>
+
+<div class="tool-wrap">
+
+  <!-- ── PAGE 1: INPUT ─────────────────────────────────────────── -->
+  <div id="page1" class="page active">
+    <div class="progress-wrap mb-3"><div class="progress-bar" style="width:33%"></div></div>
+    <div class="card">
+      <div class="card-title">Step 1 — Your details</div>
+      <div class="form-grid">
+        <div class="fg">
+          <label>Your current name</label>
+          <input type="text" id="currentName" placeholder="e.g. Rahul Sharma"/>
+        </div>
+        <div class="fg">
+          <label>Date of birth</label>
+          <input type="date" id="dob"/>
+        </div>
+        <div class="fg">
+          <label>Gender</label>
+          <select id="gender">
+            <option value="female">Female</option>
+            <option value="male">Male</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+        <div class="fg">
+          <label>Primary life focus</label>
+          <select id="focus">
+            <option value="overall">Overall life success</option>
+            <option value="career">Career & business</option>
+            <option value="wealth">Wealth & abundance</option>
+            <option value="love">Love & relationships</option>
+            <option value="health">Health & well-being</option>
+            <option value="spiritual">Spiritual growth</option>
+          </select>
+        </div>
+        <div class="fg">
+          <label>Mobile number <span style="color:var(--text3)">(optional)</span></label>
+          <input type="tel" id="mobileNum" placeholder="10 digits, no country code" maxlength="15"/>
+        </div>
+        <div class="fg full">
+          <label>Brief context <span style="color:var(--text3)">(optional)</span></label>
+          <textarea id="context" placeholder="e.g. Running a small business, recently married…"></textarea>
+        </div>
+      </div>
+      <div id="errStep1" class="err-box" style="display:none"></div>
+      <button class="btn btn-primary btn-full mt-2" onclick="goToStep2()">Continue → Calculate my numbers</button>
+    </div>
+  </div>
+
+  <!-- ── PAGE 2: ANALYSIS RESULTS ──────────────────────────────── -->
+  <div id="page2" class="page" style="display:none">
+    <div class="progress-wrap mb-3"><div class="progress-bar" style="width:66%"></div></div>
+
+    <!-- Alignment hero -->
+    <div class="align-hero" id="alignHero">
+      <div class="ah-eyebrow">Name Analysis Result for</div>
+      <div class="ah-name" id="ahName"></div>
+      <div style="display:flex;align-items:center;justify-content:center;gap:14px;flex-wrap:wrap">
+        <span class="ah-badge" id="ahBadge"></span>
+        <div class="pct-ring" id="ahRing"><span class="pr-val" id="ahPct">—</span><span class="pr-lbl">Match</span></div>
+      </div>
+      <div id="ahSub" style="font-size:13px;color:var(--text2);font-family:sans-serif;margin-top:8px"></div>
+    </div>
+
+    <!-- Core numbers -->
+    <div class="card">
+      <div class="card-title">Core numbers · Moolank & Bhagyank</div>
+      <div class="num-grid" id="coreNums"></div>
+    </div>
+
+    <!-- Letter breakdown -->
+    <div class="card">
+      <div class="card-title">Chaldean letter-to-number breakdown</div>
+      <div id="letterGrid"></div>
+      <div id="lbEq"></div>
+    </div>
+
+    <!-- 4-step checks -->
+    <div class="sec-label">Alignment analysis</div>
+    <div id="stepChecks"></div>
+
+    <!-- Lo Shu -->
+    <div class="sec-label">Lo Shu grid · missing numbers</div>
+    <div class="card" style="padding:1.25rem 1.75rem">
+      <p style="font-size:13px;color:var(--text2);font-family:sans-serif;margin-bottom:14px">Numbers present in your date of birth. Missing numbers reveal areas needing conscious activation.</p>
+      <div class="loshu-wrap">
+        <div class="loshu-grid" id="loshuGrid"></div>
+        <div id="loshuLegend" style="font-size:12px;font-family:sans-serif;color:var(--text2);line-height:1.9"></div>
+      </div>
+    </div>
+
+    <!-- Lucky Attributes -->
+    <div class="sec-label">Lucky attributes · Moolank planet</div>
+    <div class="card">
+      <p style="font-size:13px;color:var(--text2);font-family:sans-serif;margin-bottom:14px">Your Moolank's planetary ruler determines your most auspicious colours, gemstone, metal and day.</p>
+      <div id="luckyAttrs"></div>
+      <div id="luckyAttrsBhagyank" style="margin-top:10px;font-size:11px;font-family:sans-serif;color:var(--text3);font-style:italic"></div>
+    </div>
+
+    <!-- Personal Year Preview -->
+    <div class="sec-label">Next 3 personal years</div>
+    <div class="card">
+      <p style="font-size:13px;color:var(--text2);font-family:sans-serif;margin-bottom:12px">Your personal year shifts each January. Full 5-year AI forecast included in the ₹199 report.</p>
+      <div id="pyPreview"></div>
+    </div>
+
+    <!-- Career Domains -->
+    <div class="sec-label">Career domains · aligned to your numbers</div>
+    <div class="card">
+      <div id="careerSection"></div>
+    </div>
+
+    <!-- Relationship Compass -->
+    <div class="sec-label">Relationship compass</div>
+    <div class="card">
+      <p style="font-size:13px;color:var(--text2);font-family:sans-serif;margin-bottom:10px">Based on Chaldean friendly-number pairs and Moolank vibration harmony.</p>
+      <div id="relCompat"></div>
+    </div>
+
+    <!-- Remedies -->
+    <div class="sec-label">Daily remedies · planetary activation</div>
+    <div class="card">
+      <p style="font-size:13px;color:var(--text2);font-family:sans-serif;margin-bottom:12px">Practical habits to harmonise with your planetary ruler. No ritual — just intentional action.</p>
+      <div id="remediesSection"></div>
+    </div>
+
+    <!-- Name suggestions -->
+    <div id="correctionWrap">
+      <div class="sec-label">Suggested name corrections</div>
+      <p style="font-size:13px;color:var(--text2);font-family:sans-serif;margin-bottom:14px">Minor spelling adjustments — same pronunciation, better numerological vibration.</p>
+      <div id="nameSuggestions"></div>
+    </div>
+
+    <!-- Email capture -->
+    <div class="email-banner mt-4" id="emailCapture">
+      <div style="font-size:24px;margin-bottom:8px">✉️</div>
+      <h3 style="font-size:18px;margin-bottom:6px">Save your analysis</h3>
+      <p>Enter your email to save this report and receive your personalised numerology tips.</p>
+      <div class="email-row" id="emailRow">
+        <input type="email" id="captureEmail" placeholder="your@email.com"/>
+        <button class="btn btn-gold btn-sm" onclick="captureEmail()">Save free →</button>
+      </div>
+      <div id="emailDone" style="display:none;color:#b0a898;font-family:sans-serif;font-size:13px">✓ Saved! Check your inbox.</div>
+    </div>
+
+    <!-- Upgrade CTA -->
+    <div class="upgrade-card">
+      <div style="font-size:28px;margin-bottom:12px">✦</div>
+      <h3>Unlock your complete 5-year destiny report</h3>
+      <p>Year-by-year AI forecast for career, love, wealth & health — plus your master daily remedy for the full 5-year arc.</p>
+      <div class="upgrade-features">
+        <span class="upgrade-feat">5-year AI forecast</span>
+        <span class="upgrade-feat">Year-by-year predictions</span>
+        <span class="upgrade-feat">Dos & Don'ts per year</span>
+        <span class="upgrade-feat">Master daily remedy</span>
+        <span class="upgrade-feat">Downloadable PDF</span>
+      </div>
+      <a href="report.html" id="upgradeBtn" class="btn btn-gold btn-lg">Get full report — ₹199 →</a>
+      <p style="font-size:11px;color:#6a5a4a;margin-top:10px;font-family:sans-serif">One-time payment · Instant delivery · No subscription</p>
+    </div>
+
+    <div style="display:flex;gap:10px;margin-top:1.5rem;flex-wrap:wrap">
+      <button class="btn btn-outline btn-sm" onclick="showPage(1)" style="flex:1">← Start over</button>
+    </div>
+  </div>
+
+</div><!-- /tool-wrap -->
+
+<script src="assets/numerology.js"></script>
+<script>
+// ── State ──────────────────────────────────────────────────────────────
+let S = {name:'',dob:'',gender:'',focus:'',context:'',mobile:'',
+  birthNum:0,destNum:0,nameNum:0,nameRaw:0,loshu:new Set(),missing:[]};
+
+// ── Init from URL params ────────────────────────────────────────────────
+window.addEventListener('DOMContentLoaded',()=>{
+  const p = new URLSearchParams(location.search);
+  if(p.get('name')) document.getElementById('currentName').value = p.get('name');
+  if(p.get('dob'))  document.getElementById('dob').value  = p.get('dob');
+  if(p.get('name') && p.get('dob')) setTimeout(goToStep2, 100);
+});
+
+function showPage(n){
+  document.getElementById('page1').style.display = n===1?'block':'none';
+  document.getElementById('page2').style.display = n===2?'block':'none';
+  document.querySelectorAll('.step-tab').forEach((t,i)=>{
+    t.classList.remove('active','done');
+    if(i+1===n) t.classList.add('active');
+    else if(i+1<n) t.classList.add('done');
+  });
+  if(n===3){ document.getElementById('tab3').style.opacity='1'; document.getElementById('tab3').style.pointerEvents='auto'; }
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function goToStep2(){
+  const name = document.getElementById('currentName').value.trim();
+  const dob  = document.getElementById('dob').value;
+  const err  = document.getElementById('errStep1');
+  if(!name){ err.style.display='block'; err.textContent='Please enter your name.'; return; }
+  if(!dob){ err.style.display='block'; err.textContent='Please select your date of birth.'; return; }
+  err.style.display='none';
+  S.name    = name;
+  S.dob     = dob;
+  S.gender  = document.getElementById('gender').value;
+  S.focus   = document.getElementById('focus').value;
+  S.context = document.getElementById('context').value.trim();
+  S.mobile  = document.getElementById('mobileNum').value.replace(/\D/g,'');
+  S.birthNum = getBirthNum(dob);
+  S.destNum  = getDestinyNum(dob);
+  const {raw,reduced} = getNameNum(name);
+  S.nameNum  = reduced; S.nameRaw = raw;
+  S.loshu    = getLoshuNums(dob);
+  S.missing  = [1,2,3,4,5,6,7,8,9].filter(n=>!S.loshu.has(n));
+  renderAnalysis();
+  showPage(2);
+}
+
+function renderAnalysis(){
+  const {name,birthNum,destNum,nameNum,nameRaw,loshu,missing,dob} = S;
+  const bf = FRIENDLY[birthNum]||[], df = FRIENDLY[destNum]||[];
+  const bothFriendly = bf.includes(nameNum) && df.includes(nameNum);
+  const oneFriendly  = bf.includes(nameNum) || df.includes(nameNum);
+  const pct = compatPct(nameNum,nameRaw,birthNum,destNum);
+  const status = getAlignmentStatus(pct);
+  const compound = CD[nameRaw];
+
+  // Alignment hero
+  document.getElementById('alignHero').className = 'align-hero is-'+status;
+  document.getElementById('ahName').textContent  = name.toUpperCase();
+  const badgeEl = document.getElementById('ahBadge');
+  badgeEl.textContent = status==='aligned'?'✓ ALIGNED':status==='neutral'?'~ NEUTRAL':'✗ NEEDS CORRECTION';
+  badgeEl.className   = 'ah-badge '+status;
+  const ring = document.getElementById('ahRing');
+  ring.className = 'pct-ring '+(pct>=70?'high':pct>=45?'mid':'low');
+  document.getElementById('ahPct').textContent = pct+'%';
+  document.getElementById('ahSub').textContent = status==='aligned'
+    ? 'Your name is numerologically aligned with your date of birth.'
+    : status==='neutral'
+      ? 'Your name has partial alignment. A minor correction can strengthen your vibration.'
+      : 'Your name vibration can be improved with a small spelling adjustment.';
+
+  // Core numbers
+  document.getElementById('coreNums').innerHTML = `
+    <div class="nc"><div class="nl">Moolank · Driver</div><div class="nv">${birthNum}</div><div class="ns">${getPlanet(birthNum)}</div><div style="font-size:9px;color:var(--text3);font-family:sans-serif;margin-top:3px">Unalterable</div></div>
+    <div class="nc"><div class="nl">Bhagyank · Destiny</div><div class="nv">${destNum}</div><div class="ns">${getPlanet(destNum)}</div><div style="font-size:9px;color:var(--text3);font-family:sans-serif;margin-top:3px">Life path</div></div>
+    <div class="nc"><div class="nl">Name Number</div><div class="nv">${nameNum}</div><div class="ns">${nameRaw}/${nameNum}</div><div style="font-size:9px;color:var(--text3);font-family:sans-serif;margin-top:3px">Changeable</div></div>
+    <div class="nc"><div class="nl">Missing Lo Shu</div><div class="nv" style="font-size:${missing.length?'18px':'32px'}">${missing.length?missing.join(', '):'None'}</div><div class="ns">${missing.length} gap${missing.length!==1?'s':''}</div></div>`;
+
+  // Letter breakdown
+  const parts = name.trim().split(/\s+/);
+  let tiles='<div class="lb-row">'; const vals=[];
+  parts.forEach((word,wi)=>{
+    if(wi>0) tiles+='<div class="lb-space"></div>';
+    [...word.toUpperCase()].forEach((ch,ci)=>{
+      const v=CHALDEAN[ch]||0; vals.push(v);
+      if(ci>0||wi>0) tiles+=`<div class="lb-op">+</div>`;
+      tiles+=`<div class="lb-tile"><div class="lb-char">${ch}</div><div class="lb-val">${v||''}</div></div>`;
+    });
+  });
+  tiles+='</div>';
+  document.getElementById('letterGrid').innerHTML=tiles;
+  const eqNums=vals.filter(v=>v>0).join(' + ');
+  const pill=compound?compound.q:'n', pillLabel=compound?compound.l:'Standard vibration';
+  document.getElementById('lbEq').innerHTML=`<div class="lb-eq-row"><span>${eqNums} =</span><span class="lb-raw">${nameRaw}</span><span style="color:var(--text3)">→</span><span class="lb-reduced">${nameNum}</span><span class="lb-cpill ${pill}">${nameRaw}/${nameNum} · ${pillLabel}</span></div>`;
+
+  // 4-step checks
+  const checks=[
+    {n:1,title:'Name Number Calculation',detail:`Compound: ${nameRaw} → Single digit: ${nameNum} (${getPlanet(nameNum)})`,pass:true,cls:'info'},
+    {n:2,title:'Friendship with Birth Numbers',
+     detail:bothFriendly?`Friendly to both Moolank ${birthNum} (${getPlanet(birthNum)}) and Bhagyank ${destNum} (${getPlanet(destNum)})`:
+       bf.includes(nameNum)?`Friendly to Moolank ${birthNum} · Neutral with Bhagyank ${destNum}`:
+       df.includes(nameNum)?`Neutral with Moolank ${birthNum} · Friendly to Bhagyank ${destNum}`:
+       `Not in friendly numbers for Moolank ${birthNum} or Bhagyank ${destNum}`,
+     pass:bothFriendly,partial:!bothFriendly&&oneFriendly},
+    {n:3,title:'Favourable Number Check',
+     detail:PREFERRED.includes(nameNum)?`${nameNum} is a preferred name number (1, 3, 5, 6, 9)`:`${nameNum} is not in the preferred set`,
+     pass:PREFERRED.includes(nameNum)},
+    {n:4,title:'Compound Number Quality',
+     detail:compound?`Compound ${nameRaw} — ${compound.l}`:`Compound ${nameRaw} — standard vibration`,
+     pass:compound?.q==='g'}
+  ];
+  document.getElementById('stepChecks').innerHTML=checks.map(c=>{
+    const nc=c.cls||( c.pass?'pass':c.partial?'partial':'fail');
+    const tag=c.cls?'neutral':c.pass?'pass':c.partial?'partial':'fail';
+    const tagT=c.cls?'INFO':c.pass?'PASS':c.partial?'PARTIAL':'FAIL';
+    return `<div class="step-check"><div class="sc-num ${nc}">${c.n}</div><div class="sc-body"><div class="sc-title">Step ${c.n}: ${c.title}</div><div class="sc-detail">${c.pass&&c.n>1?'✓ ':c.partial?'~ ':c.n>1?'✗ ':''}${c.detail}</div><span class="sc-tag ${tag}">${tagT}</span></div></div>`;
+  }).join('');
+
+  // Lo Shu
+  const loshuOrder=[4,9,2,3,5,7,8,1,6];
+  document.getElementById('loshuGrid').innerHTML=loshuOrder.map(n=>`<div class="lc ${loshu.has(n)?'present':'missing'}">${n}</div>`).join('');
+  let leg=`<span><b>Present</b> = in your DOB</span><br><span><b>Struck</b> = missing</span><br><br>`;
+  if(missing.length) missing.forEach(m=>{leg+=`<span>${m} — ${MISSING_MEANINGS[m]||''}</span><br>`;});
+  else leg+=`<span style="color:var(--green)">All 9 energies present ✓</span>`;
+  document.getElementById('loshuLegend').innerHTML=leg;
+
+  // Lucky Attributes
+  const ba=PLANET_ATTRS[birthNum]||PLANET_ATTRS[1];
+  document.getElementById('luckyAttrs').innerHTML=`<div class="attr-row">
+    <div class="attr-item"><span style="font-size:17px">🎨</span><div><div class="attr-label">Lucky colours</div><div class="attr-val">${ba.color}</div></div></div>
+    <div class="attr-item"><span style="font-size:17px">💎</span><div><div class="attr-label">Power gemstone</div><div class="attr-val">${ba.gem}</div></div></div>
+    <div class="attr-item"><span style="font-size:17px">📅</span><div><div class="attr-label">Lucky day</div><div class="attr-val">${ba.day}</div></div></div>
+    <div class="attr-item"><span style="font-size:17px">⚗️</span><div><div class="attr-label">Metal</div><div class="attr-val">${ba.metal}</div></div></div>
+    <div class="attr-item"><span style="font-size:17px">🌍</span><div><div class="attr-label">Element</div><div class="attr-val">${ba.element}</div></div></div>
+  </div>`;
+  if(destNum!==birthNum){
+    const da=PLANET_ATTRS[destNum]||PLANET_ATTRS[1];
+    document.getElementById('luckyAttrsBhagyank').textContent=`Also for Bhagyank ${destNum} · ${getPlanet(destNum)}: ${da.color} · ${da.gem} · ${da.day}`;
+  }
+
+  // Personal Year Preview
+  const yr=new Date().getFullYear();
+  document.getElementById('pyPreview').innerHTML=`<div class="py-mini-row">${[0,1,2].map(off=>{
+    const y=yr+off, py=getPersonalYear(dob,y);
+    const label=off===0?`This year (${y})`:off===1?`Next year (${y})`:`Year after (${y})`;
+    return `<div class="py-mini"><div class="py-mini-year">${label}</div><div class="py-mini-num">Year ${py}</div><div class="py-mini-planet">${getPlanet(py)}</div><div class="py-mini-theme">${YEAR_THEMES[py]||'Growth and evolution'}</div></div>`;
+  }).join('')}</div>`;
+
+  // Career Domains
+  const bC=CAREER_DOMAINS[birthNum]||[], dC=CAREER_DOMAINS[destNum]||[];
+  const extra=dC.filter(c=>!bC.includes(c));
+  document.getElementById('careerSection').innerHTML=`
+    <div style="font-size:12px;font-family:sans-serif;color:var(--text2);margin-bottom:10px">Aligned to <strong>Moolank ${birthNum} · ${getPlanet(birthNum)}</strong>${destNum!==birthNum?` and <strong>Bhagyank ${destNum} · ${getPlanet(destNum)}</strong>`:''}</div>
+    <div class="chips" style="margin-bottom:${extra.length?'10px':'0'}">${bC.map(c=>`<span class="chip" style="background:var(--green-bg);color:var(--green);border-color:#b2d48a">${c}</span>`).join('')}</div>
+    ${extra.length?`<div style="font-size:11px;font-family:sans-serif;color:var(--text3);margin-bottom:6px">Also via Bhagyank ${destNum}:</div><div class="chips">${extra.map(c=>`<span class="chip" style="background:var(--blue-bg);color:var(--blue);border-color:#b0c0e8">${c}</span>`).join('')}</div>`:''}`;
+
+  // Relationship Compass
+  const rc=COMPAT_PARTNERS[birthNum]||{best:[],good:[],avoid:[]};
+  document.getElementById('relCompat').innerHTML=`
+    <div style="font-size:12px;font-family:sans-serif;color:var(--text2);margin-bottom:8px">For Moolank <strong>${birthNum} · ${getPlanet(birthNum)}</strong></div>
+    <div class="compat-3">
+      <div class="compat-col best"><div class="compat-col-hd">✦ Most compatible</div><div class="compat-nums">${rc.best.map(n=>`<div class="compat-np">${n}</div>`).join('')}</div><div class="compat-sub">${rc.best.map(n=>getPlanet(n)).join(' · ')}</div></div>
+      <div class="compat-col good"><div class="compat-col-hd">~ Good match</div><div class="compat-nums">${rc.good.map(n=>`<div class="compat-np">${n}</div>`).join('')}</div><div class="compat-sub">${rc.good.map(n=>getPlanet(n)).join(' · ')}</div></div>
+      <div class="compat-col caution"><div class="compat-col-hd">✗ Challenging</div><div class="compat-nums">${rc.avoid.map(n=>`<div class="compat-np">${n}</div>`).join('')}</div><div class="compat-sub">${rc.avoid.map(n=>getPlanet(n)).join(' · ')}</div></div>
+    </div>`;
+
+  // Remedies
+  const rems=REMEDIES[birthNum]||[];
+  document.getElementById('remediesSection').innerHTML=`
+    <div style="font-size:12px;font-family:sans-serif;color:var(--text2);margin-bottom:10px">Aligned to <strong>Moolank ${birthNum} · ${getPlanet(birthNum)}</strong></div>
+    ${rems.map(r=>`<div class="remedy-item"><div class="remedy-dot"></div><div class="remedy-text">${r}</div></div>`).join('')}`;
+
+  // Name suggestions (simplified spelling variants)
+  renderSuggestions();
+
+  // Wire upgrade CTA with params
+  document.getElementById('upgradeBtn').href=`report.html?name=${encodeURIComponent(name)}&dob=${encodeURIComponent(dob)}&birthNum=${birthNum}&destNum=${destNum}&nameNum=${nameNum}&pct=${pct}`;
+}
+
+function renderSuggestions(){
+  const {name,birthNum,destNum,nameNum,nameRaw} = S;
+  const currentPct = compatPct(nameNum,nameRaw,birthNum,destNum);
+  const VOWELS = new Set('aeiou');
+  const parts  = name.trim().split(/\s+/);
+  const fmt    = s => s.charAt(0).toUpperCase()+s.slice(1).toLowerCase();
+  const seen   = new Set([name.toLowerCase().replace(/\s/g,'')]);
+  const candidates = [];
+
+  function genVariants(word){
+    const w=word.toLowerCase(); const v=new Set([w]);
+    const vIdx=[...w].map((c,i)=>VOWELS.has(c)?i:-1).filter(x=>x>=0);
+    const maxM=Math.min(1<<vIdx.length,32);
+    for(let mask=1;mask<maxM;mask++){let s=w,off=0;for(let j=0;j<vIdx.length;j++){if(mask&(1<<j)){const p=vIdx[j]+off;s=s.slice(0,p+1)+s[p]+s.slice(p+1);off++;}}v.add(s);}
+    for(const sfx of ['a','aa','i','ii','e','n','na','ni','h','ah']){v.add(w+sfx);}
+    if(w.length>3){v.add(w.slice(0,-1));}
+    for(let i=1;i<w.length-1;i++){if(!VOWELS.has(w[i])&&w.length>3){const stem=w.slice(0,i)+w.slice(i+1);if(stem.length>=2){if(VOWELS.has(stem[stem.length-1]))v.add(stem+stem[stem.length-1]);for(const s of['a','aa','i'])v.add(stem+s);}}}
+    return [...v].filter(s=>s.length>=2&&s.length<=w.length+4);
+  }
+
+  parts.forEach((word,ci)=>{
+    for(const variant of genVariants(word)){
+      const acc=parts.map((orig,i)=>i===ci?fmt(variant):fmt(orig));
+      const full=acc.join(' '), key=full.toLowerCase().replace(/\s/g,'');
+      if(seen.has(key)) continue; seen.add(key);
+      const raw=chalSum(full.replace(/\s/g,'')), num=reduce(raw);
+      const pct=compatPct(num,raw,birthNum,destNum);
+      if(pct>currentPct) candidates.push({name:full,nameRaw:raw,nameNum:num,pct,changedWord:ci===0?'first name':'last name',phonCost:Math.abs(variant.length-word.length)});
+    }
+  });
+  candidates.sort((a,b)=>b.pct-a.pct||(a.phonCost-b.phonCost));
+  const top=candidates.slice(0,5);
+
+  const wrap=document.getElementById('nameSuggestions');
+  if(!top.length){
+    let maxA=0; for(let r=5;r<=75;r++){const p=compatPct(reduce(r),r,birthNum,destNum);if(p>maxA)maxA=p;}
+    wrap.innerHTML=currentPct>=maxA
+      ?`<div style="background:var(--green-bg);border-left:3px solid var(--green);border-radius:var(--r);padding:1rem;font-family:sans-serif;font-size:13px"><div style="font-weight:600;color:var(--green);margin-bottom:6px">✓ Your name is already at the optimal score for your birth numbers.</div><div style="color:#2d5a1b">${currentPct}% is the maximum achievable for Moolank ${S.birthNum} · Bhagyank ${S.destNum}.</div></div>`
+      :`<div style="background:rgba(240,180,41,.12);border-left:3px solid var(--gold);border-radius:var(--r);padding:1rem;font-family:sans-serif;font-size:13px"><div style="font-weight:600;color:var(--gold);margin-bottom:6px">⚡ Name scores ${currentPct}% — max achievable is ${maxA}%.</div><div style="color:var(--text2)">No simple spelling variant of <em>${S.name}</em> reaches a higher score. A different name structure is needed — consider a consultation for a custom suggestion.</div></div>`;
+    return;
+  }
+  wrap.innerHTML=top.map((s,i)=>{
+    const sc=CD[s.nameRaw]; const pill=sc?sc.q:'n'; const pillLabel=sc?sc.l:'Standard';
+    const pctCls=s.pct>=75?'high':s.pct>=50?'mid':'low';
+    const lift=s.pct-currentPct;
+    const origL=S.name.replace(/\s/g,'').length, sugL=s.name.replace(/\s/g,'').length;
+    const desc=sugL>origL?`Added ${sugL-origL} letter${sugL-origL>1?'s':''} · same pronunciation`:sugL<origL?`Removed ${origL-sugL} letter${origL-sugL>1?'s':''} · same sound`:'Letter swap · same sound';
+    const bf=FRIENDLY[S.birthNum]||[],df=FRIENDLY[S.destNum]||[];
+    const sugnChecks=[
+      {label:'Friendly to both birth numbers',pass:bf.includes(s.nameNum)&&df.includes(s.nameNum),partial:bf.includes(s.nameNum)||df.includes(s.nameNum)},
+      {label:'Preferred number',pass:PREFERRED.includes(s.nameNum)},
+      {label:'Auspicious compound',pass:sc?.q==='g'}
+    ];
+    return `<div class="sug-card" id="sug${i}" onclick="selectSug('${s.name.replace(/'/g,"\\'")}',${i})">
+      <span class="sug-sel-mark">✦</span>
+      <div style="display:flex;align-items:flex-start;gap:12px">
+        <div style="flex:1">
+          <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-bottom:6px">
+            ${i===0?`<span style="background:rgba(240,180,41,.20);color:var(--gold);border:1px solid var(--gold-b);border-radius:20px;font-size:10px;padding:2px 8px;font-family:sans-serif;font-weight:700">★ BEST MATCH</span>`:''}
+            <span style="background:var(--green-bg);color:var(--green);border-radius:20px;font-size:10px;padding:2px 8px;font-family:sans-serif;font-weight:600">+${lift}%</span>
+            <span style="background:rgba(155,114,176,.20);color:var(--purple);border-radius:20px;font-size:10px;padding:2px 8px;font-family:sans-serif">✎ ${s.changedWord}</span>
+          </div>
+          <div class="sug-name">${s.name}</div>
+          <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-bottom:6px">
+            <span style="background:var(--blue-bg);color:var(--blue);border-radius:20px;font-size:11px;padding:3px 10px;font-family:sans-serif">${s.nameRaw}/${s.nameNum} · ${getPlanet(s.nameNum)}</span>
+            <span class="lb-cpill ${pill}" style="font-size:11px;padding:3px 10px;border-radius:20px">${pillLabel}</span>
+          </div>
+          <div style="font-size:11px;font-family:sans-serif;color:var(--text3);font-style:italic">${desc}</div>
+        </div>
+        <div class="pct-ring ${pctCls}" style="width:56px;height:56px;flex-shrink:0"><span class="pr-val" style="font-size:16px">${s.pct}%</span><span class="pr-lbl">Match</span></div>
+      </div>
+      <div class="sug-checks">${sugnChecks.map(c=>`<div class="sci ${c.pass?'pass':c.partial?'partial':'fail'}"><span>${c.pass?'✓':c.partial?'◑':'✗'}</span><span>${c.label}</span></div>`).join('')}</div>
+    </div>`;
+  }).join('');
+}
+
+function selectSug(name, idx){
+  document.querySelectorAll('.sug-card').forEach(el=>el.classList.remove('selected'));
+  document.getElementById('sug'+idx).classList.add('selected');
+  document.getElementById('upgradeBtn').href=`report.html?name=${encodeURIComponent(name)}&dob=${encodeURIComponent(S.dob)}&birthNum=${S.birthNum}&destNum=${S.destNum}`;
+}
+
+async function captureEmail(){
+  const email = document.getElementById('captureEmail').value.trim();
+  if(!email || !email.includes('@')){alert('Please enter a valid email.');return;}
+  const btn = document.querySelector('#emailCapture .btn');
+  btn.disabled=true; btn.textContent='Saving…';
+  try{
+    await fetch('/api/lead',{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({name:S.name,dob:S.dob,email,birthNum:S.birthNum,destNum:S.destNum,nameNum:S.nameNum,pct:compatPct(S.nameNum,S.nameRaw,S.birthNum,S.destNum)})
+    });
+  }catch(e){ /* fail silently in static preview */ }
+  document.getElementById('emailRow').style.display='none';
+  document.getElementById('emailDone').style.display='block';
+}
+</script>
+</body>
+</html>
