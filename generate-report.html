@@ -1175,68 +1175,117 @@
     9:'Lucky numbers for your combination: 1, 3, 5, 9. These amplify Mars energy and support your humanitarian drive.',
   };
 
-  // Score-based name variant generator
+  // ── PHONETIC NAME VARIANT ENGINE ─────────────────────────────
+  // Generates look-alike, sound-alike variants of each word in the name.
+  // Rules: double a vowel, elongate end, insert 'i' before vowel (diphthong),
+  // remove/add silent 'h', vowel substitutions (e↔ee, i↔ee, y↔i), etc.
+  // Each word in the full name is mutated independently so both first-name
+  // and surname variants are explored (e.g. Rekha Jaiin from Jain).
+
+  function getPhoneticWordVariants(w){
+    var out=[];
+
+    // 1. Double each individual vowel in the word
+    //    Rekha → Reekha (double e), Rekhaa already caught below
+    for(var i=0;i<w.length;i++){
+      if(!/[aeiou]/i.test(w[i])) continue;
+      // Skip if already doubled
+      if(i>0 && w[i-1].toLowerCase()===w[i].toLowerCase()) continue;
+      if(i<w.length-1 && w[i+1].toLowerCase()===w[i].toLowerCase()) continue;
+      out.push(w.slice(0,i)+w[i]+w[i]+w.slice(i+1));
+    }
+
+    // 2. Append duplicate of last letter if it's a vowel → Rekha→Rekhaa, Jain→Jainn
+    var last=w[w.length-1];
+    if(/[aeiou]/i.test(last)){
+      out.push(w+last);          // Rekha → Rekhaa
+      out.push(w+'h');           // Rekha → Rekhah
+    } else {
+      out.push(w+last);          // Jain  → Jainn  (double last consonant)
+      out.push(w+'a');           // Ritu  → Ritua (soften ending)
+    }
+
+    // 3. Insert 'i' just before each vowel (creates diphthong — Reikha, Shaikh→Shaiikh etc.)
+    for(var j=1;j<w.length;j++){
+      if(/[aeiou]/i.test(w[j]) && !/[aeiou]/i.test(w[j-1])){
+        out.push(w.slice(0,j)+'i'+w.slice(j));   // consonant+vowel → consonant+i+vowel
+      }
+    }
+
+    // 4. Remove a silent 'h' that follows a consonant (kh→k, etc.)
+    //    Rekha has no ch/kh but covers names like Shikha→Sikha, Neha→Nea (skip too short)
+    var noH=w.replace(/([^aeiou\s])h/i,'$1');
+    if(noH!==w && noH.length>=3) out.push(noH);
+
+    // 5. Add silent 'h' after first consonant cluster
+    //    Reka→Rekha, Mona→Mohna etc.
+    var addH=w.replace(/([^aeiou\s])([aeiou])/i,'$1h$2');
+    if(addH!==w) out.push(addH);
+
+    // 6. Single vowel ↔ double vowel substitutions
+    if(w.search(/(?<!e)e(?!e)/i)>=0) out.push(w.replace(/(?<![aeiou])e(?!e)/i,'ee')); // e→ee first
+    if(w.search(/ee/i)>=0)           out.push(w.replace(/ee/i,'i'));                   // ee→i
+    if(w.search(/(?<!e)i(?!i)/i)>=0) out.push(w.replace(/i(?!i)/i,'ee'));              // i→ee first
+    if(w.search(/(?<!a)a(?!a)/i)>=0) out.push(w.replace(/a(?!a)/i,'aa'));              // a→aa first
+    if(w.search(/aa/i)>=0)           out.push(w.replace(/aa/i,'a'));                   // aa→a
+    if(w.search(/y$/i)>=0)           out.push(w.replace(/y$/i,'i'));                   // y→i at end
+    if(w.search(/[^aeiou]i$/i)>=0)   out.push(w.replace(/i$/i,'y'));                   // i→y at end
+    if(w.search(/u(?!u)/i)>=0)       out.push(w.replace(/u(?!u)/i,'oo'));              // u→oo
+    if(w.search(/oo/i)>=0)           out.push(w.replace(/oo/i,'u'));                   // oo→u
+
+    // 7. Deduplicate removed: remove consecutive double letters (Rekkhaa→Rekha)
+    var dedup=w.replace(/([a-z])\1+/gi,'$1');
+    if(dedup!==w && dedup.length>=3) out.push(dedup);
+
+    // Filter: no empty strings, not same as original, length diff ≤ 3
+    return out.filter(function(v){
+      return v && v!==w && v.toLowerCase()!==w.toLowerCase() &&
+             v.length>=2 && Math.abs(v.length-w.length)<=3;
+    });
+  }
+
   function generateScoredNameVariants(inputName, currentPct){
-    var parts = inputName.trim().split(/\s+/);
-    var first = parts[0] || inputName;
-    var rest  = parts.slice(1).join(' ');
-    var candidates = [];
-
-    // Suffix additions
-    var suffixes=['a','aa','ah','i','ii','ee','y','e','h','ey','ay','ie','o','u'];
-    suffixes.forEach(function(s){
-      candidates.push(first+s);
-      if(first.length>3) candidates.push(first.slice(0,-1)+s);
-    });
-
-    // Vowel substitutions
-    var vowelPairs=[['a','aa'],['i','ee'],['u','oo'],['e','ee'],['o','oo'],
-                    ['sh','sh'],['k','c'],['v','w'],['w','v']];
-    vowelPairs.forEach(function(p){
-      var re=new RegExp(p[0]+'(?=[^aeiou]*$)','i');
-      var v=first.replace(re,p[1]);
-      if(v!==first) candidates.push(v);
-      var re2=new RegExp(p[1]+'(?=[^aeiou]*$)','i');
-      var v2=first.replace(re2,p[0]);
-      if(v2!==first) candidates.push(v2);
-    });
-
-    // Double last consonant
-    var dbl=first.replace(/([bcdfghjklmnpqrstvwxyz])$/i,function(m){return m+m;});
-    if(dbl!==first) candidates.push(dbl);
-
-    // Remove doubled letters
-    var dedup=first.replace(/(.)\1+/g,'$1');
-    if(dedup!==first&&dedup.length>2) candidates.push(dedup);
-
-    // Common Indian name suffix variants
-    ['an','in','am','em','al','el','ar','er','esh','ish','raj','dev'].forEach(function(s){
-      if(first.length>3) candidates.push(first.slice(0,-1)+s);
-    });
-
-    // Score each candidate
+    var parts=inputName.trim().split(/\s+/);
     var seen=new Set([inputName.toLowerCase()]);
+    var allCandidates=[];
+
+    // Mutate each word in the name independently
+    parts.forEach(function(word,idx){
+      if(word.length<2) return;
+      var wordVars=getPhoneticWordVariants(word);
+      wordVars.forEach(function(variant){
+        var newParts=parts.slice();
+        newParts[idx]=variant;
+        // Preserve original casing style: capitalise first letter of each part
+        newParts=newParts.map(function(p){
+          return p.charAt(0).toUpperCase()+p.slice(1);
+        });
+        var fullName=newParts.join(' ');
+        var lc=fullName.toLowerCase();
+        if(!seen.has(lc)){
+          seen.add(lc);
+          allCandidates.push(fullName);
+        }
+      });
+    });
+
+    // Score every candidate
     var results=[];
-    candidates.forEach(function(c){
-      if(c.length<2) return;
-      var fullName=(c+(rest?' '+rest:'')).trim();
-      var lc=fullName.toLowerCase();
-      if(seen.has(lc)) return;
-      seen.add(lc);
+    allCandidates.forEach(function(fullName){
       var info=getNameNum(fullName);
       var score=compatPct(info.reduced,info.raw,birthNum,destNum);
       results.push({name:fullName,num:info.reduced,raw:info.raw,score:score,planet:getPlanet(info.reduced)});
     });
 
-    // Sort: improved first, then by score descending
+    // Sort: improved scores first, then by score descending
     results.sort(function(a,b){
-      var aImp=a.score>currentPct?1:0;
-      var bImp=b.score>currentPct?1:0;
+      var aImp=a.score>currentPct?1:0, bImp=b.score>currentPct?1:0;
       if(bImp!==aImp) return bImp-aImp;
       return b.score-a.score;
     });
 
-    return results.slice(0,5);
+    // Return top 6
+    return results.slice(0,6);
   }
 
   function buildNameAnalysis(){
@@ -1321,13 +1370,16 @@
         '</div>'+
       '</div>'+
       '<div class="sec-label" style="margin-top:0;">'+
-        (harmonises?'Name Variants — Alternative Spellings for Reference':'Recommended Spelling Variants — Chaldean Alignment Scores')+
+        (harmonises?'Name Variants — Alternative Spellings for Reference':'Suggested Name Spellings — Chaldean Score Comparison')+
       '</div>'+
-      '<p style="font-size:13px;font-family:sans-serif;color:var(--text2);margin-bottom:1.25rem;line-height:1.7;">'+
+      '<p style="font-size:13px;font-family:sans-serif;color:var(--text2);margin-bottom:.75rem;line-height:1.7;">'+
         (harmonises?
-          'Your current name is already aligned. The variants below show how minor spelling changes shift compound numbers and scores.':
-          'These spelling variants improve the Chaldean alignment of your name. Each shows its new alignment score vs your current '+pct+'%. Consult a numerologist before a legal name change.')+
+          'Your current name is already aligned. The variants below show how minor spelling tweaks shift the Chaldean compound number — useful if you want to push your score even higher.':
+          'These look-alike, sound-alike spellings are minor tweaks — double a vowel, add a silent letter, elongate an ending — each producing a different Chaldean value. Green rows improve your current score of '+pct+'%. Consult a numerologist before making a legal change.')+
       '</p>'+
+      '<div style="background:var(--gold-l);border:1px solid var(--gold-b);border-radius:var(--r);padding:.65rem 1rem;margin-bottom:1rem;font-size:12px;font-family:sans-serif;color:var(--text2);line-height:1.6;">'+
+        '<strong style="color:var(--gold);">How these are calculated:</strong> Each variant is formed by doubling a vowel (Rekha → Reekha), elongating the ending (Rekha → Rekhaa), inserting a sound (Rekha → Reikha), or tweaking the surname — while keeping the name recognisable. The Chaldean score is then recomputed and compared to your current score.'+
+      '</div>'+
       variantsHtml;
   }
 
