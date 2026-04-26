@@ -335,10 +335,14 @@
 
   <hr class="divider"/>
 
-  <!-- ─ 2. ALIGNMENT BANNER ──────────────────────────────────── -->
+  <!-- ─ 2. ALIGNMENT BANNER + NAME SUGGESTIONS ─────────────────── -->
   <div class="rpt-section" style="padding-top:0;">
     <div class="sec-label">Name Alignment Status</div>
     <div class="align-banner" id="alignBanner">
+      <!-- Injected by JS -->
+    </div>
+    <!-- Name suggestions appear immediately below the score -->
+    <div id="nameAnalysisSection" style="margin-top:1.5rem;">
       <!-- Injected by JS -->
     </div>
   </div>
@@ -399,17 +403,7 @@
 
   <hr class="divider"/>
 
-  <!-- ─ 8. NAME ANALYSIS ─────────────────────────────────────── -->
-  <div class="rpt-section" style="padding-top:0;">
-    <div class="sec-label">Name Analysis &amp; Optimisation</div>
-    <div id="nameAnalysisSection">
-      <!-- Injected by JS -->
-    </div>
-  </div>
-
-  <hr class="divider"/>
-
-  <hr class="divider"/>
+  <!-- ─ 8. (Name analysis moved up to section 2, below alignment banner) ── -->
 
   <!-- ─ 8b. MOBILE NUMBER ANALYSIS ─────────────────────────── -->
   <div class="rpt-section" style="padding-top:0;">
@@ -633,12 +627,12 @@
     buildCoreNumbers();
     buildCombinationNumbers();
     buildAlignmentBanner();
+    buildNameAnalysis();      // immediately below the score — keep curiosity alive
     buildLuckyAttrs();
     buildForecast();
     buildCareer();
     buildRelationship();
     buildRemedies();
-    buildNameAnalysis();
     buildMobileAnalysis();
     buildShareButtons();
   }
@@ -1420,49 +1414,36 @@
       '</div>' :
       '<p style="font-size:13px;font-family:sans-serif;color:var(--text2);">Your name is already highly optimised.</p>';
 
-    section.innerHTML=
-      '<div class="grid-2" style="gap:1.5rem;margin-bottom:1.5rem;">'+
-        '<div class="card">'+
-          '<div class="card-title">Current Name Analysis</div>'+
-          '<div style="display:flex;align-items:center;gap:1rem;margin-bottom:.75rem;">'+
-            '<div style="font-size:48px;color:var(--gold);line-height:1;">'+nameNum+'</div>'+
-            '<div>'+
-              '<div style="font-size:16px;">'+name+'</div>'+
-              '<div style="font-size:13px;color:var(--text2);font-family:sans-serif;">Chaldean value: '+nameRaw+' → reduces to '+nameNum+'</div>'+
-              '<div style="font-size:13px;color:var(--text2);font-family:sans-serif;">Ruled by <strong>'+namePlanet+'</strong></div>'+
-            '</div>'+
-          '</div>'+
-          (cdEntry?'<div style="background:var(--gold-l);border:1px solid var(--gold-b);border-radius:var(--r);padding:.75rem 1rem;font-size:12.5px;font-family:sans-serif;color:var(--text2);">'+
-            '<strong style="color:var(--gold);">Compound '+nameRaw+':</strong> '+cdEntry.l+
-          '</div>':'')+ compoundNote+
+    // Compact current-name line — shows what's changing and why
+    var currentNameLine=
+      '<div style="display:flex;align-items:center;gap:1rem;margin-top:1.25rem;margin-bottom:1rem;'+
+        'padding:.85rem 1.1rem;background:var(--card);border:1px solid var(--border);border-radius:var(--r);">'+
+        '<div style="text-align:center;min-width:44px;">'+
+          '<div style="font-size:32px;color:var(--gold);line-height:1;">'+nameNum+'</div>'+
+          '<div style="font-size:9px;font-family:sans-serif;color:var(--text3);text-transform:uppercase;letter-spacing:.05em;">'+namePlanet+'</div>'+
         '</div>'+
-        '<div class="card">'+
-          '<div class="card-title">Alignment Verdict</div>'+
-          '<div class="align-banner '+status+'" style="margin-bottom:.75rem;padding:1rem 1.25rem;">'+
-            '<div class="align-text">'+
-              '<div class="align-title '+status+'">'+(harmonises?'✦ Harmonious':'⚠ Correction Advised')+'</div>'+
-              '<div class="align-desc '+status+'">'+(harmonises?
-                'Your name\'s vibrational frequency resonates with your core numbers. The current spelling is energetically supportive.':
-                'Your name creates vibrational friction against your birth and destiny energies. The adjustments below are calibrated to improve alignment.')+
-              '</div>'+
-            '</div>'+
-            '<div class="align-pct-badge '+status+'">'+pct+'%</div>'+
+        '<div style="flex:1;">'+
+          '<div style="font-size:15px;margin-bottom:2px;"><strong>'+name+'</strong> — your current spelling</div>'+
+          '<div style="font-size:12px;font-family:sans-serif;color:var(--text2);">'+
+            'Chaldean sum: '+nameRaw+' → Name number '+nameNum+
+            (cdEntry?' &nbsp;·&nbsp; Compound: '+cdEntry.l:'')+
           '</div>'+
-          '<p style="font-size:13px;font-family:sans-serif;color:var(--text2);line-height:1.7;">'+lcMsg+'</p>'+
         '</div>'+
+        '<div style="font-size:24px;font-family:sans-serif;font-weight:700;color:var(--gold);">'+pct+'%</div>'+
+      '</div>';
+
+    var headingLine=
+      '<div style="font-size:11px;letter-spacing:.1em;text-transform:uppercase;'+
+        'font-family:sans-serif;font-weight:700;color:var(--text3);margin-bottom:.6rem;">'+
+        (harmonises?'Name variants — spellings for reference':'Suggested spellings — ranked by Chaldean alignment')+
       '</div>'+
-      '<div class="sec-label" style="margin-top:0;">'+
-        (harmonises?'Name Variants — Alternative Spellings for Reference':'Suggested Name Spellings — Chaldean Score Comparison')+
-      '</div>'+
-      '<p style="font-size:13px;font-family:sans-serif;color:var(--text2);margin-bottom:.75rem;line-height:1.7;">'+
+      '<p style="font-size:12.5px;font-family:sans-serif;color:var(--text2);margin-bottom:.85rem;line-height:1.65;">'+
         (harmonises?
-          'Your current name is already aligned. The variants below show how minor spelling tweaks shift the Chaldean compound number — useful if you want to push your score even higher.':
-          'These look-alike, sound-alike spellings are minor tweaks — double a vowel, add a silent letter, elongate an ending — each producing a different Chaldean value. Green rows improve your current score of '+pct+'%. Consult a numerologist before making a legal change.')+
-      '</p>'+
-      '<div style="background:var(--gold-l);border:1px solid var(--gold-b);border-radius:var(--r);padding:.65rem 1rem;margin-bottom:1rem;font-size:12px;font-family:sans-serif;color:var(--text2);line-height:1.6;">'+
-        '<strong style="color:var(--gold);">How these are calculated:</strong> Each variant is formed by doubling a vowel (Rekha → Reekha), elongating the ending (Rekha → Rekhaa), inserting a sound (Rekha → Reikha), or tweaking the surname — while keeping the name recognisable. The Chaldean score is then recomputed and compared to your current score.'+
-      '</div>'+
-      variantsHtml;
+          'Your name is already aligned. The variants below show how minor tweaks shift the score — useful for branding or pushing higher still.':
+          'Minor look-alike tweaks — double a vowel, elongate an ending, adjust the surname — that shift your Chaldean value. Green rows improve your current '+pct+'%. ★ hits the maximum possible for your numbers.')+
+      '</p>';
+
+    section.innerHTML= achievableBannerHtml + currentNameLine + headingLine + variantsHtml;
   }
 
   // ── 8b. MOBILE NUMBER ANALYSIS ────────────────────────────────
