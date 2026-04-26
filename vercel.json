@@ -1,20 +1,4 @@
 {
-  "_comment": [
-    "=============================================================",
-    "  NameAligned.com — Vercel deployment configuration",
-    "  Required environment variables (set in Vercel dashboard or",
-    "  via `vercel env add`):",
-    "",
-    "    SUPABASE_URL        — https://<project-ref>.supabase.co",
-    "    SUPABASE_ANON_KEY   — Supabase project anon/public key",
-    "    BREVO_API_KEY       — Brevo (Sendinblue) v3 API key",
-    "    RAZORPAY_KEY_ID     — Razorpay live/test key ID",
-    "    RAZORPAY_KEY_SECRET — Razorpay live/test key secret",
-    "=============================================================",
-    "NOTE: JSON does not support comments; this key is intentionally",
-    "unused by Vercel and exists solely as in-file documentation."
-  ],
-
   "cleanUrls": true,
   "trailingSlash": false,
 
