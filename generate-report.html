@@ -327,6 +327,14 @@
 
   <hr class="divider"/>
 
+  <!-- ─ 1b. COMBINATION NUMBER ──────────────────────────────── -->
+  <div class="rpt-section" style="padding-top:0;">
+    <div class="sec-label">Your Number Combination — <span id="comboLabel"></span></div>
+    <div id="combinationSection"><!-- Injected by JS --></div>
+  </div>
+
+  <hr class="divider"/>
+
   <!-- ─ 2. ALIGNMENT BANNER ──────────────────────────────────── -->
   <div class="rpt-section" style="padding-top:0;">
     <div class="sec-label">Name Alignment Status</div>
@@ -349,8 +357,8 @@
 
   <!-- ─ 4. 3-YEAR FORECAST ───────────────────────────────────── -->
   <div class="rpt-section" style="padding-top:0;">
-    <div class="sec-label">3-Year Personal Year Forecast</div>
-    <p style="font-size:13px;color:var(--text2);font-family:sans-serif;margin-bottom:1.5rem;">Your Personal Year number changes every January — it governs the overarching energy, opportunities and lessons of each year. Below are your next three cycles.</p>
+    <div class="sec-label">5-Year Personal Year Forecast</div>
+    <p style="font-size:13px;color:var(--text2);font-family:sans-serif;margin-bottom:1.5rem;">Your Personal Year number changes every January — it governs the overarching energy, opportunities and lessons of each year. Below are your next five cycles, personalised to your date of birth.</p>
     <div id="forecastContainer">
       <!-- Injected by JS -->
     </div>
@@ -397,6 +405,16 @@
     <div id="nameAnalysisSection">
       <!-- Injected by JS -->
     </div>
+  </div>
+
+  <hr class="divider"/>
+
+  <hr class="divider"/>
+
+  <!-- ─ 8b. MOBILE NUMBER ANALYSIS ─────────────────────────── -->
+  <div class="rpt-section" style="padding-top:0;">
+    <div class="sec-label">Mobile Number Analysis</div>
+    <div id="mobileAnalysisSection"><!-- Injected by JS --></div>
   </div>
 
   <hr class="divider"/>
@@ -565,8 +583,9 @@
   var msgs = [
     'Calculating your Chaldean chart\u2026',
     'Mapping planetary influences\u2026',
-    'Preparing your 3-year forecast\u2026',
-    'Compiling name alignment\u2026',
+    'Preparing your 5-year forecast\u2026',
+    'Analysing name alignment\u2026',
+    'Computing name optimisation scores\u2026',
     'Report ready \u2713'
   ];
   var bar = qs('loaderBar');
@@ -611,6 +630,7 @@
     qs('emailConfirm').textContent = email || 'your registered email';
 
     buildCoreNumbers();
+    buildCombinationNumbers();
     buildAlignmentBanner();
     buildLuckyAttrs();
     buildForecast();
@@ -618,6 +638,7 @@
     buildRelationship();
     buildRemedies();
     buildNameAnalysis();
+    buildMobileAnalysis();
     buildShareButtons();
   }
 
@@ -776,7 +797,7 @@
 
   function buildForecast(){
     var container = qs('forecastContainer');
-    for(var i=0;i<3;i++){
+    for(var i=0;i<5;i++){
       var yr = CURRENT_YEAR + i;
       var pyNum = getPersonalYear(dob, yr);
       var theme = YEAR_THEMES[pyNum]||'';
@@ -786,7 +807,8 @@
       var attrs = PLANET_ATTRS[pyNum]||{};
 
       var isCurrentYear = (i===0);
-      var yearLabel = isCurrentYear ? 'Current Year' : (i===1 ? 'Next Year' : 'Year After');
+      var yearLabels = ['Current Year','Year 2','Year 3','Year 4','Year 5'];
+      var yearLabel = yearLabels[i] || ('Year '+(i+1));
 
       var card = el('div','forecast-card');
       card.innerHTML=
@@ -1001,51 +1023,220 @@
     });
   }
 
-  // ── 8. NAME ANALYSIS ─────────────────────────────────────────
-  var LUCKY_NUMS_MSG={
-    1:'Numbers 1, 2, 4, 9 are most harmonious with your birth and destiny configuration.',
-    2:'Numbers 1, 2, 7 resonate most deeply with your Moon-influenced chart.',
-    3:'Numbers 1, 3, 6, 9 align with Jupiter\'s generous expansive frequency.',
-    4:'Numbers 1, 2, 4, 8 provide the most stable energetic foundation for your name.',
-    5:'Numbers 1, 3, 5, 9 carry Mercury\'s quicksilver energy aligned to your core.',
-    6:'Numbers 3, 6, 9 create the most harmonious resonance with your Venus energy.',
-    7:'Numbers 1, 2, 7 support Ketu\'s introspective and spiritually attuned path.',
-    8:'Numbers 2, 4, 6, 8 align with Saturn\'s methodical, disciplined frequency.',
-    9:'Numbers 1, 3, 5, 9 amplify Mars energy and support your humanitarian drive.',
+  // ── 1b. COMBINATION NUMBERS ──────────────────────────────────
+  var COMBO_THEMES = {
+    '1-1':'Two Suns — Visionary Leadership. An exceptionally powerful combination for entrepreneurship and public authority. Both numbers amplify Solar drive. Guard against ego clashes; channel this into bold, original ventures.',
+    '1-2':'Sun & Moon — Yin-Yang Balance. Leadership softened by emotional intelligence. You command in public and nurture in private. Success comes through balancing authority with empathy.',
+    '1-3':'Sun & Jupiter — Radiant Fortune. One of the most auspicious combinations. Leadership, optimism and expansion align. A natural magnet for success in public life, education and enterprise.',
+    '1-4':'Sun & Rahu — Ambitious Innovator. Powerful drive meets unconventional thinking. Can create breakthroughs others miss. Channel Rahu\'s energy into focused innovation rather than impulsiveness.',
+    '1-5':'Sun & Mercury — The Communicator-Leader. Outstanding in media, sales, law and business communication. Mercury adds agility to Solar authority. Highly effective in fast-moving environments.',
+    '1-6':'Sun & Venus — Charismatic Success. Charm, creativity and leadership combine. Success in creative industries, diplomacy and luxury markets. Relationships and career are both strongly favoured.',
+    '1-7':'Sun & Ketu — The Spiritual Authority. A leader who operates from deep intuition. Success in research, mysticism, and unconventional fields. Periodic solitude is essential for recharging.',
+    '1-8':'Sun & Saturn — Power and Discipline. One of the strongest wealth combinations. Ambition is backed by relentless discipline. Success in law, politics, finance and large-scale enterprise.',
+    '1-9':'Sun & Mars — Commanding Courage. A warrior combination — fearless, driven and passionate. Exceptional in athletics, military, surgery, entrepreneurship and transformational leadership.',
+    '2-1':'Moon & Sun — Intuitive Leadership. Emotional depth guides leadership decisions. Outstanding in healthcare, counselling, creative arts and people-facing leadership roles.',
+    '2-2':'Double Moon — Deep Sensitivity. Highly intuitive and empathic. Exceptional in creative arts, healing, teaching and relationship-building. Guard against emotional overwhelm.',
+    '2-3':'Moon & Jupiter — The Wise Nurturer. Compassion amplified by wisdom. Strongly favoured for teaching, publishing, counselling, social work and inspirational communication.',
+    '2-4':'Moon & Rahu — Unconventional Depth. Deep intuition with an unconventional edge. Can see what others miss. Success in research, psychology, esoteric fields and innovation.',
+    '2-5':'Moon & Mercury — The Empath-Communicator. Outstanding interpersonal skills. Thrives in journalism, content creation, healthcare communication, and human resources.',
+    '2-6':'Moon & Venus — The Harmoniser. One of the most artistically gifted combinations. Beauty, healing and harmony define your path. Excellence in music, art, therapy and hospitality.',
+    '2-7':'Moon & Ketu — The Mystic. Deeply spiritual and psychically sensitive. Excels in healing arts, intuitive guidance, writing and spiritual practice. Periodic solitude is essential.',
+    '2-8':'Moon & Saturn — Patient Ambition. Emotional sensitivity combined with disciplined perseverance. Late-bloomer combination that builds lasting wealth through persistence and reliability.',
+    '2-9':'Moon & Mars — Passionate Empathy. Emotional depth meets courageous action. Excellent in social activism, emergency services, counselling, sports and creative performance.',
+    '3-1':'Jupiter & Sun — The Fortunate Leader. Optimism, wisdom and authority merge. One of the luckiest combinations for business, education, law and public life. Abundance flows naturally.',
+    '3-2':'Jupiter & Moon — Creative Wisdom. Joyful, nurturing and expansive. Exceptional in education, healing arts, creative business and any role combining wisdom with compassion.',
+    '3-3':'Double Jupiter — Abundance Squared. Extraordinary potential for wealth, happiness and creative success. Guard against overconfidence. When disciplined, this combination produces remarkable results.',
+    '3-4':'Jupiter & Rahu — The Visionary. Expansive thinking meets innovative disruption. Excellent for technology ventures, research, unconventional business models and transformative work.',
+    '3-5':'Jupiter & Mercury — The Knowledge Broker. Communication, intelligence and wisdom combine brilliantly. Publishing, media, law, finance and digital business are prime domains.',
+    '3-6':'Jupiter & Venus — The Artist-Philosopher. Creativity and wisdom at the highest level. Success in luxury goods, fine arts, spiritual teaching, design and beauty industries.',
+    '3-7':'Jupiter & Ketu — The Enlightened Mind. Philosophical depth with spiritual detachment. Exceptional in research, writing, philosophy, spirituality and teaching ancient wisdom.',
+    '3-8':'Jupiter & Saturn — The Wealth Builder. Two of the most financially significant planets aligned. Disciplined optimism creates lasting abundance. Excellent for long-term investment and business.',
+    '3-9':'Jupiter & Mars — The Expansive Warrior. Courage amplified by wisdom. Outstanding in entrepreneurship, sports management, law, politics and any field requiring bold decisive action.',
+    '4-1':'Rahu & Sun — The Disruptive Leader. Unconventional leadership that creates new paradigms. Excellent in technology, innovation and fields that benefit from thinking differently.',
+    '4-2':'Rahu & Moon — The Intuitive Innovator. Emotional intelligence with an unconventional edge. Success in creative technology, research, psychology and progressive social fields.',
+    '4-3':'Rahu & Jupiter — Expansive Disruption. Big-picture thinking meets unconventional execution. Powerful in startups, technology, global business and transformative ventures.',
+    '4-4':'Double Rahu — The Original Thinker. Uniquely innovative, often ahead of their time. Channel this energy carefully — the most conventional paths will feel restrictive. Embrace originality.',
+    '4-5':'Rahu & Mercury — The Tech Communicator. Digital native energy. Exceptional in technology, digital media, AI, data science and any rapidly evolving field.',
+    '4-6':'Rahu & Venus — The Creative Disruptor. Unconventional aesthetic sensibility. Success in tech-meets-creativity fields: digital art, design technology, social media and innovation.',
+    '4-7':'Rahu & Ketu — The Axis of Destiny. A deeply karmic combination that often creates unusual life paths with profound spiritual undertones. Research, healing and esoteric fields are favoured.',
+    '4-8':'Rahu & Saturn — The Strategic Architect. Long-term planning with unconventional methods. Success in infrastructure, technology platforms, finance and strategic business development.',
+    '4-9':'Rahu & Mars — The Fearless Innovator. Courageous disruption. Excellent in defence technology, extreme sports, investigative journalism and any field that requires bravery to change.',
+    '5-1':'Mercury & Sun — The Brilliant Communicator. Intelligence and authority merge. Outstanding in media, politics, law, sales leadership and any high-visibility communication role.',
+    '5-2':'Mercury & Moon — Intuitive Intelligence. Combines emotional intelligence with sharp analytical mind. Exceptional in counselling, research, writing and healthcare communication.',
+    '5-3':'Mercury & Jupiter — The Knowledge Multiplier. Communication and wisdom at scale. Success in education technology, publishing, media, law and intellectual property.',
+    '5-4':'Mercury & Rahu — The Digital Strategist. Sharp mind with innovative application. Excellent in tech startups, digital marketing, data analysis and disruptive business models.',
+    '5-5':'Double Mercury — The Master Communicator. Extraordinary verbal and written gifts. Must avoid scattering energy. When focused, produces brilliant results in media, literature and business.',
+    '5-6':'Mercury & Venus — Eloquent Creativity. Words and beauty merge. Outstanding in copywriting, fashion communication, luxury marketing, content creation and aesthetic design.',
+    '5-7':'Mercury & Ketu — The Analytical Mystic. Sharp intellect with deep intuition. Excels in research, investigation, niche writing, esoteric studies and science-spirituality intersections.',
+    '5-8':'Mercury & Saturn — Precise Strategy. Analytical mind backed by iron discipline. Excellent in law, forensic accounting, data science, systematic trading and structured research.',
+    '5-9':'Mercury & Mars — The Action Thinker. Quick mind meets courageous action. Outstanding in entrepreneurship, investigative journalism, sports strategy and competitive sales.',
+    '6-1':'Venus & Sun — Charismatic Beauty. Social magnetism combined with authority. One of the most charming combinations. Success in entertainment, luxury brands, diplomacy and creative leadership.',
+    '6-2':'Venus & Moon — The Healer-Artist. Deep compassion meets refined aesthetic. Outstanding in healing arts, music, interior design, hospitality and emotional support work.',
+    '6-3':'Venus & Jupiter — The Abundant Artist. Creative expansion at its finest. One of the most joyful combinations for wealth through art, beauty, fashion, hospitality and entertainment.',
+    '6-4':'Venus & Rahu — The Unconventional Aesthetic. Original, boundary-pushing creativity. Success in avant-garde art, progressive fashion, digital design and creative technology.',
+    '6-5':'Venus & Mercury — The Creative-Communicator. Aesthetic excellence and communication gifts combined. Outstanding in advertising, luxury marketing, fashion writing and lifestyle media.',
+    '6-6':'Double Venus — Exceptional Beauty and Harmony. One of the most artistically gifted combinations. Success in performing arts, luxury goods, hospitality and healing. Guard against indulgence.',
+    '6-7':'Venus & Ketu — The Spiritual Artist. Creativity with philosophical depth. Success in sacred art, spiritual music, healing through beauty and work at the intersection of art and spirit.',
+    '6-8':'Venus & Saturn — Disciplined Creativity. Art meets rigour. Success in architecture, fine art, classical music, couture fashion and any field requiring both beauty and technical mastery.',
+    '6-9':'Venus & Mars — Passionate Creation. Energy and beauty combine explosively. Outstanding in performance arts, athletic aesthetics, bold design and passionate creative entrepreneurship.',
+    '7-1':'Ketu & Sun — The Authoritative Mystic. Leadership through wisdom rather than force. Success in research, spiritual leadership, esoteric writing and philosophical authority.',
+    '7-2':'Ketu & Moon — The Deep Intuitive. Psychic sensitivity at its most refined. Outstanding in healing arts, intuitive guidance, poetry, meditation teaching and spiritual counselling.',
+    '7-3':'Ketu & Jupiter — The Philosophical Teacher. Ancient wisdom transmitted through modern forms. Excellent in esoteric education, philosophical writing and spiritual entrepreneurship.',
+    '7-4':'Ketu & Rahu — Karmic Intelligence. A deeply spiritual, often unusual life path. Research, esoteric traditions and scientific inquiry into non-material phenomena are natural domains.',
+    '7-5':'Ketu & Mercury — The Intuitive Analyst. Pairs sharp analysis with deep intuition. Excellent in forensic research, investigative work, niche writing and esoteric intelligence.',
+    '7-6':'Ketu & Venus — The Sacred Artist. Deep spirituality expressed through beauty. Outstanding in sacred music, spiritual art, contemplative design and healing through aesthetics.',
+    '7-7':'Double Ketu — The Renunciant Scholar. Exceptionally spiritual and introspective. Guard against isolation. When engaged with the world, creates profound wisdom-based work and teaching.',
+    '7-8':'Ketu & Saturn — The Disciplined Hermit. Rigorous spiritual or intellectual discipline. Success in deep research, ascetic practice, solitary scholarship and esoteric financial analysis.',
+    '7-9':'Ketu & Mars — The Warrior-Sage. Courageous spiritual inquiry. Outstanding in investigative research, martial arts traditions, spiritual activism and transformative social work.',
+    '8-1':'Saturn & Sun — The Authoritative Achiever. Discipline and ambition under Solar authority. One of the most powerful career combinations. Major professional achievement is strongly indicated.',
+    '8-2':'Saturn & Moon — Steady Emotional Discipline. Sensitive soul with relentless perseverance. Late-bloomer pattern that builds extraordinary results through consistent dedicated effort.',
+    '8-3':'Saturn & Jupiter — The Wise Accumulator. One of the strongest long-term wealth combinations. Disciplined optimism and patient investment produce exceptional material outcomes.',
+    '8-4':'Saturn & Rahu — The Strategic Architect. Disciplined unconventional thinking. Success in technology infrastructure, strategic planning, long-cycle investment and systematic innovation.',
+    '8-5':'Saturn & Mercury — The Analytical Strategist. Precise thinking meets long-term discipline. Outstanding in data science, law, financial analysis, systematic research and strategic communication.',
+    '8-6':'Saturn & Venus — The Disciplined Creator. Art and discipline at the highest level. Success in classical arts, couture, architecture, luxury real estate and high-craftsmanship fields.',
+    '8-7':'Saturn & Ketu — The Ascetic Master. Deep discipline with spiritual foundation. Exceptional in serious research, spiritual practice, philosophy and any field requiring extreme focus over time.',
+    '8-8':'Double Saturn — The Master Builder. Extraordinary capacity for sustained effort and material achievement. Guard against rigidity. When aligned, builds lasting wealth and institutional authority.',
+    '8-9':'Saturn & Mars — Iron Will. Discipline meets raw courage. One of the most determined combinations. Success in military, surgery, competitive sports, heavy industry and demanding fields.',
+    '9-1':'Mars & Sun — The Solar Warrior. Courage amplified by Solar authority. Outstanding in athletic leadership, military command, surgery, entrepreneurship and transformational public service.',
+    '9-2':'Mars & Moon — The Courageous Empath. Passionate action driven by deep feeling. Excellent in social activism, emergency care, humanitarian work, sports and creative performance.',
+    '9-3':'Mars & Jupiter — The Expansive Warrior. Action backed by wisdom. Outstanding in entrepreneurship, law, sports management and any field requiring both courage and strategic thinking.',
+    '9-4':'Mars & Rahu — The Disruptive Force. Fearless innovation. Exceptional in technology disruption, extreme ventures, investigative fields and industries that require challenging the status quo.',
+    '9-5':'Mars & Mercury — The Action-Communicator. Fast-thinking and fast-acting. Outstanding in sales leadership, entrepreneurship, investigative journalism and competitive digital business.',
+    '9-6':'Mars & Venus — Passionate Harmony. Energy and beauty in dynamic tension. Excellent in performing arts, fashion, sports aesthetics, creative entrepreneurship and passionate advocacy.',
+    '9-7':'Mars & Ketu — The Warrior-Mystic. Fierce spiritual inquiry. Excellent in martial arts traditions, investigative research, spiritual activism and transformative humanitarian work.',
+    '9-8':'Mars & Saturn — Unstoppable Discipline. Mars courage backed by Saturn endurance. Extraordinary potential for achievement in competitive, demanding fields. One of the most powerful ambition combinations.',
+    '9-9':'Double Mars — The Unstoppable Force. Extraordinary energy and drive. Must be channelled carefully to avoid conflict. When focused, creates transformative impact in competitive, high-stakes fields.',
   };
 
-  function generateNameVariants(n){
-    var name = n.trim();
-    var parts = name.split(/\s+/);
-    var first = parts[0]||name;
-    var rest = parts.slice(1).join(' ');
-    var v=[];
+  var COMBO_POWER_NUMS = {
+    '1-1':[1,4,10,19],'1-2':[1,2,10,20],'1-3':[1,3,10,21],'1-4':[1,4,10,13],'1-5':[1,5,10,14],
+    '1-6':[1,6,10,15],'1-7':[1,7,10,16],'1-8':[1,8,10,17],'1-9':[1,9,10,27],
+    '2-1':[1,2,11,20],'2-2':[2,7,11,20],'2-3':[2,3,11,21],'2-4':[2,4,11,29],'2-5':[2,5,11,14],
+    '2-6':[2,6,11,24],'2-7':[2,7,11,20],'2-8':[2,8,11,17],'2-9':[2,9,11,18],
+    '3-1':[1,3,12,21],'3-2':[2,3,12,21],'3-3':[3,6,12,21],'3-4':[3,4,12,32],'3-5':[3,5,12,23],
+    '3-6':[3,6,12,24],'3-7':[3,7,12,33],'3-8':[3,8,12,21],'3-9':[3,6,12,21],
+    '4-1':[1,4,13,22],'4-2':[2,4,13,22],'4-3':[3,4,13,22],'4-4':[1,4,8,13],'4-5':[4,5,13,14],
+    '4-6':[4,6,13,24],'4-7':[4,7,13,16],'4-8':[2,4,8,13],'4-9':[1,4,9,13],
+    '5-1':[1,5,14,23],'5-2':[2,5,14,23],'5-3':[3,5,14,23],'5-4':[4,5,14,32],'5-5':[1,5,9,14],
+    '5-6':[5,6,14,23],'5-7':[5,7,14,32],'5-8':[5,8,14,23],'5-9':[1,5,9,14],
+    '6-1':[1,6,15,24],'6-2':[2,6,15,24],'6-3':[3,6,15,24],'6-4':[4,6,15,24],'6-5':[5,6,15,24],
+    '6-6':[3,6,9,24],'6-7':[6,7,15,24],'6-8':[6,8,15,24],'6-9':[3,6,9,15],
+    '7-1':[1,7,16,25],'7-2':[2,7,16,25],'7-3':[3,7,16,25],'7-4':[4,7,16,34],'7-5':[5,7,16,34],
+    '7-6':[6,7,16,25],'7-7':[2,7,16,25],'7-8':[7,8,16,25],'7-9':[7,9,16,25],
+    '8-1':[1,8,17,26],'8-2':[2,8,17,26],'8-3':[3,8,17,26],'8-4':[4,8,17,26],'8-5':[5,8,17,26],
+    '8-6':[6,8,17,26],'8-7':[7,8,17,26],'8-8':[2,4,8,17],'8-9':[1,8,9,17],
+    '9-1':[1,9,18,27],'9-2':[2,9,18,27],'9-3':[3,9,18,27],'9-4':[4,9,18,27],'9-5':[5,9,18,27],
+    '9-6':[6,9,18,27],'9-7':[7,9,18,27],'9-8':[8,9,17,18],'9-9':[1,3,9,27],
+  };
 
-    // Variant 1: add 'a' to first name if ends consonant
-    var v1=first;
-    if(!/[aeiouAEIOU]$/.test(first)) v1=first+'a';
-    else v1=first.replace(/.$/, function(c){ return c.toUpperCase()==='A'?c+'h':c;});
-    v.push((v1+(rest?' '+rest:'')).trim());
+  function buildCombinationNumbers(){
+    var key = birthNum+'-'+destNum;
+    var revKey = destNum+'-'+birthNum;
+    var theme = COMBO_THEMES[key] || COMBO_THEMES[revKey] || '';
+    var powerNums = COMBO_POWER_NUMS[key] || COMBO_POWER_NUMS[revKey] || [];
 
-    // Variant 2: double last vowel of first name
-    var v2=first.replace(/([aeiouAEIOU])(?=[^aeiouAEIOU]*$)/,function(m){return m+m;});
-    v.push((v2+(rest?' '+rest:'')).trim());
+    qs('comboLabel').textContent = 'Moolank '+birthNum+' × Bhagyank '+destNum;
 
-    // Variant 3: change 'i'→'ee' or add suffix 'h' for male names / 'a' otherwise
-    var v3=first;
-    if(/i$/i.test(first)) v3=first.replace(/i$/i,'ee');
-    else if(/ee$/i.test(first)) v3=first.replace(/ee$/i,'i');
-    else v3=first+(rest?'':(/[aeiouAEIOU]$/.test(first)?'h':'i'));
-    v.push((v3+(rest?' '+rest:'')).trim());
+    if(!theme){ qs('combinationSection').innerHTML=''; return; }
 
-    // Deduplicate and cap at 3
-    var seen=new Set();seen.add(name.toLowerCase());
-    var result=[];
-    v.forEach(function(vv){
-      if(!seen.has(vv.toLowerCase())){seen.add(vv.toLowerCase());result.push(vv);}
+    var parts = theme.split(' — ');
+    var headline = parts[0] || ('Moolank '+birthNum+' × Bhagyank '+destNum);
+    var body = parts.slice(1).join(' — ');
+
+    qs('combinationSection').innerHTML=
+      '<div style="background:linear-gradient(135deg,#03090f,#071525);border-radius:var(--rl);padding:1.75rem 2rem;margin-bottom:1.25rem;position:relative;overflow:hidden;">'+
+        '<div style="position:absolute;right:24px;top:50%;transform:translateY(-50%);font-size:72px;opacity:.07;line-height:1;">'+birthNum+'×'+destNum+'</div>'+
+        '<div style="position:relative;">'+
+          '<div style="font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);font-family:sans-serif;margin-bottom:.5rem;">Your Combination Blueprint</div>'+
+          '<div style="font-size:22px;color:#f0ece0;margin-bottom:.75rem;">'+headline+'</div>'+
+          '<div style="font-size:14px;color:#b0a898;font-family:sans-serif;line-height:1.75;">'+body+'</div>'+
+        '</div>'+
+      '</div>'+
+      (powerNums.length?
+        '<div style="display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;">'+
+          '<span style="font-size:11px;letter-spacing:.1em;text-transform:uppercase;font-family:sans-serif;color:var(--text3);">Power dates &amp; numbers:</span>'+
+          powerNums.map(function(n){
+            return '<span style="background:var(--gold-l);border:1px solid var(--gold-b);border-radius:var(--r);padding:3px 12px;font-family:sans-serif;font-size:13px;color:var(--gold);">'+n+'</span>';
+          }).join('')+
+        '</div>':
+      '');
+  }
+
+  // ── 8. NAME ANALYSIS ─────────────────────────────────────────
+  var LUCKY_NUMS_MSG={
+    1:'Lucky numbers for your combination: 1, 2, 4, 9. Prioritise these for mobile endings, house numbers, and important dates.',
+    2:'Lucky numbers for your combination: 1, 2, 7. These align most deeply with your Moon-influenced chart.',
+    3:'Lucky numbers for your combination: 1, 3, 6, 9. These align with Jupiter\'s generous expansive frequency.',
+    4:'Lucky numbers for your combination: 1, 2, 4, 8. These provide the most stable energetic foundation.',
+    5:'Lucky numbers for your combination: 1, 3, 5, 9. These carry Mercury\'s quicksilver energy.',
+    6:'Lucky numbers for your combination: 3, 6, 9. These create the most harmonious resonance with your Venus energy.',
+    7:'Lucky numbers for your combination: 1, 2, 7. These support Ketu\'s introspective, spiritually attuned path.',
+    8:'Lucky numbers for your combination: 2, 4, 6, 8. These align with Saturn\'s methodical, disciplined frequency.',
+    9:'Lucky numbers for your combination: 1, 3, 5, 9. These amplify Mars energy and support your humanitarian drive.',
+  };
+
+  // Score-based name variant generator
+  function generateScoredNameVariants(inputName, currentPct){
+    var parts = inputName.trim().split(/\s+/);
+    var first = parts[0] || inputName;
+    var rest  = parts.slice(1).join(' ');
+    var candidates = [];
+
+    // Suffix additions
+    var suffixes=['a','aa','ah','i','ii','ee','y','e','h','ey','ay','ie','o','u'];
+    suffixes.forEach(function(s){
+      candidates.push(first+s);
+      if(first.length>3) candidates.push(first.slice(0,-1)+s);
     });
-    while(result.length<3) result.push(result[result.length-1]||name);
-    return result.slice(0,3);
+
+    // Vowel substitutions
+    var vowelPairs=[['a','aa'],['i','ee'],['u','oo'],['e','ee'],['o','oo'],
+                    ['sh','sh'],['k','c'],['v','w'],['w','v']];
+    vowelPairs.forEach(function(p){
+      var re=new RegExp(p[0]+'(?=[^aeiou]*$)','i');
+      var v=first.replace(re,p[1]);
+      if(v!==first) candidates.push(v);
+      var re2=new RegExp(p[1]+'(?=[^aeiou]*$)','i');
+      var v2=first.replace(re2,p[0]);
+      if(v2!==first) candidates.push(v2);
+    });
+
+    // Double last consonant
+    var dbl=first.replace(/([bcdfghjklmnpqrstvwxyz])$/i,function(m){return m+m;});
+    if(dbl!==first) candidates.push(dbl);
+
+    // Remove doubled letters
+    var dedup=first.replace(/(.)\1+/g,'$1');
+    if(dedup!==first&&dedup.length>2) candidates.push(dedup);
+
+    // Common Indian name suffix variants
+    ['an','in','am','em','al','el','ar','er','esh','ish','raj','dev'].forEach(function(s){
+      if(first.length>3) candidates.push(first.slice(0,-1)+s);
+    });
+
+    // Score each candidate
+    var seen=new Set([inputName.toLowerCase()]);
+    var results=[];
+    candidates.forEach(function(c){
+      if(c.length<2) return;
+      var fullName=(c+(rest?' '+rest:'')).trim();
+      var lc=fullName.toLowerCase();
+      if(seen.has(lc)) return;
+      seen.add(lc);
+      var info=getNameNum(fullName);
+      var score=compatPct(info.reduced,info.raw,birthNum,destNum);
+      results.push({name:fullName,num:info.reduced,raw:info.raw,score:score,planet:getPlanet(info.reduced)});
+    });
+
+    // Sort: improved first, then by score descending
+    results.sort(function(a,b){
+      var aImp=a.score>currentPct?1:0;
+      var bImp=b.score>currentPct?1:0;
+      if(bImp!==aImp) return bImp-aImp;
+      return b.score-a.score;
+    });
+
+    return results.slice(0,5);
   }
 
   function buildNameAnalysis(){
@@ -1057,19 +1248,46 @@
     var compoundNote='';
     if(cdEntry){
       compoundNote='<p style="font-size:13px;font-family:sans-serif;color:var(--text2);line-height:1.7;margin-top:.75rem;">'+
-        'Your name\'s compound number is <strong>'+nameRaw+'</strong> — <em>'+cdEntry.l+'</em>. '+
-        (cdEntry.q==='g'?'This is a highly auspicious compound number that amplifies success and positive outcomes.':
-         cdEntry.q==='b'?'This compound carries challenging vibrations. A correction to a more auspicious compound is advisable.':
-         'This compound number carries a neutral quality — stable but without strong momentum either way.')+
+        'Compound number <strong>'+nameRaw+'</strong>: <em>'+cdEntry.l+'</em>. '+
+        (cdEntry.q==='g'?'Highly auspicious — amplifies success and positive outcomes.':
+         cdEntry.q==='b'?'Carries challenging vibrations. A correction to a more auspicious compound is advisable.':
+         'Neutral quality — stable but without strong momentum either way.')+
       '</p>';
     }
 
-    var variants=generateNameVariants(name);
-    var variantNums = variants.map(function(v){
-      var info=getNameNum(v); return {name:v, num:info.reduced, raw:info.raw, planet:getPlanet(info.reduced)};
-    });
-
+    var variants = generateScoredNameVariants(name, pct);
     var lcMsg = LUCKY_NUMS_MSG[birthNum]||'';
+
+    var variantsHtml = variants.length ?
+      '<div style="display:flex;flex-direction:column;gap:.85rem;">'+
+        variants.map(function(v,i){
+          var vcd=CD[v.raw];
+          var improved=v.score>pct;
+          var scoreDiff=v.score-pct;
+          var scoreColor=improved?'var(--green)':'var(--gold)';
+          var scoreLabel=improved?('+'+scoreDiff+'%'):(v.score+'%');
+          var borderStyle=improved?'border:1.5px solid #b0d48a;background:var(--green-bg)':'border:1px solid var(--gold-b);background:var(--gold-l)';
+          return '<div style="'+borderStyle+';border-radius:var(--r);padding:1rem 1.25rem;display:flex;align-items:center;gap:1rem;">'+
+            '<div style="text-align:center;min-width:48px;">'+
+              '<div style="font-size:28px;color:var(--gold);line-height:1;">'+v.num+'</div>'+
+              '<div style="font-size:9px;font-family:sans-serif;color:var(--text3);text-transform:uppercase;letter-spacing:.06em;">'+v.planet+'</div>'+
+            '</div>'+
+            '<div style="flex:1;">'+
+              '<div style="font-size:17px;margin-bottom:3px;">'+v.name+'</div>'+
+              '<div style="font-size:12px;font-family:sans-serif;color:var(--text2);">'+
+                'Compound '+v.raw+(vcd?' · '+vcd.l.slice(0,32)+(vcd.l.length>32?'…':''):'')+
+              '</div>'+
+            '</div>'+
+            '<div style="text-align:right;min-width:72px;">'+
+              '<div style="font-size:15px;font-family:sans-serif;font-weight:700;color:'+scoreColor+';">'+v.score+'%</div>'+
+              (improved?
+                '<div style="font-size:11px;font-family:sans-serif;color:var(--green);">↑ '+scoreLabel+' vs current</div>':
+                '<div style="font-size:11px;font-family:sans-serif;color:var(--text3);">vs current '+pct+'%</div>')+
+            '</div>'+
+          '</div>';
+        }).join('')+
+      '</div>' :
+      '<p style="font-size:13px;font-family:sans-serif;color:var(--text2);">Your name is already highly optimised. No variants with significantly higher scores were found.</p>';
 
     section.innerHTML=
       '<div class="grid-2" style="gap:1.5rem;margin-bottom:1.5rem;">'+
@@ -1094,7 +1312,7 @@
               '<div class="align-title '+status+'">'+(harmonises?'✦ Harmonious':'⚠ Correction Advised')+'</div>'+
               '<div class="align-desc '+status+'">'+(harmonises?
                 'Your name\'s vibrational frequency resonates with your core numbers. The current spelling is energetically supportive.':
-                'Your name creates vibrational friction against your birth and destiny energies. The adjustments below are calculated to significantly improve alignment.')+
+                'Your name creates vibrational friction against your birth and destiny energies. The adjustments below are calibrated to improve alignment.')+
               '</div>'+
             '</div>'+
             '<div class="align-pct-badge '+status+'">'+pct+'%</div>'+
@@ -1103,28 +1321,144 @@
         '</div>'+
       '</div>'+
       '<div class="sec-label" style="margin-top:0;">'+
-        (harmonises?'Your Name is Well-Aligned — Alternative Spellings for Reference':'Recommended Name Spellings — Chaldean Optimised')+
+        (harmonises?'Name Variants — Alternative Spellings for Reference':'Recommended Spelling Variants — Chaldean Alignment Scores')+
       '</div>'+
       '<p style="font-size:13px;font-family:sans-serif;color:var(--text2);margin-bottom:1.25rem;line-height:1.7;">'+
         (harmonises?
-          'Your current name is already aligned. The variants below show how minor spelling changes shift compound numbers — useful for branding or business names.':
-          'These spelling variants alter the compound Chaldean value of your name, shifting it toward more auspicious vibrations. Consult a numerologist before making a legal name change.')+
+          'Your current name is already aligned. The variants below show how minor spelling changes shift compound numbers and scores.':
+          'These spelling variants improve the Chaldean alignment of your name. Each shows its new alignment score vs your current '+pct+'%. Consult a numerologist before a legal name change.')+
       '</p>'+
-      '<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;">'+
-        variantNums.map(function(v,i){
-          var vcd=CD[v.raw];
-          return '<div class="name-variant">'+
-            '<div class="name-variant-num">'+v.num+'</div>'+
-            '<div class="name-variant-info">'+
-              '<div class="name-variant-name">'+v.name+'</div>'+
-              '<div class="name-variant-meta">'+v.planet+' · Compound '+v.raw+
-                (vcd?' · '+vcd.l.slice(0,28)+(vcd.l.length>28?'…':''):'')+
-              '</div>'+
-            '</div>'+
-          '</div>';
-        }).join('')+
+      variantsHtml;
+  }
+
+  // ── 8b. MOBILE NUMBER ANALYSIS ────────────────────────────────
+  var MOBILE_NUM_DESC={
+    1:'Your mobile root number 1 (Sun) brings leadership energy and visibility to every call. Ideal for entrepreneurs and leaders.',
+    2:'Mobile root 2 (Moon) is excellent for relationship-based professions — counsellors, caregivers and creative workers.',
+    3:'Mobile root 3 (Jupiter) is one of the luckiest numbers for a mobile. Attracts opportunities, connections and good fortune.',
+    4:'Mobile root 4 (Rahu) brings unconventional energy. Can attract unpredictable situations; works best for innovators.',
+    5:'Mobile root 5 (Mercury) is outstanding for communicators, salespeople and anyone whose business runs on conversations.',
+    6:'Mobile root 6 (Venus) attracts harmony, love and creative connections. Excellent for those in creative or social fields.',
+    7:'Mobile root 7 (Ketu) brings spiritual depth and intuitive energy. Works well for researchers, healers and spiritual teachers.',
+    8:'Mobile root 8 (Saturn) brings disciplined, serious energy. Good for business executives but can slow casual socialising.',
+    9:'Mobile root 9 (Mars) brings courageous, action-oriented energy. Excellent for leaders, athletes and driven entrepreneurs.',
+  };
+
+  function reduceMobileNum(digits){
+    var s=digits.split('').reduce(function(a,b){return a+parseInt(b);},0);
+    while(s>9){s=String(s).split('').reduce(function(a,b){return a+parseInt(b);},0);}
+    return s;
+  }
+
+  function getMobileHarmonyStatus(mRoot, moolank, bhagyank){
+    var bc=COMPAT_PARTNERS[moolank]||{best:[],good:[],avoid:[]};
+    var dc=COMPAT_PARTNERS[bhagyank]||{best:[],good:[],avoid:[]};
+    var inBest=bc.best.indexOf(mRoot)>=0||dc.best.indexOf(mRoot)>=0||mRoot===moolank||mRoot===bhagyank;
+    var inGood=bc.good.indexOf(mRoot)>=0||dc.good.indexOf(mRoot)>=0;
+    var inAvoid=bc.avoid.indexOf(mRoot)>=0&&dc.avoid.indexOf(mRoot)>=0;
+    if(inBest) return 'aligned';
+    if(inAvoid) return 'misaligned';
+    return 'neutral';
+  }
+
+  function getLuckyMobileEndings(moolank, bhagyank){
+    var bc=COMPAT_PARTNERS[moolank]||{best:[],good:[]};
+    var dc=COMPAT_PARTNERS[bhagyank]||{best:[],good:[]};
+    var best=bc.best.filter(function(n){return dc.best.indexOf(n)>=0||dc.good.indexOf(n)>=0;});
+    if(!best.length) best=bc.best.concat(dc.best).filter(function(n,i,a){return a.indexOf(n)===i;});
+    best.sort();
+    return best.length ? best : [moolank, bhagyank].filter(function(n,i,a){return a.indexOf(n)===i;});
+  }
+
+  function buildMobileAnalysis(){
+    var section = qs('mobileAnalysisSection');
+    var luckyEnds = getLuckyMobileEndings(birthNum, destNum);
+
+    section.innerHTML=
+      '<div class="card" style="max-width:640px;">'+
+        '<div class="card-title">Enter Your Mobile Number for Instant Analysis</div>'+
+        '<p style="font-size:13px;font-family:sans-serif;color:var(--text2);line-height:1.7;margin-bottom:1rem;">'+
+          'Your mobile number\'s vibrational root influences the energy of every call and connection. Enter your 10-digit number below to check alignment with your Moolank '+birthNum+' and Bhagyank '+destNum+'.'+
+        '</p>'+
+        '<div style="display:flex;gap:.75rem;align-items:flex-start;flex-wrap:wrap;">'+
+          '<input id="mobileInput" type="tel" placeholder="Enter 10-digit mobile number" '+
+            'style="flex:1;min-width:200px;padding:10px 14px;border:1px solid var(--border);border-radius:var(--r);font-size:15px;font-family:sans-serif;background:var(--card);color:var(--text);outline:none;" '+
+            'oninput="this.value=this.value.replace(/\\D/g,\'\').slice(0,12)"/>'+
+          '<button onclick="analyseMobile()" '+
+            'style="padding:10px 22px;background:linear-gradient(135deg,#7c3aed,#a855f7);color:#fff;border:none;border-radius:var(--r);font-family:sans-serif;font-size:14px;font-weight:600;cursor:pointer;white-space:nowrap;">'+
+            'Analyse →'+
+          '</button>'+
+        '</div>'+
+        '<div id="mobileResult" style="margin-top:1.25rem;display:none;"></div>'+
+        '<div style="margin-top:1rem;padding:.85rem 1rem;background:var(--gold-l);border:1px solid var(--gold-b);border-radius:var(--r);">'+
+          '<div style="font-size:11px;font-family:sans-serif;font-weight:700;color:var(--gold);text-transform:uppercase;letter-spacing:.06em;margin-bottom:.4rem;">Your lucky mobile endings</div>'+
+          '<div style="display:flex;gap:.5rem;flex-wrap:wrap;">'+
+            luckyEnds.map(function(n){
+              return '<span style="background:rgba(240,180,41,.25);color:var(--gold);padding:4px 14px;border-radius:20px;font-family:sans-serif;font-size:13px;font-weight:700;">Ends in '+n+'</span>';
+            }).join('')+
+          '</div>'+
+          '<div style="font-size:12px;font-family:sans-serif;color:var(--text2);margin-top:.5rem;">These last digits are most aligned with your Moolank '+birthNum+' ('+birthPlanet+') and Bhagyank '+destNum+' ('+destPlanet+').</div>'+
+        '</div>'+
       '</div>';
   }
+
+  // Mobile analyse function (called from button click)
+  window.analyseMobile = function(){
+    var input = document.getElementById('mobileInput');
+    var result = document.getElementById('mobileResult');
+    if(!input||!result) return;
+
+    var raw = input.value.replace(/\D/g,'');
+    // Strip leading country codes
+    if(raw.length===12&&raw.slice(0,2)==='91') raw=raw.slice(2);
+    if(raw.length===11&&raw[0]==='0') raw=raw.slice(1);
+
+    if(raw.length<10){ result.style.display='block'; result.innerHTML='<p style="color:var(--red);font-family:sans-serif;font-size:13px;">Please enter a valid 10-digit mobile number.</p>'; return; }
+
+    var digits=raw.slice(0,10);
+    var mRoot=reduceMobileNum(digits);
+    var mPlanet=getPlanet(mRoot);
+    var harmonyStatus=getMobileHarmonyStatus(mRoot,birthNum,destNum);
+    var desc=MOBILE_NUM_DESC[mRoot]||'';
+
+    var harmonyConfig={
+      aligned:{icon:'✦',label:'Well Aligned with Your Numbers',color:'var(--green)',bg:'var(--green-bg)',border:'#b0d48a'},
+      neutral:{icon:'◈',label:'Moderately Aligned',color:'var(--amber)',bg:'var(--amber-bg)',border:'#e8c77a'},
+      misaligned:{icon:'⚠',label:'Vibrational Friction — Consider Alternatives',color:'var(--red)',bg:'var(--red-bg)',border:'#f5aaaa'},
+    };
+    var hc=harmonyConfig[harmonyStatus];
+
+    // Lucky ending check
+    var lastDigit=parseInt(digits[digits.length-1]);
+    var luckyEnds=getLuckyMobileEndings(birthNum,destNum);
+    var isLuckyEnd=luckyEnds.indexOf(lastDigit)>=0;
+
+    result.style.display='block';
+    result.innerHTML=
+      '<div style="background:'+hc.bg+';border:1.5px solid '+hc.border+';border-radius:var(--r);padding:1rem 1.25rem;margin-bottom:.85rem;display:flex;align-items:flex-start;gap:.85rem;">'+
+        '<div style="font-size:24px;color:'+hc.color+';">'+hc.icon+'</div>'+
+        '<div style="flex:1;">'+
+          '<div style="font-size:15px;color:'+hc.color+';margin-bottom:4px;">'+hc.label+'</div>'+
+          '<div style="font-size:13px;font-family:sans-serif;line-height:1.65;color:var(--text2);">'+desc+'</div>'+
+        '</div>'+
+        '<div style="text-align:center;min-width:56px;">'+
+          '<div style="font-size:28px;color:'+hc.color+';line-height:1;">'+mRoot+'</div>'+
+          '<div style="font-size:10px;font-family:sans-serif;color:var(--text3);">'+mPlanet+'</div>'+
+        '</div>'+
+      '</div>'+
+      '<div style="display:flex;gap:.75rem;flex-wrap:wrap;">'+
+        '<div style="flex:1;min-width:180px;background:var(--gold-l);border:1px solid var(--gold-b);border-radius:var(--r);padding:.75rem 1rem;">'+
+          '<div style="font-size:10px;font-family:sans-serif;font-weight:700;color:var(--gold);text-transform:uppercase;letter-spacing:.06em;margin-bottom:.3rem;">Mobile Root Number</div>'+
+          '<div style="font-size:20px;color:var(--gold);">'+mRoot+' — '+mPlanet+'</div>'+
+          '<div style="font-size:11.5px;font-family:sans-serif;color:var(--text2);margin-top:3px;">Sum of all 10 digits reduced to single digit</div>'+
+        '</div>'+
+        '<div style="flex:1;min-width:180px;background:'+(isLuckyEnd?'var(--green-bg)':'var(--gold-l)')+';border:1px solid '+(isLuckyEnd?'#b0d48a':'var(--gold-b)')+';border-radius:var(--r);padding:.75rem 1rem;">'+
+          '<div style="font-size:10px;font-family:sans-serif;font-weight:700;color:'+(isLuckyEnd?'var(--green)':'var(--gold)')+';text-transform:uppercase;letter-spacing:.06em;margin-bottom:.3rem;">Last Digit</div>'+
+          '<div style="font-size:20px;color:'+(isLuckyEnd?'var(--green)':'var(--text)')+' ;">'+lastDigit+(isLuckyEnd?' ✓ Lucky':'')+'</div>'+
+          '<div style="font-size:11.5px;font-family:sans-serif;color:var(--text2);margin-top:3px;">'+(isLuckyEnd?'This is a lucky ending for your numbers.':'Lucky endings for you: '+luckyEnds.join(', '))+'</div>'+
+        '</div>'+
+      '</div>';
+  };
 
   // ── 9. SHARE BUTTONS ─────────────────────────────────────────
   function buildShareButtons(){
