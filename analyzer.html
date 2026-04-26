@@ -562,7 +562,7 @@ async function captureEmail(){
   const btn = document.querySelector('#emailCapture .btn');
   btn.disabled=true; btn.textContent='Saving…';
   try{
-    await fetch('/api/lead',{
+    await fetch('/api/capture-lead',{
       method:'POST',headers:{'Content-Type':'application/json'},
       body:JSON.stringify({name:S.name,dob:S.dob,email,birthNum:S.birthNum,destNum:S.destNum,nameNum:S.nameNum,pct:compatPct(S.nameNum,S.nameRaw,S.birthNum,S.destNum)})
     });
