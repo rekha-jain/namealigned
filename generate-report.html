@@ -555,6 +555,7 @@
   var pDestNum   = parseInt(params.get('destNum'))||0;
   var pNameNum   = parseInt(params.get('nameNum'))||0;
   var pPct       = parseInt(params.get('pct'))||0;
+  var mobile     = (params.get('mobile')||'').replace(/\D/g,'').slice(0,10);
 
   // Validate session
   if(!paymentId){
@@ -1503,56 +1504,14 @@
     return best.length ? best : [moolank, bhagyank].filter(function(n,i,a){return a.indexOf(n)===i;});
   }
 
-  function buildMobileAnalysis(){
-    var section = qs('mobileAnalysisSection');
-    var luckyEnds = getLuckyMobileEndings(birthNum, destNum);
-
-    section.innerHTML=
-      '<div class="card" style="max-width:640px;">'+
-        '<div class="card-title">Enter Your Mobile Number for Instant Analysis</div>'+
-        '<p style="font-size:13px;font-family:sans-serif;color:var(--text2);line-height:1.7;margin-bottom:1rem;">'+
-          'Your mobile number\'s vibrational root influences the energy of every call and connection. Enter your 10-digit number below to check alignment with your Moolank '+birthNum+' and Bhagyank '+destNum+'.'+
-        '</p>'+
-        '<div style="display:flex;gap:.75rem;align-items:flex-start;flex-wrap:wrap;">'+
-          '<input id="mobileInput" type="tel" placeholder="Enter 10-digit mobile number" '+
-            'style="flex:1;min-width:200px;padding:10px 14px;border:1px solid var(--border);border-radius:var(--r);font-size:15px;font-family:sans-serif;background:var(--card);color:var(--text);outline:none;" '+
-            'oninput="this.value=this.value.replace(/\\D/g,\'\').slice(0,12)"/>'+
-          '<button onclick="analyseMobile()" '+
-            'style="padding:10px 22px;background:linear-gradient(135deg,#7c3aed,#a855f7);color:#fff;border:none;border-radius:var(--r);font-family:sans-serif;font-size:14px;font-weight:600;cursor:pointer;white-space:nowrap;">'+
-            'Analyse →'+
-          '</button>'+
-        '</div>'+
-        '<div id="mobileResult" style="margin-top:1.25rem;display:none;"></div>'+
-        '<div style="margin-top:1rem;padding:.85rem 1rem;background:var(--gold-l);border:1px solid var(--gold-b);border-radius:var(--r);">'+
-          '<div style="font-size:11px;font-family:sans-serif;font-weight:700;color:var(--gold);text-transform:uppercase;letter-spacing:.06em;margin-bottom:.4rem;">Your lucky mobile endings</div>'+
-          '<div style="display:flex;gap:.5rem;flex-wrap:wrap;">'+
-            luckyEnds.map(function(n){
-              return '<span style="background:rgba(240,180,41,.25);color:var(--gold);padding:4px 14px;border-radius:20px;font-family:sans-serif;font-size:13px;font-weight:700;">Ends in '+n+'</span>';
-            }).join('')+
-          '</div>'+
-          '<div style="font-size:12px;font-family:sans-serif;color:var(--text2);margin-top:.5rem;">These last digits are most aligned with your Moolank '+birthNum+' ('+birthPlanet+') and Bhagyank '+destNum+' ('+destPlanet+').</div>'+
-        '</div>'+
-      '</div>';
-  }
-
-  // Mobile analyse function (called from button click)
-  window.analyseMobile = function(){
-    var input = document.getElementById('mobileInput');
-    var result = document.getElementById('mobileResult');
-    if(!input||!result) return;
-
-    var raw = input.value.replace(/\D/g,'');
-    // Strip leading country codes
-    if(raw.length===12&&raw.slice(0,2)==='91') raw=raw.slice(2);
-    if(raw.length===11&&raw[0]==='0') raw=raw.slice(1);
-
-    if(raw.length<10){ result.style.display='block'; result.innerHTML='<p style="color:var(--red);font-family:sans-serif;font-size:13px;">Please enter a valid 10-digit mobile number.</p>'; return; }
-
-    var digits=raw.slice(0,10);
+  function renderMobileResult(digits){
     var mRoot=reduceMobileNum(digits);
     var mPlanet=getPlanet(mRoot);
     var harmonyStatus=getMobileHarmonyStatus(mRoot,birthNum,destNum);
     var desc=MOBILE_NUM_DESC[mRoot]||'';
+    var luckyEnds=getLuckyMobileEndings(birthNum,destNum);
+    var lastDigit=parseInt(digits[digits.length-1]);
+    var isLuckyEnd=luckyEnds.indexOf(lastDigit)>=0;
 
     var harmonyConfig={
       aligned:{icon:'✦',label:'Well Aligned with Your Numbers',color:'var(--green)',bg:'var(--green-bg)',border:'#b0d48a'},
@@ -1561,14 +1520,7 @@
     };
     var hc=harmonyConfig[harmonyStatus];
 
-    // Lucky ending check
-    var lastDigit=parseInt(digits[digits.length-1]);
-    var luckyEnds=getLuckyMobileEndings(birthNum,destNum);
-    var isLuckyEnd=luckyEnds.indexOf(lastDigit)>=0;
-
-    result.style.display='block';
-    result.innerHTML=
-      '<div style="background:'+hc.bg+';border:1.5px solid '+hc.border+';border-radius:var(--r);padding:1rem 1.25rem;margin-bottom:.85rem;display:flex;align-items:flex-start;gap:.85rem;">'+
+    return '<div style="background:'+hc.bg+';border:1.5px solid '+hc.border+';border-radius:var(--r);padding:1rem 1.25rem;margin-bottom:.85rem;display:flex;align-items:flex-start;gap:.85rem;">'+
         '<div style="font-size:24px;color:'+hc.color+';">'+hc.icon+'</div>'+
         '<div style="flex:1;">'+
           '<div style="font-size:15px;color:'+hc.color+';margin-bottom:4px;">'+hc.label+'</div>'+
@@ -1579,19 +1531,50 @@
           '<div style="font-size:10px;font-family:sans-serif;color:var(--text3);">'+mPlanet+'</div>'+
         '</div>'+
       '</div>'+
-      '<div style="display:flex;gap:.75rem;flex-wrap:wrap;">'+
-        '<div style="flex:1;min-width:180px;background:var(--gold-l);border:1px solid var(--gold-b);border-radius:var(--r);padding:.75rem 1rem;">'+
+      '<div style="display:flex;gap:.75rem;flex-wrap:wrap;margin-bottom:.85rem;">'+
+        '<div style="flex:1;min-width:160px;background:var(--gold-l);border:1px solid var(--gold-b);border-radius:var(--r);padding:.75rem 1rem;">'+
           '<div style="font-size:10px;font-family:sans-serif;font-weight:700;color:var(--gold);text-transform:uppercase;letter-spacing:.06em;margin-bottom:.3rem;">Mobile Root Number</div>'+
           '<div style="font-size:20px;color:var(--gold);">'+mRoot+' — '+mPlanet+'</div>'+
-          '<div style="font-size:11.5px;font-family:sans-serif;color:var(--text2);margin-top:3px;">Sum of all 10 digits reduced to single digit</div>'+
+          '<div style="font-size:11.5px;font-family:sans-serif;color:var(--text2);margin-top:3px;">Sum of all digits reduced to single digit</div>'+
         '</div>'+
-        '<div style="flex:1;min-width:180px;background:'+(isLuckyEnd?'var(--green-bg)':'var(--gold-l)')+';border:1px solid '+(isLuckyEnd?'#b0d48a':'var(--gold-b)')+';border-radius:var(--r);padding:.75rem 1rem;">'+
+        '<div style="flex:1;min-width:160px;background:'+(isLuckyEnd?'var(--green-bg)':'var(--gold-l)')+';border:1px solid '+(isLuckyEnd?'#b0d48a':'var(--gold-b)')+';border-radius:var(--r);padding:.75rem 1rem;">'+
           '<div style="font-size:10px;font-family:sans-serif;font-weight:700;color:'+(isLuckyEnd?'var(--green)':'var(--gold)')+';text-transform:uppercase;letter-spacing:.06em;margin-bottom:.3rem;">Last Digit</div>'+
-          '<div style="font-size:20px;color:'+(isLuckyEnd?'var(--green)':'var(--text)')+' ;">'+lastDigit+(isLuckyEnd?' ✓ Lucky':'')+'</div>'+
+          '<div style="font-size:20px;color:'+(isLuckyEnd?'var(--green)':'var(--text)')+';">'+lastDigit+(isLuckyEnd?' ✓ Lucky':'')+'</div>'+
           '<div style="font-size:11.5px;font-family:sans-serif;color:var(--text2);margin-top:3px;">'+(isLuckyEnd?'This is a lucky ending for your numbers.':'Lucky endings for you: '+luckyEnds.join(', '))+'</div>'+
         '</div>'+
+      '</div>'+
+      '<div style="padding:.85rem 1rem;background:var(--gold-l);border:1px solid var(--gold-b);border-radius:var(--r);">'+
+        '<div style="font-size:10px;font-family:sans-serif;font-weight:700;color:var(--gold);text-transform:uppercase;letter-spacing:.06em;margin-bottom:.4rem;">Your Lucky Mobile Endings</div>'+
+        '<div style="display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:.4rem;">'+
+          luckyEnds.map(function(n){
+            return '<span style="background:rgba(240,180,41,.25);color:var(--gold);padding:4px 14px;border-radius:20px;font-family:sans-serif;font-size:13px;font-weight:700;">Ends in '+n+'</span>';
+          }).join('')+
+        '</div>'+
+        '<div style="font-size:12px;font-family:sans-serif;color:var(--text2);">These last digits are most aligned with your Moolank '+birthNum+' ('+birthPlanet+') and Bhagyank '+destNum+' ('+destPlanet+').</div>'+
       '</div>';
-  };
+  }
+
+  function buildMobileAnalysis(){
+    var wrap = qs('mobileAnalysisSection');
+    var section = wrap ? wrap.closest('.rpt-section') || wrap.parentElement : null;
+
+    // Normalise: strip country code if present
+    var digits = mobile;
+    if(digits.length===12 && digits.slice(0,2)==='91') digits=digits.slice(2);
+    if(digits.length===11 && digits[0]==='0') digits=digits.slice(1);
+
+    if(!digits || digits.length!==10){
+      // User didn't provide a mobile number — hide the entire section cleanly
+      if(section) section.style.display='none';
+      // Also hide the preceding <hr>
+      var prevHr=section ? section.previousElementSibling : null;
+      if(prevHr && prevHr.tagName==='HR') prevHr.style.display='none';
+      return;
+    }
+
+    // Mobile number provided — render full analysis automatically
+    if(wrap) wrap.innerHTML = renderMobileResult(digits);
+  }
 
   // ── 9. SHARE BUTTONS ─────────────────────────────────────────
   function buildShareButtons(){

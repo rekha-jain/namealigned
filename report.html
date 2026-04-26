@@ -202,6 +202,18 @@
               <label>Email (to receive report)</label>
               <input type="email" id="rEmail" placeholder="you@email.com"/>
             </div>
+            <div class="fg">
+              <label style="display:flex;align-items:center;gap:6px;">
+                Mobile number
+                <span style="font-size:11px;font-family:sans-serif;background:var(--gold-l);border:1px solid var(--gold-b);color:var(--gold);padding:1px 8px;border-radius:20px;font-weight:normal;">Optional</span>
+              </label>
+              <input type="tel" id="rMobile" placeholder="10-digit number for mobile analysis"
+                     oninput="this.value=this.value.replace(/\D/g,'').slice(0,10)"
+                     style="font-family:sans-serif;"/>
+              <div style="font-size:11.5px;font-family:sans-serif;color:var(--text3);margin-top:3px;line-height:1.5;">
+                We'll include a personalised mobile number analysis in your report.
+              </div>
+            </div>
           </div>
         </div>
 
@@ -261,10 +273,11 @@ window.addEventListener('DOMContentLoaded',()=>{
 });
 
 function initiateReportPayment(){
-  const name  = document.getElementById('rName').value.trim();
-  const dob   = document.getElementById('rDob').value;
-  const email = document.getElementById('rEmail').value.trim();
-  const err   = document.getElementById('rErrBox');
+  const name   = document.getElementById('rName').value.trim();
+  const dob    = document.getElementById('rDob').value;
+  const email  = document.getElementById('rEmail').value.trim();
+  const mobile = document.getElementById('rMobile').value.trim(); // optional
+  const err    = document.getElementById('rErrBox');
   err.style.display='none';
   if(!name)  { err.style.display='block'; err.textContent='Please enter your name.'; return; }
   if(!dob)   { err.style.display='block'; err.textContent='Please enter your date of birth.'; return; }
@@ -276,10 +289,10 @@ function initiateReportPayment(){
     currency: 'INR',
     name:     'NameAligned.com',
     description: '5-Year Destiny Report',
-    prefill:  { name, email },
-    notes:    { customer_name: name, dob, email },
+    prefill:  { name, email, contact: mobile || '' },
+    notes:    { customer_name: name, dob, email, mobile: mobile || '' },
     theme:    { color: '#f0b429' },
-    handler:  function(resp){ onSuccess(resp.razorpay_payment_id, name, dob, email); }
+    handler:  function(resp){ onSuccess(resp.razorpay_payment_id, name, dob, email, mobile); }
   };
   const rzp = new Razorpay(options);
   rzp.on('payment.failed',resp=>{
@@ -289,9 +302,9 @@ function initiateReportPayment(){
   rzp.open();
 }
 
-async function onSuccess(paymentId, name, dob, email){
-  // Redirect to report generation page
+async function onSuccess(paymentId, name, dob, email, mobile){
   const params = new URLSearchParams({paymentId, name, dob, email});
+  if(mobile) params.set('mobile', mobile);
   window.location.href = `generate-report.html?${params}`;
 }
 </script>

@@ -65,7 +65,7 @@ async function verifyRazorpayPayment(paymentId) {
 // Helper: save order to Supabase
 // ---------------------------------------------------------------------------
 async function saveOrderToSupabase({
-  paymentId, name, email, dob, birthNum, destNum, nameNum,
+  paymentId, name, email, dob, mobile, birthNum, destNum, nameNum,
 }) {
   const url = `${process.env.SUPABASE_URL}/rest/v1/orders`;
 
@@ -82,6 +82,7 @@ async function saveOrderToSupabase({
       name,
       email,
       dob: dob || null,
+      phone: mobile || null,
       moolank: birthNum ?? null,
       bhagyank: destNum ?? null,
       name_number: nameNum ?? null,
@@ -101,13 +102,14 @@ async function saveOrderToSupabase({
 // ---------------------------------------------------------------------------
 // Helper: send report delivery email via Brevo
 // ---------------------------------------------------------------------------
-async function sendReportEmail({ paymentId, name, email, dob, birthNum, destNum, nameNum }) {
+async function sendReportEmail({ paymentId, name, email, dob, mobile, birthNum, destNum, nameNum }) {
   const reportUrl =
     `https://namealigned.com/generate-report.html` +
     `?paymentId=${encodeURIComponent(paymentId || '')}` +
     `&name=${encodeURIComponent(name || '')}` +
     `&dob=${encodeURIComponent(dob || '')}` +
     `&email=${encodeURIComponent(email || '')}` +
+    (mobile ? `&mobile=${encodeURIComponent(mobile)}` : '') +
     `&birthNum=${encodeURIComponent(birthNum ?? '')}` +
     `&destNum=${encodeURIComponent(destNum ?? '')}` +
     `&nameNum=${encodeURIComponent(nameNum ?? '')}`;
@@ -314,7 +316,7 @@ export default async function handler(req, res) {
   }
 
   try {
-    const { paymentId, name, dob, email, birthNum, destNum, nameNum } =
+    const { paymentId, name, dob, email, mobile, birthNum, destNum, nameNum } =
       req.body || {};
 
     // --- Basic input validation ---
@@ -370,6 +372,7 @@ export default async function handler(req, res) {
         name: cleanName,
         email: cleanEmail,
         dob: dob || null,
+        mobile: mobile || null,
         birthNum: birthNum ?? null,
         destNum: destNum ?? null,
         nameNum: nameNum ?? null,
@@ -387,6 +390,7 @@ export default async function handler(req, res) {
         name: cleanName,
         email: cleanEmail,
         dob: dob || '',
+        mobile: mobile || '',
         birthNum,
         destNum,
         nameNum,
