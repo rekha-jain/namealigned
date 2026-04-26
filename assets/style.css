@@ -122,9 +122,11 @@ strong{font-weight:600}
 .nav-logo{
   font-family: var(--font-serif);
   font-size:18px;letter-spacing:.04em;
-  color:var(--text);display:flex;align-items:center;gap:8px;
+  color:var(--text);display:flex;align-items:center;gap:7px;
 }
-.nav-logo span{color:var(--gold)}
+.nav-logo .logo-icon{color:var(--teal);font-size:16px}
+.nav-logo .logo-text{color:var(--text);letter-spacing:.02em}
+.nav-logo .logo-text em{color:var(--gold);font-style:normal}
 .nav-links{display:flex;align-items:center;gap:1.75rem;list-style:none}
 .nav-links a{
   font-size:13px;font-family:var(--font-sans);
