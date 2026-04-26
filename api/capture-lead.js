@@ -160,16 +160,49 @@ async function sendBrevoEmail({ name, dob, email, birthNum, destNum, nameNum }) 
             </td>
           </tr>
 
-          <!-- CTA -->
+          <!-- CTA: View free report -->
           <tr>
-            <td style="padding:0 48px 48px;text-align:center;">
+            <td style="padding:0 48px 16px;text-align:center;">
               <a href="${reportUrl}"
-                 style="display:inline-block;padding:16px 40px;
+                 style="display:inline-block;padding:14px 36px;
                         background:linear-gradient(135deg,#7c3aed,#a855f7);
                         color:#ffffff;text-decoration:none;border-radius:8px;
-                        font-size:16px;font-weight:600;letter-spacing:0.5px;">
-                View Your Full Report →
+                        font-size:15px;font-weight:600;letter-spacing:0.5px;">
+                View Your Free Analysis →
               </a>
+            </td>
+          </tr>
+
+          <!-- Upgrade divider -->
+          <tr>
+            <td style="padding:8px 48px 0;text-align:center;">
+              <p style="margin:0;font-size:13px;color:#9ca3af;">or</p>
+            </td>
+          </tr>
+
+          <!-- CTA: Paid report -->
+          <tr>
+            <td style="padding:12px 48px 16px;text-align:center;">
+              <a href="${reportUrl.replace('report.html', 'report.html')}"
+                 style="display:inline-block;padding:16px 40px;
+                        background:linear-gradient(135deg,#f0b429,#f5d060);
+                        color:#1a0533;text-decoration:none;border-radius:8px;
+                        font-size:16px;font-weight:700;letter-spacing:0.5px;">
+                Get Your 5-Year Destiny Report — ₹199 →
+              </a>
+            </td>
+          </tr>
+
+          <!-- Paid report features -->
+          <tr>
+            <td style="padding:0 48px 40px;text-align:center;">
+              <p style="margin:8px 0 0;font-size:12px;color:#9ca3af;line-height:1.8;">
+                ✦ Suggested names with Chaldean scores &nbsp;·&nbsp;
+                ✦ 5-year personalised forecast<br>
+                ✦ Year-by-year career, love, wealth &amp; health &nbsp;·&nbsp;
+                ✦ Mobile number analysis<br>
+                ✦ Downloadable PDF — One-time ₹199, instant delivery
+              </p>
             </td>
           </tr>
 
