@@ -95,8 +95,8 @@
 
 /* ── LUCKY ATTRS ────────────────────────────────────────────── */
 .attr-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:1rem;}
-@media(max-width:860px){.attr-grid{grid-template-columns:repeat(3,1fr);}}
-@media(max-width:500px){.attr-grid{grid-template-columns:1fr 1fr;}}
+@media screen and (max-width:860px){.attr-grid{grid-template-columns:repeat(3,1fr);}}
+@media screen and (max-width:500px){.attr-grid{grid-template-columns:1fr 1fr;}}
 .attr-card{
   background:var(--gold-l);border:1px solid var(--gold-b);border-radius:var(--r);
   padding:1.1rem;text-align:center;
@@ -122,12 +122,12 @@
 .forecast-body{padding:1.5rem;}
 .forecast-theme{font-size:13px;color:var(--text3);font-family:sans-serif;font-style:italic;margin-bottom:1.25rem;padding-bottom:1rem;border-bottom:1px solid var(--gold-b);}
 .forecast-insights{display:grid;grid-template-columns:1fr 1fr;gap:.75rem;margin-bottom:1.25rem;}
-@media(max-width:600px){.forecast-insights{grid-template-columns:1fr;}}
+@media screen and (max-width:600px){.forecast-insights{grid-template-columns:1fr;}}
 .fi-card{background:var(--gold-l);border-radius:var(--r);padding:.85rem;}
 .fi-label{font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--gold);font-family:sans-serif;margin-bottom:.4rem;}
 .fi-text{font-size:12.5px;font-family:sans-serif;color:var(--text2);line-height:1.65;}
 .forecast-do-avoid{display:grid;grid-template-columns:1fr 1fr;gap:.75rem;margin-bottom:1.25rem;}
-@media(max-width:600px){.forecast-do-avoid{grid-template-columns:1fr;}}
+@media screen and (max-width:600px){.forecast-do-avoid{grid-template-columns:1fr;}}
 .fda{border-radius:var(--r);padding:.85rem 1rem;}
 .fda.do{background:var(--green-bg);}
 .fda.avoid{background:var(--red-bg);}
@@ -192,7 +192,7 @@
 
 /* ── NAME ANALYSIS ───────────────────────────────────────────── */
 .name-analysis-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;}
-@media(max-width:620px){.name-analysis-grid{grid-template-columns:1fr;}}
+@media screen and (max-width:620px){.name-analysis-grid{grid-template-columns:1fr;}}
 .name-variant{
   background:var(--gold-l);border:1px solid var(--gold-b);border-radius:var(--r);
   padding:1rem 1.25rem;display:flex;align-items:center;gap:.85rem;
@@ -322,9 +322,9 @@
   /* Remedies */
   .remedy-card{padding:.7rem .9rem!important;gap:.65rem!important;}
 
-  /* Name alignment section */
-  #nameAnalysisSection{break-before:page;break-inside:avoid;}
-  .name-align-card{padding:1rem!important;}
+  /* Name alignment section: stay together but flow naturally (fill prior gaps) */
+  #nameAnalysisSection{break-inside:avoid;}
+  .name-align-card{padding:1rem!important;break-inside:avoid;}
   .name-align-card>div:first-child{margin-bottom:.75rem!important;}
   .name-options-grid{display:grid!important;grid-template-columns:repeat(3,1fr)!important;gap:.6rem!important;}
   .name-options-grid>div{padding:.75rem .8rem!important;}
@@ -332,6 +332,12 @@
   /* ─ Page-break control ──────────────────────────────────────── */
   .career-col,.career-domain,.compat-card{break-inside:avoid;}
   #remediesGrid>div{break-inside:avoid;}
+  /* Each attribute card stays whole; whole grid stays together */
+  .attr-card{break-inside:avoid;}
+  .attr-grid{break-inside:avoid;}
+  .align-banner{break-inside:avoid;}
+  /* Sections with a single self-contained grid stay together */
+  #attrsGrid,#alignmentBanner{break-inside:avoid;}
   .core-num-card{break-inside:auto;}
   .forecast-card{break-inside:auto;}
   .forecast-hdr{break-after:avoid;}
@@ -381,7 +387,7 @@ hr.divider{display:none;}
 }
 
 /* ── MOBILE ─────────────────────────────────────────────────── */
-@media(max-width:768px){
+@media screen and (max-width:768px){
   .rpt-hero{padding:2.5rem 1rem 2rem;}
   .rpt-hero h1{font-size:22px;}
   .grid-3{grid-template-columns:1fr!important;}
@@ -398,7 +404,7 @@ hr.divider{display:none;}
   .compat-card{min-width:120px;}
   .order-card{position:static!important;}
 }
-@media(max-width:480px){
+@media screen and (max-width:480px){
   .container{padding-left:1rem!important;padding-right:1rem!important;}
   .rpt-hero h1{font-size:20px;}
   .core-num-big{font-size:44px;}
