@@ -245,6 +245,13 @@
   .forecast-hdr{background:linear-gradient(160deg,#071e2d,#0c3347)!important;}
   .core-num-card{background:linear-gradient(160deg,#071e2d 0%,#0c3347 100%)!important;}
 
+  /* ─ Hero: own full page, vertically centered ────────────────── */
+  .rpt-hero{
+    min-height:100vh!important;
+    display:flex!important;flex-direction:column!important;
+    align-items:center!important;justify-content:center!important;
+    break-after:page!important;
+  }
   /* ─ Layout ──────────────────────────────────────────────────── */
   .rpt-section{padding:1.25rem 1.5rem!important;margin-bottom:.75rem;}
   .forecast-card{overflow:visible;margin-bottom:1rem;}
@@ -519,7 +526,7 @@ hr.divider{display:none;}
       <div style="font-size:36px;margin-bottom:.75rem;">📄</div>
       <h3 style="font-size:20px;margin-bottom:.5rem;">Save this report as a PDF</h3>
       <p style="font-size:13px;color:var(--text2);font-family:sans-serif;line-height:1.7;margin-bottom:1.5rem;">Print a beautifully formatted version of your complete numerology report — all sections, formatted cleanly for printing or saving as PDF. Works on all devices.</p>
-      <button class="btn btn-primary btn-lg btn-print" onclick="window.print()">⬇ Download PDF</button>
+      <button class="btn btn-primary btn-lg btn-print" onclick="downloadPDF()">⬇ Download PDF</button>
       <p style="font-size:12px;color:var(--text3);font-family:sans-serif;margin-top:.85rem;">In your browser's print dialog, choose "Save as PDF" as the destination.</p>
     </div>
   </div>
@@ -740,6 +747,21 @@ hr.divider{display:none;}
     }).catch(function(e){ console.warn('generate-report API call failed:', e); });
   })();
 
+  // ── PRINT HELPER (waits for report to be fully built) ─────────
+  window._reportReady = false;
+  function downloadPDF(){
+    if(window._reportReady){ window.print(); return; }
+    var btn = document.querySelector('.btn-print');
+    if(btn){ btn.textContent = 'Preparing…'; btn.disabled = true; }
+    var check = setInterval(function(){
+      if(window._reportReady){
+        clearInterval(check);
+        if(btn){ btn.textContent = '⬇ Download PDF'; btn.disabled = false; }
+        window.print();
+      }
+    }, 200);
+  }
+
   // ── BUILD REPORT ──────────────────────────────────────────────
   function buildReport(){
     // Hero
@@ -760,6 +782,7 @@ hr.divider{display:none;}
     buildRemedies();
     buildMobileAnalysis();
     buildShareButtons();
+    window._reportReady = true;
   }
 
   // ── 1. CORE NUMBERS ──────────────────────────────────────────
