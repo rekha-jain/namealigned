@@ -119,7 +119,7 @@ strong{font-weight:600}
 .section-h2{position:relative;display:inline-block}
 /* Teal accent variant sections */
 .section-teal{
-  background: linear-gradient(160deg, #071e2d 0%, #0c3347 60%, #0e7490 100%) !important;
+  background: linear-gradient(160deg, #071e2d 0%, #0c3347 100%) !important;
   color: #e8f4ff;
 }
 .section-teal .section-eyebrow{color:var(--gold)}
@@ -345,7 +345,7 @@ textarea{resize:vertical;min-height:68px}
 
 /* ── HERO SECTIONS ──────────────────────────────────────────── */
 .hero-dark{
-  background: linear-gradient(160deg, #071e2d 0%, #0c3347 55%, #0e7490 100%);
+  background: linear-gradient(160deg, #071e2d 0%, #0c3347 100%);
   color: #e8f4ff;
   text-align:center;padding:5rem 1.5rem 4rem;
   position:relative;overflow:hidden;
@@ -637,8 +637,8 @@ textarea{resize:vertical;min-height:68px}
 
 /* ── EMAIL CAPTURE BANNER ────────────────────────────────────── */
 .email-banner{
-  background: linear-gradient(160deg, #071e2d 0%, #0c3347 60%, #0e7490 100%);
-  border:1px solid var(--teal-b);
+  background: linear-gradient(160deg, #071e2d 0%, #0c3347 100%);
+  border:1px solid rgba(6,182,212,.25);
   border-radius:var(--rl);padding:3rem 2.5rem;
   color:#e8f4ff;text-align:center;
   box-shadow:0 8px 40px rgba(6,182,212,.20);
