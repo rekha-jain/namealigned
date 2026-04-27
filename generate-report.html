@@ -231,14 +231,43 @@
 
 /* ── PRINT ───────────────────────────────────────────────────── */
 @media print{
+  /* ─ Hide chrome ────────────────────────────────────────────── */
   .nav,.footer,.sticky-cta,.no-print{display:none!important;}
   #loaderOverlay{display:none!important;}
   #reportWrap{display:block!important;}
-  body{background:var(--bg);}
-  .rpt-hero{background:#071e2d!important;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
-  .forecast-card,.core-num-card,.career-col{break-inside:avoid;}
-  .rpt-section{padding:1.5rem 0 1rem;}
   .btn-print{display:none!important;}
+
+  /* ─ Colour fidelity ────────────────────────────────────────── */
+  *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;}
+  body{background:#eaf6fa;}
+  .rpt-hero{background:linear-gradient(160deg,#071e2d 0%,#0c3347 100%)!important;}
+  .rpt-body-wrap{background:#eaf6fa;}
+  .forecast-hdr{background:linear-gradient(160deg,#071e2d,#0c3347)!important;}
+  .core-num-card{background:linear-gradient(160deg,#071e2d 0%,#0c3347 100%)!important;}
+
+  /* ─ Layout ──────────────────────────────────────────────────── */
+  .rpt-section{padding:1.25rem 1.5rem!important;margin-bottom:.75rem;}
+  .forecast-card{overflow:visible;margin-bottom:1rem;}
+
+  /* ─ Page-break control: core cards & career ─────────────────── */
+  .core-num-card,.career-col,.career-domain,.compat-card{break-inside:avoid;}
+  #remediesGrid>div{break-inside:avoid;}
+
+  /* ─ Page-break control: forecast cards ─────────────────────── */
+  /* Allow cards to span pages; prevent BAD splits inside sub-elements */
+  .forecast-card{break-inside:auto;}
+  .forecast-hdr{break-after:avoid;}           /* header glues to body  */
+  .forecast-body{break-before:avoid;}
+  .forecast-theme{break-after:avoid;}
+  .fi-card{break-inside:avoid;}               /* each insight box stays whole */
+  .fda{break-inside:avoid;}                   /* do / avoid panels stay whole */
+  .forecast-remedy{break-inside:avoid;break-after:avoid;} /* remedy stays whole & glued to chips */
+  .forecast-chips{break-before:avoid;break-inside:avoid;} /* chips never orphaned on new page */
+
+  /* ─ Prevent orphaned section intro paragraphs ───────────────── */
+  .rpt-section>.sec-label{break-after:avoid;}
+  .rpt-section>p{break-after:avoid;}
+  #forecastContainer{break-before:avoid;}
 }
 
 /* ── SEC-LABEL ───────────────────────────────────────────────── */
