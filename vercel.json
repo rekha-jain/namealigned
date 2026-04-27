@@ -18,6 +18,10 @@
     {
       "source": "/api/validate-promo",
       "destination": "/api/validate-promo.js"
+    },
+    {
+      "source": "/api/razorpay-webhook",
+      "destination": "/api/razorpay-webhook.js"
     }
   ],
 
