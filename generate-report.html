@@ -749,7 +749,7 @@ hr.divider{display:none;}
 
   // ── PRINT HELPER (waits for report to be fully built) ─────────
   window._reportReady = false;
-  function downloadPDF(){
+  window.downloadPDF = function(){
     if(window._reportReady){ window.print(); return; }
     var btn = document.querySelector('.btn-print');
     if(btn){ btn.textContent = 'Preparing…'; btn.disabled = true; }
@@ -760,7 +760,7 @@ hr.divider{display:none;}
         window.print();
       }
     }, 200);
-  }
+  };
 
   // ── BUILD REPORT ──────────────────────────────────────────────
   function buildReport(){
