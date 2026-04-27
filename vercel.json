@@ -10,6 +10,10 @@
     {
       "source": "/api/generate-report",
       "destination": "/api/generate-report.js"
+    },
+    {
+      "source": "/api/validate-promo",
+      "destination": "/api/validate-promo.js"
     }
   ],
 
