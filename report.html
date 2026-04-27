@@ -428,7 +428,7 @@ async function initiateReportPayment(){
   payBtn.disabled = true;
   payBtn.textContent = 'Preparing payment…';
 
-  let orderId;
+  let orderId, razorpayKey;
   try {
     const orderRes = await fetch('/api/create-order', {
       method: 'POST',
@@ -439,7 +439,8 @@ async function initiateReportPayment(){
     if (!orderData.success || !orderData.orderId) {
       throw new Error(orderData.error || 'Could not create order');
     }
-    orderId = orderData.orderId;
+    orderId     = orderData.orderId;
+    razorpayKey = orderData.keyId;   // always use the key the server used
   } catch(e) {
     const err = document.getElementById('rErrBox');
     err.style.display = 'block';
@@ -450,7 +451,7 @@ async function initiateReportPayment(){
   }
 
   const options = {
-    key:         'rzp_live_SiNdGI63u7ECgA',
+    key:         razorpayKey,
     amount, currency: 'INR',
     order_id:    orderId,
     name:        'NameAligned.com',
