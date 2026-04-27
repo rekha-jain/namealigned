@@ -1379,7 +1379,7 @@
   function buildNameAnalysis(){
     var section = qs('nameAnalysisSection');
     var status = getAlignmentStatus(pct);
-    var harmonises = status==='aligned';
+    var harmonises = pct >= 97; // Only truly harmonised if near-perfect
     var cdEntry = CD[nameRaw];
 
     var result = generateScoredNameVariants(name, pct);
@@ -1401,79 +1401,114 @@
     }
 
     // ── TRANSFORMATION CARD ──────────────────────────────────────
+    var friendlyLine = function(ok, label){
+      return ok
+        ? '<div style="color:#4ade80;font-size:13px;font-family:sans-serif;margin-top:5px;">&#10003; Friendly with '+label+'</div>'
+        : '<div style="color:#f87171;font-size:13px;font-family:sans-serif;margin-top:5px;">&#10007; '+label+' friction</div>';
+    };
+    var beforeBadge =
+      '<div style="background:rgba(220,38,38,.2);color:#f87171;border-radius:20px;padding:5px 16px;font-size:12px;font-weight:700;display:inline-block;margin-top:.85rem;">'+
+        '✕ Needs Correction'+
+      '</div>';
+    var afterBadge =
+      '<div style="background:#f0b429;color:#1a0533;border-radius:20px;padding:5px 16px;font-size:12px;font-weight:700;display:inline-block;margin-top:.85rem;">'+
+        '★ Fully Aligned'+
+      '</div>';
+
     var transformCardHtml = '';
     if(pct >= 97){
       // Already perfect — show congratulatory banner
       transformCardHtml =
         '<div style="background:linear-gradient(160deg,#071e2d 0%,#0c3347 100%);border-radius:16px;padding:2rem;margin-bottom:1.5rem;text-align:center;">'+
-          '<div style="font-size:32px;margin-bottom:.5rem;">★</div>'+
-          '<div style="color:#f0b429;font-size:18px;font-family:serif;margin-bottom:.5rem;">Your Name Is Fully Aligned</div>'+
-          '<div style="color:rgba(255,255,255,.75);font-size:13px;font-family:sans-serif;">'+
-            name+' already scores <strong style="color:#f0b429;">'+pct+'%</strong> — you have achieved near-perfect Chaldean alignment with your birth numbers.'+
+          '<div style="font-size:36px;margin-bottom:.5rem;">★</div>'+
+          '<div style="color:#f0b429;font-size:20px;font-family:serif;margin-bottom:.65rem;">Your Name Is Fully Aligned</div>'+
+          '<div style="color:rgba(255,255,255,.75);font-size:13px;font-family:sans-serif;max-width:520px;margin:0 auto;line-height:1.7;">'+
+            '<strong style="color:#f0b429;">'+name+'</strong> scores <strong style="color:#f0b429;">'+pct+'%</strong> — near-perfect Chaldean alignment with your birth numbers. No correction needed.'+
           '</div>'+
         '</div>';
-    } else if(bestVariant && bestVariant.score > pct){
-      // Show transformation card
-      var bvNameNum = bestVariant.num;
-      var bvPlanet  = bestVariant.planet;
-
+    } else {
+      // Always show transformation when below 97%
       var beforeMoolFriendly = isFriendly(nameNum, birthNum);
       var beforeBhagFriendly = isFriendly(nameNum, destNum);
-      var afterMoolFriendly  = isFriendly(bvNameNum, birthNum);
-      var afterBhagFriendly  = isFriendly(bvNameNum, destNum);
 
-      var beforeScoreColor = pct >= 75 ? '#4ade80' : pct >= 50 ? '#fbbf24' : '#f87171';
-
-      var friendlyLine = function(ok, label){
-        return ok
-          ? '<div style="color:#4ade80;font-size:13px;font-family:sans-serif;margin-top:5px;">&#10003; Friendly with '+label+'</div>'
-          : '<div style="color:#f87171;font-size:13px;font-family:sans-serif;margin-top:5px;">&#10007; '+label+' friction</div>';
-      };
-
-      var beforeBadge =
-        '<div style="background:rgba(220,38,38,.2);color:#f87171;border-radius:20px;padding:4px 14px;font-size:12px;display:inline-block;margin-top:.75rem;">'+
-          'Needs Correction'+
+      var beforeCard =
+        '<div style="background:rgba(220,38,38,.15);border:1.5px solid rgba(220,38,38,.45);border-radius:14px;padding:1.75rem 1.5rem;flex:1;min-width:190px;">'+
+          '<div style="font-size:10px;letter-spacing:2.5px;text-transform:uppercase;color:rgba(255,80,80,.7);margin-bottom:.9rem;font-family:sans-serif;font-weight:700;">BEFORE — CURRENT NAME</div>'+
+          '<div style="color:#ffffff;font-size:clamp(20px,3vw,28px);font-family:serif;font-weight:700;margin-bottom:.6rem;letter-spacing:.04em;">'+name+'</div>'+
+          '<div style="color:rgba(255,255,255,.5);font-size:11px;font-family:sans-serif;margin-bottom:.6rem;">'+
+            nameRaw+' → Name number <strong style="color:rgba(255,255,255,.7);">'+nameNum+'</strong> ('+namePlanet+')'+
+          '</div>'+
+          '<div style="color:#f87171;font-size:56px;font-family:sans-serif;font-weight:700;line-height:1;margin-bottom:.2rem;">'+pct+'<span style="font-size:24px;font-weight:400;">%</span></div>'+
+          '<div style="color:rgba(255,100,100,.6);font-size:11px;font-family:sans-serif;margin-bottom:.4rem;">alignment score</div>'+
+          friendlyLine(beforeMoolFriendly,'Moolank')+
+          friendlyLine(beforeBhagFriendly,'Bhagyank')+
+          beforeBadge+
         '</div>';
-      var afterBadge =
-        '<div style="background:#f0b429;color:#1a0533;border-radius:20px;padding:4px 14px;font-size:12px;font-weight:700;display:inline-block;margin-top:.75rem;">'+
-          'Fully Aligned ★'+
-        '</div>';
+
+      var afterCard, footerLine;
+      if(bestVariant && bestVariant.score > pct){
+        // Real phonetic variant scores higher — show it
+        var bvNameNum = bestVariant.num;
+        var bvPlanet  = bestVariant.planet;
+        var afterMoolFriendly = isFriendly(bvNameNum, birthNum);
+        var afterBhagFriendly = isFriendly(bvNameNum, destNum);
+        afterCard =
+          '<div style="background:rgba(240,180,41,.12);border:2.5px solid #f0b429;border-radius:14px;padding:1.75rem 1.5rem;flex:1;min-width:190px;">'+
+            '<div style="font-size:10px;letter-spacing:2.5px;text-transform:uppercase;color:#c9a227;margin-bottom:.9rem;font-family:sans-serif;font-weight:700;">AFTER — CORRECTED NAME</div>'+
+            '<div style="color:#ffffff;font-size:clamp(20px,3vw,28px);font-family:serif;font-weight:700;margin-bottom:.6rem;letter-spacing:.04em;">'+bestVariant.name+'</div>'+
+            '<div style="color:rgba(255,255,255,.5);font-size:11px;font-family:sans-serif;margin-bottom:.6rem;">'+
+              bestVariant.raw+' → Name number <strong style="color:#f0b429;">'+bvNameNum+'</strong> ('+bvPlanet+')'+
+            '</div>'+
+            '<div style="color:#f0b429;font-size:56px;font-family:sans-serif;font-weight:700;line-height:1;margin-bottom:.2rem;">'+bestVariant.score+'<span style="font-size:24px;font-weight:400;">%</span></div>'+
+            '<div style="color:rgba(240,180,41,.6);font-size:11px;font-family:sans-serif;margin-bottom:.4rem;">alignment score</div>'+
+            friendlyLine(afterMoolFriendly,'Moolank')+
+            friendlyLine(afterBhagFriendly,'Bhagyank')+
+            afterBadge+
+          '</div>';
+        footerLine = 'Name number changes from <strong style="color:#f87171;">'+nameNum+'</strong> ('+namePlanet+') → <strong style="color:#f0b429;">'+bvNameNum+'</strong> ('+bvPlanet+'). Just one small spelling tweak.';
+      } else {
+        // No phonetic variant beats current — show IDEAL TARGET as the AFTER card
+        var idealNum    = ideal.nameNum;
+        var idealPlanet = getPlanet(idealNum);
+        var idealMool   = isFriendly(idealNum, birthNum);
+        var idealBhag   = isFriendly(idealNum, destNum);
+        var bestCpd     = ideal.targetCompounds.length ? ideal.targetCompounds[0] : null;
+        var cpdLabel    = bestCpd && CD[bestCpd] ? ' · '+CD[bestCpd].l.split(' ·')[0] : '';
+        afterCard =
+          '<div style="background:rgba(240,180,41,.12);border:2.5px solid #f0b429;border-radius:14px;padding:1.75rem 1.5rem;flex:1;min-width:190px;position:relative;">'+
+            '<div style="font-size:10px;letter-spacing:2.5px;text-transform:uppercase;color:#c9a227;margin-bottom:.9rem;font-family:sans-serif;font-weight:700;">AFTER — OPTIMAL SPELLING</div>'+
+            '<div style="color:#f0b429;font-size:clamp(18px,2.5vw,24px);font-family:serif;font-weight:700;margin-bottom:.6rem;letter-spacing:.02em;">Your Aligned Name</div>'+
+            '<div style="color:rgba(255,255,255,.5);font-size:11px;font-family:sans-serif;margin-bottom:.6rem;">'+
+              'Target: Number <strong style="color:#f0b429;">'+idealNum+'</strong> ('+idealPlanet+')'+(bestCpd?'<br>Compound '+bestCpd+cpdLabel:'')+
+            '</div>'+
+            '<div style="color:#f0b429;font-size:56px;font-family:sans-serif;font-weight:700;line-height:1;margin-bottom:.2rem;">'+ideal.maxScore+'<span style="font-size:24px;font-weight:400;">%</span></div>'+
+            '<div style="color:rgba(240,180,41,.6);font-size:11px;font-family:sans-serif;margin-bottom:.4rem;">max achievable</div>'+
+            friendlyLine(idealMool,'Moolank')+
+            friendlyLine(idealBhag,'Bhagyank')+
+            afterBadge+
+            '<div style="margin-top:1rem;background:rgba(0,0,0,.3);border-radius:8px;padding:.65rem .9rem;font-size:11.5px;font-family:sans-serif;color:rgba(255,255,255,.6);line-height:1.55;border:1px solid rgba(240,180,41,.2);">'+
+              '✦ Your numerologist will reveal the exact corrected spelling in the full consultation'+
+            '</div>'+
+          '</div>';
+        footerLine = 'A targeted spelling correction takes you from <strong style="color:#f87171;">'+pct+'%</strong> → <strong style="color:#f0b429;">'+ideal.maxScore+'%</strong> — same name, same birthdate, just the right letters.';
+      }
 
       transformCardHtml =
-        '<div style="background:linear-gradient(160deg,#071e2d 0%,#0c3347 100%);border-radius:16px;padding:2rem;margin-bottom:1.5rem;">'+
-          '<div style="color:#f0b429;font-size:18px;font-family:serif;margin-bottom:4px;">&#10022; See Your Name Transformation</div>'+
-          '<div style="color:rgba(255,255,255,.6);font-size:13px;font-family:sans-serif;margin-bottom:1.25rem;">Same name. Same birthdate. Just a small spelling tweak.</div>'+
-          '<div style="display:flex;align-items:center;gap:1rem;flex-wrap:wrap;">'+
-
-            // BEFORE card
-            '<div style="background:rgba(220,38,38,.15);border:1.5px solid rgba(220,38,38,.4);border-radius:12px;padding:1.5rem;flex:1;min-width:180px;">'+
-              '<div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.5);margin-bottom:.85rem;">BEFORE</div>'+
-              '<div style="color:rgba(255,255,255,.5);font-size:11px;font-family:sans-serif;margin-bottom:.4rem;">Current Spelling</div>'+
-              '<div style="color:#ffffff;font-size:26px;font-family:serif;font-weight:600;margin-bottom:.75rem;letter-spacing:.04em;">'+name+'</div>'+
-              '<div style="color:rgba(255,255,255,.5);font-size:11px;font-family:sans-serif;margin-bottom:.5rem;">sum = '+nameRaw+' = '+nameNum+' ('+namePlanet+')</div>'+
-              '<div style="color:#f87171;font-size:48px;font-family:sans-serif;line-height:1;margin-bottom:.5rem;">'+pct+'<span style="font-size:22px;">%</span></div>'+
-              friendlyLine(beforeMoolFriendly, 'Moolank')+
-              friendlyLine(beforeBhagFriendly, 'Bhagyank')+
-              beforeBadge+
-            '</div>'+
-
-            // Arrow
-            '<div style="color:#f0b429;font-size:28px;flex-shrink:0;text-align:center;">&#8594;</div>'+
-
-            // AFTER card
-            '<div style="background:rgba(240,180,41,.12);border:2px solid #f0b429;border-radius:12px;padding:1.5rem;flex:1;min-width:180px;">'+
-              '<div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.5);margin-bottom:.85rem;">AFTER</div>'+
-              '<div style="color:rgba(255,255,255,.5);font-size:11px;font-family:sans-serif;margin-bottom:.4rem;">Enhanced Spelling</div>'+
-              '<div style="color:#ffffff;font-size:26px;font-family:serif;font-weight:600;margin-bottom:.75rem;letter-spacing:.04em;">'+bestVariant.name+'</div>'+
-              '<div style="color:rgba(255,255,255,.5);font-size:11px;font-family:sans-serif;margin-bottom:.5rem;">sum = '+bestVariant.raw+' = '+bvNameNum+' ('+bvPlanet+')</div>'+
-              '<div style="color:#f0b429;font-size:48px;font-family:sans-serif;line-height:1;margin-bottom:.5rem;">'+bestVariant.score+'<span style="font-size:22px;">%</span></div>'+
-              friendlyLine(afterMoolFriendly, 'Moolank')+
-              friendlyLine(afterBhagFriendly, 'Bhagyank')+
-              afterBadge+
-            '</div>'+
+        '<div style="background:linear-gradient(160deg,#071e2d 0%,#0c3347 100%);border-radius:16px;padding:2rem 1.75rem;margin-bottom:1.5rem;border:1px solid rgba(201,162,39,.2);">'+
+          '<div style="text-align:center;margin-bottom:1.5rem;">'+
+            '<div style="color:#c9a227;font-size:10px;letter-spacing:.2em;text-transform:uppercase;font-family:sans-serif;margin-bottom:.5rem;">✦ Chaldean Name Analysis ✦</div>'+
+            '<div style="color:#f0ece0;font-size:clamp(18px,3vw,24px);font-family:serif;font-weight:700;margin-bottom:.4rem;">See Your Name Transformation</div>'+
+            '<div style="color:rgba(200,220,235,.6);font-size:13px;font-family:sans-serif;">Same person. Same birthdate. A small spelling change unlocks this.</div>'+
           '</div>'+
-          '<div style="color:rgba(255,255,255,.55);font-size:13px;font-family:sans-serif;margin-top:1.1rem;text-align:center;">'+
-            'Name number went from <strong style="color:#f87171;">'+nameNum+'</strong> ('+namePlanet+') to <strong style="color:#f0b429;">'+bvNameNum+'</strong> ('+bvPlanet+')'+
+          '<div style="display:flex;align-items:stretch;gap:1rem;flex-wrap:wrap;">'+
+            beforeCard+
+            '<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;color:#f0b429;font-size:32px;flex-shrink:0;padding:0 .25rem;">'+
+              '<div>&#8594;</div>'+
+            '</div>'+
+            afterCard+
+          '</div>'+
+          '<div style="color:rgba(200,220,235,.5);font-size:13px;font-family:sans-serif;margin-top:1.25rem;text-align:center;line-height:1.6;">'+
+            footerLine+
           '</div>'+
         '</div>';
     }
@@ -1508,13 +1543,17 @@
           '✦ A look-alike spelling below reaches the maximum '+bestAchievable+'% — highlighted with a ★'+
         '</div>':
         (bestVariantScore>pct?
-          '<div style="background:var(--gold-l);border:1px solid var(--gold-b);border-radius:var(--r);padding:.75rem 1.1rem;margin-bottom:1rem;font-size:13px;font-family:sans-serif;color:var(--text2);">'+
-            'The best phonetic variant found reaches <strong>'+bestVariantScore+'%</strong>. '+
-            'To reach '+bestAchievable+'%, a slightly different spelling (not just a sound-alike tweak) may be needed — a numerologist can suggest one.'+
+          '<div style="background:var(--green-bg);border:1.5px solid #b0d48a;border-radius:var(--r);padding:.75rem 1.1rem;margin-bottom:1rem;font-size:13px;font-family:sans-serif;color:var(--green);">'+
+            '✦ A phonetic variant below reaches <strong>'+bestVariantScore+'%</strong>. To unlock the full '+bestAchievable+'% requires a targeted spelling — included in your numerologist consultation.'+
           '</div>':
-          '<div style="background:var(--gold-l);border:1px solid var(--gold-b);border-radius:var(--r);padding:.75rem 1.1rem;margin-bottom:1rem;font-size:13px;font-family:sans-serif;color:var(--text2);">'+
-            'Your name is already well-optimised. Variants below are for reference.'+
+          (pct >= 97 ?
+          '<div style="background:var(--green-bg);border:1.5px solid #b0d48a;border-radius:var(--r);padding:.75rem 1.1rem;margin-bottom:1rem;font-size:13px;font-family:sans-serif;color:var(--green);">'+
+            '✦ Your name is already highly optimised. Variants below are shown for reference only.'+
+          '</div>':
+          '<div style="background:rgba(240,180,41,.1);border:1.5px solid rgba(240,180,41,.35);border-radius:var(--r);padding:.75rem 1.1rem;margin-bottom:1rem;font-size:13px;font-family:sans-serif;color:var(--text);">'+
+            '⚑ Minor phonetic tweaks don\'t shift your score. The path to <strong>'+bestAchievable+'%</strong> requires a deliberate letter correction — your numerologist consultation provides the exact spelling.'+
           '</div>'
+          )
         )
       );
 
