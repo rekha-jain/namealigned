@@ -1542,8 +1542,17 @@ hr.divider{display:none;}
     var corrections = corrResult.corrections;
 
     // ── CURRENT NAME CARD ─────────────────────────────────────────
+    // Score-based palette: red (poor), orange (decent >70%)
+    var hi = pct > 70;
+    var bgC      = hi ? 'rgba(249,115,22,.12)' : 'rgba(220,38,38,.12)';
+    var bdC      = hi ? 'rgba(249,115,22,.40)' : 'rgba(220,38,38,.35)';
+    var badgeBg  = hi ? 'rgba(249,115,22,.22)' : 'rgba(220,38,38,.25)';
+    var badgeBd  = hi ? 'rgba(249,115,22,.45)' : 'rgba(220,38,38,.4)';
+    var pctC     = hi ? '#fb923c'              : '#f87171';
+    var labelC   = hi ? 'rgba(251,146,60,.7)'  : 'rgba(255,100,100,.6)';
+
     var currentCard =
-      '<div style="background:rgba(220,38,38,.12);border:1.5px solid rgba(220,38,38,.35);border-radius:14px;padding:1.5rem;margin-bottom:1.5rem;display:flex;align-items:center;gap:1.25rem;flex-wrap:wrap;">'+
+      '<div style="background:'+bgC+';border:1.5px solid '+bdC+';border-radius:14px;padding:1.5rem;margin-bottom:1.5rem;display:flex;align-items:center;gap:1.25rem;flex-wrap:wrap;">'+
         '<div style="flex:1;min-width:160px;">'+
           '<div style="font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.5);font-family:sans-serif;margin-bottom:.5rem;">YOUR CURRENT NAME</div>'+
           '<div style="color:#fff;font-size:clamp(20px,3vw,26px);font-family:serif;font-weight:700;margin-bottom:.5rem;letter-spacing:.03em;">'+name+'</div>'+
@@ -1554,9 +1563,9 @@ hr.divider{display:none;}
             'Target: Name number <strong style="color:#f0b429;">'+birthNum+'</strong> ('+getPlanet(birthNum)+') = Moolank = <strong style="color:#f0b429;">100% aligned</strong>'+
           '</div>'+
         '</div>'+
-        '<div style="text-align:center;background:rgba(220,38,38,.25);border-radius:12px;padding:.75rem 1.1rem;border:1px solid rgba(220,38,38,.4);flex-shrink:0;">'+
-          '<div style="color:#f87171;font-size:44px;font-family:sans-serif;font-weight:700;line-height:1;">'+pct+'<span style="font-size:18px;font-weight:400;">%</span></div>'+
-          '<div style="color:rgba(255,100,100,.6);font-size:10px;font-family:sans-serif;text-transform:uppercase;letter-spacing:.1em;margin-top:2px;">current</div>'+
+        '<div style="text-align:center;background:'+badgeBg+';border-radius:12px;padding:.75rem 1.1rem;border:1px solid '+badgeBd+';flex-shrink:0;">'+
+          '<div style="color:'+pctC+';font-size:44px;font-family:sans-serif;font-weight:700;line-height:1;">'+pct+'<span style="font-size:18px;font-weight:400;">%</span></div>'+
+          '<div style="color:'+labelC+';font-size:10px;font-family:sans-serif;text-transform:uppercase;letter-spacing:.1em;margin-top:2px;">current</div>'+
         '</div>'+
       '</div>';
 
