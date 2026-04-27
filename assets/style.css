@@ -1,11 +1,11 @@
 /* ═══════════════════════════════════════════════════════════════
-   NUMEROLOGY.LIFE — Shared Stylesheet v3
-   Galaxy / Cosmic theme — user-chosen direction:
-   • Deep space midnight #03090f — like looking into the Milky Way
-   • Teal-cyan nebula shimmer — cosmic, otherworldly, unique
-   • Stellar gold #f0b429 — brighter, more radiant than old muted gold
-   • Nebula gradients on html background — no image needed
-   • Glassmorphism cards — teal-tinted glass over deep space
+   NAMEALIGNED.COM — Shared Stylesheet v4
+   Light / Airy theme:
+   • Clean white canvas — fresh, premium, trustworthy
+   • Teal-cyan accent — cosmic energy without heavy dark bg
+   • Stellar gold #f0b429 — CTAs retain full shine & glow
+   • Subtle teal radial crown on html background
+   • Crisp white cards with teal border + soft shadow
    • Playfair Display headings + DM Sans body
    ═══════════════════════════════════════════════════════════════ */
 
@@ -17,40 +17,40 @@
 
 /* ── DESIGN TOKENS ───────────────────────────────────────────── */
 :root{
-  /* ── Deep space background layers */
-  --bg:       #03090f;              /* deep space — near-black midnight */
-  --bg2:      #060d18;              /* section bg — slightly lifted */
-  --card:     rgba(6,182,212,.07);  /* glassmorphism card — teal-tinted */
-  --card2:    rgba(6,182,212,.13);  /* hover / elevated card */
-  --card-solid: #071525;            /* solid card for inputs/forms */
+  /* ── Light backgrounds */
+  --bg:         #ffffff;              /* clean white canvas */
+  --bg2:        #f0fbfd;              /* very light teal-tinted sections */
+  --card:       #ffffff;              /* white cards */
+  --card2:      rgba(6,182,212,.07);  /* hover / elevated card */
+  --card-solid: #f4feff;              /* solid bg for inputs/forms */
 
-  /* ── Stellar Gold — radiant, brighter than old muted #f0b429 */
+  /* ── Stellar Gold — unchanged, full shine */
   --gold:     #f0b429;
   --gold-d:   #d4991a;              /* pressed/hover */
   --gold-l:   rgba(240,180,41,.10); /* tinted backgrounds */
-  --gold-b:   rgba(240,180,41,.28); /* borders */
+  --gold-b:   rgba(240,180,41,.35); /* borders — slightly stronger on white */
   --gold-glow:rgba(240,180,41,.50); /* CTA shadow glow */
 
-  /* ── Cosmic Teal — the nebula accent colour */
+  /* ── Teal accent — unchanged */
   --teal:     #06b6d4;
   --teal-l:   rgba(6,182,212,.10);
-  --teal-b:   rgba(6,182,212,.25);
+  --teal-b:   rgba(6,182,212,.22);
   --teal-glow:rgba(6,182,212,.35);
 
-  /* ── Text — cool star-white, not warm */
-  --text:     #e8f4ff;              /* star white */
-  --text2:    #7ec8e3;              /* nebula blue — secondary */
-  --text3:    #3d6b80;              /* deep nebula — muted */
+  /* ── Text — dark readable on white */
+  --text:     #0f1c26;              /* near-black with teal depth */
+  --text2:    #0e7490;              /* teal — legible on white */
+  --text3:    #6b9aaa;              /* muted teal-gray */
 
-  /* ── Semantic — adjusted for dark cosmic bg */
-  --green:    #34d399;  --green-bg: rgba(52,211,153,.12);
+  /* ── Semantic — adjusted for light bg */
+  --green:    #059669;  --green-bg: rgba(5,150,105,.10);
   --amber:    #f0b429;  --amber-bg: rgba(240,180,41,.12);
-  --red:      #f87171;  --red-bg:   rgba(248,113,113,.12);
-  --blue:     #38bdf8;  --blue-bg:  rgba(56,189,248,.12);
+  --red:      #dc2626;  --red-bg:   rgba(220,38,38,.10);
+  --blue:     #0284c7;  --blue-bg:  rgba(2,132,199,.10);
 
-  /* ── Borders — teal-tinted glass edges */
-  --border:   rgba(6,182,212,.12);
-  --border2:  rgba(6,182,212,.28);
+  /* ── Borders — visible on white */
+  --border:   rgba(6,182,212,.18);
+  --border2:  rgba(6,182,212,.35);
 
   /* ── Radius */
   --r:  10px;
@@ -67,18 +67,17 @@
 /* ── BASE ────────────────────────────────────────────────────── */
 html{
   scroll-behavior: smooth;
-  /* Nebula background — fixed so it stays as you scroll */
+  /* Subtle teal crown + warm gold whisper — airy, not heavy */
   background-color: var(--bg);
   background-image:
-    radial-gradient(ellipse 100% 55% at 50% -5%,  rgba(14,116,144,.32) 0%, transparent 62%),
-    radial-gradient(ellipse 55%  38% at 90%  75%,  rgba(99,102,241,.18) 0%, transparent 55%),
-    radial-gradient(ellipse 42%  30% at  5%  80%,  rgba(6,182,212,.14)  0%, transparent 50%);
+    radial-gradient(ellipse 90% 30% at 50% 0%,  rgba(6,182,212,.07) 0%, transparent 55%),
+    radial-gradient(ellipse 35% 18% at 95% 88%, rgba(240,180,41,.06) 0%, transparent 50%);
   background-attachment: fixed;
 }
 body{
   font-family: var(--font-sans);
   font-size: 16px;
-  background: transparent;      /* html carries the nebula, body is clear */
+  background: transparent;
   color: var(--text);
   line-height: 1.65;
   -webkit-font-smoothing: antialiased;
@@ -112,11 +111,12 @@ strong{font-weight:600}
 /* ── NAVBAR ─────────────────────────────────────────────────── */
 .nav{
   position:sticky;top:0;z-index:200;
-  background: rgba(3,9,15,.88);
+  background: rgba(255,255,255,.92);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
   border-bottom: 1px solid var(--teal-b);
   height: var(--nav-h);
+  box-shadow: 0 1px 12px rgba(6,182,212,.08);
 }
 .nav-inner{display:flex;align-items:center;justify-content:space-between;height:100%}
 .nav-logo{
@@ -137,7 +137,7 @@ strong{font-weight:600}
 .nav-links a:hover{color:var(--gold)}
 .nav-cta{
   background: var(--gold) !important;
-  color: #03090f !important;
+  color: #0f1c26 !important;
   padding:8px 20px;border-radius:20px;
   font-weight:600;letter-spacing:.04em;
   box-shadow: 0 0 12px var(--gold-glow);
@@ -152,10 +152,11 @@ strong{font-weight:600}
 .nav-hamburger span{width:22px;height:2px;background:var(--text);border-radius:2px;transition:all .3s}
 .nav-mobile{
   display:none;position:absolute;top:var(--nav-h);left:0;right:0;
-  background: rgba(3,9,15,.97);
+  background: rgba(255,255,255,.97);
   border-bottom:1px solid var(--teal-b);
   padding:1rem 1.5rem;flex-direction:column;gap:.75rem;
   backdrop-filter:blur(16px);
+  box-shadow: 0 8px 24px rgba(6,182,212,.10);
 }
 .nav-mobile a{font-size:14px;color:var(--text2);padding:.4rem 0;border-bottom:1px solid var(--border)}
 .nav-mobile.open{display:flex}
@@ -258,14 +259,12 @@ strong{font-weight:600}
   border: 1px solid var(--teal-b);
   border-radius: var(--rl);
   padding: 1.75rem;
-  box-shadow: 0 4px 24px rgba(0,0,0,.4), inset 0 1px 0 rgba(6,182,212,.08);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+  box-shadow: 0 2px 16px rgba(6,182,212,.10), 0 1px 4px rgba(0,0,0,.04);
   transition: border-color .2s, box-shadow .2s, transform .2s;
 }
 .card:hover{
   border-color: var(--gold-b);
-  box-shadow: 0 8px 32px rgba(0,0,0,.5), 0 0 0 1px var(--gold-b);
+  box-shadow: 0 8px 32px rgba(6,182,212,.15), 0 0 0 1px var(--gold-b);
   transform: translateY(-2px);
 }
 .card-sm{padding:1.25rem}
@@ -304,19 +303,18 @@ input,select,textarea{
   border-radius:var(--r);
   font-size:15px;font-family:var(--font-sans);
   color:var(--text);
-  background: var(--card-solid);
+  background: #ffffff;
   outline:none;
   transition:border-color .2s,box-shadow .2s,background .2s;
 }
 input::placeholder,textarea::placeholder{color:var(--text3)}
-select option{background:#071525;color:var(--text)}
+select option{background:#ffffff;color:var(--text)}
 input:focus,select:focus,textarea:focus{
   border-color: var(--teal);
-  box-shadow: 0 0 0 3px var(--teal-l), 0 0 12px rgba(6,182,212,.20);
-  background: var(--card-solid);
+  box-shadow: 0 0 0 3px var(--teal-l), 0 0 8px rgba(6,182,212,.15);
+  background: #ffffff;
   outline: none;
 }
-select option{background:var(--card2);color:var(--text)}
 textarea{resize:vertical;min-height:68px}
 .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
 @media(max-width:540px){.form-grid{grid-template-columns:1fr}}
@@ -329,23 +327,24 @@ textarea{resize:vertical;min-height:68px}
 
 /* ── HERO SECTIONS ──────────────────────────────────────────── */
 .hero-dark{
-  background: transparent;  /* html nebula shows through */
-  color: var(--text);
+  /* Keeps a teal-to-white gradient so hero feels premium on white bg */
+  background: linear-gradient(160deg, #082535 0%, #0c3347 55%, #0e7490 100%);
+  color: #e8f4ff;
   text-align:center;padding:5rem 1.5rem 4rem;
   position:relative;overflow:hidden;
 }
-/* Teal nebula crown glow */
+/* Teal crown glow */
 .hero-dark::before{
   content:'';position:absolute;inset:0;
   background: radial-gradient(ellipse 85% 55% at 50% -5%,
-              rgba(14,116,144,.30) 0%, transparent 65%);
+              rgba(6,182,212,.25) 0%, transparent 65%);
   pointer-events:none;
 }
-/* Stellar gold shimmer — like a star burning in the hero centre */
+/* Gold shimmer */
 .hero-dark::after{
   content:'';position:absolute;inset:0;
   background: radial-gradient(ellipse 40% 30% at 50% 40%,
-              rgba(240,180,41,.06) 0%, transparent 60%);
+              rgba(240,180,41,.07) 0%, transparent 60%);
   pointer-events:none;
 }
 .hero-sym{font-size:28px;letter-spacing:14px;opacity:.5;margin-bottom:16px;position:relative;color:var(--gold)}
@@ -385,14 +384,14 @@ textarea{resize:vertical;min-height:68px}
 
 /* ── FEATURE CARDS ───────────────────────────────────────────── */
 .feat-card{
-  background:var(--card);border:1px solid var(--teal-b);
+  background:#ffffff;border:1px solid var(--teal-b);
   border-radius:var(--rl);padding:1.5rem;
-  backdrop-filter:blur(8px);
+  box-shadow:0 2px 12px rgba(6,182,212,.08), 0 1px 3px rgba(0,0,0,.04);
   transition:box-shadow .25s,border-color .25s,transform .25s;
 }
 .feat-card:hover{
   border-color:var(--gold-b);
-  box-shadow:0 8px 32px rgba(0,0,0,.4), 0 0 20px var(--teal-glow);
+  box-shadow:0 8px 28px rgba(6,182,212,.15), 0 0 16px var(--teal-glow);
   transform:translateY(-2px);
 }
 .feat-icon{font-size:28px;margin-bottom:.75rem}
@@ -401,10 +400,10 @@ textarea{resize:vertical;min-height:68px}
 
 /* ── TESTIMONIALS ────────────────────────────────────────────── */
 .testi-card{
-  background: var(--card2);
+  background: #fafeff;
   border:1px solid var(--gold-b);
   border-radius:var(--rl);padding:1.75rem;position:relative;
-  box-shadow:0 4px 24px rgba(0,0,0,.2);
+  box-shadow:0 2px 16px rgba(240,180,41,.10), 0 1px 4px rgba(0,0,0,.04);
 }
 .testi-card::before{
   content:'❝';position:absolute;top:.75rem;left:1.25rem;
@@ -478,24 +477,25 @@ textarea{resize:vertical;min-height:68px}
 
 /* ── BLOG CARDS ─────────────────────────────────────────────── */
 .blog-card{
-  background:var(--card);border:1px solid var(--border);
+  background:#ffffff;border:1px solid var(--border);
   border-radius:var(--rl);overflow:hidden;
+  box-shadow:0 2px 10px rgba(6,182,212,.08), 0 1px 3px rgba(0,0,0,.04);
   transition:box-shadow .25s,border-color .25s,transform .25s;
 }
 .blog-card:hover{
   border-color:var(--gold-b);
-  box-shadow:0 8px 32px rgba(0,0,0,.3);
+  box-shadow:0 10px 32px rgba(6,182,212,.14), 0 2px 8px rgba(0,0,0,.08);
   transform:translateY(-3px);
 }
 .blog-card-img{
   height:180px;
-  background: linear-gradient(135deg, #03090f 0%, #1e1a38 50%, #060d18 100%);
+  background: linear-gradient(135deg, #0e7490 0%, #0891b2 50%, #06b6d4 100%);
   display:flex;align-items:center;justify-content:center;font-size:44px;
   position:relative;overflow:hidden;
 }
 .blog-card-img::after{
   content:'';position:absolute;inset:0;
-  background:radial-gradient(ellipse at 50% 0%, rgba(240,180,41,.15) 0%, transparent 70%);
+  background:radial-gradient(ellipse at 50% 0%, rgba(240,180,41,.25) 0%, transparent 70%);
 }
 .blog-card-body{padding:1.25rem}
 .blog-cat{
@@ -513,8 +513,8 @@ textarea{resize:vertical;min-height:68px}
 
 /* ── FOOTER ──────────────────────────────────────────────────── */
 .footer{
-  background: linear-gradient(180deg, var(--bg2) 0%, var(--bg) 100%);
-  border-top:1px solid var(--gold-b);
+  background: linear-gradient(180deg, #f0fbfd 0%, #e6f8fb 100%);
+  border-top:1px solid var(--teal-b);
   color:var(--text2);padding:4rem 0 1.75rem;
 }
 .footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:2.5rem;margin-bottom:2.5rem}
@@ -547,7 +547,7 @@ textarea{resize:vertical;min-height:68px}
 /* ── CHIPS ───────────────────────────────────────────────────── */
 .chips{display:flex;flex-wrap:wrap;gap:6px}
 .chip{
-  background:var(--card2);border:1px solid var(--border2);
+  background:#f0fbfd;border:1px solid var(--teal-b);
   border-radius:20px;padding:4px 14px;
   font-size:12px;font-family:var(--font-sans);color:var(--text2);
 }
@@ -564,11 +564,11 @@ textarea{resize:vertical;min-height:68px}
 
 /* ── EMAIL CAPTURE BANNER ────────────────────────────────────── */
 .email-banner{
-  background: linear-gradient(135deg, var(--bg2) 0%, var(--card) 100%);
+  background: linear-gradient(135deg, #f0fbfd 0%, rgba(6,182,212,.06) 100%);
   border:1px solid var(--gold-b);
   border-radius:var(--rl);padding:2.5rem;
   color:var(--text);text-align:center;
-  box-shadow:0 0 40px rgba(240,180,41,.08);
+  box-shadow:0 4px 24px rgba(240,180,41,.10);
 }
 .email-banner h3{
   font-family:var(--font-serif);font-size:24px;margin-bottom:.5rem;
@@ -606,11 +606,12 @@ textarea{resize:vertical;min-height:68px}
 /* ── STICKY CTA STRIP (mobile) ───────────────────────────────── */
 .sticky-cta{
   display:none;position:fixed;bottom:0;left:0;right:0;
-  background: rgba(3,9,15,.96);
+  background: rgba(255,255,255,.96);
   backdrop-filter:blur(12px);
   color:var(--text);padding:12px 1.5rem;z-index:150;
   align-items:center;justify-content:space-between;gap:12px;
   border-top:1px solid var(--gold-b);
+  box-shadow:0 -4px 20px rgba(6,182,212,.12);
 }
 @media(max-width:700px){.sticky-cta{display:flex}}
 .sticky-cta-text{font-size:13px;font-family:var(--font-sans)}
@@ -643,9 +644,9 @@ textarea{resize:vertical;min-height:68px}
 
 /* ── SCROLLBAR (Webkit) ──────────────────────────────────────── */
 ::-webkit-scrollbar{width:6px}
-::-webkit-scrollbar-track{background:var(--bg)}
-::-webkit-scrollbar-thumb{background:var(--gold-b);border-radius:3px}
-::-webkit-scrollbar-thumb:hover{background:var(--gold)}
+::-webkit-scrollbar-track{background:#f0fbfd}
+::-webkit-scrollbar-thumb{background:var(--teal-b);border-radius:3px}
+::-webkit-scrollbar-thumb:hover{background:var(--teal)}
 
 /* ── PRINT ───────────────────────────────────────────────────── */
 @media print{
