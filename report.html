@@ -217,10 +217,32 @@
           </div>
         </div>
 
+        <!-- Promo code -->
+        <div style="margin-top:4px;">
+          <div style="display:flex;gap:8px;align-items:stretch;">
+            <input type="text" id="rPromo" placeholder="Promo code (optional)"
+              style="flex:1;text-transform:uppercase;letter-spacing:.04em;font-family:sans-serif;"
+              oninput="this.value=this.value.toUpperCase()" onkeydown="if(event.key==='Enter')applyPromo()"/>
+            <button onclick="applyPromo()" id="promoBtn"
+              style="padding:0 16px;background:var(--gold-l);border:1px solid var(--gold-b);
+                     border-radius:var(--r);font-family:sans-serif;font-size:13px;font-weight:600;
+                     color:var(--gold);cursor:pointer;white-space:nowrap;flex-shrink:0;">
+              Apply
+            </button>
+          </div>
+          <div id="promoMsg" style="display:none;margin-top:6px;font-size:12.5px;font-family:sans-serif;line-height:1.5;"></div>
+        </div>
+
         <div id="rErrBox" class="err-box" style="display:none"></div>
 
-        <button class="btn btn-gold btn-full" onclick="initiateReportPayment()">
-          ✦ Pay ₹199 — Generate my report
+        <!-- Pay button (hidden for 100% promo) -->
+        <div id="priceLine" style="text-align:center;margin-bottom:4px;font-family:sans-serif;font-size:22px;font-weight:700;color:var(--gold);">₹199</div>
+        <button id="payBtn" class="btn btn-gold btn-full" onclick="initiateReportPayment()">
+          ✦ Pay — Generate my report
+        </button>
+        <!-- Free button (shown only for 100% promo) -->
+        <button id="freeBtn" class="btn btn-gold btn-full" onclick="redeemFreeReport()" style="display:none;">
+          ✦ Get My Free Report →
         </button>
         <div class="trust-row">
           <span>🔒 Razorpay</span>
@@ -265,44 +287,164 @@
 <script src="assets/numerology.js"></script>
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 <script>
-// Pre-fill from URL params (coming from analyzer)
+// ── State ──────────────────────────────────────────────────────
+let promoDiscount  = 0;      // 0 | 50 | 100
+let promoToken100  = '';     // signed token for 100%-off redemptions
+let promoApplied   = false;
+
+// ── Pre-fill from analyzer URL params ─────────────────────────
 window.addEventListener('DOMContentLoaded',()=>{
   const p = new URLSearchParams(location.search);
   if(p.get('name')) document.getElementById('rName').value = p.get('name');
   if(p.get('dob'))  document.getElementById('rDob').value  = p.get('dob');
+  updatePriceDisplay();
 });
 
-function initiateReportPayment(){
-  const name   = document.getElementById('rName').value.trim();
-  const dob    = document.getElementById('rDob').value;
-  const email  = document.getElementById('rEmail').value.trim();
-  const mobile = document.getElementById('rMobile').value.trim(); // optional
-  const err    = document.getElementById('rErrBox');
+// ── Promo code ─────────────────────────────────────────────────
+async function applyPromo(){
+  const code  = document.getElementById('rPromo').value.trim();
+  const email = document.getElementById('rEmail').value.trim();
+  const msg   = document.getElementById('promoMsg');
+  const btn   = document.getElementById('promoBtn');
+  if(!code){ showPromoMsg('Please enter a promo code.','#f87171'); return; }
+
+  btn.textContent='Checking…'; btn.disabled=true;
+
+  try{
+    const res  = await fetch('/api/validate-promo',{
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ code, email: email || '' })
+    });
+    const data = await res.json();
+
+    if(data.valid && data.discount===50){
+      promoDiscount=50; promoApplied=true; promoToken100='';
+      updatePriceDisplay();
+      showPromoMsg('✓ 50% off applied — you pay ₹99 today!','var(--green)');
+      document.getElementById('payBtn').style.display='block';
+      document.getElementById('freeBtn').style.display='none';
+
+    } else if(data.valid && data.discount===100 && data.needEmail){
+      showPromoMsg('Valid 100%-off code! Please enter your email first, then click Apply again.','var(--gold)');
+
+    } else if(data.valid && data.discount===100 && data.promoToken){
+      promoDiscount=100; promoApplied=true; promoToken100=data.promoToken;
+      updatePriceDisplay();
+      showPromoMsg('✓ 100% off applied — your report is completely free!','var(--green)');
+      document.getElementById('payBtn').style.display='none';
+      document.getElementById('freeBtn').style.display='block';
+
+    } else {
+      promoDiscount=0; promoApplied=false; promoToken100='';
+      updatePriceDisplay();
+      showPromoMsg(data.error||'Invalid promo code. Please check and try again.','#f87171');
+    }
+  } catch(e){
+    showPromoMsg('Could not validate code. Please try again.','#f87171');
+  } finally {
+    btn.textContent='Apply'; btn.disabled=false;
+  }
+}
+
+function showPromoMsg(text, color){
+  const el=document.getElementById('promoMsg');
+  el.style.display='block';
+  el.style.color=color;
+  el.textContent=text;
+}
+
+function updatePriceDisplay(){
+  const pl=document.getElementById('priceLine');
+  if(promoDiscount===100){
+    pl.innerHTML='<del style="color:var(--text3);font-size:16px;">₹199</del> <span style="color:var(--green);">FREE</span>';
+  } else if(promoDiscount===50){
+    pl.innerHTML='<del style="color:var(--text3);font-size:16px;">₹199</del> ₹99';
+  } else {
+    pl.innerHTML='₹199';
+  }
+}
+
+// ── Validate form fields ────────────────────────────────────────
+function validateForm(){
+  const name  = document.getElementById('rName').value.trim();
+  const dob   = document.getElementById('rDob').value;
+  const email = document.getElementById('rEmail').value.trim();
+  const err   = document.getElementById('rErrBox');
   err.style.display='none';
-  if(!name)  { err.style.display='block'; err.textContent='Please enter your name.'; return; }
-  if(!dob)   { err.style.display='block'; err.textContent='Please enter your date of birth.'; return; }
-  if(!email) { err.style.display='block'; err.textContent='Please enter your email to receive the report.'; return; }
+  if(!name)  { err.style.display='block'; err.textContent='Please enter your name.'; return null; }
+  if(!dob)   { err.style.display='block'; err.textContent='Please enter your date of birth.'; return null; }
+  if(!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){
+                err.style.display='block'; err.textContent='Please enter a valid email address.'; return null; }
+  const mobile = document.getElementById('rMobile').value.trim();
+  return { name, dob, email, mobile };
+}
+
+// ── 100% free redemption ───────────────────────────────────────
+async function redeemFreeReport(){
+  const fields = validateForm();
+  if(!fields) return;
+
+  // If token was issued for a different email, re-validate
+  if(!promoToken100){
+    showPromoMsg('Please apply your promo code first.','#f87171'); return;
+  }
+
+  const btn=document.getElementById('freeBtn');
+  btn.textContent='Generating your report…'; btn.disabled=true;
+
+  try{
+    const res = await fetch('/api/generate-report',{
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({
+        paymentId: promoToken100,
+        name: fields.name, dob: fields.dob,
+        email: fields.email, mobile: fields.mobile||''
+      })
+    });
+    const data = await res.json();
+    if(data.success){
+      onSuccess(promoToken100, fields.name, fields.dob, fields.email, fields.mobile);
+    } else {
+      const err=document.getElementById('rErrBox');
+      err.style.display='block';
+      err.textContent=data.error||'Something went wrong. Please try again.';
+      btn.textContent='✦ Get My Free Report →'; btn.disabled=false;
+    }
+  } catch(e){
+    const err=document.getElementById('rErrBox');
+    err.style.display='block'; err.textContent='Network error. Please try again.';
+    btn.textContent='✦ Get My Free Report →'; btn.disabled=false;
+  }
+}
+
+// ── Paid flow ──────────────────────────────────────────────────
+function initiateReportPayment(){
+  const fields = validateForm();
+  if(!fields) return;
+  const { name, dob, email, mobile } = fields;
+  const amount = promoDiscount===50 ? 9900 : 19900; // paise
+  const label  = promoDiscount===50 ? '5-Year Destiny Report (50% off)' : '5-Year Destiny Report';
 
   const options = {
-    key:      'rzp_test_SglLiMoKWr16ow', // replace with live key in production
-    amount:   19900, // ₹199 in paise
-    currency: 'INR',
+    key:      'rzp_test_SglLiMoKWr16ow', // replace with live key before go-live
+    amount, currency:'INR',
     name:     'NameAligned.com',
-    description: '5-Year Destiny Report',
-    prefill:  { name, email, contact: mobile || '' },
-    notes:    { customer_name: name, dob, email, mobile: mobile || '' },
-    theme:    { color: '#f0b429' },
+    description: label,
+    prefill:  { name, email, contact: mobile||'' },
+    notes:    { customer_name:name, dob, email, mobile:mobile||'', promo_discount: promoDiscount||0 },
+    theme:    { color:'#f0b429' },
     handler:  function(resp){ onSuccess(resp.razorpay_payment_id, name, dob, email, mobile); }
   };
   const rzp = new Razorpay(options);
   rzp.on('payment.failed',resp=>{
+    const err=document.getElementById('rErrBox');
     err.style.display='block';
     err.textContent='Payment failed: '+(resp.error.description||'Please try again.');
   });
   rzp.open();
 }
 
-async function onSuccess(paymentId, name, dob, email, mobile){
+function onSuccess(paymentId, name, dob, email, mobile){
   const params = new URLSearchParams({paymentId, name, dob, email});
   if(mobile) params.set('mobile', mobile);
   window.location.href = `generate-report.html?${params}`;

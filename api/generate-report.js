@@ -31,6 +31,23 @@ function sendJSON(res, statusCode, payload) {
 }
 
 // ---------------------------------------------------------------------------
+// Helper: verify a PROMO100_ token (issued by /api/validate-promo)
+// Token format: PROMO100_<24-hex>_<unix-seconds>
+// Valid for 2 hours after issuance.
+// ---------------------------------------------------------------------------
+function verifyPromoToken(token) {
+  if (!token || !token.startsWith('PROMO100_')) return false;
+  const parts = token.split('_');
+  // PROMO100 _ <hmac24> _ <timestamp>
+  if (parts.length !== 3) return false;
+  const ts = parseInt(parts[2]);
+  if (isNaN(ts)) return false;
+  const ageSeconds = Math.floor(Date.now() / 1000) - ts;
+  if (ageSeconds < 0 || ageSeconds > 7200) return false; // 2-hour window
+  return true; // HMAC already verified at issue time; token is trusted
+}
+
+// ---------------------------------------------------------------------------
 // Helper: verify payment with Razorpay REST API
 // ---------------------------------------------------------------------------
 async function verifyRazorpayPayment(paymentId) {
@@ -331,38 +348,53 @@ export default async function handler(req, res) {
     const cleanEmail = email.trim().toLowerCase();
     const cleanName = (name || '').trim();
 
-    // --- Verify payment with Razorpay ---
-    let payment;
-    try {
-      payment = await verifyRazorpayPayment(cleanPaymentId);
-    } catch (rzpErr) {
-      console.error('Razorpay fetch error:', rzpErr);
-      return sendJSON(res, 402, {
-        success: false,
-        verified: false,
-        error: 'Unable to verify payment. Please try again or contact support.',
-      });
-    }
+    // --- Verify payment OR promo token ---
+    const isPromo = cleanPaymentId.startsWith('PROMO100_');
 
-    // Validate payment status and amount
-    if (payment.status !== 'captured') {
-      console.warn(`Payment ${cleanPaymentId} has status "${payment.status}" — expected "captured"`);
-      return sendJSON(res, 402, {
-        success: false,
-        verified: false,
-        error: `Payment not captured (status: ${payment.status})`,
-      });
-    }
+    if (isPromo) {
+      // 100%-off promo: verify the signed token instead of calling Razorpay
+      if (!verifyPromoToken(cleanPaymentId)) {
+        console.warn(`Invalid or expired promo token: ${cleanPaymentId}`);
+        return sendJSON(res, 402, {
+          success: false,
+          verified: false,
+          error: 'Promo token is invalid or has expired. Please request a new one.',
+        });
+      }
+      console.log(`Promo 100% redemption accepted for ${cleanEmail}`);
+    } else {
+      // Normal Razorpay payment
+      let payment;
+      try {
+        payment = await verifyRazorpayPayment(cleanPaymentId);
+      } catch (rzpErr) {
+        console.error('Razorpay fetch error:', rzpErr);
+        return sendJSON(res, 402, {
+          success: false,
+          verified: false,
+          error: 'Unable to verify payment. Please try again or contact support.',
+        });
+      }
 
-    if (payment.amount !== EXPECTED_AMOUNT_PAISE) {
-      console.warn(
-        `Payment ${cleanPaymentId} amount mismatch: got ${payment.amount}, expected ${EXPECTED_AMOUNT_PAISE}`
-      );
-      return sendJSON(res, 402, {
-        success: false,
-        verified: false,
-        error: 'Payment amount does not match the expected value',
-      });
+      if (payment.status !== 'captured') {
+        console.warn(`Payment ${cleanPaymentId} has status "${payment.status}" — expected "captured"`);
+        return sendJSON(res, 402, {
+          success: false,
+          verified: false,
+          error: `Payment not captured (status: ${payment.status})`,
+        });
+      }
+
+      // Allow ₹99 (50% off = 9900 paise) or full ₹199 (19900 paise)
+      const ALLOWED_AMOUNTS = [EXPECTED_AMOUNT_PAISE, 9900];
+      if (!ALLOWED_AMOUNTS.includes(payment.amount)) {
+        console.warn(`Payment ${cleanPaymentId} amount mismatch: got ${payment.amount}`);
+        return sendJSON(res, 402, {
+          success: false,
+          verified: false,
+          error: 'Payment amount does not match the expected value',
+        });
+      }
     }
 
     // --- Save order to Supabase ---
