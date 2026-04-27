@@ -138,12 +138,17 @@ strong{font-weight:600}
 }
 .nav-inner{display:flex;align-items:center;justify-content:space-between;height:100%}
 .nav-logo{
-  font-family: var(--font-serif);
-  font-size:18px;letter-spacing:.04em;
-  color:var(--text);display:flex;align-items:center;gap:7px;
+  display:flex;align-items:center;
+  line-height:1;
 }
+.nav-logo img{
+  height:38px;width:auto;
+  display:block;
+  /* Tint gold ring + wordmark to match brand teal on white nav */
+}
+/* Legacy text spans — kept for fallback only */
 .nav-logo .logo-icon{color:var(--teal);font-size:16px}
-.nav-logo .logo-text{color:var(--text);letter-spacing:.02em}
+.nav-logo .logo-text{color:var(--text);letter-spacing:.02em;font-family:var(--font-serif);font-size:18px;}
 .nav-logo .logo-text em{color:var(--gold);font-style:normal}
 .nav-links{display:flex;align-items:center;gap:1.75rem;list-style:none}
 .nav-links a{

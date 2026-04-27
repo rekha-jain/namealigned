@@ -1,0 +1,25 @@
+<svg width="280" height="56" viewBox="0 0 280 56" xmlns="http://www.w3.org/2000/svg">
+  <title>NameAligned — Navbar Logo</title>
+
+  <!-- Icon: clean ring -->
+  <circle cx="28" cy="28" r="24" fill="none" stroke="#a8780e" stroke-width="2"/>
+
+  <!-- Saturn ring -->
+  <ellipse cx="28" cy="28" rx="28" ry="6" fill="none" stroke="#c9a227" stroke-width="1" opacity="0.6" transform="rotate(-18,28,28)"/>
+
+  <!-- Crescent -->
+  <path d="M28,6 A22,22 0 1,1 28,50 A14,17 0 1,0 28,6 Z" fill="#1a0e52"/>
+
+  <!-- Crescent inner edge -->
+  <path d="M28,6 A14,17 0 1,0 28,50" fill="none" stroke="#3a2a8a" stroke-width="1.2" opacity="0.6"/>
+
+  <!-- Star -->
+  <polygon points="40,18 41.8,22.5 47,22.5 43,25.5 44.5,30 40,27 35.5,30 37,25.5 33,22.5 38.2,22.5" fill="#c9a227"/>
+
+  <!-- Planet dot -->
+  <circle cx="44" cy="14" r="3.5" fill="#c9a227" opacity="0.9"/>
+  <ellipse cx="44" cy="14" rx="6.5" ry="2" fill="none" stroke="#c9a227" stroke-width="0.8" opacity="0.7" transform="rotate(-15,44,14)"/>
+
+  <!-- Wordmark -->
+  <text x="62" y="36" font-family="Georgia,'Times New Roman',serif" font-size="26" font-weight="700" fill="#1a0e52">Name<tspan fill="#a8780e">Aligned</tspan></text>
+</svg>
