@@ -278,6 +278,13 @@
   .rpt-section>p{break-after:avoid;break-inside:avoid;}
   #forecastContainer{break-before:avoid;}
 
+  /* ─ Name alignment section: own page, compressed ───────────── */
+  #nameAnalysisSection{break-before:page;break-inside:avoid;}
+  .name-align-card{padding:1rem!important;}
+  .name-align-card>div:first-child{margin-bottom:.75rem!important;}
+  .name-options-grid{display:grid!important;grid-template-columns:repeat(3,1fr)!important;gap:.6rem!important;}
+  .name-options-grid>div{padding:.85rem .9rem!important;}
+
   /* ─ Force CSS grids to maintain columns in print ────────────── */
   /* Chromium print mode collapses grid to 1 col unless forced    */
   .grid-3{display:grid!important;grid-template-columns:repeat(3,1fr)!important;gap:1rem;}
@@ -1504,7 +1511,7 @@ hr.divider{display:none;}
     } else {
       // Header
       html +=
-        '<div style="background:linear-gradient(160deg,#071e2d 0%,#0c3347 100%);border-radius:16px;padding:1.75rem;margin-bottom:1rem;border:1px solid rgba(201,162,39,.2);">'+
+        '<div class="name-align-card" style="background:linear-gradient(160deg,#071e2d 0%,#0c3347 100%);border-radius:16px;padding:1.75rem;margin-bottom:1rem;border:1px solid rgba(201,162,39,.2);">'+
           '<div style="text-align:center;margin-bottom:1.25rem;">'+
             '<div style="color:#c9a227;font-size:10px;letter-spacing:.2em;text-transform:uppercase;font-family:sans-serif;margin-bottom:.4rem;">✦ Chaldean Name Alignment ✦</div>'+
             '<div style="color:#f0ece0;font-size:clamp(17px,2.8vw,22px);font-family:serif;font-weight:700;margin-bottom:.35rem;">3 Phonetic Paths to 100% Alignment</div>'+
@@ -1513,7 +1520,7 @@ hr.divider{display:none;}
           currentCard;
 
       if(corrections.length > 0){
-        html += '<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:.9rem;">';
+        html += '<div class="name-options-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:.9rem;">';
         corrections.forEach(function(c, i){
           var cde = CD[c.newTotal];
           var cpdLabel = cde ? ' · '+cde.l.split(' ·')[0] : '';
