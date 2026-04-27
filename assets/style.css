@@ -57,7 +57,7 @@
   --rl: 16px;
 
   /* ── Nav height */
-  --nav-h: 64px;
+  --nav-h: 88px;
 
   /* ── Font stacks */
   --font-serif: 'Playfair Display', Georgia, serif;
@@ -142,9 +142,8 @@ strong{font-weight:600}
   line-height:1;
 }
 .nav-logo img{
-  height:38px;width:auto;
+  height:72px;width:auto;
   display:block;
-  /* Tint gold ring + wordmark to match brand teal on white nav */
 }
 /* Legacy text spans — kept for fallback only */
 .nav-logo .logo-icon{color:var(--teal);font-size:16px}
