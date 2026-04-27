@@ -259,13 +259,6 @@
       <div id="remediesSection"></div>
     </div>
 
-    <!-- Name suggestions -->
-    <div id="correctionWrap">
-      <div class="sec-label">Suggested name corrections</div>
-      <p style="font-size:13px;color:var(--text2);font-family:sans-serif;margin-bottom:14px">Minor spelling adjustments — same pronunciation, better numerological vibration.</p>
-      <div id="nameSuggestions"></div>
-    </div>
-
     <!-- Email capture -->
     <div class="email-banner mt-4" id="emailCapture">
       <div style="font-size:24px;margin-bottom:8px">✉️</div>
@@ -501,8 +494,7 @@ function renderAnalysis(){
     <div style="font-size:12px;font-family:sans-serif;color:var(--text2);margin-bottom:10px">Aligned to <strong>Moolank ${birthNum} · ${getPlanet(birthNum)}</strong></div>
     ${rems.map(r=>`<div class="remedy-item"><div class="remedy-dot"></div><div class="remedy-text">${r}</div></div>`).join('')}`;
 
-  // Name suggestions (simplified spelling variants)
-  renderSuggestions();
+  // Name suggestions removed from free analysis — available in paid report only
 
   // Wire upgrade CTA with params
   document.getElementById('upgradeBtn').href=`report?name=${encodeURIComponent(name)}&dob=${encodeURIComponent(dob)}&birthNum=${birthNum}&destNum=${destNum}&nameNum=${nameNum}&pct=${pct}`;
@@ -517,85 +509,10 @@ function renderAnalysis(){
 }
 
 function renderSuggestions(){
-  const {name,birthNum,destNum,nameNum,nameRaw} = S;
-  const currentPct = compatPct(nameNum,nameRaw,birthNum,destNum);
-  const VOWELS = new Set('aeiou');
-  const parts  = name.trim().split(/\s+/);
-  const fmt    = s => s.charAt(0).toUpperCase()+s.slice(1).toLowerCase();
-  const seen   = new Set([name.toLowerCase().replace(/\s/g,'')]);
-  const candidates = [];
+  // Name suggestions are only shown in the paid full report.
+  // This function is kept as a no-op for compatibility.
 
-  function genVariants(word){
-    const w=word.toLowerCase(); const v=new Set([w]);
-    const vIdx=[...w].map((c,i)=>VOWELS.has(c)?i:-1).filter(x=>x>=0);
-    const maxM=Math.min(1<<vIdx.length,32);
-    for(let mask=1;mask<maxM;mask++){let s=w,off=0;for(let j=0;j<vIdx.length;j++){if(mask&(1<<j)){const p=vIdx[j]+off;s=s.slice(0,p+1)+s[p]+s.slice(p+1);off++;}}v.add(s);}
-    for(const sfx of ['a','aa','i','ii','e','n','na','ni','h','ah']){v.add(w+sfx);}
-    if(w.length>3){v.add(w.slice(0,-1));}
-    for(let i=1;i<w.length-1;i++){if(!VOWELS.has(w[i])&&w.length>3){const stem=w.slice(0,i)+w.slice(i+1);if(stem.length>=2){if(VOWELS.has(stem[stem.length-1]))v.add(stem+stem[stem.length-1]);for(const s of['a','aa','i'])v.add(stem+s);}}}
-    return [...v].filter(s=>s.length>=2&&s.length<=w.length+4);
-  }
-
-  parts.forEach((word,ci)=>{
-    for(const variant of genVariants(word)){
-      const acc=parts.map((orig,i)=>i===ci?fmt(variant):fmt(orig));
-      const full=acc.join(' '), key=full.toLowerCase().replace(/\s/g,'');
-      if(seen.has(key)) continue; seen.add(key);
-      const raw=chalSum(full.replace(/\s/g,'')), num=reduce(raw);
-      const pct=compatPct(num,raw,birthNum,destNum);
-      if(pct>currentPct) candidates.push({name:full,nameRaw:raw,nameNum:num,pct,changedWord:ci===0?'first name':'last name',phonCost:Math.abs(variant.length-word.length)});
-    }
-  });
-  candidates.sort((a,b)=>b.pct-a.pct||(a.phonCost-b.phonCost));
-  const top=candidates.slice(0,5);
-
-  const wrap=document.getElementById('nameSuggestions');
-  if(!top.length){
-    let maxA=0; for(let r=5;r<=75;r++){const p=compatPct(reduce(r),r,birthNum,destNum);if(p>maxA)maxA=p;}
-    wrap.innerHTML=currentPct>=maxA
-      ?`<div style="background:var(--green-bg);border-left:3px solid var(--green);border-radius:var(--r);padding:1rem;font-family:sans-serif;font-size:13px"><div style="font-weight:600;color:var(--green);margin-bottom:6px">✓ Your name is already at the optimal score for your birth numbers.</div><div style="color:#2d5a1b">${currentPct}% is the maximum achievable for Moolank ${S.birthNum} · Bhagyank ${S.destNum}.</div></div>`
-      :`<div style="background:rgba(240,180,41,.12);border-left:3px solid var(--gold);border-radius:var(--r);padding:1rem;font-family:sans-serif;font-size:13px"><div style="font-weight:600;color:var(--gold);margin-bottom:6px">⚡ Name scores ${currentPct}% — max achievable is ${maxA}%.</div><div style="color:var(--text2)">No simple spelling variant of <em>${S.name}</em> reaches a higher score. A different name structure is needed — consider a consultation for a custom suggestion.</div></div>`;
-    return;
-  }
-  wrap.innerHTML=top.map((s,i)=>{
-    const sc=CD[s.nameRaw]; const pill=sc?sc.q:'n'; const pillLabel=sc?sc.l:'Standard';
-    const pctCls=s.pct>=75?'high':s.pct>=50?'mid':'low';
-    const lift=s.pct-currentPct;
-    const origL=S.name.replace(/\s/g,'').length, sugL=s.name.replace(/\s/g,'').length;
-    const desc=sugL>origL?`Added ${sugL-origL} letter${sugL-origL>1?'s':''} · same pronunciation`:sugL<origL?`Removed ${origL-sugL} letter${origL-sugL>1?'s':''} · same sound`:'Letter swap · same sound';
-    const bf=FRIENDLY[S.birthNum]||[],df=FRIENDLY[S.destNum]||[];
-    const sugnChecks=[
-      {label:'Friendly to both birth numbers',pass:bf.includes(s.nameNum)&&df.includes(s.nameNum),partial:bf.includes(s.nameNum)||df.includes(s.nameNum)},
-      {label:'Preferred number',pass:PREFERRED.includes(s.nameNum)},
-      {label:'Auspicious compound',pass:sc?.q==='g'}
-    ];
-    return `<div class="sug-card" id="sug${i}" onclick="selectSug('${s.name.replace(/'/g,"\\'")}',${i})">
-      <span class="sug-sel-mark">✦</span>
-      <div style="display:flex;align-items:flex-start;gap:12px">
-        <div style="flex:1">
-          <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-bottom:6px">
-            ${i===0?`<span style="background:rgba(240,180,41,.20);color:var(--gold);border:1px solid var(--gold-b);border-radius:20px;font-size:10px;padding:2px 8px;font-family:sans-serif;font-weight:700">★ BEST MATCH</span>`:''}
-            <span style="background:var(--green-bg);color:var(--green);border-radius:20px;font-size:10px;padding:2px 8px;font-family:sans-serif;font-weight:600">+${lift}%</span>
-            <span style="background:rgba(155,114,176,.20);color:var(--purple);border-radius:20px;font-size:10px;padding:2px 8px;font-family:sans-serif">✎ ${s.changedWord}</span>
-          </div>
-          <div class="sug-name">${s.name}</div>
-          <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-bottom:6px">
-            <span style="background:var(--blue-bg);color:var(--blue);border-radius:20px;font-size:11px;padding:3px 10px;font-family:sans-serif">${s.nameRaw}/${s.nameNum} · ${getPlanet(s.nameNum)}</span>
-            <span class="lb-cpill ${pill}" style="font-size:11px;padding:3px 10px;border-radius:20px">${pillLabel}</span>
-          </div>
-          <div style="font-size:11px;font-family:sans-serif;color:var(--text3);font-style:italic">${desc}</div>
-        </div>
-        <div class="pct-ring ${pctCls}" style="width:56px;height:56px;flex-shrink:0"><span class="pr-val" style="font-size:16px">${s.pct}%</span><span class="pr-lbl">Match</span></div>
-      </div>
-      <div class="sug-checks">${sugnChecks.map(c=>`<div class="sci ${c.pass?'pass':c.partial?'partial':'fail'}"><span>${c.pass?'✓':c.partial?'◑':'✗'}</span><span>${c.label}</span></div>`).join('')}</div>
-    </div>`;
-  }).join('');
-}
-
-function selectSug(name, idx){
-  document.querySelectorAll('.sug-card').forEach(el=>el.classList.remove('selected'));
-  document.getElementById('sug'+idx).classList.add('selected');
-  document.getElementById('upgradeBtn').href=`report?name=${encodeURIComponent(name)}&dob=${encodeURIComponent(S.dob)}&birthNum=${S.birthNum}&destNum=${S.destNum}`;
+  // No-op — name corrections only in paid report
 }
 
 async function captureEmail(){

@@ -243,17 +243,17 @@ strong{font-weight:600}
   color: var(--gold);
 }
 
-/* Glassmorphism primary */
+/* Primary = Gold (same weight as btn-gold) */
 .btn-primary{
-  background: var(--card);
-  color: var(--text);
-  border: 1px solid var(--teal-b);
-  backdrop-filter: blur(8px);
+  background: linear-gradient(135deg, var(--gold), #f5d060);
+  color: #03090f;
+  box-shadow: 0 2px 12px var(--gold-glow);
 }
 .btn-primary:hover{
-  background: var(--card2);
-  border-color: var(--gold-b);
-  color: var(--text);
+  background: linear-gradient(135deg, var(--gold-d), var(--gold));
+  box-shadow: 0 6px 28px var(--gold-glow);
+  transform: translateY(-2px);
+  color: #03090f;
 }
 
 /* Ghost dark */
@@ -516,18 +516,28 @@ textarea{resize:vertical;min-height:68px}
 .price-features li.no::before{content:'—  ';color:var(--text3)}
 
 /* ── FAQ ─────────────────────────────────────────────────────── */
-.faq-item{border-bottom:1px solid var(--border);padding:1.25rem 0}
+.faq-item{
+  background:var(--card);border:1px solid var(--border);
+  border-radius:var(--r);padding:1rem 1.25rem;
+  margin-bottom:.5rem;
+  transition:border-color .2s,box-shadow .2s;
+}
+.faq-item:hover{border-color:var(--gold-b);box-shadow:0 2px 14px rgba(240,180,41,.08);}
+.faq-item.open{border-color:var(--gold-b);background:var(--gold-l);}
 .faq-q{
   font-size:15px;cursor:pointer;
   display:flex;justify-content:space-between;align-items:center;gap:1rem;
-  user-select:none;font-family:var(--font-sans);font-weight:500;
+  user-select:none;font-family:var(--font-sans);font-weight:600;
   color:var(--text);
 }
 .faq-q::after{
-  content:'＋';font-size:18px;color:var(--gold);
+  content:'＋';font-size:20px;color:var(--gold);
   flex-shrink:0;transition:transform .25s;
+  width:28px;height:28px;display:flex;align-items:center;justify-content:center;
+  background:var(--gold-l);border-radius:50%;border:1px solid var(--gold-b);
+  font-size:16px;
 }
-.faq-item.open .faq-q::after{transform:rotate(45deg)}
+.faq-item.open .faq-q::after{transform:rotate(45deg);background:var(--gold);color:#03090f;}
 .faq-a{
   font-size:14px;color:var(--text2);font-family:var(--font-sans);
   line-height:1.8;max-height:0;overflow:hidden;

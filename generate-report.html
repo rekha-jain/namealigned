@@ -1400,252 +1400,94 @@ hr.divider{display:none;}
 
   function buildNameAnalysis(){
     var section = qs('nameAnalysisSection');
-    var status = getAlignmentStatus(pct);
-    var harmonises = pct >= 97; // Only truly harmonised if near-perfect
     var cdEntry = CD[nameRaw];
 
-    var result = generateScoredNameVariants(name, pct);
-    var variants = result.variants;
-    var ideal   = result.ideal;
+    // ── CORRECTION ENGINE ─────────────────────────────────────────
+    var corrResult = generateAlignedCorrectedNames(name, birthNum);
+    var corrections = corrResult.corrections;
 
-    // Best-achievable banner
-    var bestAchievable = ideal.maxScore;
-    var bestVariantScore = variants.length ? variants[0].score : pct;
-    var canHit97 = (bestAchievable >= 97);
-    var phoneticsHitIdeal = variants.some(function(v){return v.hitsIdeal;});
-    var bestVariant = variants.length ? variants[0] : null;
-
-    // Helper: is a number friendly to a core number via COMPAT_PARTNERS?
-    function isFriendly(num, coreNum){
-      var cp = COMPAT_PARTNERS[coreNum];
-      if(!cp) return false;
-      return cp.best.indexOf(num)!==-1 || cp.good.indexOf(num)!==-1;
-    }
-
-    // ── TRANSFORMATION CARD ──────────────────────────────────────
-    var friendlyLine = function(ok, label){
-      return ok
-        ? '<div style="color:#4ade80;font-size:13px;font-family:sans-serif;margin-top:5px;">&#10003; Friendly with '+label+'</div>'
-        : '<div style="color:#f87171;font-size:13px;font-family:sans-serif;margin-top:5px;">&#10007; '+label+' friction</div>';
-    };
-    var beforeBadge =
-      '<div style="background:rgba(220,38,38,.2);color:#f87171;border-radius:20px;padding:5px 16px;font-size:12px;font-weight:700;display:inline-block;margin-top:.85rem;">'+
-        '✕ Needs Correction'+
-      '</div>';
-    var afterBadge =
-      '<div style="background:#f0b429;color:#1a0533;border-radius:20px;padding:5px 16px;font-size:12px;font-weight:700;display:inline-block;margin-top:.85rem;">'+
-        '★ Fully Aligned'+
+    // ── CURRENT NAME CARD ─────────────────────────────────────────
+    var currentCard =
+      '<div style="background:rgba(220,38,38,.12);border:1.5px solid rgba(220,38,38,.35);border-radius:14px;padding:1.5rem;margin-bottom:1.5rem;display:flex;align-items:center;gap:1.25rem;flex-wrap:wrap;">'+
+        '<div style="flex:1;min-width:160px;">'+
+          '<div style="font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.5);font-family:sans-serif;margin-bottom:.5rem;">YOUR CURRENT NAME</div>'+
+          '<div style="color:#fff;font-size:clamp(20px,3vw,26px);font-family:serif;font-weight:700;margin-bottom:.5rem;letter-spacing:.03em;">'+name+'</div>'+
+          '<div style="color:rgba(255,255,255,.55);font-size:12px;font-family:sans-serif;margin-bottom:.35rem;">'+
+            'Sum: <strong style="color:rgba(255,255,255,.8);">'+nameRaw+'</strong> → Number <strong style="color:rgba(255,255,255,.8);">'+nameNum+'</strong> ('+namePlanet+')'+(cdEntry?' · '+cdEntry.l.split(' ·')[0]:'')+
+          '</div>'+
+          '<div style="color:rgba(255,160,100,.8);font-size:11.5px;font-family:sans-serif;">'+
+            'Target: Name number <strong style="color:#f0b429;">'+birthNum+'</strong> ('+getPlanet(birthNum)+') = Moolank = <strong style="color:#f0b429;">100% aligned</strong>'+
+          '</div>'+
+        '</div>'+
+        '<div style="text-align:center;background:rgba(220,38,38,.25);border-radius:12px;padding:.75rem 1.1rem;border:1px solid rgba(220,38,38,.4);flex-shrink:0;">'+
+          '<div style="color:#f87171;font-size:44px;font-family:sans-serif;font-weight:700;line-height:1;">'+pct+'<span style="font-size:18px;font-weight:400;">%</span></div>'+
+          '<div style="color:rgba(255,100,100,.6);font-size:10px;font-family:sans-serif;text-transform:uppercase;letter-spacing:.1em;margin-top:2px;">current</div>'+
+        '</div>'+
       '</div>';
 
-    var transformCardHtml = '';
-    if(pct >= 97){
-      // Already perfect — show congratulatory banner
-      transformCardHtml =
-        '<div style="background:linear-gradient(160deg,#071e2d 0%,#0c3347 100%);border-radius:16px;padding:2rem;margin-bottom:1.5rem;text-align:center;">'+
-          '<div style="font-size:36px;margin-bottom:.5rem;">★</div>'+
-          '<div style="color:#f0b429;font-size:20px;font-family:serif;margin-bottom:.65rem;">Your Name Is Fully Aligned</div>'+
-          '<div style="color:rgba(255,255,255,.75);font-size:13px;font-family:sans-serif;max-width:520px;margin:0 auto;line-height:1.7;">'+
-            '<strong style="color:#f0b429;">'+name+'</strong> scores <strong style="color:#f0b429;">'+pct+'%</strong> — near-perfect Chaldean alignment with your birth numbers. No correction needed.'+
+    // ── BUILD SECTION HTML ─────────────────────────────────────────
+    var html = '';
+
+    if(pct >= 97 || corrResult.alreadyAligned){
+      // Already perfectly aligned
+      html =
+        '<div style="background:linear-gradient(160deg,#071e2d 0%,#0c3347 100%);border-radius:16px;padding:2rem;text-align:center;border:1px solid rgba(201,162,39,.3);">'+
+          '<div style="font-size:40px;margin-bottom:.5rem;">★</div>'+
+          '<div style="color:#f0b429;font-size:20px;font-family:serif;margin-bottom:.6rem;font-weight:700;">Your Name Is Fully Aligned</div>'+
+          '<div style="color:rgba(255,255,255,.7);font-size:13px;font-family:sans-serif;max-width:480px;margin:0 auto;line-height:1.75;">'+
+            '<strong style="color:#f0b429;">'+name+'</strong> scores <strong style="color:#f0b429;">'+pct+'%</strong> — Chaldean alignment with your Moolank is complete. No correction needed.'+
           '</div>'+
         '</div>';
     } else {
-      // Always show transformation when below 97%
-      var beforeMoolFriendly = isFriendly(nameNum, birthNum);
-      var beforeBhagFriendly = isFriendly(nameNum, destNum);
-
-      var beforeCard =
-        '<div style="background:rgba(220,38,38,.15);border:1.5px solid rgba(220,38,38,.45);border-radius:14px;padding:1.75rem 1.5rem;flex:1;min-width:190px;">'+
-          '<div style="font-size:10px;letter-spacing:2.5px;text-transform:uppercase;color:rgba(255,80,80,.7);margin-bottom:.9rem;font-family:sans-serif;font-weight:700;">BEFORE — CURRENT NAME</div>'+
-          '<div style="color:#ffffff;font-size:clamp(20px,3vw,28px);font-family:serif;font-weight:700;margin-bottom:.6rem;letter-spacing:.04em;">'+name+'</div>'+
-          '<div style="color:rgba(255,255,255,.5);font-size:11px;font-family:sans-serif;margin-bottom:.6rem;">'+
-            nameRaw+' → Name number <strong style="color:rgba(255,255,255,.7);">'+nameNum+'</strong> ('+namePlanet+')'+
+      // Header
+      html +=
+        '<div style="background:linear-gradient(160deg,#071e2d 0%,#0c3347 100%);border-radius:16px;padding:1.75rem;margin-bottom:1rem;border:1px solid rgba(201,162,39,.2);">'+
+          '<div style="text-align:center;margin-bottom:1.25rem;">'+
+            '<div style="color:#c9a227;font-size:10px;letter-spacing:.2em;text-transform:uppercase;font-family:sans-serif;margin-bottom:.4rem;">✦ Chaldean Name Alignment ✦</div>'+
+            '<div style="color:#f0ece0;font-size:clamp(17px,2.8vw,22px);font-family:serif;font-weight:700;margin-bottom:.35rem;">3 Phonetic Paths to 100% Alignment</div>'+
+            '<div style="color:rgba(200,220,235,.6);font-size:13px;font-family:sans-serif;">First name only · Same sound · Exact Chaldean maths</div>'+
           '</div>'+
-          '<div style="color:#f87171;font-size:56px;font-family:sans-serif;font-weight:700;line-height:1;margin-bottom:.2rem;">'+pct+'<span style="font-size:24px;font-weight:400;">%</span></div>'+
-          '<div style="color:rgba(255,100,100,.6);font-size:11px;font-family:sans-serif;margin-bottom:.4rem;">alignment score</div>'+
-          friendlyLine(beforeMoolFriendly,'Moolank')+
-          friendlyLine(beforeBhagFriendly,'Bhagyank')+
-          beforeBadge+
-        '</div>';
+          currentCard;
 
-      var afterCard, footerLine;
-      if(bestVariant && bestVariant.score > pct){
-        // Real phonetic variant scores higher — show it
-        var bvNameNum = bestVariant.num;
-        var bvPlanet  = bestVariant.planet;
-        var afterMoolFriendly = isFriendly(bvNameNum, birthNum);
-        var afterBhagFriendly = isFriendly(bvNameNum, destNum);
-        afterCard =
-          '<div style="background:rgba(240,180,41,.12);border:2.5px solid #f0b429;border-radius:14px;padding:1.75rem 1.5rem;flex:1;min-width:190px;">'+
-            '<div style="font-size:10px;letter-spacing:2.5px;text-transform:uppercase;color:#c9a227;margin-bottom:.9rem;font-family:sans-serif;font-weight:700;">AFTER — CORRECTED NAME</div>'+
-            '<div style="color:#ffffff;font-size:clamp(20px,3vw,28px);font-family:serif;font-weight:700;margin-bottom:.6rem;letter-spacing:.04em;">'+bestVariant.name+'</div>'+
-            '<div style="color:rgba(255,255,255,.5);font-size:11px;font-family:sans-serif;margin-bottom:.6rem;">'+
-              bestVariant.raw+' → Name number <strong style="color:#f0b429;">'+bvNameNum+'</strong> ('+bvPlanet+')'+
-            '</div>'+
-            '<div style="color:#f0b429;font-size:56px;font-family:sans-serif;font-weight:700;line-height:1;margin-bottom:.2rem;">'+bestVariant.score+'<span style="font-size:24px;font-weight:400;">%</span></div>'+
-            '<div style="color:rgba(240,180,41,.6);font-size:11px;font-family:sans-serif;margin-bottom:.4rem;">alignment score</div>'+
-            friendlyLine(afterMoolFriendly,'Moolank')+
-            friendlyLine(afterBhagFriendly,'Bhagyank')+
-            afterBadge+
-          '</div>';
-        footerLine = 'Name number changes from <strong style="color:#f87171;">'+nameNum+'</strong> ('+namePlanet+') → <strong style="color:#f0b429;">'+bvNameNum+'</strong> ('+bvPlanet+'). Just one small spelling tweak.';
+      if(corrections.length > 0){
+        html += '<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:.9rem;">';
+        corrections.forEach(function(c, i){
+          var cde = CD[c.newTotal];
+          var cpdLabel = cde ? ' · '+cde.l.split(' ·')[0] : '';
+          html +=
+            '<div style="background:rgba(240,180,41,.1);border:2px solid rgba(240,180,41,'+(i===0?'.7':'.35')+');border-radius:14px;padding:1.4rem 1.25rem;position:relative;">'+
+              (i===0?'<div style="position:absolute;top:-1px;left:50%;transform:translateX(-50%);background:#f0b429;color:#03090f;font-size:9px;font-weight:700;letter-spacing:.1em;padding:2px 10px;border-radius:0 0 8px 8px;white-space:nowrap;">★ OPTION '+(i+1)+'</div>':''+
+              '<div style="position:absolute;top:-1px;left:50%;transform:translateX(-50%);background:rgba(240,180,41,.2);color:#c9a227;font-size:9px;font-weight:700;letter-spacing:.1em;padding:2px 10px;border-radius:0 0 8px 8px;white-space:nowrap;border:1px solid rgba(240,180,41,.35);">OPTION '+(i+1)+'</div>')+
+              '<div style="margin-top:.85rem;color:#ffffff;font-size:clamp(17px,2.5vw,22px);font-family:serif;font-weight:700;letter-spacing:.03em;margin-bottom:.6rem;">'+c.fullName+'</div>'+
+              '<div style="color:rgba(255,255,255,.5);font-size:11px;font-family:sans-serif;margin-bottom:.5rem;line-height:1.7;">'+
+                '<span style="color:rgba(255,255,255,.75);">'+c.firstName+'</span> ('+c.newFirstSum+') + '+
+                (corrResult.delta > 0 ? '<span style="color:rgba(255,255,255,.55);">rest</span> ('+c.restSum+') = ' : '')+
+                '<strong style="color:#f0b429;">'+c.newTotal+'</strong> → <strong style="color:#f0b429;">'+c.nameNum+'</strong> ('+getPlanet(c.nameNum)+')'+
+                (cde?'<br><span style="color:rgba(240,180,41,.5);">Compound: '+cpdLabel.slice(3)+'</span>':'')+
+              '</div>'+
+              '<div style="color:#f0b429;font-size:40px;font-family:sans-serif;font-weight:700;line-height:1;margin-bottom:3px;">100<span style="font-size:18px;font-weight:400;">%</span></div>'+
+              '<div style="background:#f0b429;color:#03090f;border-radius:20px;padding:4px 14px;font-size:11px;font-weight:700;display:inline-block;margin-top:.5rem;">★ Fully Aligned</div>'+
+            '</div>';
+        });
+        html += '</div>';
       } else {
-        // No phonetic variant beats current — show IDEAL TARGET as the AFTER card
-        var idealNum    = ideal.nameNum;
-        var idealPlanet = getPlanet(idealNum);
-        var idealMool   = isFriendly(idealNum, birthNum);
-        var idealBhag   = isFriendly(idealNum, destNum);
-        var bestCpd     = ideal.targetCompounds.length ? ideal.targetCompounds[0] : null;
-        var cpdLabel    = bestCpd && CD[bestCpd] ? ' · '+CD[bestCpd].l.split(' ·')[0] : '';
-        afterCard =
-          '<div style="background:rgba(240,180,41,.12);border:2.5px solid #f0b429;border-radius:14px;padding:1.75rem 1.5rem;flex:1;min-width:190px;position:relative;">'+
-            '<div style="font-size:10px;letter-spacing:2.5px;text-transform:uppercase;color:#c9a227;margin-bottom:.9rem;font-family:sans-serif;font-weight:700;">AFTER — OPTIMAL SPELLING</div>'+
-            '<div style="color:#f0b429;font-size:clamp(18px,2.5vw,24px);font-family:serif;font-weight:700;margin-bottom:.6rem;letter-spacing:.02em;">Your Aligned Name</div>'+
-            '<div style="color:rgba(255,255,255,.5);font-size:11px;font-family:sans-serif;margin-bottom:.6rem;">'+
-              'Target: Number <strong style="color:#f0b429;">'+idealNum+'</strong> ('+idealPlanet+')'+(bestCpd?'<br>Compound '+bestCpd+cpdLabel:'')+
-            '</div>'+
-            '<div style="color:#f0b429;font-size:56px;font-family:sans-serif;font-weight:700;line-height:1;margin-bottom:.2rem;">'+ideal.maxScore+'<span style="font-size:24px;font-weight:400;">%</span></div>'+
-            '<div style="color:rgba(240,180,41,.6);font-size:11px;font-family:sans-serif;margin-bottom:.4rem;">max achievable</div>'+
-            friendlyLine(idealMool,'Moolank')+
-            friendlyLine(idealBhag,'Bhagyank')+
-            afterBadge+
-            '<div style="margin-top:1rem;background:rgba(0,0,0,.3);border-radius:8px;padding:.65rem .9rem;font-size:11.5px;font-family:sans-serif;color:rgba(255,255,255,.6);line-height:1.55;border:1px solid rgba(240,180,41,.2);">'+
-              '✦ Your numerologist will reveal the exact corrected spelling in the full consultation'+
-            '</div>'+
+        // Fallback if algorithm finds no phonetic options
+        html +=
+          '<div style="background:rgba(240,180,41,.1);border:1.5px solid rgba(240,180,41,.35);border-radius:12px;padding:1.25rem;font-family:sans-serif;font-size:13px;color:rgba(255,255,255,.7);line-height:1.7;">'+
+            '⚑ Phonetic correction requires adding <strong style="color:#f0b429;">'+corrResult.delta+'</strong> to your name\'s Chaldean sum. '+
+            'This correction is custom to your name structure — your full consultation includes the exact optimal spelling.'+
           '</div>';
-        footerLine = 'A targeted spelling correction takes you from <strong style="color:#f87171;">'+pct+'%</strong> → <strong style="color:#f0b429;">'+ideal.maxScore+'%</strong> — same name, same birthdate, just the right letters.';
       }
 
-      transformCardHtml =
-        '<div style="background:linear-gradient(160deg,#071e2d 0%,#0c3347 100%);border-radius:16px;padding:2rem 1.75rem;margin-bottom:1.5rem;border:1px solid rgba(201,162,39,.2);">'+
-          '<div style="text-align:center;margin-bottom:1.5rem;">'+
-            '<div style="color:#c9a227;font-size:10px;letter-spacing:.2em;text-transform:uppercase;font-family:sans-serif;margin-bottom:.5rem;">✦ Chaldean Name Analysis ✦</div>'+
-            '<div style="color:#f0ece0;font-size:clamp(18px,3vw,24px);font-family:serif;font-weight:700;margin-bottom:.4rem;">See Your Name Transformation</div>'+
-            '<div style="color:rgba(200,220,235,.6);font-size:13px;font-family:sans-serif;">Same person. Same birthdate. A small spelling change unlocks this.</div>'+
-          '</div>'+
-          '<div style="display:flex;align-items:stretch;gap:1rem;flex-wrap:wrap;">'+
-            beforeCard+
-            '<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;color:#f0b429;font-size:32px;flex-shrink:0;padding:0 .25rem;">'+
-              '<div>&#8594;</div>'+
-            '</div>'+
-            afterCard+
-          '</div>'+
-          '<div style="color:rgba(200,220,235,.5);font-size:13px;font-family:sans-serif;margin-top:1.25rem;text-align:center;line-height:1.6;">'+
-            footerLine+
-          '</div>'+
-        '</div>';
+      html +=
+        '<div style="margin-top:1rem;background:rgba(0,0,0,.2);border-radius:10px;padding:.85rem 1rem;font-size:12px;font-family:sans-serif;color:rgba(200,220,235,.55);line-height:1.6;border:1px solid rgba(255,255,255,.07);">'+
+          '✦ These corrections tweak your <em>first name only</em> — adding a soft letter (A, I, H, K) for phonetic similarity. '+
+          'Same pronunciation, different Chaldean vibration. Moolank '+birthNum+' ('+getPlanet(birthNum)+') is your target number.'+
+        '</div>'+
+        '</div>'; // close outer dark card
     }
 
-    // ── BEST-ACHIEVABLE BANNER ───────────────────────────────────
-    var achievableBannerHtml =
-      '<div style="display:flex;align-items:center;gap:1rem;flex-wrap:wrap;'+
-        'padding:1rem 1.25rem;border-radius:var(--r);margin-bottom:1.25rem;'+
-        'background:'+(canHit97?'linear-gradient(135deg,rgba(240,180,41,.12),rgba(240,180,41,.06))':'var(--gold-l)')+';'+
-        'border:1.5px solid var(--gold-b);">'+
-        '<div style="flex:1;min-width:160px;">'+
-          '<div style="font-size:11px;font-family:sans-serif;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--gold);margin-bottom:3px;">Best achievable for your numbers</div>'+
-          '<div style="font-size:13px;font-family:sans-serif;color:var(--text2);line-height:1.6;">'+
-            'Target name number: <strong>'+ideal.nameNum+'</strong> ('+getPlanet(ideal.nameNum)+') — '+
-            (ideal.bothFriendly?'friendly to <strong>both</strong> your Moolank &amp; Bhagyank':'friendly to one of your core numbers')+
-            (ideal.preferred?' · preferred number':'')+'.<br>'+
-            (ideal.targetCompounds.length?
-              'Auspicious compound targets: '+ideal.targetCompounds.slice(0,4).map(function(c){
-                return c+'<span style="color:var(--text3);"> ('+CD[c].l.split(' ·')[0]+')</span>';
-              }).join(', ')+'.':
-              'Any compound that reduces to '+ideal.nameNum+'.')+
-          '</div>'+
-        '</div>'+
-        '<div style="text-align:center;padding:.5rem 1.25rem;background:'+(canHit97?'var(--gold)':'var(--gold-l)')+';'+
-          'border-radius:var(--r);border:1px solid var(--gold-b);">'+
-          '<div style="font-size:28px;font-weight:normal;font-family:sans-serif;color:'+(canHit97?'#1a0533':'var(--gold)')+';">'+bestAchievable+'%</div>'+
-          '<div style="font-size:10px;font-family:sans-serif;color:'+(canHit97?'#3b0764':'var(--text3)')+';text-transform:uppercase;letter-spacing:.06em;">max possible</div>'+
-        '</div>'+
-      '</div>'+
-      (phoneticsHitIdeal?
-        '<div style="background:var(--green-bg);border:1.5px solid #b0d48a;border-radius:var(--r);padding:.75rem 1.1rem;margin-bottom:1rem;font-size:13px;font-family:sans-serif;color:var(--green);">'+
-          '✦ A look-alike spelling below reaches the maximum '+bestAchievable+'% — highlighted with a ★'+
-        '</div>':
-        (bestVariantScore>pct?
-          '<div style="background:var(--green-bg);border:1.5px solid #b0d48a;border-radius:var(--r);padding:.75rem 1.1rem;margin-bottom:1rem;font-size:13px;font-family:sans-serif;color:var(--green);">'+
-            '✦ A phonetic variant below reaches <strong>'+bestVariantScore+'%</strong>. To unlock the full '+bestAchievable+'% requires a targeted spelling — included in your numerologist consultation.'+
-          '</div>':
-          (pct >= 97 ?
-          '<div style="background:var(--green-bg);border:1.5px solid #b0d48a;border-radius:var(--r);padding:.75rem 1.1rem;margin-bottom:1rem;font-size:13px;font-family:sans-serif;color:var(--green);">'+
-            '✦ Your name is already highly optimised. Variants below are shown for reference only.'+
-          '</div>':
-          '<div style="background:rgba(240,180,41,.1);border:1.5px solid rgba(240,180,41,.35);border-radius:var(--r);padding:.75rem 1.1rem;margin-bottom:1rem;font-size:13px;font-family:sans-serif;color:var(--text);">'+
-            '⚑ Minor phonetic tweaks don\'t shift your score. The path to <strong>'+bestAchievable+'%</strong> requires a deliberate letter correction — your numerologist consultation provides the exact spelling.'+
-          '</div>'
-          )
-        )
-      );
-
-    // ── VARIANTS LIST (up to 4) ──────────────────────────────────
-    var topVariants = variants.slice(0,4);
-    var variantsHtml = topVariants.length ?
-      '<div style="display:flex;flex-direction:column;gap:.85rem;">'+
-        topVariants.map(function(v){
-          var vcd=CD[v.raw];
-          var improved=v.score>pct;
-          var isIdeal=v.hitsIdeal;
-          var scoreColor=isIdeal?'var(--gold)':improved?'var(--green)':'var(--text3)';
-          var scoreDiff=v.score-pct;
-          var bg=isIdeal?'background:linear-gradient(135deg,rgba(240,180,41,.18),rgba(240,180,41,.08));border:2px solid var(--gold)':
-                 improved?'background:var(--green-bg);border:1.5px solid #b0d48a':
-                          'background:var(--gold-l);border:1px solid var(--gold-b)';
-          return '<div style="'+bg+';border-radius:var(--r);padding:1rem 1.25rem;display:flex;align-items:center;gap:1rem;">'+
-            '<div style="text-align:center;min-width:48px;">'+
-              '<div style="font-size:28px;color:var(--gold);line-height:1;">'+v.num+'</div>'+
-              '<div style="font-size:9px;font-family:sans-serif;color:var(--text3);text-transform:uppercase;letter-spacing:.06em;">'+v.planet+'</div>'+
-            '</div>'+
-            '<div style="flex:1;">'+
-              '<div style="font-size:17px;margin-bottom:3px;">'+(isIdeal?'★ ':'')+v.name+'</div>'+
-              '<div style="font-size:12px;font-family:sans-serif;color:var(--text2);">'+
-                'Compound '+v.raw+(vcd?' · '+vcd.l.slice(0,36)+(vcd.l.length>36?'…':''):'')+
-              '</div>'+
-            '</div>'+
-            '<div style="text-align:right;min-width:80px;">'+
-              '<div style="font-size:16px;font-family:sans-serif;font-weight:700;color:'+scoreColor+';">'+v.score+'%</div>'+
-              (isIdeal?
-                '<div style="font-size:11px;font-family:sans-serif;color:var(--gold);">★ Max score</div>':
-               improved?
-                '<div style="font-size:11px;font-family:sans-serif;color:var(--green);">↑ +'+scoreDiff+'% vs current</div>':
-                '<div style="font-size:11px;font-family:sans-serif;color:var(--text3);">current '+pct+'%</div>')+
-            '</div>'+
-          '</div>';
-        }).join('')+
-      '</div>' :
-      '<p style="font-size:13px;font-family:sans-serif;color:var(--text2);">Your name is already highly optimised.</p>';
-
-    // ── CURRENT NAME LINE ────────────────────────────────────────
-    var currentNameLine=
-      '<div style="display:flex;align-items:center;gap:1rem;margin-top:1.25rem;margin-bottom:1rem;'+
-        'padding:.85rem 1.1rem;background:var(--card);border:1px solid var(--border);border-radius:var(--r);">'+
-        '<div style="text-align:center;min-width:44px;">'+
-          '<div style="font-size:32px;color:var(--gold);line-height:1;">'+nameNum+'</div>'+
-          '<div style="font-size:9px;font-family:sans-serif;color:var(--text3);text-transform:uppercase;letter-spacing:.05em;">'+namePlanet+'</div>'+
-        '</div>'+
-        '<div style="flex:1;">'+
-          '<div style="font-size:15px;margin-bottom:2px;"><strong>'+name+'</strong> — your current spelling</div>'+
-          '<div style="font-size:12px;font-family:sans-serif;color:var(--text2);">'+
-            'Chaldean sum: '+nameRaw+' → Name number '+nameNum+
-            (cdEntry?' &nbsp;·&nbsp; Compound: '+cdEntry.l:'')+
-          '</div>'+
-        '</div>'+
-        '<div style="font-size:24px;font-family:sans-serif;font-weight:700;color:var(--gold);">'+pct+'%</div>'+
-      '</div>';
-
-    var headingLine=
-      '<div style="font-size:11px;letter-spacing:.1em;text-transform:uppercase;'+
-        'font-family:sans-serif;font-weight:700;color:var(--text3);margin-bottom:.6rem;">'+
-        (harmonises?'Name variants — spellings for reference':'Suggested spellings — ranked by Chaldean alignment')+
-      '</div>'+
-      '<p style="font-size:12.5px;font-family:sans-serif;color:var(--text2);margin-bottom:.85rem;line-height:1.65;">'+
-        (harmonises?
-          'Your name is already aligned. The variants below show how minor tweaks shift the score — useful for branding or pushing higher still.':
-          'Minor look-alike tweaks — double a vowel, elongate an ending, adjust the surname — that shift your Chaldean value. Green rows improve your current '+pct+'%. ★ hits the maximum possible for your numbers.')+
-      '</p>';
-
-    section.innerHTML= transformCardHtml + achievableBannerHtml + currentNameLine + headingLine + variantsHtml;
+    section.innerHTML = html;
   }
 
   // ── 8b. MOBILE NUMBER ANALYSIS ────────────────────────────────

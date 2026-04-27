@@ -141,3 +141,104 @@ function initFaq(){
   });
 }
 document.addEventListener('DOMContentLoaded',initFaq);
+
+// ── ALIGNED NAME CORRECTION ENGINE ───────────────────────────
+// Tweaks FIRST NAME ONLY with phonetic additions (same sound) to
+// make reduce(chalSum(fullName)) === moolank  → 100% alignment.
+// Rule: never add new words / initials — only add letters within
+// the first name (extra vowel, soft consonant, doubled letter).
+function generateAlignedCorrectedNames(fullName, moolank){
+  var parts=fullName.trim().split(/\s+/);
+  var firstName=parts[0], restStr=parts.slice(1).join(' ');
+  var firstSum=chalSum(firstName), restSum=chalSum(restStr);
+  var total=firstSum+restSum;
+
+  // Smallest targetSum >= total where reduce(targetSum)===moolank
+  var target=null;
+  for(var t=total;t<=total+100;t++){ if(reduce(t)===moolank){target=t;break;} }
+  if(!target) return {corrections:[],delta:0,target:total,currentSum:total};
+  var delta=target-total;
+  if(delta===0) return {corrections:[],delta:0,target:total,currentSum:total,alreadyAligned:true};
+
+  // Phonetic addition pool — apply(name_lowercase) → string|null
+  var ADDS=[
+    {v:1,apply:function(n){return n+'a';}},                                    // A at end
+    {v:1,apply:function(n){                                                    // I at first vowel-consonant boundary
+      var m=n.match(/([aeiou])([^aeiou])/i);
+      return m?n.slice(0,m.index+1)+'i'+n.slice(m.index+1):null;
+    }},
+    {v:1,apply:function(n){                                                    // Y before final vowel
+      var m=n.match(/([^aeiou])([aeiou]+)$/i);
+      return m?n.slice(0,m.index+1)+'y'+n.slice(m.index+1):n+'y';
+    }},
+    {v:2,apply:function(n){                                                    // double ending vowel
+      return /[aeiou]$/i.test(n)?n+n.slice(-1):n+'aa';
+    }},
+    {v:2,apply:function(n){var ki=n.lastIndexOf('k');                          // double last K
+      return ki>=0?n.slice(0,ki+1)+'k'+n.slice(ki+1):null;}},
+    {v:2,apply:function(n){var ri=n.lastIndexOf('r');                          // double last R
+      return ri>=0?n.slice(0,ri+1)+'r'+n.slice(ri+1):null;}},
+    {v:3,apply:function(n){var si=n.lastIndexOf('s');                          // double last S
+      return si>=0?n.slice(0,si+1)+'s'+n.slice(si+1):null;}},
+    {v:3,apply:function(n){var li=n.lastIndexOf('l');                          // double last L
+      return li>=0?n.slice(0,li+1)+'l'+n.slice(li+1):null;}},
+    {v:4,apply:function(n){var mi=n.lastIndexOf('m');                          // double last M
+      return mi>=0?n.slice(0,mi+1)+'m'+n.slice(mi+1):null;}},
+    {v:4,apply:function(n){var ti=n.lastIndexOf('t');                          // double last T
+      return ti>=0?n.slice(0,ti+1)+'t'+n.slice(ti+1):null;}},
+    {v:5,apply:function(n){                                                    // H after first vowel
+      var m=n.match(/[aeiou]/i);
+      return m?n.slice(0,m.index+1)+'h'+n.slice(m.index+1):null;
+    }},
+    {v:5,apply:function(n){var hi=n.indexOf('h');                              // double first H
+      return hi>=0?n.slice(0,hi)+'h'+n.slice(hi):null;}},
+    {v:5,apply:function(n){var ni=n.lastIndexOf('n');                          // double last N
+      return ni>=0?n.slice(0,ni+1)+'n'+n.slice(ni+1):null;}},
+    {v:6,apply:function(n){                                                    // AH ending
+      return /[aeiou]$/i.test(n)?n.slice(0,-1)+'ah':n+'ah';
+    }},
+    {v:7,apply:function(n){                                                    // H-inner + double-end-vowel (5+2=7 combined)
+      var m=n.match(/[aeiou]/i);
+      var h=m?n.slice(0,m.index+1)+'h'+n.slice(m.index+1):'h'+n;
+      return /[aeiou]$/i.test(h)?h+h.slice(-1)+'a':h+'aa';
+    }},
+    {v:8,apply:function(n){                                                    // H-inner + triple A
+      var m=n.match(/[aeiou]/i);
+      var h=m?n.slice(0,m.index+1)+'h'+n.slice(m.index+1):'h'+n;
+      return h+'aaa';
+    }},
+  ];
+
+  function cap(s){return s.charAt(0).toUpperCase()+s.slice(1);}
+  var results=[],seen=new Set([firstName.toLowerCase()]);
+
+  // Try single additions matching delta exactly
+  ADDS.forEach(function(a){
+    if(a.v!==delta||results.length>=3) return;
+    var r=a.apply(firstName.toLowerCase());
+    if(!r||seen.has(r.toLowerCase())) return;
+    var capped=cap(r),nt=chalSum(capped)+restSum;
+    if(reduce(nt)!==moolank) return;
+    seen.add(r.toLowerCase());
+    results.push({firstName:capped,fullName:restStr?capped+' '+restStr:capped,
+      newFirstSum:chalSum(capped),restSum:restSum,newTotal:nt,nameNum:moolank});
+  });
+
+  // Try pairs of additions summing to delta
+  for(var i=0;i<ADDS.length&&results.length<3;i++){
+    for(var j=0;j<ADDS.length&&results.length<3;j++){
+      if(ADDS[i].v+ADDS[j].v!==delta) continue;
+      var s1=ADDS[i].apply(firstName.toLowerCase());
+      if(!s1) continue;
+      var s2=ADDS[j].apply(s1);
+      if(!s2||seen.has(s2.toLowerCase())) continue;
+      var capped2=cap(s2),nt2=chalSum(capped2)+restSum;
+      if(reduce(nt2)!==moolank) continue;
+      seen.add(s2.toLowerCase());
+      results.push({firstName:capped2,fullName:restStr?capped2+' '+restStr:capped2,
+        newFirstSum:chalSum(capped2),restSum:restSum,newTotal:nt2,nameNum:moolank});
+    }
+  }
+
+  return {corrections:results,delta:delta,target:target,currentSum:total};
+}
