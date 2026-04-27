@@ -249,9 +249,11 @@
   .rpt-section{padding:1.25rem 1.5rem!important;margin-bottom:.75rem;}
   .forecast-card{overflow:visible;margin-bottom:1rem;}
 
-  /* ─ Page-break control: core cards & career ─────────────────── */
-  .core-num-card,.career-col,.career-domain,.compat-card{break-inside:avoid;}
+  /* ─ Page-break control: career & compat ─────────────────────── */
+  .career-col,.career-domain,.compat-card{break-inside:avoid;}
   #remediesGrid>div{break-inside:avoid;}
+  /* core-num-card must be auto so it participates in the 3-col grid */
+  .core-num-card{break-inside:auto;}
 
   /* ─ Page-break control: forecast cards ─────────────────────── */
   /* Allow cards to span pages; prevent BAD splits inside sub-elements */
@@ -266,8 +268,17 @@
 
   /* ─ Prevent orphaned section intro paragraphs ───────────────── */
   .rpt-section>.sec-label{break-after:avoid;}
-  .rpt-section>p{break-after:avoid;}
+  .rpt-section>p{break-after:avoid;break-inside:avoid;}
   #forecastContainer{break-before:avoid;}
+
+  /* ─ Force CSS grids to maintain columns in print ────────────── */
+  /* Chromium print mode collapses grid to 1 col unless forced    */
+  .grid-3{display:grid!important;grid-template-columns:repeat(3,1fr)!important;gap:1rem;}
+  .grid-2{display:grid!important;grid-template-columns:1fr 1fr!important;gap:1rem;}
+  .forecast-insights{display:grid!important;grid-template-columns:1fr 1fr!important;}
+  .forecast-do-avoid{display:grid!important;grid-template-columns:1fr 1fr!important;}
+  .attr-grid{display:grid!important;grid-template-columns:repeat(3,1fr)!important;}
+  #remediesGrid{display:grid!important;grid-template-columns:1fr 1fr!important;}
 }
 
 /* ── SEC-LABEL ───────────────────────────────────────────────── */
