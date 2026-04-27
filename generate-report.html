@@ -1653,6 +1653,27 @@ hr.divider{display:none;}
     return s;
   }
 
+  // Returns array of reduction steps, e.g. ['9+9+3+0+4+5+9+4+5+3 = 51','5+1 = 6']
+  function getMobileBreakdown(digits){
+    var steps=[];
+    var s=digits.split('').join('+');
+    var sum=digits.split('').reduce(function(a,b){return a+parseInt(b);},0);
+    steps.push(s+' = '+sum);
+    while(sum>9){
+      var str=String(sum);
+      var nextSum=str.split('').reduce(function(a,b){return a+parseInt(b);},0);
+      steps.push(str.split('').join('+')+' = '+nextSum);
+      sum=nextSum;
+    }
+    return steps;
+  }
+
+  // Pretty mobile format: 9930459453 → 99304 59453
+  function formatMobile(digits){
+    if(digits.length===10) return digits.slice(0,5)+' '+digits.slice(5);
+    return digits;
+  }
+
   function getMobileHarmonyStatus(mRoot, moolank, bhagyank){
     var bc=COMPAT_PARTNERS[moolank]||{best:[],good:[],avoid:[]};
     var dc=COMPAT_PARTNERS[bhagyank]||{best:[],good:[],avoid:[]};
@@ -1689,7 +1710,29 @@ hr.divider{display:none;}
     };
     var hc=harmonyConfig[harmonyStatus];
 
-    return '<div style="background:'+hc.bg+';border:1.5px solid '+hc.border+';border-radius:var(--r);padding:1rem 1.25rem;margin-bottom:.85rem;display:flex;align-items:flex-start;gap:.85rem;">'+
+    // Calculation breakdown card — shows mobile + how we arrived at the root
+    var steps=getMobileBreakdown(digits);
+    var stepsHtml=steps.map(function(s,i){
+      return '<div style="font-family:sans-serif;font-size:12.5px;color:var(--text2);line-height:1.7;">'+
+               (i>0?'<span style="color:var(--text3);">→ </span>':'')+s+
+             '</div>';
+    }).join('');
+    var breakdownCard =
+      '<div style="background:linear-gradient(160deg,#071e2d 0%,#0c3347 100%);border:1px solid rgba(201,162,39,.25);border-radius:var(--r);padding:1rem 1.25rem;margin-bottom:.85rem;display:flex;align-items:center;gap:1.25rem;flex-wrap:wrap;">'+
+        '<div style="flex:1;min-width:180px;">'+
+          '<div style="font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:rgba(200,220,235,.55);font-family:sans-serif;margin-bottom:.4rem;">Your Mobile Number</div>'+
+          '<div style="color:#f0ece0;font-size:22px;font-family:serif;font-weight:700;letter-spacing:.04em;margin-bottom:.5rem;">'+formatMobile(digits)+'</div>'+
+          '<div style="color:rgba(200,220,235,.7);font-size:11px;font-family:sans-serif;text-transform:uppercase;letter-spacing:.1em;margin-bottom:.3rem;">Reduction</div>'+
+          stepsHtml.replace(/color:var\(--text2\)/g,'color:rgba(240,236,224,.8)').replace(/color:var\(--text3\)/g,'color:rgba(240,180,41,.7)')+
+        '</div>'+
+        '<div style="text-align:center;background:rgba(240,180,41,.15);border:1px solid rgba(240,180,41,.4);border-radius:12px;padding:.65rem 1rem;flex-shrink:0;">'+
+          '<div style="color:#f0b429;font-size:38px;font-family:sans-serif;font-weight:700;line-height:1;">'+mRoot+'</div>'+
+          '<div style="color:rgba(240,180,41,.7);font-size:10px;font-family:sans-serif;text-transform:uppercase;letter-spacing:.1em;margin-top:2px;">'+mPlanet+'</div>'+
+        '</div>'+
+      '</div>';
+
+    return breakdownCard+
+      '<div style="background:'+hc.bg+';border:1.5px solid '+hc.border+';border-radius:var(--r);padding:1rem 1.25rem;margin-bottom:.85rem;display:flex;align-items:flex-start;gap:.85rem;">'+
         '<div style="font-size:24px;color:'+hc.color+';">'+hc.icon+'</div>'+
         '<div style="flex:1;">'+
           '<div style="font-size:15px;color:'+hc.color+';margin-bottom:4px;">'+hc.label+'</div>'+
@@ -1733,11 +1776,21 @@ hr.divider{display:none;}
     if(digits.length===11 && digits[0]==='0') digits=digits.slice(1);
 
     if(!digits || digits.length!==10){
-      // User didn't provide a mobile number — hide the entire section cleanly
-      if(section) section.style.display='none';
-      // Also hide the preceding <hr>
-      var prevHr=section ? section.previousElementSibling : null;
-      if(prevHr && prevHr.tagName==='HR') prevHr.style.display='none';
+      // No (or invalid) mobile number — show a friendly fallback so the
+      // section isn't blank and users know why no analysis is shown.
+      if(wrap){
+        wrap.innerHTML =
+          '<div style="background:var(--gold-l);border:1.5px dashed var(--gold-b);border-radius:var(--r);padding:1.25rem 1.5rem;display:flex;align-items:flex-start;gap:1rem;">'+
+            '<div style="font-size:26px;line-height:1;flex-shrink:0;">📱</div>'+
+            '<div style="flex:1;">'+
+              '<div style="font-size:14px;color:var(--gold);font-family:serif;font-weight:700;margin-bottom:.35rem;">Mobile analysis unavailable</div>'+
+              '<div style="font-size:12.5px;font-family:sans-serif;color:var(--text2);line-height:1.65;">'+
+                'Sorry, we couldn\'t generate this analysis as a mobile number wasn\'t shared during checkout. '+
+                'Add your number to your profile or contact <a href="mailto:support@namealigned.com" style="color:var(--gold);">support@namealigned.com</a> with your payment ID and we\'ll send a personalised mobile analysis to your inbox.'+
+              '</div>'+
+            '</div>'+
+          '</div>';
+      }
       return;
     }
 
