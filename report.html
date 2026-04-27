@@ -33,19 +33,19 @@
 
 <nav class="nav">
   <div class="container nav-inner">
-    <a href="index.html" class="nav-logo"><span class="logo-icon">☽</span><span class="logo-text"><em>Name</em>Aligned</span></a>
+    <a href="/" class="nav-logo"><span class="logo-icon">☽</span><span class="logo-text"><em>Name</em>Aligned</span></a>
     <ul class="nav-links">
-      <li><a href="analyzer.html">Free Analysis</a></li>
-      <li><a href="blog/index.html">Blog</a></li>
-      <li><a href="about.html">About</a></li>
-      <li><a href="analyzer.html" class="nav-cta">Try Free →</a></li>
+      <li><a href="analyzer">Free Analysis</a></li>
+      <li><a href="/blog">Blog</a></li>
+      <li><a href="about">About</a></li>
+      <li><a href="analyzer" class="nav-cta">Try Free →</a></li>
     </ul>
     <div class="nav-hamburger" id="navHamburger"><span></span><span></span><span></span></div>
   </div>
   <div class="nav-mobile" id="navMobile">
-    <a href="index.html">Home</a>
-    <a href="analyzer.html">Free Analysis</a>
-    <a href="blog/index.html">Blog</a>
+    <a href="/">Home</a>
+    <a href="analyzer">Free Analysis</a>
+    <a href="/blog">Blog</a>
   </div>
 </nav>
 
@@ -251,7 +251,7 @@
         </div>
 
         <div style="margin-top:1.25rem;border-top:1px solid var(--gold-b);padding-top:1rem;text-align:center">
-          <a href="analyzer.html" style="font-size:12.5px;font-family:sans-serif;color:var(--text3)">
+          <a href="analyzer" style="font-size:12.5px;font-family:sans-serif;color:var(--text3)">
             Try the free analysis first →
           </a>
         </div>
@@ -274,9 +274,9 @@
   <div class="container">
     <div class="footer-grid">
       <div><div class="footer-brand">☽ NameAligned.com</div><p class="footer-tagline">Free Chaldean numerology analysis for everyone. Based on Cheiro's Book of Numbers.</p></div>
-      <div><div class="footer-col-title">Tools</div><ul class="footer-links"><li><a href="analyzer.html">Free Analysis</a></li><li><a href="report.html">Full Report ₹199</a></li></ul></div>
-      <div><div class="footer-col-title">Learn</div><ul class="footer-links"><li><a href="blog/index.html">Blog</a></li><li><a href="about.html">About</a></li></ul></div>
-      <div><div class="footer-col-title">Legal</div><ul class="footer-links"><li><a href="privacy.html">Privacy</a></li><li><a href="terms.html">Terms</a></li></ul></div>
+      <div><div class="footer-col-title">Tools</div><ul class="footer-links"><li><a href="analyzer">Free Analysis</a></li><li><a href="report">Full Report ₹199</a></li></ul></div>
+      <div><div class="footer-col-title">Learn</div><ul class="footer-links"><li><a href="/blog">Blog</a></li><li><a href="about">About</a></li></ul></div>
+      <div><div class="footer-col-title">Legal</div><ul class="footer-links"><li><a href="privacy">Privacy</a></li><li><a href="terms">Terms</a></li></ul></div>
     </div>
     <div class="footer-bottom"><span>© 2026 NameAligned.com</span><span>Made with ✦ in India</span></div>
   </div>
@@ -445,7 +445,7 @@ function initiateReportPayment(){
 function onSuccess(paymentId, name, dob, email, mobile){
   const params = new URLSearchParams({paymentId, name, dob, email});
   if(mobile) params.set('mobile', mobile);
-  window.location.href = `generate-report.html?${params}`;
+  window.location.href = `generate-report?${params}`;
 }
 </script>
 </body>

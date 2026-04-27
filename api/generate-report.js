@@ -121,7 +121,7 @@ async function saveOrderToSupabase({
 // ---------------------------------------------------------------------------
 async function sendReportEmail({ paymentId, name, email, dob, mobile, birthNum, destNum, nameNum }) {
   const reportUrl =
-    `https://namealigned.com/generate-report.html` +
+    `https://namealigned.com/generate-report` +
     `?paymentId=${encodeURIComponent(paymentId || '')}` +
     `&name=${encodeURIComponent(name || '')}` +
     `&dob=${encodeURIComponent(dob || '')}` +

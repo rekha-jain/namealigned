@@ -102,19 +102,19 @@
 
 <nav class="nav">
   <div class="container nav-inner">
-    <a href="index.html" class="nav-logo"><span class="logo-icon">☽</span><span class="logo-text"><em>Name</em>Aligned</span></a>
+    <a href="/" class="nav-logo"><span class="logo-icon">☽</span><span class="logo-text"><em>Name</em>Aligned</span></a>
     <ul class="nav-links">
-      <li><a href="analyzer.html" style="color:var(--gold)">Free Analysis</a></li>
-      <li><a href="blog/index.html">Blog</a></li>
-      <li><a href="about.html">About</a></li>
-      <li><a href="report.html" class="nav-cta">Full Report ₹199</a></li>
+      <li><a href="analyzer" style="color:var(--gold)">Free Analysis</a></li>
+      <li><a href="/blog">Blog</a></li>
+      <li><a href="about">About</a></li>
+      <li><a href="report" class="nav-cta">Full Report ₹199</a></li>
     </ul>
     <div class="nav-hamburger" id="navHamburger"><span></span><span></span><span></span></div>
   </div>
   <div class="nav-mobile" id="navMobile">
-    <a href="index.html">Home</a>
-    <a href="report.html">Full Report ₹199</a>
-    <a href="blog/index.html">Blog</a>
+    <a href="/">Home</a>
+    <a href="report">Full Report ₹199</a>
+    <a href="/blog">Blog</a>
   </div>
 </nav>
 
@@ -282,7 +282,7 @@
         <span class="upgrade-feat">Master daily remedy</span>
         <span class="upgrade-feat">Downloadable PDF</span>
       </div>
-      <a href="report.html" id="upgradeBtn" class="btn btn-gold btn-lg">Get full report — ₹199 →</a>
+      <a href="report" id="upgradeBtn" class="btn btn-gold btn-lg">Get full report — ₹199 →</a>
       <p style="font-size:11px;color:#6a5a4a;margin-top:10px;font-family:sans-serif">One-time payment · Instant delivery · No subscription</p>
     </div>
 
@@ -471,7 +471,7 @@ function renderAnalysis(){
   renderSuggestions();
 
   // Wire upgrade CTA with params
-  document.getElementById('upgradeBtn').href=`report.html?name=${encodeURIComponent(name)}&dob=${encodeURIComponent(dob)}&birthNum=${birthNum}&destNum=${destNum}&nameNum=${nameNum}&pct=${pct}`;
+  document.getElementById('upgradeBtn').href=`report?name=${encodeURIComponent(name)}&dob=${encodeURIComponent(dob)}&birthNum=${birthNum}&destNum=${destNum}&nameNum=${nameNum}&pct=${pct}`;
 }
 
 function renderSuggestions(){
@@ -553,7 +553,7 @@ function renderSuggestions(){
 function selectSug(name, idx){
   document.querySelectorAll('.sug-card').forEach(el=>el.classList.remove('selected'));
   document.getElementById('sug'+idx).classList.add('selected');
-  document.getElementById('upgradeBtn').href=`report.html?name=${encodeURIComponent(name)}&dob=${encodeURIComponent(S.dob)}&birthNum=${S.birthNum}&destNum=${S.destNum}`;
+  document.getElementById('upgradeBtn').href=`report?name=${encodeURIComponent(name)}&dob=${encodeURIComponent(S.dob)}&birthNum=${S.birthNum}&destNum=${S.destNum}`;
 }
 
 async function captureEmail(){
