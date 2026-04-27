@@ -142,8 +142,9 @@ strong{font-weight:600}
   line-height:1;
 }
 .nav-logo img{
-  height:72px;width:auto;
+  height:68px;width:auto;max-width:260px;
   display:block;
+  overflow:visible;
 }
 /* Legacy text spans — kept for fallback only */
 .nav-logo .logo-icon{color:var(--teal);font-size:16px}

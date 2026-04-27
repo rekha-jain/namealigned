@@ -9,10 +9,10 @@
 <link rel="stylesheet" href="assets/style.css"/>
 <style>
 .tool-wrap{max-width:760px;margin:0 auto;padding:2rem 1rem 5rem}
-.step-tabs{display:flex;background:var(--bg2);border-bottom:1px solid var(--gold-b);position:sticky;top:var(--nav-h);z-index:99}
-.step-tab{flex:1;padding:14px 8px;text-align:center;font-size:11px;font-family:sans-serif;letter-spacing:.07em;text-transform:uppercase;color:var(--text3);border-bottom:2px solid transparent;cursor:pointer;transition:all .2s;user-select:none}
-.step-tab.active{color:var(--gold);border-bottom-color:var(--gold)}
-.step-tab.done{color:var(--green)}
+.step-tabs{display:flex;background:#0a2233;border-bottom:2px solid rgba(201,162,39,.25);position:sticky;top:var(--nav-h);z-index:99}
+.step-tab{flex:1;padding:14px 8px;text-align:center;font-size:11px;font-family:sans-serif;letter-spacing:.07em;text-transform:uppercase;color:rgba(180,210,230,.5);border-bottom:2px solid transparent;cursor:pointer;transition:all .2s;user-select:none}
+.step-tab.active{color:#c9a227;border-bottom-color:#c9a227}
+.step-tab.done{color:#4caf84}
 .step-tab .sn{display:inline-block;width:20px;height:20px;border-radius:50%;border:1px solid currentColor;font-size:10px;line-height:20px;text-align:center;margin-right:5px}
 .align-hero{text-align:center;padding:2rem 1.25rem 1.75rem;border-radius:var(--rl);margin-bottom:1.25rem;border:1px solid transparent}
 .align-hero.is-aligned{background:linear-gradient(135deg,rgba(42,122,42,.12),rgba(42,122,42,.06));border-color:#2a7a2a}
@@ -118,6 +118,13 @@
     <a href="/blog">Blog</a>
   </div>
 </nav>
+
+<!-- Dark teal hero -->
+<div style="background:linear-gradient(160deg,#071e2d 0%,#0c3347 100%);padding:2.25rem 1.5rem 2rem;text-align:center;">
+  <p style="font-family:'DM Sans',sans-serif;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:#c9a227;margin-bottom:.6rem;opacity:.9;">✦ Chaldean Numerology System ✦</p>
+  <h1 style="font-family:'Playfair Display',Georgia,serif;font-size:clamp(1.6rem,4vw,2.4rem);color:#f0ece0;font-weight:700;margin-bottom:.6rem;line-height:1.2;">Your Free Name &amp; Birth<br>Number Analysis</h1>
+  <p style="font-family:'DM Sans',sans-serif;font-size:14px;color:rgba(200,220,235,.75);max-width:480px;margin:0 auto;">Discover your Moolank, Bhagyank &amp; name alignment score — free in 30 seconds</p>
+</div>
 
 <!-- Step tabs -->
 <div class="step-tabs" id="stepTabs">
