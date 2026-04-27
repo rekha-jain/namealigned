@@ -345,8 +345,7 @@ textarea{resize:vertical;min-height:68px}
 
 /* ── HERO SECTIONS ──────────────────────────────────────────── */
 .hero-dark{
-  /* Keeps a teal-to-white gradient so hero feels premium on white bg */
-  background: linear-gradient(160deg, #082535 0%, #0c3347 55%, #0e7490 100%);
+  background: linear-gradient(160deg, #071e2d 0%, #0c3347 55%, #0e7490 100%);
   color: #e8f4ff;
   text-align:center;padding:5rem 1.5rem 4rem;
   position:relative;overflow:hidden;
@@ -355,34 +354,49 @@ textarea{resize:vertical;min-height:68px}
 .hero-dark::before{
   content:'';position:absolute;inset:0;
   background: radial-gradient(ellipse 85% 55% at 50% -5%,
-              rgba(6,182,212,.25) 0%, transparent 65%);
+              rgba(6,182,212,.20) 0%, transparent 65%);
   pointer-events:none;
 }
-/* Gold shimmer */
+/* Gold shimmer centre */
 .hero-dark::after{
   content:'';position:absolute;inset:0;
-  background: radial-gradient(ellipse 40% 30% at 50% 40%,
-              rgba(240,180,41,.07) 0%, transparent 60%);
+  background: radial-gradient(ellipse 60% 40% at 50% 60%,
+              rgba(240,180,41,.06) 0%, transparent 65%);
   pointer-events:none;
 }
-.hero-sym{font-size:28px;letter-spacing:14px;opacity:.5;margin-bottom:16px;position:relative;color:var(--gold)}
+.hero-sym{
+  font-size:22px;letter-spacing:12px;opacity:.55;
+  margin-bottom:20px;position:relative;color:var(--gold);
+}
 .hero-eyebrow{
-  font-size:11px;letter-spacing:.2em;text-transform:uppercase;
-  color:var(--gold);margin-bottom:12px;
-  font-family:var(--font-sans);font-weight:500;position:relative;
+  font-size:11px;letter-spacing:.22em;text-transform:uppercase;
+  color:var(--gold);margin-bottom:16px;
+  font-family:var(--font-sans);font-weight:600;position:relative;
+  display:inline-flex;align-items:center;gap:10px;
+}
+.hero-eyebrow::before{
+  content:'';display:inline-block;width:28px;height:2px;
+  background:linear-gradient(90deg,var(--gold),rgba(240,180,41,.3));
+  border-radius:2px;
+}
+.hero-eyebrow::after{
+  content:'';display:inline-block;width:28px;height:2px;
+  background:linear-gradient(90deg,rgba(240,180,41,.3),var(--gold));
+  border-radius:2px;
 }
 .hero-h1{
   font-family: var(--font-serif);
-  font-size:clamp(28px,5vw,56px);line-height:1.12;
-  color:var(--text);position:relative;margin-bottom:16px;
+  font-size:clamp(30px,5vw,58px);line-height:1.1;
+  color:#ffffff;position:relative;margin-bottom:20px;
+  text-shadow: 0 2px 20px rgba(6,182,212,.20);
 }
 .hero-h1 em{color:var(--gold);font-style:italic}
 .hero-sub{
-  font-size:clamp(14px,2vw,18px);color:var(--text2);
-  font-style:italic;max-width:600px;margin:0 auto 2rem;position:relative;
-  font-family:var(--font-sans);font-weight:300;
+  font-size:clamp(14px,2vw,17px);color:rgba(232,244,255,.72);
+  max-width:580px;margin:0 auto 2rem;position:relative;
+  font-family:var(--font-sans);font-weight:300;line-height:1.75;
 }
-.hero-line{width:48px;height:1px;background:var(--gold);margin:16px auto;position:relative;opacity:.6}
+.hero-line{width:48px;height:2px;background:linear-gradient(90deg,transparent,var(--gold),transparent);margin:20px auto;position:relative;}
 
 /* ── GRID LAYOUTS ────────────────────────────────────────────── */
 .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:2rem}
