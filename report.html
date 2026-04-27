@@ -416,34 +416,74 @@ async function redeemFreeReport(){
 }
 
 // ── Paid flow ──────────────────────────────────────────────────
-function initiateReportPayment(){
+async function initiateReportPayment(){
   const fields = validateForm();
   if(!fields) return;
   const { name, dob, email, mobile } = fields;
   const amount = promoDiscount===50 ? 9900 : 19900; // paise
   const label  = promoDiscount===50 ? '5-Year Destiny Report (50% off)' : '5-Year Destiny Report';
 
+  // Disable button while creating order
+  const payBtn = document.getElementById('payBtn');
+  payBtn.disabled = true;
+  payBtn.textContent = 'Preparing payment…';
+
+  let orderId;
+  try {
+    const orderRes = await fetch('/api/create-order', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ amount })
+    });
+    const orderData = await orderRes.json();
+    if (!orderData.success || !orderData.orderId) {
+      throw new Error(orderData.error || 'Could not create order');
+    }
+    orderId = orderData.orderId;
+  } catch(e) {
+    const err = document.getElementById('rErrBox');
+    err.style.display = 'block';
+    err.textContent = 'Could not initialise payment. Please try again.';
+    payBtn.disabled = false;
+    payBtn.textContent = '✦ Pay — Generate my report';
+    return;
+  }
+
   const options = {
-    key:      'rzp_live_SiNdGI63u7ECgA',
-    amount, currency:'INR',
-    name:     'NameAligned.com',
+    key:         'rzp_live_SiNdGI63u7ECgA',
+    amount, currency: 'INR',
+    order_id:    orderId,
+    name:        'NameAligned.com',
     description: label,
-    prefill:  { name, email, contact: mobile||'' },
-    notes:    { customer_name:name, dob, email, mobile:mobile||'', promo_discount: promoDiscount||0 },
-    theme:    { color:'#f0b429' },
-    handler:  function(resp){ onSuccess(resp.razorpay_payment_id, name, dob, email, mobile); }
+    prefill:     { name, email, contact: mobile||'' },
+    notes:       { customer_name: name, dob, email, mobile: mobile||'', promo_discount: promoDiscount||0 },
+    theme:       { color: '#f0b429' },
+    handler: function(resp){
+      onSuccess(
+        resp.razorpay_payment_id,
+        resp.razorpay_order_id,
+        resp.razorpay_signature,
+        name, dob, email, mobile
+      );
+    }
   };
   const rzp = new Razorpay(options);
-  rzp.on('payment.failed',resp=>{
-    const err=document.getElementById('rErrBox');
-    err.style.display='block';
-    err.textContent='Payment failed: '+(resp.error.description||'Please try again.');
+  rzp.on('payment.failed', resp => {
+    const err = document.getElementById('rErrBox');
+    err.style.display = 'block';
+    err.textContent = 'Payment failed: ' + (resp.error.description || 'Please try again.');
+    payBtn.disabled = false;
+    payBtn.textContent = '✦ Pay — Generate my report';
+  });
+  rzp.on('payment.cancel', () => {
+    payBtn.disabled = false;
+    payBtn.textContent = '✦ Pay — Generate my report';
   });
   rzp.open();
 }
 
-function onSuccess(paymentId, name, dob, email, mobile){
-  const params = new URLSearchParams({paymentId, name, dob, email});
+function onSuccess(paymentId, orderId, signature, name, dob, email, mobile){
+  const params = new URLSearchParams({ paymentId, orderId, signature, name, dob, email });
   if(mobile) params.set('mobile', mobile);
   window.location.href = `generate-report?${params}`;
 }

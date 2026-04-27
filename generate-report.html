@@ -542,6 +542,8 @@
   // ── PARSE URL PARAMS ──────────────────────────────────────────
   var params=new URLSearchParams(window.location.search);
   var paymentId  = params.get('paymentId')||'';
+  var orderId    = params.get('orderId')||'';
+  var signature  = params.get('signature')||'';
   var rawName    = params.get('name')||'';
   var dob        = params.get('dob')||'';
   var email      = params.get('email')||'';
@@ -614,6 +616,29 @@
       },600);
     }
   }, interval);
+
+  // ── SAVE ORDER + SEND EMAIL (fire-and-forget) ─────────────────
+  // Calls the API to verify payment, persist to DB and trigger delivery email.
+  // We do this after the report renders so the user never waits on the API call.
+  (function saveAndEmail(){
+    if(!email) return; // can't email without an address
+    fetch('/api/generate-report', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        paymentId: paymentId,
+        orderId:   orderId   || undefined,
+        signature: signature || undefined,
+        name:      decodeURIComponent(rawName),
+        dob:       dob,
+        email:     email,
+        mobile:    mobile || undefined,
+        birthNum:  birthNum,
+        destNum:   destNum,
+        nameNum:   nameNum,
+      })
+    }).catch(function(e){ console.warn('generate-report API call failed:', e); });
+  })();
 
   // ── BUILD REPORT ──────────────────────────────────────────────
   function buildReport(){

@@ -8,6 +8,10 @@
       "destination": "/api/capture-lead.js"
     },
     {
+      "source": "/api/create-order",
+      "destination": "/api/create-order.js"
+    },
+    {
       "source": "/api/generate-report",
       "destination": "/api/generate-report.js"
     },

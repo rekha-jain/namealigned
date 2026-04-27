@@ -1,18 +1,20 @@
 /**
  * Vercel Serverless Function — POST /api/generate-report
  *
- * Verifies a Razorpay payment, saves the order to Supabase, and sends a
- * delivery email via Brevo containing the link to the full paid report.
+ * Verifies a Razorpay payment (via HMAC signature), saves the order to
+ * Supabase, and sends a delivery email via Brevo containing the report link.
  *
  * Required environment variables:
- *   SUPABASE_URL        — e.g. https://xyzxyz.supabase.co
- *   SUPABASE_ANON_KEY   — Supabase project anon/public key
- *   BREVO_API_KEY       — Brevo (Sendinblue) v3 API key
- *   RAZORPAY_KEY_ID     — Razorpay live/test key ID
- *   RAZORPAY_KEY_SECRET — Razorpay live/test key secret
+ *   SUPABASE_URL          — e.g. https://xyzxyz.supabase.co
+ *   SUPABASE_SERVICE_KEY  — Supabase service role key
+ *   BREVO_API_KEY         — Brevo (Sendinblue) v3 API key
+ *   RAZORPAY_KEY_ID       — Razorpay live key ID
+ *   RAZORPAY_KEY_SECRET   — Razorpay live key secret
  */
 
 'use strict';
+
+import crypto from 'crypto';
 
 const CORS_HEADERS = {
   'Access-Control-Allow-Origin': '*',
@@ -48,13 +50,23 @@ function verifyPromoToken(token) {
 }
 
 // ---------------------------------------------------------------------------
-// Helper: verify payment with Razorpay REST API
+// Helper: verify Razorpay payment signature (HMAC-SHA256)
+// Razorpay signs: orderId + "|" + paymentId with your key secret.
+// We verify this instead of a round-trip API call — faster and more reliable.
 // ---------------------------------------------------------------------------
-async function verifyRazorpayPayment(paymentId) {
-  if (!paymentId || typeof paymentId !== 'string') {
-    throw new TypeError('paymentId must be a non-empty string');
-  }
+function verifyRazorpaySignature(orderId, paymentId, signature) {
+  if (!orderId || !paymentId || !signature) return false;
+  const expected = crypto
+    .createHmac('sha256', process.env.RAZORPAY_KEY_SECRET)
+    .update(`${orderId}|${paymentId}`)
+    .digest('hex');
+  return crypto.timingSafeEqual(Buffer.from(expected), Buffer.from(signature));
+}
 
+// ---------------------------------------------------------------------------
+// Helper: fetch payment details from Razorpay (used as fallback / amount check)
+// ---------------------------------------------------------------------------
+async function fetchRazorpayPayment(paymentId) {
   const credentials = Buffer.from(
     `${process.env.RAZORPAY_KEY_ID}:${process.env.RAZORPAY_KEY_SECRET}`
   ).toString('base64');
@@ -333,8 +345,10 @@ export default async function handler(req, res) {
   }
 
   try {
-    const { paymentId, name, dob, email, mobile, birthNum, destNum, nameNum } =
-      req.body || {};
+    const {
+      paymentId, orderId, signature,
+      name, dob, email, mobile, birthNum, destNum, nameNum,
+    } = req.body || {};
 
     // --- Basic input validation ---
     if (!paymentId || typeof paymentId !== 'string' || paymentId.trim().length === 0) {
@@ -363,37 +377,52 @@ export default async function handler(req, res) {
       }
       console.log(`Promo 100% redemption accepted for ${cleanEmail}`);
     } else {
-      // Normal Razorpay payment
-      let payment;
-      try {
-        payment = await verifyRazorpayPayment(cleanPaymentId);
-      } catch (rzpErr) {
-        console.error('Razorpay fetch error:', rzpErr);
-        return sendJSON(res, 402, {
-          success: false,
-          verified: false,
-          error: 'Unable to verify payment. Please try again or contact support.',
-        });
-      }
+      // Normal Razorpay payment — verify HMAC signature first (fast & secure)
+      if (orderId && signature) {
+        // Preferred path: signature verification (no extra API call needed)
+        const sigValid = verifyRazorpaySignature(orderId, cleanPaymentId, signature);
+        if (!sigValid) {
+          console.warn(`Signature mismatch for payment ${cleanPaymentId}`);
+          return sendJSON(res, 402, {
+            success: false,
+            verified: false,
+            error: 'Payment signature verification failed. Please contact support.',
+          });
+        }
+        console.log(`Payment ${cleanPaymentId} verified via HMAC signature`);
+      } else {
+        // Fallback path: fetch payment from Razorpay API and check status/amount
+        let payment;
+        try {
+          payment = await fetchRazorpayPayment(cleanPaymentId);
+        } catch (rzpErr) {
+          console.error('Razorpay fetch error:', rzpErr);
+          return sendJSON(res, 402, {
+            success: false,
+            verified: false,
+            error: 'Unable to verify payment. Please try again or contact support.',
+          });
+        }
 
-      if (payment.status !== 'captured') {
-        console.warn(`Payment ${cleanPaymentId} has status "${payment.status}" — expected "captured"`);
-        return sendJSON(res, 402, {
-          success: false,
-          verified: false,
-          error: `Payment not captured (status: ${payment.status})`,
-        });
-      }
+        if (payment.status !== 'captured') {
+          console.warn(`Payment ${cleanPaymentId} status "${payment.status}" — expected "captured"`);
+          return sendJSON(res, 402, {
+            success: false,
+            verified: false,
+            error: `Payment not captured (status: ${payment.status})`,
+          });
+        }
 
-      // Allow ₹99 (50% off = 9900 paise) or full ₹199 (19900 paise)
-      const ALLOWED_AMOUNTS = [EXPECTED_AMOUNT_PAISE, 9900];
-      if (!ALLOWED_AMOUNTS.includes(payment.amount)) {
-        console.warn(`Payment ${cleanPaymentId} amount mismatch: got ${payment.amount}`);
-        return sendJSON(res, 402, {
-          success: false,
-          verified: false,
-          error: 'Payment amount does not match the expected value',
-        });
+        // Allow ₹99 (50% off = 9900 paise) or full ₹199 (19900 paise)
+        const ALLOWED_AMOUNTS = [EXPECTED_AMOUNT_PAISE, 9900];
+        if (!ALLOWED_AMOUNTS.includes(payment.amount)) {
+          console.warn(`Payment ${cleanPaymentId} amount mismatch: got ${payment.amount}`);
+          return sendJSON(res, 402, {
+            success: false,
+            verified: false,
+            error: 'Payment amount does not match the expected value',
+          });
+        }
       }
     }
 
