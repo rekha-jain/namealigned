@@ -1,11 +1,11 @@
 /* ═══════════════════════════════════════════════════════════════
-   NAMEALIGNED.COM — Shared Stylesheet v4
-   Light / Airy theme:
-   • Clean white canvas — fresh, premium, trustworthy
-   • Teal-cyan accent — cosmic energy without heavy dark bg
-   • Stellar gold #f0b429 — CTAs retain full shine & glow
-   • Subtle teal radial crown on html background
-   • Crisp white cards with teal border + soft shadow
+   NAMEALIGNED.COM — Shared Stylesheet v5
+   Dark Teal Hero + White Content theme:
+   • Hero: deep teal-navy gradient — rich, premium, bold
+   • Content: clean white canvas — airy, readable
+   • Teal-cyan accent #06b6d4
+   • Stellar gold #f0b429 — CTAs with full shine & glow
+   • Rich section treatments for visual depth on scroll
    • Playfair Display headings + DM Sans body
    ═══════════════════════════════════════════════════════════════ */
 
@@ -19,7 +19,7 @@
 :root{
   /* ── Light backgrounds */
   --bg:         #ffffff;              /* clean white canvas */
-  --bg2:        #f0fbfd;              /* very light teal-tinted sections */
+  --bg2:        #e6f5fa;              /* teal-tinted alternating sections — visible rhythm */
   --card:       #ffffff;              /* white cards */
   --card2:      rgba(6,182,212,.07);  /* hover / elevated card */
   --card-solid: #f4feff;              /* solid bg for inputs/forms */
@@ -105,8 +105,26 @@ strong{font-weight:600}
 .container-sm{max-width:760px;margin:0 auto;padding:0 1.5rem}
 .section     {padding:5rem 0}
 .section-sm  {padding:3rem 0}
-.section-eyebrow{font-size:11px;letter-spacing:.18em;text-transform:uppercase;
-                  color:var(--gold);font-family:var(--font-sans);margin-bottom:.75rem}
+.section-eyebrow{
+  font-size:11px;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--teal);font-family:var(--font-sans);margin-bottom:.75rem;
+  display:inline-flex;align-items:center;gap:8px;
+}
+.section-eyebrow::before{
+  content:'';display:inline-block;width:28px;height:2px;
+  background:linear-gradient(90deg,var(--gold),var(--teal));
+  border-radius:2px;flex-shrink:0;
+}
+/* Rich section heading */
+.section-h2{position:relative;display:inline-block}
+/* Teal accent variant sections */
+.section-teal{
+  background: linear-gradient(160deg, #071e2d 0%, #0c3347 60%, #0e7490 100%) !important;
+  color: #e8f4ff;
+}
+.section-teal .section-eyebrow{color:var(--gold)}
+.section-teal .section-h2{color:#e8f4ff}
+.section-teal p{color:rgba(232,244,255,.75)}
 
 /* ── NAVBAR ─────────────────────────────────────────────────── */
 .nav{
@@ -378,32 +396,54 @@ textarea{resize:vertical;min-height:68px}
 .stat-box{text-align:center;padding:1.5rem}
 .stat-num{
   font-family:var(--font-serif);
-  font-size:44px;color:var(--gold);line-height:1;margin-bottom:6px;
+  font-size:52px;color:var(--gold);line-height:1;margin-bottom:8px;
+  text-shadow: 0 2px 20px rgba(240,180,41,.30);
 }
-.stat-label{font-size:13px;color:var(--text2);font-family:var(--font-sans)}
+.stat-label{
+  font-size:12px;color:var(--text2);font-family:var(--font-sans);
+  letter-spacing:.1em;text-transform:uppercase;font-weight:600;
+}
 
 /* ── FEATURE CARDS ───────────────────────────────────────────── */
 .feat-card{
-  background:#ffffff;border:1px solid var(--teal-b);
-  border-radius:var(--rl);padding:1.5rem;
-  box-shadow:0 2px 12px rgba(6,182,212,.08), 0 1px 3px rgba(0,0,0,.04);
-  transition:box-shadow .25s,border-color .25s,transform .25s;
+  background:#ffffff;
+  border:1px solid var(--teal-b);
+  border-top: 3px solid var(--teal);
+  border-radius:var(--rl);padding:1.75rem 1.5rem;
+  box-shadow:0 4px 18px rgba(6,182,212,.10), 0 1px 4px rgba(0,0,0,.05);
+  transition:box-shadow .25s,border-color .25s,transform .3s;
+  position:relative;
 }
 .feat-card:hover{
-  border-color:var(--gold-b);
-  box-shadow:0 8px 28px rgba(6,182,212,.15), 0 0 16px var(--teal-glow);
-  transform:translateY(-2px);
+  border-color:var(--gold);
+  border-top-color:var(--gold);
+  box-shadow:0 12px 36px rgba(6,182,212,.18), 0 2px 8px rgba(0,0,0,.08);
+  transform:translateY(-4px);
 }
-.feat-icon{font-size:28px;margin-bottom:.75rem}
-.feat-title{font-size:16px;margin-bottom:.5rem;font-family:var(--font-serif)}
+.feat-icon{
+  font-size:26px;
+  width:52px;height:52px;
+  background:linear-gradient(135deg,rgba(6,182,212,.12),rgba(6,182,212,.06));
+  border:1px solid var(--teal-b);
+  border-radius:14px;
+  display:flex;align-items:center;justify-content:center;
+  margin-bottom:1rem;
+}
+.feat-title{font-size:16px;margin-bottom:.5rem;font-family:var(--font-serif);color:var(--text)}
 .feat-desc{font-size:14px;color:var(--text2);font-family:var(--font-sans);line-height:1.7}
 
 /* ── TESTIMONIALS ────────────────────────────────────────────── */
 .testi-card{
-  background: #fafeff;
+  background: #ffffff;
   border:1px solid var(--gold-b);
+  border-left: 4px solid var(--gold);
   border-radius:var(--rl);padding:1.75rem;position:relative;
-  box-shadow:0 2px 16px rgba(240,180,41,.10), 0 1px 4px rgba(0,0,0,.04);
+  box-shadow:0 4px 24px rgba(240,180,41,.12), 0 1px 4px rgba(0,0,0,.05);
+  transition: transform .25s, box-shadow .25s;
+}
+.testi-card:hover{
+  transform: translateY(-3px);
+  box-shadow:0 10px 36px rgba(240,180,41,.18);
 }
 .testi-card::before{
   content:'❝';position:absolute;top:.75rem;left:1.25rem;
@@ -562,14 +602,34 @@ textarea{resize:vertical;min-height:68px}
 }
 @keyframes spin{to{transform:rotate(360deg)}}
 
+/* ── TRUST STRIP ─────────────────────────────────────────────── */
+.trust-strip{
+  background: linear-gradient(90deg, #071e2d 0%, #0c3347 50%, #071e2d 100%);
+  border-top: 2px solid var(--teal);
+  border-bottom: 1px solid rgba(6,182,212,.3);
+  padding: .85rem 0;
+}
+.trust-items{
+  display:flex;justify-content:center;align-items:center;
+  gap:2.5rem;flex-wrap:wrap;
+}
+.trust-item{
+  font-size:13px;font-family:var(--font-sans);
+  color:rgba(232,244,255,.85);
+  display:flex;align-items:center;gap:7px;white-space:nowrap;
+}
+.trust-icon{font-size:15px}
+
 /* ── EMAIL CAPTURE BANNER ────────────────────────────────────── */
 .email-banner{
-  background: linear-gradient(135deg, #f0fbfd 0%, rgba(6,182,212,.06) 100%);
-  border:1px solid var(--gold-b);
-  border-radius:var(--rl);padding:2.5rem;
-  color:var(--text);text-align:center;
-  box-shadow:0 4px 24px rgba(240,180,41,.10);
+  background: linear-gradient(160deg, #071e2d 0%, #0c3347 60%, #0e7490 100%);
+  border:1px solid var(--teal-b);
+  border-radius:var(--rl);padding:3rem 2.5rem;
+  color:#e8f4ff;text-align:center;
+  box-shadow:0 8px 40px rgba(6,182,212,.20);
 }
+.email-banner h3{color:#e8f4ff;font-family:var(--font-serif);font-size:26px;margin-bottom:.5rem}
+.email-banner p{color:rgba(232,244,255,.75);margin-bottom:1.5rem}
 .email-banner h3{
   font-family:var(--font-serif);font-size:24px;margin-bottom:.5rem;
 }
