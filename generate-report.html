@@ -252,46 +252,105 @@
     align-items:center!important;justify-content:center!important;
     break-after:page!important;
   }
-  /* ─ Layout ──────────────────────────────────────────────────── */
-  .rpt-section{padding:1.25rem 1.5rem!important;margin-bottom:.75rem;}
-  .forecast-card{overflow:visible;margin-bottom:1rem;}
 
-  /* ─ Page-break control: career & compat ─────────────────────── */
-  .career-col,.career-domain,.compat-card{break-inside:avoid;}
-  #remediesGrid>div{break-inside:avoid;}
-  /* core-num-card must be auto so it participates in the 3-col grid */
-  .core-num-card{break-inside:auto;}
+  /* ════════════════════════════════════════════════════════════
+     GLOBAL COMPACT SIZING — match the small fi-card style
+     All boxes get uniform tight padding + reduced font sizes
+     ════════════════════════════════════════════════════════════ */
 
-  /* ─ Page-break control: forecast cards ─────────────────────── */
-  /* Allow cards to span pages; prevent BAD splits inside sub-elements */
-  .forecast-card{break-inside:auto;}
-  .forecast-hdr{break-after:avoid;}           /* header glues to body  */
-  .forecast-body{break-before:avoid;}
-  .forecast-theme{break-after:avoid;}
-  .fi-card{break-inside:avoid;}               /* each insight box stays whole */
-  .fda{break-inside:avoid;}                   /* do / avoid panels stay whole */
-  .forecast-remedy{break-inside:avoid;break-after:avoid;} /* remedy stays whole & glued to chips */
-  .forecast-chips{break-before:avoid;break-inside:avoid;} /* chips never orphaned on new page */
+  /* Sections */
+  .rpt-section{padding:.9rem 1.1rem!important;margin-bottom:.55rem!important;}
+  .sec-label{margin-bottom:.7rem!important;font-size:9.5px!important;}
 
-  /* ─ Prevent orphaned section intro paragraphs ───────────────── */
-  .rpt-section>.sec-label{break-after:avoid;}
-  .rpt-section>p{break-after:avoid;break-inside:avoid;}
-  #forecastContainer{break-before:avoid;}
+  /* Core number cards */
+  .core-num-card{padding:.85rem .75rem!important;}
+  .core-num-big{font-size:36px!important;margin-bottom:2px!important;}
+  .core-num-planet{font-size:11.5px!important;margin-bottom:.4rem!important;}
+  .core-num-meaning{font-size:11.5px!important;line-height:1.5!important;}
 
-  /* ─ Name alignment section: own page, compressed ───────────── */
+  /* Alignment banner */
+  .align-banner{padding:.75rem 1rem!important;gap:.75rem!important;}
+  .align-icon{font-size:22px!important;}
+  .align-title{font-size:14px!important;margin-bottom:2px!important;}
+  .align-desc{font-size:11.5px!important;line-height:1.55!important;}
+  .align-pct-badge{font-size:20px!important;padding:.35rem .9rem!important;}
+
+  /* Lucky attributes */
+  .attr-card{padding:.6rem .65rem!important;}
+  .attr-icon{font-size:18px!important;margin-bottom:.25rem!important;}
+  .attr-label{font-size:8.5px!important;margin-bottom:.2rem!important;}
+  .attr-value{font-size:11.5px!important;}
+
+  /* Forecast cards */
+  .forecast-card{overflow:visible;margin-bottom:.65rem!important;}
+  .forecast-hdr{padding:.65rem 1rem!important;}
+  .forecast-year-label{font-size:13px!important;}
+  .forecast-year-label strong{font-size:16px!important;}
+  .forecast-badge{font-size:9.5px!important;padding:2px 8px!important;}
+  .forecast-body{padding:.9rem!important;}
+  .forecast-theme{font-size:11.5px!important;margin-bottom:.7rem!important;padding-bottom:.6rem!important;}
+  .fi-card{padding:.6rem .7rem!important;}
+  .fi-label{font-size:8.5px!important;margin-bottom:.25rem!important;}
+  .fi-text{font-size:11.5px!important;line-height:1.5!important;}
+  .fda{padding:.6rem .75rem!important;}
+  .fda-label{font-size:8.5px!important;margin-bottom:.3rem!important;}
+  .fda ul{font-size:11px!important;line-height:1.55!important;padding-left:13px!important;}
+  .forecast-insights{gap:.5rem!important;margin-bottom:.7rem!important;}
+  .forecast-do-avoid{gap:.5rem!important;margin-bottom:.7rem!important;}
+  .forecast-remedy{padding:.6rem .75rem!important;}
+  .forecast-remedy-label{font-size:8.5px!important;margin-bottom:.25rem!important;}
+  .forecast-remedy-text{font-size:11.5px!important;}
+  .forecast-chips{margin-top:.55rem!important;gap:4px!important;}
+
+  /* Career */
+  .career-col{padding:.9rem 1rem!important;}
+  .career-col-hdr{margin-bottom:.55rem!important;}
+  .career-col-num{width:28px!important;height:28px!important;font-size:14px!important;}
+  .career-domain{padding:.4rem 0!important;}
+  .career-domain-icon{font-size:15px!important;}
+  .career-domain-name{font-size:12.5px!important;margin-bottom:1px!important;}
+  .career-domain-desc{font-size:11px!important;}
+
+  /* Relationship / compatibility */
+  .compat-group{margin-bottom:.75rem!important;}
+  .compat-group-label{font-size:9.5px!important;margin-bottom:.45rem!important;}
+  .compat-card{padding:.55rem .7rem!important;}
+  .compat-num{font-size:22px!important;margin-bottom:2px!important;}
+  .compat-planet{font-size:10px!important;margin-bottom:.25rem!important;}
+  .compat-note{font-size:11px!important;line-height:1.45!important;}
+
+  /* Remedies */
+  .remedy-card{padding:.7rem .9rem!important;gap:.65rem!important;}
+
+  /* Name alignment section */
   #nameAnalysisSection{break-before:page;break-inside:avoid;}
   .name-align-card{padding:1rem!important;}
   .name-align-card>div:first-child{margin-bottom:.75rem!important;}
   .name-options-grid{display:grid!important;grid-template-columns:repeat(3,1fr)!important;gap:.6rem!important;}
-  .name-options-grid>div{padding:.85rem .9rem!important;}
+  .name-options-grid>div{padding:.75rem .8rem!important;}
+
+  /* ─ Page-break control ──────────────────────────────────────── */
+  .career-col,.career-domain,.compat-card{break-inside:avoid;}
+  #remediesGrid>div{break-inside:avoid;}
+  .core-num-card{break-inside:auto;}
+  .forecast-card{break-inside:auto;}
+  .forecast-hdr{break-after:avoid;}
+  .forecast-body{break-before:avoid;}
+  .forecast-theme{break-after:avoid;}
+  .fi-card{break-inside:avoid;}
+  .fda{break-inside:avoid;}
+  .forecast-remedy{break-inside:avoid;break-after:avoid;}
+  .forecast-chips{break-before:avoid;break-inside:avoid;}
+  .rpt-section>.sec-label{break-after:avoid;}
+  .rpt-section>p{break-after:avoid;break-inside:avoid;}
+  #forecastContainer{break-before:avoid;}
 
   /* ─ Force CSS grids to maintain columns in print ────────────── */
-  /* Chromium print mode collapses grid to 1 col unless forced    */
-  .grid-3{display:grid!important;grid-template-columns:repeat(3,1fr)!important;gap:1rem;}
-  .grid-2{display:grid!important;grid-template-columns:1fr 1fr!important;gap:1rem;}
+  .grid-3{display:grid!important;grid-template-columns:repeat(3,1fr)!important;gap:.75rem;}
+  .grid-2{display:grid!important;grid-template-columns:1fr 1fr!important;gap:.75rem;}
   .forecast-insights{display:grid!important;grid-template-columns:1fr 1fr!important;}
   .forecast-do-avoid{display:grid!important;grid-template-columns:1fr 1fr!important;}
-  .attr-grid{display:grid!important;grid-template-columns:repeat(3,1fr)!important;}
+  .attr-grid{display:grid!important;grid-template-columns:repeat(5,1fr)!important;}
   #remediesGrid{display:grid!important;grid-template-columns:1fr 1fr!important;}
 }
 
