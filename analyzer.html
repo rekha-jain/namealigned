@@ -287,6 +287,32 @@
       <p style="font-size:11px;color:#6a5a4a;margin-top:10px;font-family:sans-serif">One-time payment · Instant delivery · No subscription</p>
     </div>
 
+    <!-- Share with a friend -->
+    <div id="shareBlock" style="margin-top:1.5rem;background:linear-gradient(160deg,#071e2d 0%,#0c3347 100%);border-radius:16px;padding:1.75rem;text-align:center;">
+      <div style="font-size:22px;margin-bottom:6px;">🌟</div>
+      <h3 style="font-size:18px;color:#ffffff;margin-bottom:6px;">Know someone who should try this?</h3>
+      <p style="font-size:13px;color:#06b6d4;font-family:sans-serif;line-height:1.6;margin-bottom:1.25rem;max-width:380px;margin-left:auto;margin-right:auto;">
+        Share the free Chaldean name analysis with a friend or family member — takes 30 seconds and reveals their core numbers.
+      </p>
+      <div style="display:flex;gap:.75rem;justify-content:center;flex-wrap:wrap;">
+        <a id="analyzerShareWa" href="#" target="_blank" rel="noopener"
+           style="display:inline-flex;align-items:center;gap:8px;background:#25D366;color:#fff;
+                  padding:11px 22px;border-radius:10px;font-family:sans-serif;font-size:14px;
+                  font-weight:600;text-decoration:none;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 2C6.477 2 2 6.477 2 12c0 1.89.525 3.66 1.438 5.168L2 22l4.985-1.418A9.956 9.956 0 0012 22c5.523 0 10-4.477 10-10S17.523 2 12 2zm0 18a7.946 7.946 0 01-4.337-1.284l-.31-.186-3.224.917.874-3.147-.203-.323A7.944 7.944 0 014 12c0-4.411 3.589-8 8-8s8 3.589 8 8-3.589 8-8 8z"/></svg>
+          Share on WhatsApp
+        </a>
+        <button id="analyzerCopyLink" onclick="copyAnalyzerLink()"
+           style="display:inline-flex;align-items:center;gap:8px;background:rgba(240,180,41,.15);
+                  color:#f0b429;border:1.5px solid rgba(240,180,41,.4);
+                  padding:11px 22px;border-radius:10px;font-family:sans-serif;font-size:14px;
+                  font-weight:600;cursor:pointer;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+          <span id="copyLinkText">Copy link</span>
+        </button>
+      </div>
+    </div>
+
     <div style="display:flex;gap:10px;margin-top:1.5rem;flex-wrap:wrap">
       <button class="btn btn-outline btn-sm" onclick="showPage(1)" style="flex:1">← Start over</button>
     </div>
@@ -473,6 +499,14 @@ function renderAnalysis(){
 
   // Wire upgrade CTA with params
   document.getElementById('upgradeBtn').href=`report?name=${encodeURIComponent(name)}&dob=${encodeURIComponent(dob)}&birthNum=${birthNum}&destNum=${destNum}&nameNum=${nameNum}&pct=${pct}`;
+
+  // Wire share buttons
+  const shareMsg = `I just checked my Chaldean numerology on NameAligned.com!\n\n` +
+    `✦ Moolank (Birth Number): ${birthNum} — ${getPlanet(birthNum)}\n` +
+    `✦ Bhagyank (Destiny Number): ${destNum} — ${getPlanet(destNum)}\n` +
+    `✦ Name Alignment Score: ${pct}%\n\n` +
+    `Try it free — takes 30 seconds 👇\nhttps://namealigned.com/analyzer`;
+  document.getElementById('analyzerShareWa').href = 'https://wa.me/?text=' + encodeURIComponent(shareMsg);
 }
 
 function renderSuggestions(){
@@ -570,6 +604,25 @@ async function captureEmail(){
   }catch(e){ /* fail silently in static preview */ }
   document.getElementById('emailRow').style.display='none';
   document.getElementById('emailDone').style.display='block';
+}
+
+function copyAnalyzerLink(){
+  const url = 'https://namealigned.com/analyzer';
+  navigator.clipboard.writeText(url).then(()=>{
+    const btn = document.getElementById('copyLinkText');
+    btn.textContent = '✓ Copied!';
+    setTimeout(()=>{ btn.textContent = 'Copy link'; }, 2500);
+  }).catch(()=>{
+    // Fallback for older browsers
+    const ta = document.createElement('textarea');
+    ta.value = url; ta.style.position='fixed'; ta.style.opacity='0';
+    document.body.appendChild(ta); ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+    const btn = document.getElementById('copyLinkText');
+    btn.textContent = '✓ Copied!';
+    setTimeout(()=>{ btn.textContent = 'Copy link'; }, 2500);
+  });
 }
 </script>
 </body>
