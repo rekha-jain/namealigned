@@ -498,6 +498,17 @@ hr.divider{display:none;}
 <div style="background:#eaf6fa;padding:2rem 0 4rem;">
 <div class="container">
 
+  <!-- ─ 0. CHALDEAN NUMEROLOGY SUMMARY (Top-of-report authority) ── -->
+  <div class="rpt-section" style="background:linear-gradient(160deg,#1a0e52 0%,#3a1d80 60%,#0c3347 100%);color:#f0ece0;padding:1.75rem 1.75rem 1.5rem;border-radius:14px;border:1.5px solid rgba(201,162,39,.45);box-shadow:0 6px 30px rgba(26,14,82,.3);margin-bottom:1.5rem;">
+    <div style="font-family:'DM Sans',sans-serif;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:#c9a227;margin-bottom:.65rem;text-align:center;">🔮 Your Complete Chaldean Numerology Summary</div>
+    <div id="chaldeanSummary" style="font-family:Georgia,serif;font-size:14.5px;line-height:1.7;color:#e2d4f5;">
+      <!-- Injected by JS -->
+    </div>
+    <div style="text-align:center;margin-top:.85rem;padding-top:.85rem;border-top:1px dashed rgba(201,162,39,.3);font-family:sans-serif;font-size:11.5px;color:#9eb1c0;letter-spacing:.04em;">
+      Based on Chaldean numerology — the sound-vibration system used for over 2,500 years
+    </div>
+  </div>
+
   <!-- ─ 1. CORE NUMBERS ──────────────────────────────────────── -->
   <div class="rpt-section">
     <div class="sec-label">Your Core Chaldean Numbers</div>
@@ -516,12 +527,21 @@ hr.divider{display:none;}
 
   <hr class="divider"/>
 
-  <!-- ─ 2. ALIGNMENT BANNER + NAME SUGGESTIONS ─────────────────── -->
+  <!-- ─ 2. ALIGNMENT BANNER + CHALDEAN ALIGNMENT BREAKDOWN + NAME SUGGESTIONS ─ -->
   <div class="rpt-section" style="padding-top:0;">
-    <div class="sec-label">Name Alignment Status</div>
+    <div class="sec-label">Chaldean Alignment Score</div>
     <div class="align-banner" id="alignBanner">
       <!-- Injected by JS -->
     </div>
+
+    <!-- Chaldean Alignment Breakdown (Name vs Moolank · Name vs Bhagyank) -->
+    <div id="chaldeanAlignBreakdown" style="margin-top:1.25rem;background:#ffffff;border:1px solid var(--border);border-radius:12px;padding:1.1rem 1.25rem;">
+      <!-- Injected by JS -->
+    </div>
+    <p style="font-size:12.5px;color:var(--text2);font-family:sans-serif;margin-top:.85rem;font-style:italic;text-align:center;">
+      In Chaldean numerology, even small phonetic changes in your name can significantly shift this alignment.
+    </p>
+
     <!-- Name suggestions appear immediately below the score -->
     <div id="nameAnalysisSection" style="margin-top:1.5rem;">
       <!-- Injected by JS -->
@@ -543,7 +563,7 @@ hr.divider{display:none;}
   <!-- ─ 4. 3-YEAR FORECAST ───────────────────────────────────── -->
   <div class="rpt-section" style="padding-top:0;">
     <div class="sec-label">5-Year Personal Year Forecast</div>
-    <p style="font-size:13px;color:var(--text2);font-family:sans-serif;margin-bottom:1.5rem;">Your Personal Year number changes every January — it governs the overarching energy, opportunities and lessons of each year. Below are your next five cycles, personalised to your date of birth.</p>
+    <p style="font-size:13px;color:var(--text2);font-family:sans-serif;margin-bottom:1.5rem;">Your Personal Year cycles are derived from your Chaldean birth numbers and govern how planetary energies affect each year. Certain years act as <strong>activation points</strong> — decisions taken in those years carry long-term impact. Below are your next five cycles, personalised to your DOB.</p>
     <div id="forecastContainer">
       <!-- Injected by JS -->
     </div>
@@ -565,9 +585,29 @@ hr.divider{display:none;}
   <!-- ─ 6. RELATIONSHIP COMPASS ──────────────────────────────── -->
   <div class="rpt-section" style="padding-top:0;">
     <div class="sec-label">Relationship Compass</div>
-    <p style="font-size:13px;color:var(--text2);font-family:sans-serif;margin-bottom:1.5rem;">Compatibility in Chaldean numerology is determined by the interplay of planetary rulers. Your Moolank <strong id="birthNumRel"></strong> is ruled by <strong id="birthPlanetRel"></strong>. Here is how each number interacts with your energy.</p>
+    <p style="font-size:13px;color:var(--text2);font-family:sans-serif;margin-bottom:1.5rem;">🔗 <strong>Chaldean Compatibility Insight</strong> — In Chaldean numerology, compatibility is determined by the interplay of planetary rulers, not just shared birth months. Your Moolank <strong id="birthNumRel"></strong> is ruled by <strong id="birthPlanetRel"></strong>. Here is how each number interacts with your energy.</p>
     <div id="compatContainer">
       <!-- Injected by JS -->
+    </div>
+
+    <!-- Compatibility CTAs (Partner / Child / Business) -->
+    <div style="margin-top:1.75rem;padding:1.25rem;background:linear-gradient(135deg,rgba(124,58,237,.08),rgba(201,162,39,.06));border:1px solid rgba(124,58,237,.25);border-radius:12px;">
+      <div style="font-family:sans-serif;font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:#7c3aed;font-weight:700;margin-bottom:.5rem;text-align:center;">Extend Your Chaldean Reading</div>
+      <p style="font-size:13px;color:var(--text2);font-family:sans-serif;text-align:center;margin-bottom:1rem;">Run a Chaldean compatibility check for the people who matter most.</p>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:.6rem;">
+        <a href="/analyzer" style="display:block;background:var(--card);border:1.5px solid var(--border);border-radius:10px;padding:.8rem .5rem;font-family:sans-serif;font-size:12.5px;color:var(--text);text-align:center;text-decoration:none;transition:border-color .2s;">
+          <div style="font-size:18px;margin-bottom:4px;">💞</div>
+          Check Partner<br>Compatibility
+        </a>
+        <a href="/analyzer" style="display:block;background:var(--card);border:1.5px solid var(--border);border-radius:10px;padding:.8rem .5rem;font-family:sans-serif;font-size:12.5px;color:var(--text);text-align:center;text-decoration:none;transition:border-color .2s;">
+          <div style="font-size:18px;margin-bottom:4px;">👶</div>
+          Check Child<br>Name Alignment
+        </a>
+        <a href="/analyzer" style="display:block;background:var(--card);border:1.5px solid var(--border);border-radius:10px;padding:.8rem .5rem;font-family:sans-serif;font-size:12.5px;color:var(--text);text-align:center;text-decoration:none;transition:border-color .2s;">
+          <div style="font-size:18px;margin-bottom:4px;">🏢</div>
+          Check Business<br>Name
+        </a>
+      </div>
     </div>
   </div>
 
@@ -846,9 +886,11 @@ hr.divider{display:none;}
     qs('heroPayId').textContent = paymentId;
     qs('emailConfirm').textContent = email || 'your registered email';
 
+    buildChaldeanSummary();   // top-of-report authority statement
     buildCoreNumbers();
     buildCombinationNumbers();
     buildAlignmentBanner();
+    buildChaldeanAlignBreakdown(); // name vs Moolank · name vs Bhagyank
     buildNameAnalysis();      // immediately below the score — keep curiosity alive
     buildLuckyAttrs();
     buildForecast();
@@ -858,6 +900,84 @@ hr.divider{display:none;}
     buildMobileAnalysis();
     buildShareButtons();
     window._reportReady = true;
+  }
+
+  // ── 0. CHALDEAN NUMEROLOGY SUMMARY ────────────────────────────
+  // Planet → core trait words used in the summary template
+  var PLANET_TRAITS = {
+    1:'leadership, originality, solar visibility',
+    2:'sensitivity, intuition, emotional receptivity',
+    3:'expansion, communication, creative abundance',
+    4:'innovation, structure, sudden change',
+    5:'adaptability, communication, mental quickness',
+    6:'harmony, beauty, magnetic relationship energy',
+    7:'introspection, wisdom, spiritual depth',
+    8:'discipline, justice, slow-built authority',
+    9:'courage, energy, fearless action'
+  };
+  // Planet benefits used in name-correction cards
+  var PLANET_BENEFITS = {
+    1:'amplifies leadership, recognition and self-authority',
+    2:'softens emotional life, improves intuition and partnerships',
+    3:'expands opportunities, communication and abundance',
+    4:'channels Rahu energy into structured innovation',
+    5:'sharpens communication, agility and adaptive intelligence',
+    6:'improves harmony, relationships and long-term stability',
+    7:'deepens intuition, wisdom and spiritual clarity',
+    8:'builds discipline, lasting authority and material mastery',
+    9:'channels Mars-energy into courage, drive and decisive action'
+  };
+
+  function buildChaldeanSummary(){
+    var el = qs('chaldeanSummary'); if(!el) return;
+    var firstName = (name||'You').trim().split(/\s+/)[0];
+    var traits = PLANET_TRAITS[nameNum] || PLANET_TRAITS[1];
+    var bhTraits = PLANET_TRAITS[birthNum] || PLANET_TRAITS[1];
+    var pctTier = pct >= 75 ? 'strong alignment — your name actively supports your destiny path'
+                 : pct >= 50 ? 'partial alignment — your name supports some areas of life but creates friction in others'
+                 : 'low alignment — your name vibration works against your birth energy, which can show up as recurring delays, missed recognition, or repeated patterns of effort without proportionate reward';
+    var html =
+      '<p style="margin:0 0 .85rem;"><strong style="color:#f5d060;">'+firstName+',</strong> your Chaldean numerology profile is shaped by the interaction between your <strong style="color:#f5d060;">name vibration</strong> and your <strong style="color:#f5d060;">birth numbers</strong> (Moolank and Bhagyank).</p>'+
+      '<p style="margin:0 0 .85rem;">Your name number <strong>'+nameNum+'</strong> (ruled by <strong>'+namePlanet+'</strong>) interacts with your Moolank <strong>'+birthNum+'</strong> ('+birthPlanet+') and Bhagyank <strong>'+destNum+'</strong> ('+destPlanet+'), creating a combined pattern of <em>'+traits+'</em> overlaid on a foundation of <em>'+bhTraits+'</em>.</p>'+
+      '<p style="margin:0 0 .85rem;">In Chaldean numerology, alignment between your name and birth numbers is critical. Your current alignment is <strong style="color:#f5d060;">'+pct+'%</strong> — '+pctTier+'.</p>'+
+      '<p style="margin:0;color:#cbb8e8;font-style:italic;">When this alignment is improved, your natural strengths amplify and resistance in life reduces significantly. The Name Correction section below shows the exact phonetic adjustments to bring your name into 100% alignment.</p>';
+    el.innerHTML = html;
+  }
+
+  function buildChaldeanAlignBreakdown(){
+    var el = qs('chaldeanAlignBreakdown'); if(!el) return;
+    // Compute partial alignments using same compatPct internals
+    var bf = (typeof FRIENDLY!=='undefined' ? FRIENDLY[birthNum]||[] : []);
+    var df = (typeof FRIENDLY!=='undefined' ? FRIENDLY[destNum]||[] : []);
+    var vsMoolank  = bf.includes(nameNum) ? 'aligned'   : (nameNum===birthNum ? 'aligned' : 'misaligned');
+    var vsBhagyank = df.includes(nameNum) ? 'aligned'   : (nameNum===destNum  ? 'aligned' : 'misaligned');
+    var moolankPct  = vsMoolank==='aligned' ? 100 : 40;
+    var bhagyankPct = vsBhagyank==='aligned'? 100 : 40;
+    function bar(label, val, planet, status){
+      var color = status==='aligned' ? '#2a7a2a' : '#c9a227';
+      var bg    = status==='aligned' ? 'rgba(42,122,42,.10)' : 'rgba(201,162,39,.10)';
+      return '<div style="margin-bottom:.8rem;">'+
+        '<div style="display:flex;justify-content:space-between;align-items:center;font-family:sans-serif;font-size:13px;margin-bottom:5px;">'+
+          '<span style="color:var(--text);"><strong>'+label+'</strong> <span style="color:var(--text3);font-size:11.5px;">('+planet+')</span></span>'+
+          '<span style="color:'+color+';font-weight:700;">'+val+'%</span>'+
+        '</div>'+
+        '<div style="height:8px;background:var(--card2);border:1px solid var(--border);border-radius:4px;overflow:hidden;">'+
+          '<div style="width:'+val+'%;height:100%;background:'+color+';border-radius:4px;"></div>'+
+        '</div>'+
+        '<div style="font-family:sans-serif;font-size:11.5px;color:var(--text3);margin-top:4px;font-style:italic;">'+
+          (status==='aligned'
+            ? 'Friendly planetary interaction — your name vibration supports this number'
+            : 'Planetary friction — your name vibration creates resistance with this number')+
+        '</div></div>';
+    }
+    el.innerHTML =
+      '<div style="font-family:sans-serif;font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--text3);margin-bottom:.85rem;">Chaldean Alignment Breakdown</div>'+
+      bar('Name Number ('+nameNum+') vs Moolank ('+birthNum+')',  moolankPct,  birthPlanet, vsMoolank)+
+      bar('Name Number ('+nameNum+') vs Bhagyank ('+destNum+')',  bhagyankPct, destPlanet,  vsBhagyank)+
+      '<div style="display:flex;justify-content:space-between;align-items:center;padding-top:.65rem;margin-top:.5rem;border-top:1px solid var(--border);font-family:sans-serif;font-size:13px;">'+
+        '<span style="color:var(--text);font-weight:700;">Overall Chaldean Alignment</span>'+
+        '<span style="font-family:Georgia,serif;font-size:22px;font-weight:700;color:'+(pct>=70?'#2a7a2a':pct>=45?'#c9a227':'#a32d2d')+';">'+pct+'%</span>'+
+      '</div>';
   }
 
   // ── 1. CORE NUMBERS ──────────────────────────────────────────
@@ -1614,6 +1734,7 @@ hr.divider{display:none;}
               '</div>'+
               '<div style="color:#f0b429;font-size:40px;font-family:sans-serif;font-weight:700;line-height:1;margin-bottom:3px;">100<span style="font-size:18px;font-weight:400;">%</span></div>'+
               '<div style="background:#f0b429;color:#03090f;border-radius:20px;padding:4px 14px;font-size:11px;font-weight:700;display:inline-block;margin-top:.5rem;">★ Fully Aligned</div>'+
+              '<div style="margin-top:.65rem;padding-top:.65rem;border-top:1px dashed rgba(240,180,41,.25);font-family:sans-serif;font-size:11.5px;color:rgba(255,255,255,.7);line-height:1.55;"><strong style="color:#f0b429;">'+getPlanet(c.nameNum)+'</strong> '+(PLANET_BENEFITS[c.nameNum]||'amplifies your core energies')+'</div>'+
             '</div>';
         });
         html += '</div>';
@@ -1628,8 +1749,8 @@ hr.divider{display:none;}
 
       html +=
         '<div style="margin-top:1rem;background:rgba(0,0,0,.2);border-radius:10px;padding:.85rem 1rem;font-size:12px;font-family:sans-serif;color:rgba(200,220,235,.55);line-height:1.6;border:1px solid rgba(255,255,255,.07);">'+
-          '✦ These corrections tweak your <em>first name only</em> — adding a soft letter (A, I, H, K) for phonetic similarity. '+
-          'Same pronunciation, different Chaldean vibration. Moolank '+birthNum+' ('+getPlanet(birthNum)+') is your target number.'+
+          '✦ <strong style="color:#f0b429;">Chaldean numerology works on sound vibration.</strong> Small phonetic adjustments — adding A, H, I or K-style sounds to your <em>first name only</em> — shift your name into a more aligned number without changing pronunciation. '+
+          'Moolank <strong>'+birthNum+'</strong> ('+getPlanet(birthNum)+') is your target — when name vibration matches Moolank, life resistance reduces and natural strengths amplify.'+
         '</div>'+
         '</div>'; // close outer dark card
     }

@@ -124,7 +124,15 @@
 .hook-card{background:linear-gradient(160deg,#1a0e52 0%,#3a1d80 100%);color:#f0ece0;border-radius:var(--rl);padding:1.75rem 1.5rem;text-align:center;margin-bottom:1rem;border:1px solid rgba(201,162,39,.4);box-shadow:0 4px 22px rgba(26,14,82,.25)}
 .hook-eyebrow{font-family:'DM Sans',sans-serif;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:#c9a227;margin-bottom:.5rem;opacity:.95}
 .hook-greet{font-family:'Playfair Display',Georgia,serif;font-size:24px;font-weight:700;margin:0 0 .6rem;color:#f0ece0;line-height:1.2}
-.hook-line{font-family:Georgia,serif;font-size:15px;line-height:1.6;color:#cbb8e8;margin:0;font-style:italic}
+.hook-line{font-family:Georgia,serif;font-size:15px;line-height:1.6;color:#e2d4f5;margin:0 0 .75rem;font-style:italic}
+.hook-foot{font-family:sans-serif;font-size:12.5px;line-height:1.55;color:#9eb1c0;margin:0;padding-top:.65rem;border-top:1px dashed rgba(201,162,39,.3)}
+.hook-foot strong{color:#f5d060}
+
+/* Vibration callout — sits just below letter breakdown */
+.vibe-callout{margin-top:1.25rem;background:linear-gradient(135deg,rgba(124,58,237,.08),rgba(201,162,39,.06));border:1px solid rgba(124,58,237,.25);border-left:4px solid #7c3aed;border-radius:var(--r);padding:.95rem 1.1rem}
+.vibe-callout-hd{font-family:sans-serif;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:#7c3aed;font-weight:700;margin-bottom:6px}
+.vibe-callout-body{font-family:sans-serif;font-size:13.5px;line-height:1.6;color:var(--text)}
+.vibe-callout-body strong{color:var(--gold)}
 
 .insights-list{margin-top:1rem}
 .insight-row{display:flex;align-items:flex-start;gap:12px;padding:.75rem 0;border-bottom:1px dashed var(--border)}
@@ -275,11 +283,12 @@
   <div id="page2" class="page" style="display:none">
     <div class="progress-wrap mb-3"><div class="progress-bar" style="width:66%"></div></div>
 
-    <!-- 1. PERSONALIZED HOOK -->
+    <!-- 1. PERSONALIZED HOOK (Chaldean-anchored) -->
     <div class="hook-card">
-      <div class="hook-eyebrow">✦ Your Chaldean Reading ✦</div>
+      <div class="hook-eyebrow">🔮 Your Chaldean Numerology Summary</div>
       <h2 class="hook-greet" id="hookGreet"></h2>
       <p class="hook-line" id="hookLine"></p>
+      <p class="hook-foot" id="hookFoot"></p>
     </div>
 
     <!-- 2. CORE FREE RESULT -->
@@ -304,6 +313,12 @@
         <div id="lbEq"></div>
       </div>
 
+      <!-- ⚡ How Your Name Vibration Affects You (Chaldean-specific callout) -->
+      <div class="vibe-callout">
+        <div class="vibe-callout-hd">⚡ How Your Name Vibration Affects You</div>
+        <div class="vibe-callout-body" id="vibeCallout"></div>
+      </div>
+
       <!-- 4-5 personality insights (curiosity-gap teaser) -->
       <div class="insights-list" id="insightsList"></div>
 
@@ -312,16 +327,16 @@
       </div>
     </div>
 
-    <!-- 3. TRUST BUILDER -->
-    <p class="trust-line-top">Based on Chaldean numerology principles applied to thousands of names</p>
+    <!-- 3. TRUST BUILDER (Chaldean-anchored) -->
+    <p class="trust-line-top">Sound-based · vibration-anchored · Chaldean numerology — used for over 2,500 years</p>
     <div class="trust-block">
       <div class="trust-stat">
         <div class="trust-num" id="analysesCount">10,247</div>
-        <div class="trust-lbl">analyses generated</div>
+        <div class="trust-lbl">Chaldean analyses generated</div>
       </div>
       <div class="trust-stat">
         <div class="trust-num">2,500+ yr</div>
-        <div class="trust-lbl">Chaldean tradition</div>
+        <div class="trust-lbl">ancient Chaldean tradition</div>
       </div>
       <div class="trust-stat">
         <div class="trust-num">★ 4.8/5</div>
@@ -329,50 +344,50 @@
       </div>
     </div>
 
-    <!-- 4. LOCKED PREMIUM CONTENT -->
-    <div class="locked-section-label">🔒 Unlock the rest of your reading</div>
-    <div class="locked-section-sub">4 deeper sections — included in your full report</div>
+    <!-- 4. LOCKED PREMIUM CONTENT (Chaldean-anchored titles) -->
+    <div class="locked-section-label">🔒 Unlock your full Chaldean profile</div>
+    <div class="locked-section-sub">4 deeper sections — included in your full Chaldean Destiny Report</div>
     <div class="locked-grid">
       <div class="locked-card" onclick="trackAndScrollCTA('locked_career')">
         <div class="lc-lock">🔒</div>
         <div class="lc-icon">💼</div>
-        <div class="lc-title">Career &amp; Wealth</div>
-        <div class="lc-teaser">Will your name support financial success?</div>
-        <div class="lc-blur"><div class="lc-blur-content" id="lcCareerTease">Your aligned career domains include high-finance, technology leadership, and structured creative roles. Saturn-Rahu combination suggests…</div></div>
+        <div class="lc-title">Career Alignment</div>
+        <div class="lc-teaser">Chaldean-aligned career domains for your numbers</div>
+        <div class="lc-blur"><div class="lc-blur-content" id="lcCareerTease">Your Chaldean-aligned career domains include high-finance, technology leadership, and structured creative roles. The Saturn-Rahu combination indicates…</div></div>
       </div>
       <div class="locked-card" onclick="trackAndScrollCTA('locked_love')">
         <div class="lc-lock">🔒</div>
         <div class="lc-icon">❤️</div>
-        <div class="lc-title">Love &amp; Compatibility</div>
-        <div class="lc-teaser">Who are you naturally aligned with?</div>
-        <div class="lc-blur"><div class="lc-blur-content" id="lcLoveTease">Your most compatible partner numbers reveal a clear pattern. You harmonise best with people whose Moolank…</div></div>
-      </div>
-      <div class="locked-card" onclick="trackAndScrollCTA('locked_hidden')">
-        <div class="lc-lock">🔒</div>
-        <div class="lc-icon">🔮</div>
-        <div class="lc-title">Hidden Traits</div>
-        <div class="lc-teaser">Traits even you may not be aware of</div>
-        <div class="lc-blur"><div class="lc-blur-content" id="lcHiddenTease">Your missing Lo Shu numbers reveal blind spots that quietly shape your decisions. The most impactful gap for you is…</div></div>
+        <div class="lc-title">Relationship Compatibility</div>
+        <div class="lc-teaser">Planetary interaction — who harmonises with you</div>
+        <div class="lc-blur"><div class="lc-blur-content" id="lcLoveTease">In Chaldean numerology, compatibility comes from planetary interaction. Your most aligned partner numbers reveal a clear pattern. You harmonise best with people whose Moolank…</div></div>
       </div>
       <div class="locked-card" onclick="trackAndScrollCTA('locked_correction')">
         <div class="lc-lock">🔒</div>
         <div class="lc-icon">✨</div>
-        <div class="lc-title">Name Correction</div>
-        <div class="lc-teaser">Optimize your name for better outcomes</div>
-        <div class="lc-blur"><div class="lc-blur-content" id="lcCorrectionTease">3 phonetic adjustments that bring your name into 100% alignment with your Moolank — without changing pronunciation…</div></div>
+        <div class="lc-title">Name Correction <span style="font-size:10px;background:#dc2626;color:#fff;padding:2px 6px;border-radius:8px;letter-spacing:.04em;font-weight:700;margin-left:4px;text-transform:uppercase;vertical-align:middle">Phonetic</span></div>
+        <div class="lc-teaser">Add A · H · I · K sounds — shift your vibration</div>
+        <div class="lc-blur"><div class="lc-blur-content" id="lcCorrectionTease">Chaldean numerology works on sound vibration. 3 phonetic adjustments — adding A, H, I, K-style sounds — bring your name into 100% Chaldean alignment with your Moolank, without changing pronunciation…</div></div>
+      </div>
+      <div class="locked-card" onclick="trackAndScrollCTA('locked_cycles')">
+        <div class="lc-lock">🔒</div>
+        <div class="lc-icon">🌀</div>
+        <div class="lc-title">Future Cycles</div>
+        <div class="lc-teaser">Chaldean personal-year activation points</div>
+        <div class="lc-blur"><div class="lc-blur-content" id="lcCyclesTease">Your personal-year cycle is derived from your birth numbers and tells you which years act as activation points — when decisions create long-term impact. Your next 5 years…</div></div>
       </div>
     </div>
 
-    <!-- 5. CONVERSION CTA -->
+    <!-- 5. CONVERSION CTA (Chaldean-anchored) -->
     <div class="cta-pro" id="ctaPro">
-      <h3>Unlock Your Full Destiny Report</h3>
-      <p class="cta-sub">Get your complete personalized analysis in 30 seconds</p>
+      <h3>Unlock Your Full Chaldean Destiny Report</h3>
+      <p class="cta-sub">Your complete Chaldean profile — name vibration, planetary alignment, 5-year cycles &amp; phonetic corrections</p>
       <div class="cta-pricing">
         <span class="cta-strike">₹499</span>
         <span class="cta-price">₹199</span>
         <span class="cta-save">Save 60%</span>
       </div>
-      <a href="report" id="upgradeBtn" class="cta-btn" onclick="trackEvent('cta_clicked',{location:'main'})">Unlock Full Report →</a>
+      <a href="report" id="upgradeBtn" class="cta-btn" onclick="trackEvent('cta_clicked',{location:'main'})">Unlock Full Chaldean Report →</a>
       <div class="cta-bullets">
         <span>✓ One-time payment</span>
         <span>✓ Instant access</span>
@@ -546,11 +561,29 @@ function renderAnalysis(){
   const ba = PLANET_ATTRS[birthNum] || PLANET_ATTRS[1];
   const insights = MOOLANK_INSIGHTS[birthNum] || MOOLANK_INSIGHTS[1];
 
-  // 1. HOOK
+  // 1. HOOK — Chaldean-anchored template
   const firstName = name.trim().split(/\s+/)[0];
+  const namePlanet = getPlanet(nameNum);
   document.getElementById('hookGreet').textContent = firstName + ',';
   document.getElementById('hookLine').textContent =
-    `your name carries ${insights.hook}.`;
+    `based on Chaldean numerology — which analyses the sound vibration of your name — your current name carries the energy of number ${nameNum} (${namePlanet}). This vibration shapes ${insights.hook}.`;
+  document.getElementById('hookFoot').innerHTML =
+    `Because Chaldean numerology focuses on how your name <strong>sounds</strong>, not just how it is written, it reveals deeper patterns in how you think, act and respond. <strong>This is only a partial view of your full Chaldean profile ↓</strong>`;
+
+  // Vibration callout — explains how name number affects daily life
+  const vibePatterns = {
+    1:'creates a leadership-driven mental pattern. You initiate fast, but may struggle when forced to follow.',
+    2:'creates a sensitive, emotionally-attuned pattern. You feel deeply, but may absorb others\' moods.',
+    3:'creates an expressive, communicative pattern. You generate ideas fast, but may scatter your focus.',
+    4:'creates an unconventional, system-breaking pattern. You see what others miss, but face sudden shifts.',
+    5:'creates a fast-moving, adaptive mental pattern. You think quickly and adapt easily, but may struggle with consistency.',
+    6:'creates a harmonising, magnetic pattern. You attract people, but may overgive emotionally.',
+    7:'creates a deep, analytical pattern. You see hidden layers, but may overthink decisions.',
+    8:'creates a disciplined, justice-driven pattern. You build slowly and lastingly, but may feel under-recognised early on.',
+    9:'creates a courageous, action-driven pattern. You move with intensity, but cycle through high-low energy bursts.'
+  };
+  document.getElementById('vibeCallout').innerHTML =
+    `Your name number <strong>${nameNum} (${namePlanet})</strong> ${vibePatterns[nameNum]||vibePatterns[1]}`;
 
   // Badge (now lives inside align-mini)
   const badgeEl = document.getElementById('ahBadge');
@@ -612,13 +645,20 @@ function renderAnalysis(){
     `Your aligned career domains include ${bC}. Combined with Bhagyank ${destNum} (${getPlanet(destNum)}), the deeper analysis reveals which paths…`;
   document.getElementById('lcLoveTease').textContent =
     `Your most compatible partner numbers are ${rc.best.join(', ')} — but the avoid-list (${rc.avoid.join(', ')}) is what most people get wrong. Full breakdown shows…`;
-  document.getElementById('lcHiddenTease').textContent = missing.length
-    ? `You're missing ${missing.length} Lo Shu number${missing.length>1?'s':''} (${missing.join(', ')}). Each missing number reveals a quiet blind spot — the most impactful for you is…`
-    : `All 9 Lo Shu energies are present in your DOB — a rare configuration. The way these combine for your specific Moolank reveals a hidden strength most people miss…`;
   document.getElementById('lcCorrectionTease').textContent =
     pct >= 97
-      ? `Your name is already 100% aligned with Moolank ${birthNum} — but the report shows further fine-tuning for compound vibration and gentle phonetic polish…`
-      : `3 phonetic adjustments bring your name into 100% alignment with Moolank ${birthNum} — pronunciation stays nearly identical. Math + recommendation included…`;
+      ? `Your name is already 100% Chaldean-aligned with Moolank ${birthNum} (${getPlanet(birthNum)}) — the report shows further fine-tuning for compound vibration and gentle phonetic polish…`
+      : `3 phonetic adjustments — adding A, H, I, K-style sounds — shift your name into 100% Chaldean alignment with Moolank ${birthNum}. Pronunciation stays nearly identical. Math + planet + benefit shown…`;
+  // Future Cycles teaser — uses current Personal Year
+  try {
+    const py = getPersonalYear(dob, new Date().getFullYear());
+    const theme = (typeof YEAR_THEMES !== 'undefined' && YEAR_THEMES[py]) ? YEAR_THEMES[py] : 'a major energy shift';
+    document.getElementById('lcCyclesTease').textContent =
+      `Your current Personal Year is ${py} — a cycle of ${theme.toLowerCase()}. The next 4 years follow a Chaldean planetary sequence that determines which years act as activation points…`;
+  } catch(e){
+    document.getElementById('lcCyclesTease').textContent =
+      `Your personal-year cycle is derived from Chaldean reduction of your DOB. Each year activates a different planetary energy — some accelerate, some test. Full 5-year arc included…`;
+  }
 
   // 5. CTA — wire link with prefilled params
   document.getElementById('upgradeBtn').href =
