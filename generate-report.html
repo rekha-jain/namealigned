@@ -698,7 +698,7 @@ hr.divider{display:none;}
       <div class="upsell-card">
         <div class="upsell-icon">🔮</div>
         <h3 class="upsell-title">Consult a Numerology Expert</h3>
-        <p class="upsell-desc">Go deeper with a live 45-minute one-on-one session. Our certified Chaldean numerologists provide personalised guidance on name corrections, business naming, relationship timing and life path strategy.</p>
+        <p class="upsell-desc">Go deeper with a live 45-minute one-on-one session. Our certified Chaldean numerologists provide personalised guidance on name optimisation, business naming, relationship timing and life-path strategy.</p>
         <span class="badge badge-gold" style="margin-bottom:1rem;">Coming Soon</span>
         <p style="font-size:12px;color:var(--text3);font-family:sans-serif;">Join the waitlist and get early access pricing.</p>
         <div style="margin-top:1rem;">
@@ -746,7 +746,7 @@ hr.divider{display:none;}
           <li><a href="#">Chaldean vs Pythagorean</a></li>
           <li><a href="#">Moolank Guide</a></li>
           <li><a href="#">Planet Rulers</a></li>
-          <li><a href="#">Name Correction</a></li>
+          <li><a href="#">Name Optimization</a></li>
         </ul>
       </div>
       <div>
@@ -949,14 +949,53 @@ hr.divider{display:none;}
     var firstName = (name||'You').trim().split(/\s+/)[0];
     var traits = PLANET_TRAITS[nameNum] || PLANET_TRAITS[1];
     var bhTraits = PLANET_TRAITS[birthNum] || PLANET_TRAITS[1];
-    var pctTier = pct >= 75 ? 'strong alignment — your name actively supports your destiny path'
-                 : pct >= 50 ? 'partial alignment — your name supports some areas of life but creates friction in others'
-                 : 'low alignment — your name vibration works against your birth energy, which can show up as recurring delays, missed recognition, or repeated patterns of effort without proportionate reward';
+
+    // Tone-shifted alignment narrative — strengths-led, never judgmental
+    var pctTier = pct >= 75
+        ? 'strong alignment — your name actively supports your natural strengths'
+        : pct >= 50
+        ? 'moderate alignment — your name supports several areas well; a few can be enhanced further'
+        : 'different alignment — your name carries strengths of its own, with room to enhance how they interact with your birth numbers';
+
+    // Behavioural pattern + strength area per Moolank
+    var BEHAVIOURS = {
+      1:{behaviour:'lead before others are ready', challenge:'isolation when no one keeps up', strength:'starting things from zero'},
+      2:{behaviour:'feel before you think', challenge:'absorbing other people\'s moods', strength:'reading rooms and people'},
+      3:{behaviour:'speak ideas faster than most can absorb them', challenge:'scattering across too many projects', strength:'expressive, generative thinking'},
+      4:{behaviour:'question rules others accept', challenge:'sudden shifts that test stability', strength:'seeing what others miss'},
+      5:{behaviour:'adapt fast to change', challenge:'losing interest before things mature', strength:'learning, talking and trading'},
+      6:{behaviour:'give freely to those you love', challenge:'feeling unreciprocated when you give too much', strength:'building harmonious relationships'},
+      7:{behaviour:'research deeply before committing', challenge:'over-thinking the final decision', strength:'pattern-finding and depth'},
+      8:{behaviour:'work hard quietly while others get noticed first', challenge:'frustration before recognition arrives', strength:'building things that last'},
+      9:{behaviour:'move with high intensity in long bursts', challenge:'crashes and recovery cycles', strength:'finishing what others fear to start'}
+    };
+    var b = BEHAVIOURS[birthNum] || BEHAVIOURS[1];
+
+    var OUTCOMES_LONG = {
+      1:'recognised authority and decisive leadership',
+      2:'harmonious partnerships and emotional clarity',
+      3:'expressive influence and joyful creative momentum',
+      4:'unconventional success in technology, foreign or innovative fields',
+      5:'versatile income, fast learning and freedom of movement',
+      6:'magnetic relationships and aesthetic mastery',
+      7:'respected expertise and philosophical depth',
+      8:'lasting wealth, structure and earned recognition',
+      9:'protective leadership and decisive completion'
+    };
+    var outcome = OUTCOMES_LONG[birthNum] || OUTCOMES_LONG[1];
+
     var html =
-      '<p style="margin:0 0 .85rem;"><strong style="color:#f5d060;">'+firstName+',</strong> your Chaldean numerology profile is shaped by the interaction between your <strong style="color:#f5d060;">name vibration</strong> and your <strong style="color:#f5d060;">birth numbers</strong> (Moolank and Bhagyank).</p>'+
-      '<p style="margin:0 0 .85rem;">Your name number <strong>'+nameNum+'</strong> (ruled by <strong>'+namePlanet+'</strong>) interacts with your Moolank <strong>'+birthNum+'</strong> ('+birthPlanet+') and Bhagyank <strong>'+destNum+'</strong> ('+destPlanet+'), creating a combined pattern of <em>'+traits+'</em> overlaid on a foundation of <em>'+bhTraits+'</em>.</p>'+
-      '<p style="margin:0 0 .85rem;">In Chaldean numerology, alignment between your name and birth numbers is critical. Your current alignment is <strong style="color:#f5d060;">'+pct+'%</strong> — '+pctTier+'.</p>'+
-      '<p style="margin:0;color:#cbb8e8;font-style:italic;">When this alignment is improved, your natural strengths amplify and resistance in life reduces significantly. The Name Correction section below shows the exact phonetic adjustments to bring your name into 100% alignment.</p>';
+      '<p style="margin:0 0 .85rem;"><strong style="color:#f5d060;">'+firstName+',</strong> your Chaldean profile is based on the interaction between your <strong style="color:#f5d060;">name vibration</strong> and your <strong style="color:#f5d060;">birth numbers</strong>.</p>'+
+
+      '<p style="margin:0 0 .85rem;">Your name number <strong>'+nameNum+'</strong> (ruled by <strong>'+namePlanet+'</strong>) interacts with your Moolank <strong>'+birthNum+'</strong> ('+birthPlanet+') and Bhagyank <strong>'+destNum+'</strong> ('+destPlanet+'), creating a pattern of <em>'+traits+'</em> layered on a foundation of <em>'+bhTraits+'</em>.</p>'+
+
+      '<p style="margin:0 0 .85rem;">You tend to <strong>'+b.behaviour+'</strong>, which can sometimes lead to '+b.challenge+', but also gives you real strength in <strong>'+b.strength+'</strong>.</p>'+
+
+      '<p style="margin:0 0 .85rem;">A recurring pattern in your life is the rhythm of '+b.behaviour+' followed by '+b.challenge+'. When alignment improves, this rhythm steadies — outcomes become more predictable and your natural strengths amplify into <strong style="color:#f5d060;">'+outcome+'</strong>.</p>'+
+
+      '<p style="margin:0 0 .65rem;">Your current overall alignment is <strong style="color:#f5d060;">'+pct+'%</strong> — '+pctTier+'.</p>'+
+
+      '<p style="margin:0;color:#cbb8e8;font-style:italic;">Your name already carries strengths. The Name Optimization section below shows gentle phonetic enhancements that can support stronger Chaldean alignment — without changing how your name sounds in everyday use.</p>';
     el.innerHTML = html;
   }
 
@@ -1114,19 +1153,19 @@ hr.divider{display:none;}
     var icon, title, desc;
     if(status==='aligned'){
       icon='✦';
-      title='Strong Alignment — Your Name Works For You';
-      desc='Your name number '+nameNum+' ('+namePlanet+') resonates strongly with your birth and destiny energies. '+
-           'The compound energy of your name amplifies your natural strengths. No corrections are needed.';
+      title='Strong Alignment — Your Name Already Supports You';
+      desc='Your name number '+nameNum+' ('+namePlanet+') resonates well with your birth and destiny energies. '+
+           'The compound energy of your name actively amplifies your natural strengths. Optional fine-tuning is shown below — for those who want to enhance alignment further.';
     } else if(status==='neutral'){
       icon='◈';
-      title='Moderate Alignment — Name Correction Suggested';
-      desc='Your name number shows partial harmony with your core numbers. A minor spelling adjustment could significantly '+
-           'strengthen the energetic alignment and remove friction in wealth and relationship domains.';
+      title='Moderate Alignment — Room to Enhance';
+      desc='Your name supports several life areas well. A small phonetic optimisation can lift the alignment further, '+
+           'helping wealth and relationship areas feel less effortful. Suggestions below — your current name is not wrong, only different in strengths.';
     } else {
-      icon='⚠';
-      title='Misalignment — Name Correction Recommended';
-      desc='Your current name number creates resistance against your birth and destiny energies. This can manifest as repeated '+
-           'obstacles, delayed success or relationship friction. A Chaldean-calibrated name adjustment is strongly advised.';
+      icon='◇';
+      title='Different Alignment — Optimisation Can Help';
+      desc='Your name carries strengths of its own — and there is meaningful room to enhance how those strengths interact with your birth numbers. '+
+           'Gentle phonetic adjustments shown below can support this further, without changing how your name sounds in everyday use.';
     }
 
     banner.innerHTML=
@@ -1793,9 +1832,9 @@ hr.divider{display:none;}
       html =
         '<div style="background:linear-gradient(160deg,#071e2d 0%,#0c3347 100%);border-radius:16px;padding:2rem;text-align:center;border:1px solid rgba(201,162,39,.3);">'+
           '<div style="font-size:40px;margin-bottom:.5rem;">★</div>'+
-          '<div style="color:#f0b429;font-size:20px;font-family:serif;margin-bottom:.6rem;font-weight:700;">Your Name Is Fully Aligned</div>'+
+          '<div style="color:#f0b429;font-size:20px;font-family:serif;margin-bottom:.6rem;font-weight:700;">Your Name Already Carries Strong Alignment</div>'+
           '<div style="color:rgba(255,255,255,.7);font-size:13px;font-family:sans-serif;max-width:480px;margin:0 auto;line-height:1.75;">'+
-            '<strong style="color:#f0b429;">'+name+'</strong> scores <strong style="color:#f0b429;">'+pct+'%</strong> — Chaldean alignment with your Moolank is complete. No correction needed.'+
+            '<strong style="color:#f0b429;">'+name+'</strong> scores <strong style="color:#f0b429;">'+pct+'%</strong> — your name vibration is in strong harmony with your Moolank. No optimisation is needed; the rest of this report shows how to make the most of what you already have.'+
           '</div>'+
         '</div>';
     } else {
@@ -1803,9 +1842,9 @@ hr.divider{display:none;}
       html +=
         '<div class="name-align-card" style="background:linear-gradient(160deg,#071e2d 0%,#0c3347 100%);border-radius:16px;padding:1.75rem;margin-bottom:1rem;border:1px solid rgba(201,162,39,.2);">'+
           '<div style="text-align:center;margin-bottom:1.25rem;">'+
-            '<div style="color:#c9a227;font-size:10px;letter-spacing:.2em;text-transform:uppercase;font-family:sans-serif;margin-bottom:.4rem;">✦ Chaldean Name Alignment ✦</div>'+
-            '<div style="color:#f0ece0;font-size:clamp(17px,2.8vw,22px);font-family:serif;font-weight:700;margin-bottom:.35rem;">3 Phonetic Paths to 100% Alignment</div>'+
-            '<div style="color:rgba(200,220,235,.6);font-size:13px;font-family:sans-serif;">First name only · Same sound · Exact Chaldean maths</div>'+
+            '<div style="color:#c9a227;font-size:10px;letter-spacing:.2em;text-transform:uppercase;font-family:sans-serif;margin-bottom:.4rem;">✦ Name Optimization · Chaldean Phonetic Enhancement ✦</div>'+
+            '<div style="color:#f0ece0;font-size:clamp(17px,2.8vw,22px);font-family:serif;font-weight:700;margin-bottom:.35rem;">Your name already works. These options enhance alignment further.</div>'+
+            '<div style="color:rgba(200,220,235,.6);font-size:13px;font-family:sans-serif;">First name only · Same sound · Each option shows number, planet &amp; benefit</div>'+
           '</div>'+
           currentCard;
 
@@ -1923,7 +1962,7 @@ hr.divider{display:none;}
     var harmonyConfig={
       aligned:{icon:'✦',label:'Well Aligned with Your Numbers',color:'var(--green)',bg:'var(--green-bg)',border:'#b0d48a'},
       neutral:{icon:'◈',label:'Moderately Aligned',color:'var(--amber)',bg:'var(--amber-bg)',border:'#e8c77a'},
-      misaligned:{icon:'⚠',label:'Vibrational Friction — Consider Alternatives',color:'var(--red)',bg:'var(--red-bg)',border:'#f5aaaa'},
+      misaligned:{icon:'◇',label:'Different Vibration — A More Supportive Number Is Available',color:'var(--red)',bg:'var(--red-bg)',border:'#f5aaaa'},
     };
     var hc=harmonyConfig[harmonyStatus];
 
