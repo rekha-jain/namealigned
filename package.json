@@ -5,6 +5,11 @@
   "engines": {
     "node": "20.x"
   },
+  "scripts": {
+    "og:render":  "node tools/render-og-cards.js",
+    "og:pages":   "node tools/build-share-pages.js",
+    "og:build":   "node tools/render-og-cards.js && node tools/build-share-pages.js"
+  },
   "dependencies": {
     "puppeteer": "^24.42.0"
   }
