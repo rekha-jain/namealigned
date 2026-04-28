@@ -1037,10 +1037,13 @@ function buildShareCard(){
   ctx.lineWidth = 1.5;
   ctx.beginPath(); ctx.moveTo(lcx-70, 240); ctx.lineTo(lcx+70, 240); ctx.stroke();
 
-  // "Your Destiny Number"
+  // "Your Driver Number" — Moolank, the day-of-birth number that
+  // determines the ruling planet & personality traits shown on this card.
+  // (Bhagyank/"destiny" maps to life path, not personality, and would
+  //  conflict with the Moolank-keyed strengths/insight to its right.)
   ctx.fillStyle = 'rgba(255,255,255,0.7)';
   ctx.font = 'italic 18px Georgia, serif';
-  ctx.fillText('Your Destiny Number', lcx, 268);
+  ctx.fillText('Your Driver Number', lcx, 268);
 
   // Cosmic ring around number
   const ringX = lcx, ringY = 395, ringR = 92;
@@ -1065,7 +1068,7 @@ function buildShareCard(){
   ctx.fillStyle = '#f5d060';
   ctx.font = '700 130px Georgia, serif';
   ctx.textBaseline = 'middle';
-  ctx.fillText(String(destinyNum), ringX, ringY + 4);
+  ctx.fillText(String(moolank), ringX, ringY + 4);
   ctx.shadowBlur = 0;
   ctx.textBaseline = 'alphabetic';
 

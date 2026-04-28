@@ -1115,7 +1115,8 @@ hr.divider{display:none;}
     ctx.beginPath(); ctx.moveTo(lcx-70,240); ctx.lineTo(lcx+70,240); ctx.stroke();
     ctx.fillStyle = 'rgba(255,255,255,0.7)';
     ctx.font = 'italic 18px Georgia, serif';
-    ctx.fillText('Your Destiny Number', lcx, 268);
+    // Moolank-keyed card → label as Driver Number (not Destiny/Bhagyank)
+    ctx.fillText('Your Driver Number', lcx, 268);
 
     // Cosmic ring
     var ringX = lcx, ringY = 395, ringR = 92;
@@ -1136,7 +1137,7 @@ hr.divider{display:none;}
     ctx.fillStyle = '#f5d060';
     ctx.font = '700 130px Georgia, serif';
     ctx.textBaseline = 'middle';
-    ctx.fillText(String(destNum), ringX, ringY+4);
+    ctx.fillText(String(moolank), ringX, ringY+4);
     ctx.shadowBlur = 0;
     ctx.textBaseline = 'alphabetic';
 
