@@ -1,5 +1,5 @@
 /**
- * Generate /i/1.html ... /i/9.html from share.html template.
+ * Generate /share/1.html ... /share/9.html from share.html template.
  *
  * Each per-Moolank page is a near-clone of share.html but with hardcoded
  * og:image / twitter:image / og:url / og:title / og:description, so when
@@ -36,13 +36,13 @@ const META = {
 async function main(){
   const tplPath = path.join(ROOT, 'share.html');
   const tpl = await readFile(tplPath, 'utf8');
-  const outDir = path.join(ROOT, 'i');
+  const outDir = path.join(ROOT, 'share');
   await mkdir(outDir, { recursive: true });
 
   for(const m of Object.keys(META)){
     const { planet, theme } = META[m];
     const ogImage = `https://namealigned.com/assets/og/moolank-${m}.png`;
-    const ogUrl   = `https://namealigned.com/i/${m}`;
+    const ogUrl   = `https://namealigned.com/share/${m}`;
     const title   = `A Moolank ${m} insight (${planet}) ✦`;
     const desc    = `${theme}. A 30-second Chaldean numerology insight that's surprisingly accurate.`;
 
@@ -81,12 +81,12 @@ async function main(){
     html = html.replace(
       /const params = new URLSearchParams\(location\.search\);/,
       `const params = new URLSearchParams(location.search);\n` +
-      `if(!params.get('m')) params.set('m','${m}'); // path-baked default for /i/${m}`
+      `if(!params.get('m')) params.set('m','${m}'); // path-baked default for /share/${m}`
     );
 
     const out = path.join(outDir, `${m}.html`);
     await writeFile(out, html);
-    console.log('  ✓ wrote i/' + m + '.html');
+    console.log('  ✓ wrote share/' + m + '.html');
   }
   console.log('\n✓ 9 per-Moolank share pages built');
 }
