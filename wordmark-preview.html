@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>NameAligned — Wordmark Options</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,500;1,600;1,700&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&family=DM+Serif+Display:ital@0;1&family=Cinzel:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=Italiana&family=Marcellus&display=swap" rel="stylesheet"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  font-family:'Inter',sans-serif;
+  background:#f6f3fb;color:#0a0820;
+  padding:48px 32px 96px;
+  -webkit-font-smoothing:antialiased;
+}
+h1{font-family:'Playfair Display',serif;font-size:34px;margin-bottom:6px;font-weight:700}
+.intro{color:#5a4d80;max-width:680px;margin-bottom:48px;line-height:1.5}
+.grid{display:grid;grid-template-columns:1fr;gap:18px;max-width:880px}
+.row{
+  background:#fff;
+  border:1px solid rgba(109,78,209,.18);
+  border-radius:14px;
+  padding:32px 32px;
+  display:flex;align-items:center;gap:32px;
+  box-shadow:0 1px 0 rgba(10,8,32,.04);
+  transition:all .2s;
+}
+.row:hover{border-color:#6d4ed1;transform:translateY(-1px);box-shadow:0 8px 24px rgba(109,78,209,.10)}
+.tag{
+  font-size:11px;font-weight:600;color:#6d4ed1;
+  letter-spacing:.12em;text-transform:uppercase;
+  min-width:90px;
+}
+.mark{flex:1;display:flex;align-items:center;gap:10px;line-height:1}
+.note{font-size:12px;color:#8a7ba8;font-style:italic;max-width:240px;line-height:1.45}
+
+/* Dark backdrop variants */
+.dark{background:#0f0a2a;color:#fff}
+.dark .note{color:#c9bfee}
+.dark{border-color:rgba(157,127,255,.30)}
+
+/* ───────── Variants ───────── */
+
+/* V1 — current */
+.v1 .mark{font-family:'Playfair Display',serif;font-size:32px;font-weight:700;color:#0a0820}
+.v1 .mark em{font-style:italic;font-weight:700}
+.v1 .mark .com{font-size:.62em;font-weight:500;letter-spacing:.04em;color:#4a2da6;margin-left:1px}
+
+/* V2 — Cormorant elegant */
+.v2 .mark{font-family:'Cormorant Garamond',serif;font-size:38px;font-weight:600;color:#0a0820;letter-spacing:.005em}
+.v2 .mark em{font-style:italic;font-weight:500;color:#6d4ed1}
+.v2 .mark .com{font-family:'Inter',sans-serif;font-size:.32em;font-weight:500;letter-spacing:.18em;color:#8a7ba8;text-transform:uppercase;margin-left:6px;align-self:center}
+
+/* V3 — Italiana airy */
+.v3 .mark{font-family:'Italiana',serif;font-size:36px;font-weight:400;color:#0a0820;letter-spacing:.02em}
+.v3 .mark em{font-style:normal;color:#6d4ed1}
+.v3 .mark .com{font-family:'Inter',sans-serif;font-size:.34em;font-weight:600;letter-spacing:.2em;color:#0a0820;text-transform:uppercase;margin-left:6px;align-self:center}
+
+/* V4 — DM Serif bold + tiny dot */
+.v4 .mark{font-family:'DM Serif Display',serif;font-size:30px;font-weight:400;color:#0a0820;letter-spacing:-.01em}
+.v4 .mark em{font-style:italic}
+.v4 .mark .dot{width:6px;height:6px;border-radius:50%;background:#6d4ed1;margin:0 2px}
+.v4 .mark .com{font-family:'Inter',sans-serif;font-size:.36em;font-weight:600;color:#6d4ed1;text-transform:uppercase;letter-spacing:.16em;align-self:center}
+
+/* V5 — Marcellus + crescent */
+.v5 .mark{font-family:'Marcellus',serif;font-size:30px;font-weight:400;color:#0a0820;letter-spacing:.015em}
+.v5 .mark .com{font-family:'Marcellus',serif;font-size:.7em;color:#6d4ed1;margin-left:0px}
+
+/* V6 — All italic Cormorant + gradient moon */
+.v6 .mark{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:38px;font-weight:600;color:#0a0820}
+.v6 .mark .com{font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:500;font-size:.7em;color:#6d4ed1}
+
+/* V7 — Cinzel uppercase, refined */
+.v7 .mark{font-family:'Cinzel',serif;font-size:20px;font-weight:600;color:#0a0820;letter-spacing:.08em;text-transform:uppercase}
+.v7 .mark .dot{display:inline-block;width:5px;height:5px;border-radius:50%;background:#6d4ed1;margin:0 8px;vertical-align:middle}
+.v7 .mark .com{font-family:'Inter',sans-serif;font-size:.7em;font-weight:500;letter-spacing:.18em;color:#8a7ba8}
+
+/* V8 — Stacked: Playfair big + italic underline tagline */
+.v8 .mark{flex-direction:column;align-items:flex-start;gap:0}
+.v8 .mark .top{font-family:'Playfair Display',serif;font-size:30px;font-weight:700;color:#0a0820;line-height:1;letter-spacing:-.01em}
+.v8 .mark .top em{font-style:italic;color:#6d4ed1}
+.v8 .mark .bot{font-family:'Inter',sans-serif;font-size:10px;font-weight:600;color:#8a7ba8;letter-spacing:.32em;text-transform:uppercase;margin-top:6px}
+
+/* V9 — N|A monogram + wordmark */
+.v9 .mark{gap:14px}
+.v9 .mono{
+  width:38px;height:38px;border-radius:50%;
+  background:linear-gradient(135deg,#6d4ed1 0%,#3d1f8a 100%);
+  color:#fff;font-family:'Playfair Display',serif;font-size:18px;font-weight:700;font-style:italic;
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 4px 14px rgba(109,78,209,.30);letter-spacing:-.04em;
+}
+.v9 .text{font-family:'Playfair Display',serif;font-size:26px;font-weight:700;color:#0a0820;letter-spacing:-.005em;line-height:1}
+.v9 .text em{font-style:italic;color:#6d4ed1}
+.v9 .text .com{font-size:.5em;font-weight:500;letter-spacing:.12em;color:#8a7ba8;text-transform:uppercase;margin-left:4px}
+
+/* V10 — Outlined N + serif text */
+.v10 .mark{gap:14px}
+.v10 .badge{
+  width:34px;height:34px;border:1.5px solid #6d4ed1;border-radius:8px;
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Playfair Display',serif;font-size:18px;font-weight:700;color:#6d4ed1;font-style:italic;
+}
+.v10 .text{font-family:'Playfair Display',serif;font-size:26px;font-weight:700;color:#0a0820;letter-spacing:-.005em;line-height:1}
+.v10 .text .com{font-size:.55em;font-weight:500;color:#8a7ba8;letter-spacing:.08em;margin-left:2px}
+
+/* V11 — On dark cosmic */
+.v11 .mark{font-family:'Playfair Display',serif;font-size:30px;font-weight:700;color:#fff;letter-spacing:-.005em}
+.v11 .mark em{font-style:italic;background:linear-gradient(135deg,#f5c451 0%,#e8a838 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.v11 .mark .com{font-size:.5em;font-weight:500;letter-spacing:.16em;color:#9d7fff;text-transform:uppercase;margin-left:4px}
+
+/* V12 — Refined crescent SVG + small caps tail */
+.v12 .mark{font-family:'Playfair Display',serif;font-size:28px;font-weight:600;color:#0a0820;letter-spacing:0;gap:12px}
+.v12 .mark em{font-style:italic;font-weight:600}
+.v12 .mark .com{font-family:'Inter',sans-serif;font-size:.4em;font-weight:600;letter-spacing:.22em;color:#6d4ed1;text-transform:uppercase;margin-left:4px;align-self:center}
+</style>
+</head>
+<body>
+
+<h1>Wordmark options</h1>
+<p class="intro">Twelve directions on the same brand. Pick what feels right — refined, premium, modern, traditional. We can mix two if needed (e.g. V2 with V9's monogram).</p>
+
+<div class="grid">
+
+  <div class="row v1">
+    <div class="tag">V1 · Current</div>
+    <div class="mark">
+      <svg width="26" height="26" viewBox="0 0 26 26"><defs><linearGradient id="m1" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#7b5fd9"/><stop offset="1" stop-color="#3d1f8a"/></linearGradient></defs><path d="M19.2 6.5a8.5 8.5 0 1 0 0 13 6.8 6.8 0 0 1 0-13z" fill="url(#m1)"/></svg>
+      <span>Name<em>Aligned</em><span class="com">.com</span></span>
+    </div>
+    <div class="note">What's live now. Italic Aligned, tiny purple .com.</div>
+  </div>
+
+  <div class="row v2">
+    <div class="tag">V2 · Cormorant</div>
+    <div class="mark">
+      <svg width="28" height="28" viewBox="0 0 28 28"><defs><linearGradient id="m2" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#9d7fff"/><stop offset="1" stop-color="#4a2da6"/></linearGradient></defs><path d="M21 7a9 9 0 1 0 0 14 7 7 0 0 1 0-14z" fill="url(#m2)"/></svg>
+      <span>Name<em>Aligned</em><span class="com">.com</span></span>
+    </div>
+    <div class="note">High-contrast serif, italic purple "Aligned", tiny capped .COM.</div>
+  </div>
+
+  <div class="row v3">
+    <div class="tag">V3 · Italiana</div>
+    <div class="mark">
+      <svg width="26" height="26" viewBox="0 0 26 26"><circle cx="13" cy="13" r="10" fill="none" stroke="#6d4ed1" stroke-width="1.4"/><circle cx="16" cy="11" r="9" fill="#fff"/></svg>
+      <span>Name<em>Aligned</em><span class="com">.COM</span></span>
+    </div>
+    <div class="note">Airy display serif, fashion-magazine feel. Hairline crescent.</div>
+  </div>
+
+  <div class="row v4">
+    <div class="tag">V4 · DM Serif</div>
+    <div class="mark">
+      <span>Name</span><span class="dot"></span><span><em>Aligned</em></span>
+      <span class="com">.COM</span>
+    </div>
+    <div class="note">Bold modern serif, no moon — small bullet separator instead.</div>
+  </div>
+
+  <div class="row v5">
+    <div class="tag">V5 · Marcellus</div>
+    <div class="mark">
+      <svg width="22" height="22" viewBox="0 0 22 22"><path d="M16 4a7 7 0 1 0 0 14 5.5 5.5 0 0 1 0-14z" fill="#6d4ed1"/></svg>
+      <span>NameAligned<span class="com">.com</span></span>
+    </div>
+    <div class="note">Quiet roman serif, single weight. Minimal, classic.</div>
+  </div>
+
+  <div class="row v6">
+    <div class="tag">V6 · All italic</div>
+    <div class="mark">
+      <svg width="26" height="26" viewBox="0 0 26 26"><defs><linearGradient id="m6" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#a98aff"/><stop offset="1" stop-color="#3d1f8a"/></linearGradient></defs><path d="M19.2 6.5a8.5 8.5 0 1 0 0 13 6.8 6.8 0 0 1 0-13z" fill="url(#m6)"/></svg>
+      <span>NameAligned<span class="com">.com</span></span>
+    </div>
+    <div class="note">Fully italic Cormorant — flowing, signature-like.</div>
+  </div>
+
+  <div class="row v7">
+    <div class="tag">V7 · Cinzel caps</div>
+    <div class="mark">
+      <span>Name<span class="dot"></span>Aligned<span class="com">.COM</span></span>
+    </div>
+    <div class="note">All-caps spaced — premium boutique feel. Roman inscriptional.</div>
+  </div>
+
+  <div class="row v8">
+    <div class="tag">V8 · Stacked</div>
+    <div class="mark">
+      <span class="top">Name<em>Aligned</em></span>
+      <span class="bot">Chaldean Numerology</span>
+    </div>
+    <div class="note">Wordmark + tiny tagline beneath. Adds context without clutter.</div>
+  </div>
+
+  <div class="row v9">
+    <div class="tag">V9 · Monogram</div>
+    <div class="mark">
+      <div class="mono">N</div>
+      <span class="text">Name<em>Aligned</em><span class="com">.COM</span></span>
+    </div>
+    <div class="note">Purple gradient circle with italic N — works as standalone favicon too.</div>
+  </div>
+
+  <div class="row v10">
+    <div class="tag">V10 · Badge</div>
+    <div class="mark">
+      <div class="badge">N</div>
+      <span class="text">NameAligned<span class="com">.com</span></span>
+    </div>
+    <div class="note">Outlined squircle badge. Cleaner and quieter than V9.</div>
+  </div>
+
+  <div class="row v11 dark">
+    <div class="tag" style="color:#9d7fff">V11 · On dark</div>
+    <div class="mark">
+      <svg width="26" height="26" viewBox="0 0 26 26"><defs><linearGradient id="m11" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f5c451"/><stop offset="1" stop-color="#9d7fff"/></linearGradient></defs><path d="M19.2 6.5a8.5 8.5 0 1 0 0 13 6.8 6.8 0 0 1 0-13z" fill="url(#m11)"/></svg>
+      <span>Name<em>Aligned</em><span class="com">.com</span></span>
+    </div>
+    <div class="note">Same V1 layout but with a gold-aligned italic — looks great on the dark hero.</div>
+  </div>
+
+  <div class="row v12">
+    <div class="tag">V12 · Refined</div>
+    <div class="mark">
+      <svg width="22" height="22" viewBox="0 0 22 22"><path d="M16 3a8 8 0 1 0 0 16 6 6 0 0 1 0-16z" fill="#0a0820"/></svg>
+      <span>Name<em>Aligned</em><span class="com">.COM</span></span>
+    </div>
+    <div class="note">Minimal: solid black crescent, light Playfair, tiny purple cap .COM.</div>
+  </div>
+
+</div>
+
+<p style="margin-top:48px;color:#5a4d80;font-size:13px;max-width:680px;line-height:1.6">
+  <strong>How to choose:</strong> open this preview side-by-side with your homepage. My picks for "premium + modern" are <strong>V2 (Cormorant)</strong>, <strong>V8 (stacked tagline)</strong>, or <strong>V9 (monogram)</strong>. For "minimal + serious" go <strong>V5</strong> or <strong>V12</strong>. Tell me a number and I'll wire it across all 24 pages.
+</p>
+
+</body>
+</html>
