@@ -145,6 +145,8 @@
 
 .trust-block{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:1rem 0;padding:1rem;background:linear-gradient(135deg,#f8f5ec,#fffbf2);border:1px solid var(--gold-b);border-radius:var(--rl)}
 @media(max-width:480px){.trust-block{grid-template-columns:1fr}}
+.extend-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+@media(max-width:520px){.extend-grid{grid-template-columns:1fr}}
 .trust-stat{text-align:center;padding:.5rem .25rem}
 .trust-num{font-family:'Playfair Display',Georgia,serif;font-size:22px;font-weight:700;color:var(--gold);line-height:1.1}
 .trust-lbl{font-family:sans-serif;font-size:11px;color:var(--text2);margin-top:4px;letter-spacing:.02em}
@@ -320,15 +322,77 @@
       </div>
 
       <!-- 4-5 personality insights (curiosity-gap teaser) -->
+      <div style="margin-top:1.25rem;padding-top:1rem;border-top:1px dashed var(--border);">
+        <div style="font-family:'Playfair Display',Georgia,serif;font-size:16px;font-weight:700;color:var(--text);margin-bottom:.25rem;">⚡ Insight You Might Recognize</div>
+        <div style="font-family:sans-serif;font-size:12px;color:var(--text3);margin-bottom:.5rem;letter-spacing:.02em;">Patterns most people with your Moolank quietly notice in themselves</div>
+      </div>
       <div class="insights-list" id="insightsList"></div>
 
       <div style="text-align:center">
         <span class="confidence-pill" id="confidencePill"></span>
       </div>
+
+      <!-- ── Dynamic share-card generator (1080×1080, Canvas-rendered) ── -->
+      <div id="shareBlock" style="margin-top:1.5rem;padding-top:1.25rem;border-top:1px dashed var(--border);">
+        <div style="text-align:center;margin-bottom:1rem;">
+          <div style="font-family:'Playfair Display',Georgia,serif;font-size:18px;font-weight:700;color:var(--text);margin-bottom:.2rem;">🌟 Share your card</div>
+          <div style="font-family:sans-serif;font-size:12.5px;color:var(--text2);line-height:1.55;">A 1080×1080 image — perfect for WhatsApp, Instagram Stories &amp; Reels.</div>
+        </div>
+
+        <!-- Card preview (canvas at full res, displayed scaled-down) -->
+        <div style="display:flex;justify-content:center;margin-bottom:1rem;">
+          <div style="position:relative;border-radius:18px;overflow:hidden;box-shadow:0 12px 48px rgba(26,14,82,.35);max-width:340px;width:100%;">
+            <canvas id="shareCanvas" width="1080" height="1080" style="display:block;width:100%;height:auto;background:#1a0e52;"></canvas>
+            <button id="rerollInsight" onclick="rerollShareInsight()" title="New insight"
+              style="position:absolute;top:10px;right:10px;background:rgba(255,255,255,.12);backdrop-filter:blur(6px);
+                     border:1px solid rgba(255,255,255,.25);color:#fff;border-radius:50%;width:34px;height:34px;
+                     display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;">↻</button>
+          </div>
+        </div>
+
+        <!-- Action buttons -->
+        <div style="display:flex;gap:.6rem;flex-wrap:wrap;justify-content:center;">
+          <button onclick="shareCardWA()"
+             style="display:inline-flex;align-items:center;gap:7px;background:#25D366;color:#fff;border:none;
+                    padding:11px 20px;border-radius:10px;font-family:sans-serif;font-size:13.5px;
+                    font-weight:600;cursor:pointer;box-shadow:0 2px 10px rgba(37,211,102,.3);">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 2C6.477 2 2 6.477 2 12c0 1.89.525 3.66 1.438 5.168L2 22l4.985-1.418A9.956 9.956 0 0012 22c5.523 0 10-4.477 10-10S17.523 2 12 2zm0 18a7.946 7.946 0 01-4.337-1.284l-.31-.186-3.224.917.874-3.147-.203-.323A7.944 7.944 0 014 12c0-4.411 3.589-8 8-8s8 3.589 8 8-3.589 8-8 8z"/></svg>
+            WhatsApp
+          </button>
+          <button onclick="shareCardIG()"
+             style="display:inline-flex;align-items:center;gap:7px;background:linear-gradient(135deg,#f09433 0%,#e6683c 25%,#dc2743 50%,#cc2366 75%,#bc1888 100%);color:#fff;border:none;
+                    padding:11px 20px;border-radius:10px;font-family:sans-serif;font-size:13.5px;
+                    font-weight:600;cursor:pointer;box-shadow:0 2px 10px rgba(220,39,67,.3);">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+            Instagram
+          </button>
+          <button onclick="downloadShareCard()"
+             style="display:inline-flex;align-items:center;gap:6px;background:var(--gold-l);
+                    color:var(--gold);border:1.5px solid var(--gold-b);
+                    padding:11px 18px;border-radius:10px;font-family:sans-serif;font-size:13.5px;
+                    font-weight:600;cursor:pointer;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            Save
+          </button>
+          <button onclick="copyAnalyzerLink()"
+             style="display:inline-flex;align-items:center;gap:6px;background:transparent;
+                    color:var(--text2);border:1.5px solid var(--border);
+                    padding:11px 16px;border-radius:10px;font-family:sans-serif;font-size:13.5px;
+                    font-weight:600;cursor:pointer;">
+            <span id="copyLinkText">📋 Copy link</span>
+          </button>
+        </div>
+
+        <!-- Caption preview — shows what gets posted alongside -->
+        <div style="margin-top:.85rem;background:rgba(124,58,237,.04);border:1px dashed rgba(124,58,237,.35);border-left:3px solid #7c3aed;border-radius:8px;padding:.65rem .9rem;font-family:sans-serif;font-size:12px;color:var(--text2);line-height:1.6;">
+          <div style="font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:#7c3aed;font-weight:700;margin-bottom:3px;">Caption that goes with the image</div>
+          <em style="font-style:italic;">"This was weirdly accurate 😅 — Check what your name says → namealigned.com/analyzer"</em>
+        </div>
+      </div>
     </div>
 
     <!-- 3. TRUST BUILDER (Chaldean-anchored) -->
-    <p class="trust-line-top">Sound-based · vibration-anchored · Chaldean numerology — used for over 2,500 years</p>
+    <p class="trust-line-top">Based on Chaldean numerology principles · Focused on sound vibration, not just numbers · Used to understand patterns, not predict fate</p>
     <div class="trust-block">
       <div class="trust-stat">
         <div class="trust-num" id="analysesCount">10,247</div>
@@ -345,8 +409,8 @@
     </div>
 
     <!-- 4. LOCKED PREMIUM CONTENT (Chaldean-anchored titles) -->
-    <div class="locked-section-label">🔒 Unlock your full Chaldean profile</div>
-    <div class="locked-section-sub">4 deeper sections — included in your full Chaldean Destiny Report</div>
+    <div class="locked-section-label">🔒 Explore deeper Chaldean insights</div>
+    <div class="locked-section-sub">4 deeper sections — included in your full Chaldean Destiny Report. Insight, not judgment.</div>
     <div class="locked-grid">
       <div class="locked-card" onclick="trackAndScrollCTA('locked_career')">
         <div class="lc-lock">🔒</div>
@@ -362,19 +426,19 @@
         <div class="lc-teaser">Planetary interaction — who harmonises with you</div>
         <div class="lc-blur"><div class="lc-blur-content" id="lcLoveTease">In Chaldean numerology, compatibility comes from planetary interaction. Your most aligned partner numbers reveal a clear pattern. You harmonise best with people whose Moolank…</div></div>
       </div>
-      <div class="locked-card" onclick="trackAndScrollCTA('locked_correction')">
+      <div class="locked-card" onclick="trackAndScrollCTA('locked_optimization')">
         <div class="lc-lock">🔒</div>
         <div class="lc-icon">✨</div>
-        <div class="lc-title">Name Correction <span style="font-size:10px;background:#dc2626;color:#fff;padding:2px 6px;border-radius:8px;letter-spacing:.04em;font-weight:700;margin-left:4px;text-transform:uppercase;vertical-align:middle">Phonetic</span></div>
-        <div class="lc-teaser">Add A · H · I · K sounds — shift your vibration</div>
-        <div class="lc-blur"><div class="lc-blur-content" id="lcCorrectionTease">Chaldean numerology works on sound vibration. 3 phonetic adjustments — adding A, H, I, K-style sounds — bring your name into 100% Chaldean alignment with your Moolank, without changing pronunciation…</div></div>
+        <div class="lc-title">Name Optimization <span style="font-size:10px;background:#7c3aed;color:#fff;padding:2px 6px;border-radius:8px;letter-spacing:.04em;font-weight:700;margin-left:4px;text-transform:uppercase;vertical-align:middle">Phonetic</span></div>
+        <div class="lc-teaser">Your name already works — gentle phonetic enhancements can support it further</div>
+        <div class="lc-blur"><div class="lc-blur-content" id="lcCorrectionTease">Your current name already carries strengths. Optimization simply enhances alignment further. 3 phonetic adjustments — adding A, H, I, K-style sounds — bring your name into stronger Chaldean alignment with your Moolank, without changing pronunciation…</div></div>
       </div>
-      <div class="locked-card" onclick="trackAndScrollCTA('locked_cycles')">
+      <div class="locked-card" onclick="trackAndScrollCTA('locked_hidden')">
         <div class="lc-lock">🔒</div>
         <div class="lc-icon">🌀</div>
-        <div class="lc-title">Future Cycles</div>
-        <div class="lc-teaser">Chaldean personal-year activation points</div>
-        <div class="lc-blur"><div class="lc-blur-content" id="lcCyclesTease">Your personal-year cycle is derived from your birth numbers and tells you which years act as activation points — when decisions create long-term impact. Your next 5 years…</div></div>
+        <div class="lc-title">Hidden Traits &amp; Cycles</div>
+        <div class="lc-teaser">Quiet strengths most people miss + your activation years</div>
+        <div class="lc-blur"><div class="lc-blur-content" id="lcCyclesTease">Beyond your visible Moolank traits, your name vibration carries hidden strengths most people don't notice in themselves. Combined with your personal-year cycle, certain years act as activation points where decisions create long-term outcomes. Your next 5 years…</div></div>
       </div>
     </div>
 
@@ -395,14 +459,32 @@
       </div>
     </div>
 
-    <!-- ENGAGEMENT LOOP -->
-    <div class="engage-row">
-      <button class="engage-btn" onclick="checkAnotherName()">
-        <span class="eb-icon">🔄</span>Check another name
-      </button>
-      <button class="engage-btn" onclick="checkCompatibility()">
-        <span class="eb-icon">💞</span>Check compatibility<span class="eb-soon">Soon</span>
-      </button>
+    <!-- EXTEND THIS INSIGHT — repeat-purchase triggers -->
+    <div style="margin-top:2rem;padding:1.5rem;background:linear-gradient(135deg,rgba(124,58,237,.05),rgba(201,162,39,.04));border:1px solid var(--gold-b);border-radius:var(--rl);">
+      <div style="font-family:'Playfair Display',Georgia,serif;font-size:18px;font-weight:700;color:var(--text);margin-bottom:.4rem;">🔗 Extend This Insight</div>
+      <p style="font-family:sans-serif;font-size:13px;color:var(--text2);line-height:1.6;margin-bottom:1rem;">Your alignment is also influenced by close relationships and decisions like naming a child or business. Each carries its own vibration.</p>
+      <div class="extend-grid">
+        <button class="engage-btn" onclick="extendInsight('partner')" style="display:flex;flex-direction:column;align-items:center;gap:4px;padding:1rem .5rem;">
+          <span style="font-size:22px">💞</span>
+          <span style="font-size:12.5px;font-weight:600;">Partner Compatibility</span>
+          <span style="font-size:10.5px;color:var(--text3);">Check together</span>
+        </button>
+        <button class="engage-btn" onclick="extendInsight('child')" style="display:flex;flex-direction:column;align-items:center;gap:4px;padding:1rem .5rem;">
+          <span style="font-size:22px">👶</span>
+          <span style="font-size:12.5px;font-weight:600;">Child Name Alignment</span>
+          <span style="font-size:10.5px;color:var(--text3);">For new parents</span>
+        </button>
+        <button class="engage-btn" onclick="extendInsight('business')" style="display:flex;flex-direction:column;align-items:center;gap:4px;padding:1rem .5rem;">
+          <span style="font-size:22px">🏢</span>
+          <span style="font-size:12.5px;font-weight:600;">Business Name</span>
+          <span style="font-size:10.5px;color:var(--text3);">Brand vibration</span>
+        </button>
+      </div>
+      <div style="text-align:center;margin-top:1rem;">
+        <button class="engage-btn" onclick="checkAnotherName()" style="display:inline-flex;align-items:center;gap:8px;font-size:12.5px;color:var(--text2);background:transparent;border:none;cursor:pointer;text-decoration:underline;text-decoration-color:var(--gold-b);text-underline-offset:3px;">
+          🔄 Check another name
+        </button>
+      </div>
     </div>
 
     <!-- Email capture -->
@@ -415,32 +497,6 @@
         <button class="btn btn-gold btn-sm" onclick="captureEmail()">Save free →</button>
       </div>
       <div id="emailDone" style="display:none;color:#b0a898;font-family:sans-serif;font-size:13px">✓ Saved! Check your inbox.</div>
-    </div>
-
-    <!-- Share with a friend -->
-    <div id="shareBlock" style="margin-top:1.5rem;background:linear-gradient(160deg,#071e2d 0%,#0c3347 100%);border-radius:16px;padding:1.75rem;text-align:center;">
-      <div style="font-size:22px;margin-bottom:6px;">🌟</div>
-      <h3 style="font-size:18px;color:#ffffff;margin-bottom:6px;">Know someone who should try this?</h3>
-      <p style="font-size:13px;color:#06b6d4;font-family:sans-serif;line-height:1.6;margin-bottom:1.25rem;max-width:380px;margin-left:auto;margin-right:auto;">
-        Share the free Chaldean name analysis with a friend or family member — takes 30 seconds and reveals their core numbers.
-      </p>
-      <div style="display:flex;gap:.75rem;justify-content:center;flex-wrap:wrap;">
-        <a id="analyzerShareWa" href="#" target="_blank" rel="noopener"
-           style="display:inline-flex;align-items:center;gap:8px;background:#25D366;color:#fff;
-                  padding:11px 22px;border-radius:10px;font-family:sans-serif;font-size:14px;
-                  font-weight:600;text-decoration:none;">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 2C6.477 2 2 6.477 2 12c0 1.89.525 3.66 1.438 5.168L2 22l4.985-1.418A9.956 9.956 0 0012 22c5.523 0 10-4.477 10-10S17.523 2 12 2zm0 18a7.946 7.946 0 01-4.337-1.284l-.31-.186-3.224.917.874-3.147-.203-.323A7.944 7.944 0 014 12c0-4.411 3.589-8 8-8s8 3.589 8 8-3.589 8-8 8z"/></svg>
-          Share on WhatsApp
-        </a>
-        <button id="analyzerCopyLink" onclick="copyAnalyzerLink()"
-           style="display:inline-flex;align-items:center;gap:8px;background:rgba(240,180,41,.15);
-                  color:#f0b429;border:1.5px solid rgba(240,180,41,.4);
-                  padding:11px 22px;border-radius:10px;font-family:sans-serif;font-size:14px;
-                  font-weight:600;cursor:pointer;">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
-          <span id="copyLinkText">Copy link</span>
-        </button>
-      </div>
     </div>
 
     <div style="display:flex;gap:10px;margin-top:1.5rem;flex-wrap:wrap">
@@ -564,11 +620,28 @@ function renderAnalysis(){
   // 1. HOOK — Chaldean-anchored template
   const firstName = name.trim().split(/\s+/)[0];
   const namePlanet = getPlanet(nameNum);
+  // Outcome potential by Moolank (positive framing — what alignment supports)
+  const OUTCOMES = {
+    1:'clear leadership, decisive action and recognised authority',
+    2:'deep intuition, harmonious partnerships and emotional balance',
+    3:'expressive creativity, influential communication and joyful momentum',
+    4:'original thinking, technological breakthroughs and unconventional success',
+    5:'fast learning, freedom of movement and versatile income streams',
+    6:'magnetic relationships, aesthetic mastery and abundant beauty',
+    7:'deep insight, philosophical clarity and respected expertise',
+    8:'lasting wealth, structural authority and earned recognition',
+    9:'courageous action, protective leadership and decisive completion'
+  };
+  const outcome = OUTCOMES[birthNum] || OUTCOMES[1];
+
   document.getElementById('hookGreet').textContent = firstName + ',';
-  document.getElementById('hookLine').textContent =
-    `based on Chaldean numerology — which analyses the sound vibration of your name — your current name carries the energy of number ${nameNum} (${namePlanet}). This vibration shapes ${insights.hook}.`;
+  // Identity → Life pattern → Outcome → Curiosity gap
+  document.getElementById('hookLine').innerHTML =
+    `based on Chaldean numerology — which focuses on the sound vibration of your name — your current name carries the energy of number <strong style="color:#f5d060">${nameNum} (${namePlanet})</strong>. This vibration is associated with ${insights.hook}.<br><br>` +
+    `You may have noticed that ${insights.pattern.toLowerCase()}. This is influenced by how your name vibration interacts with your birth numbers (Moolank ${birthNum}, Bhagyank ${destNum}).<br><br>` +
+    `When aligned well, your numbers support <strong style="color:#f5d060">${outcome}</strong>.`;
   document.getElementById('hookFoot').innerHTML =
-    `Because Chaldean numerology focuses on how your name <strong>sounds</strong>, not just how it is written, it reveals deeper patterns in how you think, act and respond. <strong>This is only a partial view of your full Chaldean profile ↓</strong>`;
+    `👉 This is only a part of your full Chaldean numerology profile. Read on for your alignment score, recognition moments and how to enhance alignment further. <strong>Scroll down to explore ↓</strong>`;
 
   // Vibration callout — explains how name number affects daily life
   const vibePatterns = {
@@ -587,7 +660,7 @@ function renderAnalysis(){
 
   // Badge (now lives inside align-mini)
   const badgeEl = document.getElementById('ahBadge');
-  badgeEl.textContent = status==='aligned'?'✓ ALIGNED':status==='neutral'?'~ NEUTRAL':'✗ NEEDS CORRECTION';
+  badgeEl.textContent = status==='aligned'?'✓ STRONG ALIGNMENT':status==='neutral'?'~ MODERATE ALIGNMENT':'◇ DIFFERENT ALIGNMENT';
   badgeEl.className   = 'ah-badge '+status;
 
   // Compact alignment block
@@ -647,8 +720,8 @@ function renderAnalysis(){
     `Your most compatible partner numbers are ${rc.best.join(', ')} — but the avoid-list (${rc.avoid.join(', ')}) is what most people get wrong. Full breakdown shows…`;
   document.getElementById('lcCorrectionTease').textContent =
     pct >= 97
-      ? `Your name is already 100% Chaldean-aligned with Moolank ${birthNum} (${getPlanet(birthNum)}) — the report shows further fine-tuning for compound vibration and gentle phonetic polish…`
-      : `3 phonetic adjustments — adding A, H, I, K-style sounds — shift your name into 100% Chaldean alignment with Moolank ${birthNum}. Pronunciation stays nearly identical. Math + planet + benefit shown…`;
+      ? `Your name is already strongly Chaldean-aligned with Moolank ${birthNum} (${getPlanet(birthNum)}) — the report shows gentle compound-vibration polish to enhance it further…`
+      : `Your current name already carries strengths. 3 phonetic enhancements — adding A, H, I, K-style sounds — can support stronger Chaldean alignment with Moolank ${birthNum}. Pronunciation stays nearly identical. Math + planet + benefit shown…`;
   // Future Cycles teaser — uses current Personal Year
   try {
     const py = getPersonalYear(dob, new Date().getFullYear());
@@ -672,15 +745,8 @@ function renderAnalysis(){
       (base + daysSinceLaunch * 23).toLocaleString('en-IN');
   } catch(e){}
 
-  // Share buttons
-  const shareMsg = `I just checked my Chaldean numerology on NameAligned.com!\n\n` +
-    `✦ Moolank (Birth Number): ${birthNum} — ${getPlanet(birthNum)}\n` +
-    `✦ Bhagyank (Destiny Number): ${destNum} — ${getPlanet(destNum)}\n` +
-    `✦ Name Alignment Score: ${pct}%\n\n` +
-    `Try it free — takes 30 seconds 👇\nhttps://namealigned.com/analyzer`;
-  document.getElementById('analyzerShareWa').href = 'https://wa.me/?text=' + encodeURIComponent(shareMsg);
-  document.getElementById('analyzerShareWa').addEventListener('click',
-    ()=>trackEvent('share_clicked',{channel:'whatsapp'}), {once:true});
+  // Build dynamic share card
+  buildShareCard();
 
   // Track result viewed
   trackEvent('result_viewed', {
@@ -697,8 +763,19 @@ function checkAnotherName(){
   showPage(1);
 }
 function checkCompatibility(){
-  trackEvent('check_compatibility_clicked');
-  alert('Compatibility check is coming soon ✨\n\nFor now, your full ₹199 report includes a complete compatibility breakdown for all 9 Moolank pairings.');
+  extendInsight('partner');
+}
+function extendInsight(kind){
+  trackEvent('extend_insight_clicked', {kind});
+  const labels = {partner:'Partner Compatibility', child:'Child Name Alignment', business:'Business Name'};
+  const note = {
+    partner:'Partner compatibility check is included in your full Chaldean Destiny Report — you\'ll see how your name vibration interacts with your partner\'s, with planetary alignment for relationship harmony.',
+    child:'Child name alignment is included in your full Chaldean Destiny Report — you\'ll see suggested names that support your child\'s Moolank, with phonetic options that preserve cultural meaning.',
+    business:'Business name vibration is included in your full Chaldean Destiny Report — you\'ll see how a brand name interacts with your founder Moolank, with optimization paths for stronger commercial alignment.'
+  };
+  alert(`✨ ${labels[kind]}\n\n${note[kind]}\n\nUnlock the full report below — ₹199 one-time.`);
+  const cta = document.getElementById('ctaPro');
+  if(cta) cta.scrollIntoView({behavior:'smooth', block:'center'});
 }
 
 function renderSuggestions(){
@@ -729,7 +806,7 @@ function copyAnalyzerLink(){
   navigator.clipboard.writeText(url).then(()=>{
     const btn = document.getElementById('copyLinkText');
     btn.textContent = '✓ Copied!';
-    setTimeout(()=>{ btn.textContent = 'Copy link'; }, 2500);
+    setTimeout(()=>{ btn.textContent = '📋 Copy link'; }, 2500);
   }).catch(()=>{
     // Fallback for older browsers
     const ta = document.createElement('textarea');
@@ -739,8 +816,342 @@ function copyAnalyzerLink(){
     document.body.removeChild(ta);
     const btn = document.getElementById('copyLinkText');
     btn.textContent = '✓ Copied!';
-    setTimeout(()=>{ btn.textContent = 'Copy link'; }, 2500);
+    setTimeout(()=>{ btn.textContent = '📋 Copy link'; }, 2500);
   });
+}
+
+// ═══════════════════════════════════════════════════════════════════════
+// ── DYNAMIC SHARE CARD (1080×1080, Canvas-rendered) ───────────────────
+// ═══════════════════════════════════════════════════════════════════════
+
+// Insight templates by Moolank — 4 categories rotated per session.
+// Each must feel personal, relatable, max ~120 chars, use "You tend to…" patterns.
+const SHARE_INSIGHTS = {
+  1:{
+    identity:  'You\'re independent, decisive, and built to lead.',
+    behavior:  'You tend to start things others only talk about — and rarely ask permission.',
+    emotional: 'You feel responsible for everyone, but rarely show when you\'re tired.',
+    pattern:   'Things in your life tend to work out — but only after you stop waiting for approval.'
+  },
+  2:{
+    identity:  'You\'re sensitive, intuitive, and read people before they speak.',
+    behavior:  'You often feel emotions in the room before anyone names them.',
+    emotional: 'You feel deeply, but don\'t always express it easily.',
+    pattern:   'You often find yourself mediating conflicts you didn\'t start.'
+  },
+  3:{
+    identity:  'You\'re expressive, creative, and full of ideas.',
+    behavior:  'You tend to think out loud — sometimes faster than people can keep up.',
+    emotional: 'You laugh easily, but the deeper feelings stay private.',
+    pattern:   'You start many things with intensity — but only finish what feels meaningful.'
+  },
+  4:{
+    identity:  'You\'re unconventional — you don\'t follow the standard path.',
+    behavior:  'You tend to question rules everyone else just accepts.',
+    emotional: 'You feel like an outsider sometimes — even with people who love you.',
+    pattern:   'Opportunities arrive suddenly in your life — and just as suddenly disappear.'
+  },
+  5:{
+    identity:  'You\'re quick, adaptive, curious — built for change.',
+    behavior:  'You tend to learn fast and lose interest faster.',
+    emotional: 'You crave variety, but secretly miss what you left behind.',
+    pattern:   'You change cities, careers, or circles every few years — and find yourself each time.'
+  },
+  6:{
+    identity:  'You\'re warm, magnetic, and people are drawn to you for comfort.',
+    behavior:  'You tend to give freely — and feel deeply hurt when it isn\'t reciprocated.',
+    emotional: 'You feel love through small gestures, not loud ones.',
+    pattern:   'People share their problems with you within minutes of meeting.'
+  },
+  7:{
+    identity:  'You\'re analytical, introspective, deep.',
+    behavior:  'You tend to think deeply before acting — which protects you, but also delays decisions.',
+    emotional: 'You feel things you rarely tell anyone about.',
+    pattern:   'You research everything for weeks — then decide in a single moment.'
+  },
+  8:{
+    identity:  'You\'re disciplined, fair, built for the long game.',
+    behavior:  'You tend to take responsibility others quietly avoid.',
+    emotional: 'You hide stress well — but it shows up in your shoulders and your sleep.',
+    pattern:   'Recognition comes to you late — but when it arrives, it lasts.'
+  },
+  9:{
+    identity:  'You\'re courageous, loyal, action-driven.',
+    behavior:  'You tend to act first and reflect later.',
+    emotional: 'You\'re fiercely protective of people you love, and brutal with people who hurt them.',
+    pattern:   'You move with high intensity for long stretches — then crash and reset.'
+  }
+};
+
+let _shareInsightCategory = null;
+
+function pickShareInsight(moolank){
+  const set = SHARE_INSIGHTS[moolank] || SHARE_INSIGHTS[1];
+  const cats = Object.keys(set); // identity, behavior, emotional, pattern
+  // Avoid repeating same category on reroll
+  let next = cats[Math.floor(Math.random() * cats.length)];
+  if(_shareInsightCategory && cats.length > 1){
+    let attempts = 0;
+    while(next === _shareInsightCategory && attempts++ < 5){
+      next = cats[Math.floor(Math.random() * cats.length)];
+    }
+  }
+  _shareInsightCategory = next;
+  return { category: next, text: set[next] };
+}
+
+function getPlanetForShare(num){
+  try { return getPlanet(num); } catch(e){ return ''; }
+}
+
+function buildShareCard(){
+  const canvas = document.getElementById('shareCanvas');
+  if(!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const W = 1080, H = 1080;
+
+  const firstName = (S.name||'You').trim().split(/\s+/)[0];
+  // Title-case first name for visual consistency
+  const displayName = firstName.charAt(0).toUpperCase() + firstName.slice(1).toLowerCase();
+  const destinyNum = S.destNum || S.birthNum || 1;
+  const planet = getPlanetForShare(destinyNum);
+  const insight = pickShareInsight(S.birthNum || 1);
+
+  // ── Background: deep purple → blue → black gradient ──
+  const bg = ctx.createLinearGradient(0, 0, W, H);
+  bg.addColorStop(0,    '#1a0e52');
+  bg.addColorStop(0.45, '#3a1d80');
+  bg.addColorStop(1,    '#03090f');
+  ctx.fillStyle = bg;
+  ctx.fillRect(0, 0, W, H);
+
+  // Subtle radial glow behind the number
+  const glow = ctx.createRadialGradient(W/2, H*0.46, 50, W/2, H*0.46, 520);
+  glow.addColorStop(0,   'rgba(245,208,96,0.25)');
+  glow.addColorStop(0.5, 'rgba(124,58,237,0.10)');
+  glow.addColorStop(1,   'rgba(0,0,0,0)');
+  ctx.fillStyle = glow;
+  ctx.fillRect(0, 0, W, H);
+
+  // Faint celestial dots
+  ctx.fillStyle = 'rgba(255,255,255,0.5)';
+  for(let i=0;i<60;i++){
+    const x = Math.random()*W, y = Math.random()*H, r = Math.random()*1.6 + 0.3;
+    ctx.globalAlpha = Math.random()*0.6 + 0.15;
+    ctx.beginPath(); ctx.arc(x,y,r,0,Math.PI*2); ctx.fill();
+  }
+  ctx.globalAlpha = 1;
+
+  // ── TOP: Brand strip ──
+  ctx.textAlign = 'left';
+  ctx.fillStyle = '#c9a227';
+  ctx.font = '700 30px "Helvetica Neue", Arial, sans-serif';
+  ctx.fillText('✦ NameAligned', 70, 90);
+
+  ctx.textAlign = 'right';
+  ctx.fillStyle = 'rgba(255,255,255,0.55)';
+  ctx.font = '500 22px "Helvetica Neue", Arial, sans-serif';
+  ctx.fillText('Chaldean Numerology', W - 70, 90);
+
+  // "Weirdly accurate" sticker — top-right under brand
+  ctx.save();
+  ctx.translate(W - 90, 175);
+  ctx.rotate(-0.08);
+  const stickerW = 320, stickerH = 64;
+  ctx.fillStyle = 'rgba(245, 208, 96, 0.95)';
+  roundRect(ctx, -stickerW/2, -stickerH/2, stickerW, stickerH, 32);
+  ctx.fill();
+  ctx.fillStyle = '#03090f';
+  ctx.font = '700 26px "Helvetica Neue", Arial, sans-serif';
+  ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  ctx.fillText('weirdly accurate 😅', 0, 2);
+  ctx.restore();
+  ctx.textBaseline = 'alphabetic';
+
+  // ── CENTER: Eyebrow ──
+  ctx.textAlign = 'center';
+  ctx.fillStyle = '#c9a227';
+  ctx.font = '700 26px "Helvetica Neue", Arial, sans-serif';
+  ctx.letterSpacing = '4px';
+  ctx.fillText('— DESTINY NUMBER —', W/2, 360);
+
+  // ── BIG NUMBER ──
+  ctx.fillStyle = '#f5d060';
+  ctx.font = 'bold 380px "Helvetica Neue", Arial, sans-serif';
+  // Slight glow
+  ctx.shadowColor = 'rgba(245, 208, 96, 0.45)';
+  ctx.shadowBlur = 60;
+  ctx.fillText(String(destinyNum), W/2, 660);
+  ctx.shadowBlur = 0;
+
+  // Planet ruler under the number
+  if(planet){
+    ctx.fillStyle = 'rgba(245, 208, 96, 0.85)';
+    ctx.font = 'italic 30px Georgia, serif';
+    ctx.fillText('ruled by ' + planet, W/2, 710);
+  }
+
+  // ── NAME ──
+  ctx.fillStyle = '#ffffff';
+  ctx.font = '700 64px Georgia, serif';
+  // Truncate very long names
+  let nameToDraw = displayName.length > 22 ? displayName.slice(0,21) + '…' : displayName;
+  ctx.fillText(nameToDraw, W/2, 800);
+
+  // ── INSIGHT ──
+  ctx.fillStyle = 'rgba(232, 220, 255, 0.92)';
+  ctx.font = 'italic 34px Georgia, serif';
+  wrapText(ctx, '"' + insight.text + '"', W/2, 880, W - 200, 46, 3);
+
+  // ── BOTTOM CTA ──
+  ctx.fillStyle = 'rgba(255,255,255,0.5)';
+  ctx.font = '500 26px "Helvetica Neue", Arial, sans-serif';
+  ctx.fillText('Check your name →  namealigned.com/analyzer', W/2, H - 70);
+
+  // Gold underline under CTA
+  ctx.strokeStyle = 'rgba(201, 162, 39, 0.45)';
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.moveTo(W/2 - 280, H - 50);
+  ctx.lineTo(W/2 + 280, H - 50);
+  ctx.stroke();
+}
+
+// Helper: rounded rect
+function roundRect(ctx, x, y, w, h, r){
+  ctx.beginPath();
+  ctx.moveTo(x+r, y);
+  ctx.lineTo(x+w-r, y);
+  ctx.quadraticCurveTo(x+w, y, x+w, y+r);
+  ctx.lineTo(x+w, y+h-r);
+  ctx.quadraticCurveTo(x+w, y+h, x+w-r, y+h);
+  ctx.lineTo(x+r, y+h);
+  ctx.quadraticCurveTo(x, y+h, x, y+h-r);
+  ctx.lineTo(x, y+r);
+  ctx.quadraticCurveTo(x, y, x+r, y);
+  ctx.closePath();
+}
+
+// Helper: wrap text within max width, max N lines
+function wrapText(ctx, text, x, y, maxWidth, lineHeight, maxLines){
+  const words = text.split(' ');
+  let line = '', lines = [];
+  for(let i=0;i<words.length;i++){
+    const test = line ? line + ' ' + words[i] : words[i];
+    if(ctx.measureText(test).width > maxWidth && line){
+      lines.push(line); line = words[i];
+    } else {
+      line = test;
+    }
+    if(lines.length === maxLines - 1 && i < words.length - 1){
+      // Last line: pack remainder + ellipsis if overflow
+      let rest = line;
+      for(let j=i+1;j<words.length;j++){
+        const t = rest + ' ' + words[j];
+        if(ctx.measureText(t + '…').width > maxWidth){ rest += '…'; break; }
+        rest = t;
+      }
+      lines.push(rest);
+      line = '';
+      break;
+    }
+  }
+  if(line) lines.push(line);
+  const totalH = lines.length * lineHeight;
+  const startY = y - totalH/2 + lineHeight/2;
+  lines.forEach((l, i) => ctx.fillText(l, x, startY + i*lineHeight));
+}
+
+function rerollShareInsight(){
+  trackEvent('share_card_rerolled');
+  buildShareCard();
+}
+
+// Convert canvas to Blob (Promise-based)
+function canvasToBlob(canvas){
+  return new Promise(resolve => {
+    canvas.toBlob(blob => resolve(blob), 'image/png', 0.95);
+  });
+}
+
+const SHARE_CAPTION =
+  'This was weirdly accurate 😅\n' +
+  'Check what your name says → https://namealigned.com/analyzer';
+
+async function shareCardWA(){
+  trackEvent('share_card_clicked', {channel:'whatsapp'});
+  const canvas = document.getElementById('shareCanvas');
+  const blob = await canvasToBlob(canvas);
+  const file = new File([blob], 'namealigned-card.png', {type:'image/png'});
+
+  // Try Web Share API with files (mobile — user picks WhatsApp from sheet)
+  if(navigator.canShare && navigator.canShare({files:[file]})){
+    try {
+      await navigator.share({files:[file], text: SHARE_CAPTION, title:'My name reading'});
+      trackEvent('share_card_completed', {channel:'whatsapp'});
+      return;
+    } catch(e){ /* user cancelled — fall through */ }
+  }
+  // Desktop / unsupported: download image + open WhatsApp Web with text
+  downloadBlob(blob, 'namealigned-card.png');
+  setTimeout(() => {
+    window.open('https://wa.me/?text=' + encodeURIComponent(SHARE_CAPTION), '_blank');
+  }, 600);
+  showShareHint('Image saved! Now attach it in WhatsApp along with the message.');
+}
+
+async function shareCardIG(){
+  trackEvent('share_card_clicked', {channel:'instagram'});
+  const canvas = document.getElementById('shareCanvas');
+  const blob = await canvasToBlob(canvas);
+  const file = new File([blob], 'namealigned-card.png', {type:'image/png'});
+
+  // Web Share API — on mobile, sheet shows Instagram (Stories / Feed / Reels share)
+  if(navigator.canShare && navigator.canShare({files:[file]})){
+    try {
+      await navigator.share({files:[file], text: SHARE_CAPTION, title:'My name reading'});
+      trackEvent('share_card_completed', {channel:'instagram'});
+      return;
+    } catch(e){ /* user cancelled */ }
+  }
+  // Desktop fallback — Instagram has no web post URL; download + instruct
+  downloadBlob(blob, 'namealigned-card.png');
+  showShareHint('Image saved! Open Instagram on your phone to post it as a Story or Feed.');
+}
+
+async function downloadShareCard(){
+  trackEvent('share_card_clicked', {channel:'download'});
+  const canvas = document.getElementById('shareCanvas');
+  const blob = await canvasToBlob(canvas);
+  downloadBlob(blob, 'namealigned-card.png');
+  showShareHint('Saved to your downloads. Share it anywhere ✦');
+}
+
+function downloadBlob(blob, filename){
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = filename;
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  setTimeout(() => URL.revokeObjectURL(url), 5000);
+}
+
+function showShareHint(msg){
+  let hint = document.getElementById('shareHint');
+  if(!hint){
+    hint = document.createElement('div');
+    hint.id = 'shareHint';
+    hint.style.cssText =
+      'position:fixed;bottom:24px;left:50%;transform:translateX(-50%);'+
+      'background:#1a0e52;color:#f5d060;padding:12px 22px;border-radius:30px;'+
+      'font-family:sans-serif;font-size:13px;font-weight:600;'+
+      'box-shadow:0 8px 32px rgba(0,0,0,.4);z-index:9999;'+
+      'border:1px solid rgba(245,208,96,.3);max-width:90vw;text-align:center;';
+    document.body.appendChild(hint);
+  }
+  hint.textContent = msg;
+  hint.style.opacity = '1';
+  clearTimeout(window._shareHintT);
+  window._shareHintT = setTimeout(() => { hint.style.transition = 'opacity .4s'; hint.style.opacity = '0'; }, 4500);
 }
 </script>
 </body>
