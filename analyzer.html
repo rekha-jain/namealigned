@@ -335,18 +335,14 @@
       <!-- ── Dynamic share-card generator (1080×1080, Canvas-rendered) ── -->
       <div id="shareBlock" style="margin-top:1.5rem;padding-top:1.25rem;border-top:1px dashed var(--border);">
         <div style="text-align:center;margin-bottom:1rem;">
-          <div style="font-family:'Playfair Display',Georgia,serif;font-size:18px;font-weight:700;color:var(--text);margin-bottom:.2rem;">🌟 Share your card</div>
-          <div style="font-family:sans-serif;font-size:12.5px;color:var(--text2);line-height:1.55;">A 1080×1080 image — perfect for WhatsApp, Instagram Stories &amp; Reels.</div>
+          <div style="font-family:'Playfair Display',Georgia,serif;font-size:18px;font-weight:700;color:var(--text);margin-bottom:.2rem;">🌟 Your insight card</div>
+          <div style="font-family:sans-serif;font-size:12.5px;color:var(--text2);line-height:1.55;">A 1200×630 image — perfect for WhatsApp, Telegram, Twitter &amp; Facebook.</div>
         </div>
 
         <!-- Card preview (canvas at full res, displayed scaled-down) -->
         <div style="display:flex;justify-content:center;margin-bottom:1rem;">
-          <div style="position:relative;border-radius:18px;overflow:hidden;box-shadow:0 12px 48px rgba(26,14,82,.35);max-width:340px;width:100%;">
-            <canvas id="shareCanvas" width="1080" height="1080" style="display:block;width:100%;height:auto;background:#1a0e52;"></canvas>
-            <button id="rerollInsight" onclick="rerollShareInsight()" title="New insight"
-              style="position:absolute;top:10px;right:10px;background:rgba(255,255,255,.12);backdrop-filter:blur(6px);
-                     border:1px solid rgba(255,255,255,.25);color:#fff;border-radius:50%;width:34px;height:34px;
-                     display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;">↻</button>
+          <div style="position:relative;border-radius:18px;overflow:hidden;box-shadow:0 12px 48px rgba(26,14,82,.35);max-width:560px;width:100%;">
+            <canvas id="shareCanvas" width="1200" height="630" style="display:block;width:100%;height:auto;background:#1a0e52;"></canvas>
           </div>
         </div>
 
@@ -821,84 +817,104 @@ function copyAnalyzerLink(){
 }
 
 // ═══════════════════════════════════════════════════════════════════════
-// ── DYNAMIC SHARE CARD (1080×1080, Canvas-rendered) ───────────────────
+// ── DYNAMIC SHARE CARD (1200×630 landscape, Canvas-rendered) ──────────
 // ═══════════════════════════════════════════════════════════════════════
 
-// Insight templates by Moolank — 4 categories rotated per session.
-// Each must feel personal, relatable, max ~120 chars, use "You tend to…" patterns.
-const SHARE_INSIGHTS = {
+// Per-Moolank profile: planet, qualities, 3 strengths, 1 insight quote.
+// Strengths-led, positive, non-judgmental — designed to make users
+// proud to share and curious to click.
+const MOOLANK_PROFILES = {
   1:{
-    identity:  'You\'re independent, decisive, and built to lead.',
-    behavior:  'You tend to start things others only talk about — and rarely ask permission.',
-    emotional: 'You feel responsible for everyone, but rarely show when you\'re tired.',
-    pattern:   'Things in your life tend to work out — but only after you stop waiting for approval.'
+    planet:'Sun', planetIcon:'☀',
+    qualities:'Leadership · Confidence · Vitality',
+    strengths:[
+      {icon:'☀', title:'Natural Leader',      desc:'You inspire and motivate people around you.'},
+      {icon:'◎', title:'Independent Thinker', desc:'You value your freedom and trust your judgment.'},
+      {icon:'✦', title:'Creative & Original', desc:'You bring fresh ideas and unique perspectives.'}
+    ],
+    insight:'You take your time before deciding, but once you\'re sure, you move forward with full power.'
   },
   2:{
-    identity:  'You\'re sensitive, intuitive, and read people before they speak.',
-    behavior:  'You often feel emotions in the room before anyone names them.',
-    emotional: 'You feel deeply, but don\'t always express it easily.',
-    pattern:   'You often find yourself mediating conflicts you didn\'t start.'
+    planet:'Moon', planetIcon:'☾',
+    qualities:'Sensitivity · Intuition · Harmony',
+    strengths:[
+      {icon:'☾', title:'Empathic Listener', desc:'You sense what others feel before they say it.'},
+      {icon:'◇', title:'Diplomatic',         desc:'You bring people together with quiet grace.'},
+      {icon:'✧', title:'Imaginative',        desc:'Your inner world is rich, gentle, and creative.'}
+    ],
+    insight:'You feel things deeply, but rarely show how much — until the right person earns it.'
   },
   3:{
-    identity:  'You\'re expressive, creative, and full of ideas.',
-    behavior:  'You tend to think out loud — sometimes faster than people can keep up.',
-    emotional: 'You laugh easily, but the deeper feelings stay private.',
-    pattern:   'You start many things with intensity — but only finish what feels meaningful.'
+    planet:'Jupiter', planetIcon:'♃',
+    qualities:'Expression · Optimism · Joy',
+    strengths:[
+      {icon:'✦', title:'Natural Communicator', desc:'Your words carry warmth and energy.'},
+      {icon:'☼', title:'Optimist',             desc:'You see the upside in almost any situation.'},
+      {icon:'✧', title:'Creative Spark',       desc:'You make life feel lighter for everyone around you.'}
+    ],
+    insight:'You make life feel lighter for everyone — except, sometimes, yourself.'
   },
   4:{
-    identity:  'You\'re unconventional — you don\'t follow the standard path.',
-    behavior:  'You tend to question rules everyone else just accepts.',
-    emotional: 'You feel like an outsider sometimes — even with people who love you.',
-    pattern:   'Opportunities arrive suddenly in your life — and just as suddenly disappear.'
+    planet:'Rahu', planetIcon:'◈',
+    qualities:'Innovation · Logic · Structure',
+    strengths:[
+      {icon:'◈', title:'Systems Thinker',  desc:'You spot patterns most people miss.'},
+      {icon:'⚙', title:'Unconventional',   desc:'You challenge the status quo with substance.'},
+      {icon:'◉', title:'Quietly Reliable', desc:'You build things that genuinely last.'}
+    ],
+    insight:'You see what others miss — and quietly fix it without taking credit.'
   },
   5:{
-    identity:  'You\'re quick, adaptive, curious — built for change.',
-    behavior:  'You tend to learn fast and lose interest faster.',
-    emotional: 'You crave variety, but secretly miss what you left behind.',
-    pattern:   'You change cities, careers, or circles every few years — and find yourself each time.'
+    planet:'Mercury', planetIcon:'☿',
+    qualities:'Adaptability · Wit · Communication',
+    strengths:[
+      {icon:'⚡', title:'Quick Mind',  desc:'You absorb and process at lightning speed.'},
+      {icon:'✶', title:'Versatile',    desc:'You move comfortably between very different worlds.'},
+      {icon:'✦', title:'Charismatic',  desc:'People remember the energy you bring into a room.'}
+    ],
+    insight:'Your mind moves faster than most rooms can keep up with.'
   },
   6:{
-    identity:  'You\'re warm, magnetic, and people are drawn to you for comfort.',
-    behavior:  'You tend to give freely — and feel deeply hurt when it isn\'t reciprocated.',
-    emotional: 'You feel love through small gestures, not loud ones.',
-    pattern:   'People share their problems with you within minutes of meeting.'
+    planet:'Venus', planetIcon:'♀',
+    qualities:'Harmony · Love · Aesthetics',
+    strengths:[
+      {icon:'❤', title:'Caretaker',       desc:'You hold others together with quiet strength.'},
+      {icon:'✿', title:'Aesthetic Sense', desc:'You bring beauty into ordinary moments.'},
+      {icon:'✦', title:'Devoted',         desc:'Your loyalty runs deep and steady.'}
+    ],
+    insight:'You hold others together — even when nobody asks who holds you.'
   },
   7:{
-    identity:  'You\'re analytical, introspective, deep.',
-    behavior:  'You tend to think deeply before acting — which protects you, but also delays decisions.',
-    emotional: 'You feel things you rarely tell anyone about.',
-    pattern:   'You research everything for weeks — then decide in a single moment.'
+    planet:'Ketu', planetIcon:'◉',
+    qualities:'Wisdom · Introspection · Depth',
+    strengths:[
+      {icon:'◉', title:'Analytical',       desc:'You think deeply before you speak.'},
+      {icon:'✦', title:'Spiritual Seeker', desc:'You ask the questions others quietly avoid.'},
+      {icon:'◇', title:'Discerning',       desc:'You see through surfaces to what\'s real.'}
+    ],
+    insight:'You research everything for weeks — then decide in a single moment.'
   },
   8:{
-    identity:  'You\'re disciplined, fair, built for the long game.',
-    behavior:  'You tend to take responsibility others quietly avoid.',
-    emotional: 'You hide stress well — but it shows up in your shoulders and your sleep.',
-    pattern:   'Recognition comes to you late — but when it arrives, it lasts.'
+    planet:'Saturn', planetIcon:'♄',
+    qualities:'Discipline · Authority · Resilience',
+    strengths:[
+      {icon:'⚖', title:'Strategic',   desc:'You play long games most people can\'t see.'},
+      {icon:'◆', title:'Resilient',   desc:'You hold steady when others panic.'},
+      {icon:'✦', title:'Accountable', desc:'Your word is your reputation.'}
+    ],
+    insight:'You look composed, but you carry weight most people never see.'
   },
   9:{
-    identity:  'You\'re courageous, loyal, action-driven.',
-    behavior:  'You tend to act first and reflect later.',
-    emotional: 'You\'re fiercely protective of people you love, and brutal with people who hurt them.',
-    pattern:   'You move with high intensity for long stretches — then crash and reset.'
+    planet:'Mars', planetIcon:'♂',
+    qualities:'Courage · Energy · Action',
+    strengths:[
+      {icon:'⚔', title:'Bold',       desc:'You move first while others wait.'},
+      {icon:'❤', title:'Protective', desc:'You defend the people you love fiercely.'},
+      {icon:'✦', title:'Driven',     desc:'Your fire fuels everyone around you.'}
+    ],
+    insight:'You move fast, feel hard, and don\'t apologise for either.'
   }
 };
-
-let _shareInsightCategory = null;
-
-function pickShareInsight(moolank){
-  const set = SHARE_INSIGHTS[moolank] || SHARE_INSIGHTS[1];
-  const cats = Object.keys(set); // identity, behavior, emotional, pattern
-  // Avoid repeating same category on reroll
-  let next = cats[Math.floor(Math.random() * cats.length)];
-  if(_shareInsightCategory && cats.length > 1){
-    let attempts = 0;
-    while(next === _shareInsightCategory && attempts++ < 5){
-      next = cats[Math.floor(Math.random() * cats.length)];
-    }
-  }
-  _shareInsightCategory = next;
-  return { category: next, text: set[next] };
-}
 
 function getPlanetForShare(num){
   try { return getPlanet(num); } catch(e){ return ''; }
@@ -908,113 +924,269 @@ function buildShareCard(){
   const canvas = document.getElementById('shareCanvas');
   if(!canvas) return;
   const ctx = canvas.getContext('2d');
-  const W = 1080, H = 1080;
+  const W = 1200, H = 630;
 
   const firstName = (S.name||'You').trim().split(/\s+/)[0];
-  // Title-case first name for visual consistency
   const displayName = firstName.charAt(0).toUpperCase() + firstName.slice(1).toLowerCase();
-  const destinyNum = S.destNum || S.birthNum || 1;
-  const planet = getPlanetForShare(destinyNum);
-  const insight = pickShareInsight(S.birthNum || 1);
+  const moolank    = S.birthNum || 1;
+  const destinyNum = S.destNum  || moolank;
+  const profile    = MOOLANK_PROFILES[moolank] || MOOLANK_PROFILES[1];
 
-  // ── Background: deep purple → blue → black gradient ──
-  const bg = ctx.createLinearGradient(0, 0, W, H);
-  bg.addColorStop(0,    '#1a0e52');
-  bg.addColorStop(0.45, '#3a1d80');
-  bg.addColorStop(1,    '#03090f');
-  ctx.fillStyle = bg;
-  ctx.fillRect(0, 0, W, H);
+  // ── Background: deep purple/navy gradient ──
+  const bg = ctx.createLinearGradient(0, 0, 0, H);
+  bg.addColorStop(0,   '#1a0e52');
+  bg.addColorStop(0.6, '#2a1180');
+  bg.addColorStop(1,   '#0d0521');
+  ctx.fillStyle = bg; ctx.fillRect(0, 0, W, H);
 
-  // Subtle radial glow behind the number
-  const glow = ctx.createRadialGradient(W/2, H*0.46, 50, W/2, H*0.46, 520);
-  glow.addColorStop(0,   'rgba(245,208,96,0.25)');
+  // Soft sunset/horizon glow at bottom
+  const horiz = ctx.createLinearGradient(0, H-240, 0, H);
+  horiz.addColorStop(0,   'rgba(245,200,110,0)');
+  horiz.addColorStop(0.6, 'rgba(245,180,100,0.06)');
+  horiz.addColorStop(1,   'rgba(245,150,80,0.18)');
+  ctx.fillStyle = horiz; ctx.fillRect(0, H-240, W, 240);
+
+  // Radial glow behind big number
+  const gx = 320, gy = H/2 + 30;
+  const glow = ctx.createRadialGradient(gx, gy, 30, gx, gy, 280);
+  glow.addColorStop(0,   'rgba(245,208,96,0.22)');
   glow.addColorStop(0.5, 'rgba(124,58,237,0.10)');
   glow.addColorStop(1,   'rgba(0,0,0,0)');
-  ctx.fillStyle = glow;
-  ctx.fillRect(0, 0, W, H);
+  ctx.fillStyle = glow; ctx.fillRect(0, 0, W, H);
 
-  // Faint celestial dots
-  ctx.fillStyle = 'rgba(255,255,255,0.5)';
-  for(let i=0;i<60;i++){
-    const x = Math.random()*W, y = Math.random()*H, r = Math.random()*1.6 + 0.3;
+  // Celestial dots
+  ctx.fillStyle = 'rgba(255,255,255,0.6)';
+  for(let i=0;i<70;i++){
+    const x = Math.random()*W, y = Math.random()*H, r = Math.random()*1.5 + 0.3;
     ctx.globalAlpha = Math.random()*0.6 + 0.15;
     ctx.beginPath(); ctx.arc(x,y,r,0,Math.PI*2); ctx.fill();
   }
   ctx.globalAlpha = 1;
 
-  // ── TOP: Brand strip ──
+  // Subtle center divider
+  ctx.strokeStyle = 'rgba(201,162,39,0.18)';
+  ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(W/2, 110); ctx.lineTo(W/2, H-50); ctx.stroke();
+
+  // ─────────────────────────────────────
+  // TOP HEADER STRIP
+  // ─────────────────────────────────────
   ctx.textAlign = 'left';
-  ctx.fillStyle = '#c9a227';
-  ctx.font = '700 30px "Helvetica Neue", Arial, sans-serif';
-  ctx.fillText('✦ NameAligned', 70, 90);
-
-  ctx.textAlign = 'right';
-  ctx.fillStyle = 'rgba(255,255,255,0.55)';
-  ctx.font = '500 22px "Helvetica Neue", Arial, sans-serif';
-  ctx.fillText('Chaldean Numerology', W - 70, 90);
-
-  // "Weirdly accurate" sticker — top-right under brand
-  ctx.save();
-  ctx.translate(W - 90, 175);
-  ctx.rotate(-0.08);
-  const stickerW = 320, stickerH = 64;
-  ctx.fillStyle = 'rgba(245, 208, 96, 0.95)';
-  roundRect(ctx, -stickerW/2, -stickerH/2, stickerW, stickerH, 32);
-  ctx.fill();
-  ctx.fillStyle = '#03090f';
-  ctx.font = '700 26px "Helvetica Neue", Arial, sans-serif';
-  ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-  ctx.fillText('weirdly accurate 😅', 0, 2);
-  ctx.restore();
-  ctx.textBaseline = 'alphabetic';
-
-  // ── CENTER: Eyebrow ──
-  ctx.textAlign = 'center';
-  ctx.fillStyle = '#c9a227';
-  ctx.font = '700 26px "Helvetica Neue", Arial, sans-serif';
-  ctx.letterSpacing = '4px';
-  ctx.fillText('— DESTINY NUMBER —', W/2, 360);
-
-  // ── BIG NUMBER ──
   ctx.fillStyle = '#f5d060';
-  ctx.font = 'bold 380px "Helvetica Neue", Arial, sans-serif';
-  // Slight glow
-  ctx.shadowColor = 'rgba(245, 208, 96, 0.45)';
-  ctx.shadowBlur = 60;
-  ctx.fillText(String(destinyNum), W/2, 660);
-  ctx.shadowBlur = 0;
+  ctx.font = '700 28px "Helvetica Neue", Arial, sans-serif';
+  ctx.fillText('✦  NameAligned', 50, 60);
+  ctx.fillStyle = 'rgba(255,255,255,0.55)';
+  ctx.font = '500 13px "Helvetica Neue", Arial, sans-serif';
+  ctx.fillText('Alignment. Insight. Empowerment.', 50, 82);
 
-  // Planet ruler under the number
-  if(planet){
-    ctx.fillStyle = 'rgba(245, 208, 96, 0.85)';
-    ctx.font = 'italic 30px Georgia, serif';
-    ctx.fillText('ruled by ' + planet, W/2, 710);
+  // Chaldean Numerology pill (top-right)
+  ctx.font = '600 15px "Helvetica Neue", Arial, sans-serif';
+  const pillText = 'Chaldean Numerology';
+  const pillTW = ctx.measureText(pillText).width;
+  const pillW = pillTW + 64, pillH = 36;
+  const pillX = W - 50 - pillW, pillY = 46;
+  roundRect(ctx, pillX, pillY, pillW, pillH, 18);
+  ctx.fillStyle = 'rgba(255,255,255,0.06)';
+  ctx.fill();
+  ctx.strokeStyle = 'rgba(201,162,39,0.45)';
+  ctx.lineWidth = 1.4;
+  ctx.stroke();
+  ctx.fillStyle = '#f5d060';
+  ctx.fillText(pillText, pillX + 18, pillY + 23);
+  ctx.fillText('◇', pillX + pillW - 26, pillY + 24);
+
+  // ─────────────────────────────────────
+  // LEFT COLUMN — Name + Number + Planet
+  // ─────────────────────────────────────
+  const lcx = 320; // left column center
+  ctx.textAlign = 'center';
+
+  // HEY ✦
+  ctx.fillStyle = 'rgba(245,208,96,0.85)';
+  ctx.font = '600 18px "Helvetica Neue", Arial, sans-serif';
+  ctx.fillText('HEY  ✦', lcx, 145);
+
+  // Big italic name
+  ctx.fillStyle = '#ffffff';
+  let nameSize = 76;
+  ctx.font = 'italic 700 ' + nameSize + 'px Georgia, serif';
+  while(ctx.measureText(displayName).width > 480 && nameSize > 38){
+    nameSize -= 4;
+    ctx.font = 'italic 700 ' + nameSize + 'px Georgia, serif';
+  }
+  ctx.fillText(displayName, lcx, 215);
+
+  // Gold accent underline
+  ctx.strokeStyle = 'rgba(201,162,39,0.85)';
+  ctx.lineWidth = 1.5;
+  ctx.beginPath(); ctx.moveTo(lcx-70, 240); ctx.lineTo(lcx+70, 240); ctx.stroke();
+
+  // "Your Destiny Number"
+  ctx.fillStyle = 'rgba(255,255,255,0.7)';
+  ctx.font = 'italic 18px Georgia, serif';
+  ctx.fillText('Your Destiny Number', lcx, 268);
+
+  // Cosmic ring around number
+  const ringX = lcx, ringY = 395, ringR = 92;
+  ctx.strokeStyle = 'rgba(201,162,39,0.55)';
+  ctx.lineWidth = 1.5;
+  ctx.beginPath(); ctx.arc(ringX, ringY, ringR, 0, Math.PI*2); ctx.stroke();
+  ctx.strokeStyle = 'rgba(201,162,39,0.22)';
+  ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.arc(ringX, ringY, ringR + 20, 0, Math.PI*2); ctx.stroke();
+  // Compass marks (8 points)
+  ctx.fillStyle = 'rgba(245,208,96,0.7)';
+  for(let a=0;a<8;a++){
+    const ang = a * Math.PI/4;
+    const x = ringX + Math.cos(ang) * (ringR + 20);
+    const y = ringY + Math.sin(ang) * (ringR + 20);
+    ctx.beginPath(); ctx.arc(x, y, 2.5, 0, Math.PI*2); ctx.fill();
   }
 
-  // ── NAME ──
-  ctx.fillStyle = '#ffffff';
-  ctx.font = '700 64px Georgia, serif';
-  // Truncate very long names
-  let nameToDraw = displayName.length > 22 ? displayName.slice(0,21) + '…' : displayName;
-  ctx.fillText(nameToDraw, W/2, 800);
+  // Big destiny number
+  ctx.shadowColor = 'rgba(245,208,96,0.55)';
+  ctx.shadowBlur = 38;
+  ctx.fillStyle = '#f5d060';
+  ctx.font = '700 130px Georgia, serif';
+  ctx.textBaseline = 'middle';
+  ctx.fillText(String(destinyNum), ringX, ringY + 4);
+  ctx.shadowBlur = 0;
+  ctx.textBaseline = 'alphabetic';
 
-  // ── INSIGHT ──
-  ctx.fillStyle = 'rgba(232, 220, 255, 0.92)';
-  ctx.font = 'italic 34px Georgia, serif';
-  wrapText(ctx, '"' + insight.text + '"', W/2, 880, W - 200, 46, 3);
-
-  // ── BOTTOM CTA ──
-  ctx.fillStyle = 'rgba(255,255,255,0.5)';
-  ctx.font = '500 26px "Helvetica Neue", Arial, sans-serif';
-  ctx.fillText('Check your name →  namealigned.com/analyzer', W/2, H - 70);
-
-  // Gold underline under CTA
-  ctx.strokeStyle = 'rgba(201, 162, 39, 0.45)';
-  ctx.lineWidth = 2;
-  ctx.beginPath();
-  ctx.moveTo(W/2 - 280, H - 50);
-  ctx.lineTo(W/2 + 280, H - 50);
+  // RULING PLANET pill
+  const rpY = 520;
+  ctx.font = '700 11px "Helvetica Neue", Arial, sans-serif';
+  const rpText = 'RULING PLANET';
+  const rpTW = ctx.measureText(rpText).width;
+  const rpW = rpTW + 60, rpH = 24;
+  const rpX = lcx - rpW/2;
+  roundRect(ctx, rpX, rpY - 16, rpW, rpH, 12);
+  ctx.fillStyle = 'rgba(255,255,255,0.04)';
+  ctx.fill();
+  ctx.strokeStyle = 'rgba(201,162,39,0.55)';
+  ctx.lineWidth = 1;
   ctx.stroke();
+  ctx.fillStyle = '#f5d060';
+  ctx.fillText(rpText, lcx, rpY);
+
+  // Planet name with glyph
+  ctx.fillStyle = '#ffffff';
+  ctx.font = '700 26px Georgia, serif';
+  ctx.fillText(profile.planetIcon + '  ' + profile.planet, lcx, rpY + 38);
+
+  // Qualities tagline
+  ctx.fillStyle = 'rgba(245,208,96,0.85)';
+  ctx.font = '500 13px "Helvetica Neue", Arial, sans-serif';
+  ctx.fillText(profile.qualities, lcx, rpY + 65);
+
+  // ─────────────────────────────────────
+  // RIGHT COLUMN — Strengths + Insight + CTA
+  // ─────────────────────────────────────
+  const rcx = 640;
+  ctx.textAlign = 'left';
+
+  // Eyebrow
+  ctx.fillStyle = '#c9a227';
+  ctx.font = '700 13px "Helvetica Neue", Arial, sans-serif';
+  ctx.fillText('YOUR CORE STRENGTHS', rcx, 138);
+
+  // 3 strengths
+  const startY = 170, rowH = 72;
+  profile.strengths.forEach((s, i) => {
+    const y = startY + i * rowH;
+    // Icon circle
+    const cx = rcx + 22, cy = y + 18;
+    ctx.fillStyle = 'rgba(245,208,96,0.13)';
+    ctx.beginPath(); ctx.arc(cx, cy, 22, 0, Math.PI*2); ctx.fill();
+    ctx.strokeStyle = 'rgba(201,162,39,0.5)';
+    ctx.lineWidth = 1.2;
+    ctx.beginPath(); ctx.arc(cx, cy, 22, 0, Math.PI*2); ctx.stroke();
+    // Glyph
+    ctx.fillStyle = '#f5d060';
+    ctx.font = '600 22px Georgia, serif';
+    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillText(s.icon, cx, cy + 1);
+    ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic';
+
+    // Title
+    ctx.fillStyle = '#ffffff';
+    ctx.font = '700 18px "Helvetica Neue", Arial, sans-serif';
+    ctx.fillText(s.title, rcx + 60, y + 14);
+    // Description
+    ctx.fillStyle = 'rgba(255,255,255,0.7)';
+    ctx.font = '400 14px "Helvetica Neue", Arial, sans-serif';
+    ctx.fillText(s.desc, rcx + 60, y + 36);
+  });
+
+  // Divider
+  ctx.strokeStyle = 'rgba(201,162,39,0.25)';
+  ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(rcx, 392); ctx.lineTo(W - 50, 392); ctx.stroke();
+
+  // INSIGHT eyebrow
+  ctx.fillStyle = '#c9a227';
+  ctx.font = '700 13px "Helvetica Neue", Arial, sans-serif';
+  ctx.fillText('INSIGHT THAT RELATES TO YOU', rcx, 422);
+
+  // Open quote glyph
+  ctx.fillStyle = 'rgba(245,208,96,0.7)';
+  ctx.font = '700 56px Georgia, serif';
+  ctx.fillText('“', rcx - 4, 470);
+
+  // Insight body
+  ctx.fillStyle = 'rgba(255,255,255,0.92)';
+  ctx.font = 'italic 22px Georgia, serif';
+  wrapTextLeft(ctx, profile.insight, rcx + 36, 458, W - 90 - rcx, 30, 3);
+
+  // Close quote glyph
+  ctx.fillStyle = 'rgba(245,208,96,0.7)';
+  ctx.font = '700 56px Georgia, serif';
+  ctx.textAlign = 'right';
+  ctx.fillText('”', W - 50, 540);
+  ctx.textAlign = 'left';
+
+  // Bottom CTA
+  ctx.fillStyle = 'rgba(255,255,255,0.65)';
+  ctx.font = '500 12px "Helvetica Neue", Arial, sans-serif';
+  ctx.fillText('Discover your full numerology report at', rcx, 568);
+
+  // CTA pill (gold gradient)
+  const ctaText = 'namealigned.com/analyzer  →';
+  ctx.font = '700 15px "Helvetica Neue", Arial, sans-serif';
+  const ctaTW = ctx.measureText(ctaText).width;
+  const ctaW = ctaTW + 36, ctaH = 36;
+  const ctaX = rcx, ctaY = 580;
+  const ctaGrad = ctx.createLinearGradient(ctaX, ctaY, ctaX + ctaW, ctaY);
+  ctaGrad.addColorStop(0, '#f5d060');
+  ctaGrad.addColorStop(1, '#c9a227');
+  ctx.fillStyle = ctaGrad;
+  roundRect(ctx, ctaX, ctaY, ctaW, ctaH, 18);
+  ctx.fill();
+  ctx.fillStyle = '#0c1a2e';
+  ctx.fillText(ctaText, ctaX + 18, ctaY + 23);
+}
+
+// Helper: wrap text left-aligned, max N lines, with ellipsis on overflow
+function wrapTextLeft(ctx, text, x, y, maxWidth, lineHeight, maxLines){
+  const words = text.split(' ');
+  let line = '', lines = [];
+  for(let i=0;i<words.length;i++){
+    const test = line ? line + ' ' + words[i] : words[i];
+    if(ctx.measureText(test).width > maxWidth && line){
+      lines.push(line); line = words[i];
+    } else line = test;
+    if(lines.length === maxLines - 1 && i < words.length - 1){
+      let rest = line;
+      for(let j=i+1;j<words.length;j++){
+        const t = rest + ' ' + words[j];
+        if(ctx.measureText(t + '…').width > maxWidth){ rest += '…'; break; }
+        rest = t;
+      }
+      lines.push(rest); line = ''; break;
+    }
+  }
+  if(line) lines.push(line);
+  lines.forEach((l, i) => ctx.fillText(l, x, y + i*lineHeight));
 }
 
 // Helper: rounded rect
@@ -1060,11 +1232,6 @@ function wrapText(ctx, text, x, y, maxWidth, lineHeight, maxLines){
   const totalH = lines.length * lineHeight;
   const startY = y - totalH/2 + lineHeight/2;
   lines.forEach((l, i) => ctx.fillText(l, x, startY + i*lineHeight));
-}
-
-function rerollShareInsight(){
-  trackEvent('share_card_rerolled');
-  buildShareCard();
 }
 
 // Convert canvas to Blob (Promise-based)
