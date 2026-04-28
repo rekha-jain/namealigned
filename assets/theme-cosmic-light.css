@@ -150,6 +150,8 @@ div[style*="linear-gradient(160deg,#071e2d"]{
 
 /* Nav stays clean — slight tint to bridge into hero */
 .nav{background:rgba(255,255,255,.92) !important;backdrop-filter:blur(10px)}
+.nav-links a{font-weight:600 !important;letter-spacing:.01em}
+.nav-mobile a{font-weight:600 !important}
 
 /* ── PAGE-SPECIFIC ────────────────────────────────────────────── */
 .hero-stats{display:flex;justify-content:center;gap:3rem;flex-wrap:wrap;margin-top:2.5rem;position:relative}
