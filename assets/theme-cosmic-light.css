@@ -149,6 +149,25 @@ div[style*="linear-gradient(160deg,#071e2d"]{
 .hero-form-card label{color:rgba(245,196,81,.80) !important}
 .hero-form-card select option{background:#110d2e;color:#fff}
 
+/* Email-banner CTA ("Ready to see what your numbers say?") → cosmic purple */
+.email-banner{
+  background:linear-gradient(160deg,#1a1340 0%,#2a1a5c 60%,#1a1340 100%) !important;
+  border:1px solid rgba(157,127,255,.30) !important;
+  box-shadow:0 8px 40px rgba(109,78,209,.25) !important;
+  color:#f0eaff !important;
+}
+.email-banner h3{color:#ffffff !important}
+.email-banner p{color:rgba(240,234,255,.78) !important}
+.email-banner .hero-sym{color:#f5c451 !important;opacity:.85 !important}
+
+/* Sample-result preview card on homepage — flip teal gradient + fix label/badge */
+.card div[style*="linear-gradient(135deg,#071e2d"]{
+  background:linear-gradient(135deg,#1a1340 0%,#2a1a5c 100%) !important;
+  border:1px solid rgba(157,127,255,.25);
+  border-radius:10px;
+}
+.card div[style*="linear-gradient(135deg,#071e2d"] div[style*="color:rgba(6,182,212"]{color:#9d7fff !important}
+
 /* Nav stays clean — slight tint to bridge into hero */
 .nav{background:rgba(255,255,255,.92) !important;backdrop-filter:blur(10px)}
 .nav-links a{font-weight:600 !important;letter-spacing:.01em}
