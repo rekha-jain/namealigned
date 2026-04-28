@@ -86,7 +86,7 @@ div[style*="linear-gradient(160deg,#071e2d"]{
     linear-gradient(160deg, #0a0820 0%, #1a0d3d 50%, #0a0820 100%) !important;
   color:#f0eaff !important;
   position:relative;overflow:hidden;
-  padding:1.5rem 1.5rem 2rem !important;
+  padding:3rem 1.5rem 3rem !important;
 }
 .hero-dark::before{
   content:'';position:absolute;inset:0;pointer-events:none;

@@ -47,8 +47,8 @@
   background:rgba(7,30,45,.75);
   border:1px solid rgba(6,182,212,.3);
   border-top:2px solid var(--gold);
-  border-radius:var(--rl);padding:1.25rem 1.5rem 1.5rem;
-  max-width:520px;margin:.5rem auto 0;
+  border-radius:var(--rl);padding:1rem 1.25rem 1.1rem;
+  max-width:460px;margin:.5rem auto 0;
   backdrop-filter:blur(16px);
   box-shadow:0 8px 48px rgba(0,0,0,.35),
              0 0 0 1px rgba(240,180,41,.06),
@@ -113,12 +113,12 @@
 
 <!-- ── HERO ───────────────────────────────────────────────────── -->
 <section class="hero-dark">
-  <div class="container-sm" style="padding-top:.5rem;padding-bottom:.5rem;">
-    <div class="hero-eyebrow" style="margin-bottom:.4rem;">✦ Chaldean Numerology · Sound-based system</div>
-    <h1 class="hero-h1" style="margin-bottom:.4rem;font-size:clamp(26px,4vw,42px);line-height:1.15;">Every name carries its own <em>strengths</em></h1>
-    <p class="hero-sub" style="color:#06b6d4;font-style:normal;font-weight:400;font-size:clamp(13px,1.8vw,15px);margin-bottom:0;">Discover what yours already supports — and how to enhance it further.</p>
+  <div class="container-sm" style="padding-top:1rem;padding-bottom:1rem;">
+    <div class="hero-eyebrow" style="margin-bottom:1rem;">✦ Chaldean Numerology · Sound-based system</div>
+    <h1 class="hero-h1" style="margin-bottom:.9rem;font-size:clamp(30px,4.5vw,52px);line-height:1.15;">Every name carries its own <em>strengths</em></h1>
+    <p class="hero-sub" style="color:#06b6d4;font-style:normal;font-weight:400;font-size:clamp(14px,2vw,17px);margin-bottom:0;">Discover what yours already supports — and how to enhance it further.</p>
 
-    <div style="margin:1rem auto 2.75rem;max-width:760px;display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:.3rem .9rem;font-family:sans-serif;font-size:13px;color:rgba(232,244,255,.78);">
+    <div style="margin:1.75rem auto 2.5rem;max-width:760px;display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:.3rem 1.25rem;font-family:sans-serif;font-size:14px;color:rgba(232,244,255,.78);">
       <span style="color:#c9a227;">✦</span><span>Know your strengths</span>
       <span style="color:#c9a227;">✦</span><span>Spot your patterns</span>
       <span style="color:#c9a227;">✦</span><span>Enhance your alignment</span>
@@ -128,35 +128,29 @@
     <div class="hero-form-card" style="margin-top:0;">
       <h3 style="font-size:18px;letter-spacing:.01em">✦ Start your free analysis</h3>
       <p style="color:var(--gold);font-size:12px;letter-spacing:.06em;text-transform:uppercase;font-weight:600">No account needed · Results in seconds</p>
-      <form id="quickForm" onsubmit="quickSubmit(event)" style="margin-top:1.25rem">
-        <div class="form-grid" style="gap:14px;margin-bottom:14px">
+      <form id="quickForm" onsubmit="quickSubmit(event)" style="margin-top:.85rem">
+        <div class="form-grid" style="gap:10px;margin-bottom:10px">
           <div class="fg">
             <label style="font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:rgba(6,182,212,.7);font-weight:600">Your full name</label>
             <input type="text" id="qName" placeholder="e.g. Priya Sharma" required
               style="background:rgba(6,182,212,.08);border:1.5px solid rgba(6,182,212,.35);color:#ffffff;
-                     border-radius:10px;padding:13px 16px;font-size:15px;
+                     border-radius:10px;padding:10px 14px;font-size:14.5px;
                      transition:all .25s;"/>
           </div>
           <div class="fg">
             <label style="font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:rgba(6,182,212,.7);font-weight:600">Date of birth</label>
             <input type="date" id="qDob" required
               style="background:rgba(6,182,212,.08);border:1.5px solid rgba(6,182,212,.35);color:#ffffff;
-                     border-radius:10px;padding:13px 16px;font-size:15px;
+                     border-radius:10px;padding:10px 14px;font-size:14.5px;
                      transition:all .25s;"/>
           </div>
         </div>
-        <p style="font-size:11px;color:rgba(6,182,212,.55);text-align:center;margin:-4px 0 12px;font-family:sans-serif;letter-spacing:.02em;line-height:1.55">
-          Based on Chaldean numerology — a sound-based system used to understand name patterns
-        </p>
-        <button type="submit" class="btn btn-gold btn-full" style="margin-top:4px;font-size:16px;padding:15px;letter-spacing:.04em">
+        <button type="submit" class="btn btn-gold btn-full" style="margin-top:4px;font-size:15px;padding:11px;letter-spacing:.04em">
           ✦ Analyse my name — Free
         </button>
-        <p style="font-size:11.5px;color:rgba(232,244,255,.55);text-align:center;margin-top:10px;font-family:sans-serif;font-style:italic;line-height:1.55">
-          Your actions shape your life — this tool simply helps you understand patterns.
-        </p>
       </form>
-      <p style="font-size:11px;color:rgba(6,182,212,.4);text-align:center;margin-top:12px;font-family:sans-serif;letter-spacing:.03em">
-        🔒 We never share your data · Powered by Chaldean numerology
+      <p style="font-size:11px;color:rgba(6,182,212,.4);text-align:center;margin-top:8px;font-family:sans-serif;letter-spacing:.03em">
+        🔒 No signup · Instant results
       </p>
     </div>
 
