@@ -92,7 +92,7 @@
 <!-- ── NAVBAR ─────────────────────────────────────────────────── -->
 <nav class="nav">
   <div class="container nav-inner">
-    <a href="/" class="nav-logo"><img src="/assets/namealigned-logo-full.svg" alt="NameAligned — Chaldean Numerology" height="72" style="display:block;width:auto;"/></a>
+    <a href="/" class="nav-logo" style="font-family:'Playfair Display',Georgia,serif;font-size:22px;font-weight:600;color:var(--text);letter-spacing:.01em;text-decoration:none;">NameAligned</a>
     <ul class="nav-links">
       <li><a href="analyzer">Free Analysis</a></li>
       <li><a href="/blog">Blog</a></li>
@@ -113,21 +113,19 @@
 
 <!-- ── HERO ───────────────────────────────────────────────────── -->
 <section class="hero-dark">
-  <div class="container-sm">
-    <div class="hero-sym">☽ ✦ ☉</div>
-    <div class="hero-eyebrow">Chaldean Numerology · Sound-based system · Insight-driven</div>
-    <h1 class="hero-h1">Every name carries<br>its own <em>strengths</em>.</h1>
-    <p class="hero-sub" style="color:#06b6d4;font-style:normal;font-weight:400;font-size:clamp(14px,2vw,17px)">Discover what yours already supports — and how to enhance it further.<br><span style="color:rgba(232,244,255,.6);font-size:13px;">This is an insight tool — not a judgment. Your name is never &lsquo;wrong&rsquo;, only different in strengths.</span></p>
+  <div class="container-sm" style="padding-top:1.5rem;padding-bottom:1.5rem;">
+    <div class="hero-eyebrow" style="margin-bottom:.5rem;">✦ Chaldean Numerology · Sound-based system</div>
+    <h1 class="hero-h1" style="margin-bottom:.5rem;">Every name carries its own <em>strengths</em>.</h1>
+    <p class="hero-sub" style="color:#06b6d4;font-style:normal;font-weight:400;font-size:clamp(14px,2vw,17px);margin-bottom:0;">Discover what yours already supports — and how to enhance it further.</p>
 
-    <ul style="list-style:none;padding:0;margin:1.25rem auto 0;max-width:440px;display:flex;flex-direction:column;gap:.5rem;font-family:sans-serif;font-size:13.5px;color:rgba(232,244,255,.78);">
-      <li style="display:flex;align-items:flex-start;gap:10px;"><span style="color:#c9a227;flex-shrink:0;">✦</span>Understand your natural strengths</li>
-      <li style="display:flex;align-items:flex-start;gap:10px;"><span style="color:#c9a227;flex-shrink:0;">✦</span>Discover patterns in your decisions</li>
-      <li style="display:flex;align-items:flex-start;gap:10px;"><span style="color:#c9a227;flex-shrink:0;">✦</span>Explore ways to enhance alignment</li>
-    </ul>
-    <div class="hero-line"></div>
+    <div style="margin:.75rem auto 1rem;max-width:760px;display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:.3rem .9rem;font-family:sans-serif;font-size:13.5px;color:rgba(232,244,255,.78);">
+      <span style="color:#c9a227;">✦</span><span>Know your strengths</span>
+      <span style="color:#c9a227;">✦</span><span>Spot your patterns</span>
+      <span style="color:#c9a227;">✦</span><span>Enhance your alignment</span>
+    </div>
 
     <!-- Quick entry form -->
-    <div class="hero-form-card">
+    <div class="hero-form-card" style="margin-top:0;">
       <h3 style="font-size:18px;letter-spacing:.01em">✦ Start your free analysis</h3>
       <p style="color:var(--gold);font-size:12px;letter-spacing:.06em;text-transform:uppercase;font-weight:600">No account needed · Results in seconds</p>
       <form id="quickForm" onsubmit="quickSubmit(event)" style="margin-top:1.25rem">
