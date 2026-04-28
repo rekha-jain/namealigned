@@ -29,8 +29,10 @@
 {"@context":"https://schema.org","@type":"WebApplication","name":"Free Chaldean Numerology Name Analyzer","url":"https://namealigned.com/analyzer.html","description":"Score your name alignment with your Chaldean birth numbers. Get lucky colours, career domains, relationship compass and personal year forecast.","applicationCategory":"LifestyleApplication","operatingSystem":"Any","inLanguage":"en-IN","offers":{"@type":"Offer","price":"0","priceCurrency":"INR"},"publisher":{"@type":"Organization","name":"NameAligned.com","url":"https://namealigned.com/"}}
 </script>
 <link rel="stylesheet" href="assets/style.css"/>
-<link rel="stylesheet" href="assets/theme-cosmic-light.css"/>
+<link rel="stylesheet" href="assets/cosmic-theme.css"/>
 <style>
+.preview-banner{position:fixed;top:0;left:0;right:0;z-index:9999;background:linear-gradient(90deg,#7c5cff,#d946ef);color:#fff;font-size:11px;font-weight:600;letter-spacing:.15em;text-align:center;padding:5px;text-transform:uppercase}
+.nav{top:24px}body{padding-top:24px}
 .tool-wrap{max-width:760px;margin:0 auto;padding:2rem 1rem 5rem}
 .step-tabs{display:flex;background:#0a2233;border-bottom:2px solid rgba(201,162,39,.25);position:sticky;top:var(--nav-h);z-index:99}
 .step-tab{flex:1;padding:14px 8px;text-align:center;font-size:11px;font-family:sans-serif;letter-spacing:.07em;text-transform:uppercase;color:rgba(180,210,230,.5);border-bottom:2px solid transparent;cursor:pointer;transition:all .2s;user-select:none}
@@ -200,6 +202,7 @@
 </style>
 </head>
 <body>
+<div class="preview-banner">✦ Preview — Aurora Cosmic · Analyzer page</div>
 
 <nav class="nav">
   <div class="container nav-inner">
@@ -337,7 +340,7 @@
       <div id="shareBlock" style="margin-top:1.5rem;padding-top:1.25rem;border-top:1px dashed var(--border);">
         <div style="text-align:center;margin-bottom:1rem;">
           <div style="font-family:'Playfair Display',Georgia,serif;font-size:18px;font-weight:700;color:var(--text);margin-bottom:.2rem;">🌟 Your insight card</div>
-          <div style="font-family:sans-serif;font-size:12.5px;color:var(--text2);line-height:1.55;">Share it with friends and family ❤️ — let them discover what their name says too.</div>
+          <div style="font-family:sans-serif;font-size:12.5px;color:var(--text2);line-height:1.55;">A 1200×630 image — perfect for WhatsApp, Telegram, Twitter &amp; Facebook.</div>
         </div>
 
         <!-- Card preview (canvas at full res, displayed scaled-down) -->
@@ -380,10 +383,10 @@
           </button>
         </div>
 
-        <!-- What gets shared — explains the new link-based UX -->
+        <!-- Caption preview — shows what gets posted alongside -->
         <div style="margin-top:.85rem;background:rgba(124,58,237,.04);border:1px dashed rgba(124,58,237,.35);border-left:3px solid #7c3aed;border-radius:8px;padding:.65rem .9rem;font-family:sans-serif;font-size:12px;color:var(--text2);line-height:1.6;">
-          <div style="font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:#7c3aed;font-weight:700;margin-bottom:3px;">What gets shared</div>
-          <em style="font-style:italic;">A link to your card. When pasted in WhatsApp, Telegram, Facebook or Twitter, it auto-shows a rich preview — receivers tap to see it and discover their own.</em>
+          <div style="font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:#7c3aed;font-weight:700;margin-bottom:3px;">Caption that goes with the image</div>
+          <em style="font-style:italic;">"This was weirdly accurate 😅 — Check what your name says → namealigned.com/analyzer"</em>
         </div>
       </div>
     </div>
@@ -797,39 +800,23 @@ async function captureEmail(){
   document.getElementById('emailDone').style.display='block';
 }
 
-// Build the personalized share-card URL. Lands on /share which previews
-// nicely in WhatsApp/Twitter/Facebook (Open Graph) and gives anyone who
-// taps it a CTA to discover their own.
-function buildShareUrl(){
-  // Path-based per-Moolank URL: /share/{1..9}  →  served by /share/N.html,
-  // which has a hardcoded og:image pointing to /assets/og/moolank-N.png.
-  // Crawlers (WhatsApp/Twitter/FB) read those static meta tags without
-  // running JS, so the right preview shows up in every share.
-  // Only pass name + Moolank — DOB stays private (the Moolank in the path
-  // is enough to render the right card, and exposing DOB in a shared URL
-  // is unnecessary PII leakage).
-  const params = new URLSearchParams();
-  if(S.name) params.set('n', S.name);
-  const m  = (S.birthNum >= 1 && S.birthNum <= 9) ? S.birthNum : 1;
-  const qs = params.toString();
-  return 'https://namealigned.com/share/' + m + (qs ? '?' + qs : '');
-}
-
 function copyAnalyzerLink(){
   trackEvent('share_clicked',{channel:'copy_link'});
-  const url = buildShareUrl();
-  const showCopied = () => {
+  const url = 'https://namealigned.com/analyzer';
+  navigator.clipboard.writeText(url).then(()=>{
     const btn = document.getElementById('copyLinkText');
-    btn.textContent = '✓ Link copied!';
+    btn.textContent = '✓ Copied!';
     setTimeout(()=>{ btn.textContent = '📋 Copy link'; }, 2500);
-  };
-  navigator.clipboard.writeText(url).then(showCopied).catch(()=>{
+  }).catch(()=>{
+    // Fallback for older browsers
     const ta = document.createElement('textarea');
     ta.value = url; ta.style.position='fixed'; ta.style.opacity='0';
     document.body.appendChild(ta); ta.select();
     document.execCommand('copy');
     document.body.removeChild(ta);
-    showCopied();
+    const btn = document.getElementById('copyLinkText');
+    btn.textContent = '✓ Copied!';
+    setTimeout(()=>{ btn.textContent = '📋 Copy link'; }, 2500);
   });
 }
 
@@ -1038,13 +1025,10 @@ function buildShareCard(){
   ctx.lineWidth = 1.5;
   ctx.beginPath(); ctx.moveTo(lcx-70, 240); ctx.lineTo(lcx+70, 240); ctx.stroke();
 
-  // "Your Driver Number" — Moolank, the day-of-birth number that
-  // determines the ruling planet & personality traits shown on this card.
-  // (Bhagyank/"destiny" maps to life path, not personality, and would
-  //  conflict with the Moolank-keyed strengths/insight to its right.)
+  // "Your Destiny Number"
   ctx.fillStyle = 'rgba(255,255,255,0.7)';
   ctx.font = 'italic 18px Georgia, serif';
-  ctx.fillText('Your Driver Number', lcx, 268);
+  ctx.fillText('Your Destiny Number', lcx, 268);
 
   // Cosmic ring around number
   const ringX = lcx, ringY = 395, ringR = 92;
@@ -1069,7 +1053,7 @@ function buildShareCard(){
   ctx.fillStyle = '#f5d060';
   ctx.font = '700 130px Georgia, serif';
   ctx.textBaseline = 'middle';
-  ctx.fillText(String(moolank), ringX, ringY + 4);
+  ctx.fillText(String(destinyNum), ringX, ringY + 4);
   ctx.shadowBlur = 0;
   ctx.textBaseline = 'alphabetic';
 
@@ -1261,44 +1245,49 @@ function canvasToBlob(canvas){
   });
 }
 
-// SHARING STRATEGY
-// ────────────────
-// Primary path: send a personalized LINK (https://namealigned.com/share?…)
-// instead of a PNG attachment. The /share page has Open Graph meta, so when
-// the link is pasted into WhatsApp/Twitter/FB/Telegram, those platforms
-// auto-fetch a rich preview. Receiver taps it → lands on a personalized
-// page → sees the card → clicks "Try yours" → conversion loop.
-//
-// PNG download is kept as a secondary "Save image" affordance for users who
-// want to attach it manually (Instagram Stories, etc).
-
-function buildShareCaption(){
-  return 'This was weirdly accurate 😅 — see what your name says: ' + buildShareUrl();
-}
+const SHARE_CAPTION =
+  'This was weirdly accurate 😅\n' +
+  'Check what your name says → https://namealigned.com/analyzer';
 
 async function shareCardWA(){
   trackEvent('share_card_clicked', {channel:'whatsapp'});
-  const text = buildShareCaption();
-  // Mobile + desktop: wa.me works everywhere and opens WhatsApp/Web with
-  // text pre-filled. WhatsApp auto-fetches the OG preview from the URL.
-  window.open('https://wa.me/?text=' + encodeURIComponent(text), '_blank');
-  trackEvent('share_card_completed', {channel:'whatsapp'});
+  const canvas = document.getElementById('shareCanvas');
+  const blob = await canvasToBlob(canvas);
+  const file = new File([blob], 'namealigned-card.png', {type:'image/png'});
+
+  // Try Web Share API with files (mobile — user picks WhatsApp from sheet)
+  if(navigator.canShare && navigator.canShare({files:[file]})){
+    try {
+      await navigator.share({files:[file], text: SHARE_CAPTION, title:'My name reading'});
+      trackEvent('share_card_completed', {channel:'whatsapp'});
+      return;
+    } catch(e){ /* user cancelled — fall through */ }
+  }
+  // Desktop / unsupported: download image + open WhatsApp Web with text
+  downloadBlob(blob, 'namealigned-card.png');
+  setTimeout(() => {
+    window.open('https://wa.me/?text=' + encodeURIComponent(SHARE_CAPTION), '_blank');
+  }, 600);
+  showShareHint('Image saved! Now attach it in WhatsApp along with the message.');
 }
 
 async function shareCardIG(){
   trackEvent('share_card_clicked', {channel:'instagram'});
-  // Instagram has no web share-as-link API. Best UX: copy the link and
-  // let the user paste it in DM / bio / Story sticker.
-  const url = buildShareUrl();
-  try {
-    await navigator.clipboard.writeText(url);
-    showShareHint('Link copied! Open Instagram, paste it in a DM or Story sticker.');
-  } catch(e){
-    showShareHint('Copy this link manually: ' + url);
+  const canvas = document.getElementById('shareCanvas');
+  const blob = await canvasToBlob(canvas);
+  const file = new File([blob], 'namealigned-card.png', {type:'image/png'});
+
+  // Web Share API — on mobile, sheet shows Instagram (Stories / Feed / Reels share)
+  if(navigator.canShare && navigator.canShare({files:[file]})){
+    try {
+      await navigator.share({files:[file], text: SHARE_CAPTION, title:'My name reading'});
+      trackEvent('share_card_completed', {channel:'instagram'});
+      return;
+    } catch(e){ /* user cancelled */ }
   }
-  // Best-effort open of Instagram (mobile app deep-links work; desktop opens web)
-  setTimeout(()=>{ window.open('https://www.instagram.com/', '_blank'); }, 800);
-  trackEvent('share_card_completed', {channel:'instagram'});
+  // Desktop fallback — Instagram has no web post URL; download + instruct
+  downloadBlob(blob, 'namealigned-card.png');
+  showShareHint('Image saved! Open Instagram on your phone to post it as a Story or Feed.');
 }
 
 async function downloadShareCard(){
@@ -1306,7 +1295,7 @@ async function downloadShareCard(){
   const canvas = document.getElementById('shareCanvas');
   const blob = await canvasToBlob(canvas);
   downloadBlob(blob, 'namealigned-card.png');
-  showShareHint('Image saved — useful for Instagram Stories or printing.');
+  showShareHint('Saved to your downloads. Share it anywhere ✦');
 }
 
 function downloadBlob(blob, filename){
