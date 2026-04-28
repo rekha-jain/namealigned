@@ -3,15 +3,16 @@
   "trailingSlash": false,
 
   "redirects": [
-    { "source": "/share", "has": [{"type":"query","key":"m","value":"1"}], "destination": "/share/1", "permanent": false },
-    { "source": "/share", "has": [{"type":"query","key":"m","value":"2"}], "destination": "/share/2", "permanent": false },
-    { "source": "/share", "has": [{"type":"query","key":"m","value":"3"}], "destination": "/share/3", "permanent": false },
-    { "source": "/share", "has": [{"type":"query","key":"m","value":"4"}], "destination": "/share/4", "permanent": false },
-    { "source": "/share", "has": [{"type":"query","key":"m","value":"5"}], "destination": "/share/5", "permanent": false },
-    { "source": "/share", "has": [{"type":"query","key":"m","value":"6"}], "destination": "/share/6", "permanent": false },
-    { "source": "/share", "has": [{"type":"query","key":"m","value":"7"}], "destination": "/share/7", "permanent": false },
-    { "source": "/share", "has": [{"type":"query","key":"m","value":"8"}], "destination": "/share/8", "permanent": false },
-    { "source": "/share", "has": [{"type":"query","key":"m","value":"9"}], "destination": "/share/9", "permanent": false }
+    { "source": "/share", "has": [{"type":"query","key":"m","value":"1"}], "destination": "/i/1", "permanent": false },
+    { "source": "/share", "has": [{"type":"query","key":"m","value":"2"}], "destination": "/i/2", "permanent": false },
+    { "source": "/share", "has": [{"type":"query","key":"m","value":"3"}], "destination": "/i/3", "permanent": false },
+    { "source": "/share", "has": [{"type":"query","key":"m","value":"4"}], "destination": "/i/4", "permanent": false },
+    { "source": "/share", "has": [{"type":"query","key":"m","value":"5"}], "destination": "/i/5", "permanent": false },
+    { "source": "/share", "has": [{"type":"query","key":"m","value":"6"}], "destination": "/i/6", "permanent": false },
+    { "source": "/share", "has": [{"type":"query","key":"m","value":"7"}], "destination": "/i/7", "permanent": false },
+    { "source": "/share", "has": [{"type":"query","key":"m","value":"8"}], "destination": "/i/8", "permanent": false },
+    { "source": "/share", "has": [{"type":"query","key":"m","value":"9"}], "destination": "/i/9", "permanent": false },
+    { "source": "/share/:m(\\d)", "destination": "/i/:m", "permanent": false }
   ],
 
   "rewrites": [

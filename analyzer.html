@@ -800,7 +800,7 @@ async function captureEmail(){
 // nicely in WhatsApp/Twitter/Facebook (Open Graph) and gives anyone who
 // taps it a CTA to discover their own.
 function buildShareUrl(){
-  // Path-based per-Moolank URL: /share/{1..9}  →  served by /share/N.html,
+  // Path-based per-Moolank URL: /i/{1..9}  →  served by /i/N.html,
   // which has a hardcoded og:image pointing to /assets/og/moolank-N.png.
   // Crawlers (WhatsApp/Twitter/FB) read those static meta tags without
   // running JS, so the right preview shows up in every share.
@@ -811,7 +811,7 @@ function buildShareUrl(){
   if(S.name) params.set('n', S.name);
   const m  = (S.birthNum >= 1 && S.birthNum <= 9) ? S.birthNum : 1;
   const qs = params.toString();
-  return 'https://namealigned.com/share/' + m + (qs ? '?' + qs : '');
+  return 'https://namealigned.com/i/' + m + (qs ? '?' + qs : '');
 }
 
 function copyAnalyzerLink(){
