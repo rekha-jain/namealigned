@@ -47,8 +47,8 @@
 .rpt-line{width:48px;height:1px;background:var(--gold);margin:14px auto;position:relative;}
 
 /* ── SECTION WRAPPER ────────────────────────────────────────── */
-.rpt-section{padding:3rem 0 2rem;}
-.rpt-section:first-of-type{padding-top:2.5rem;}
+.rpt-section{padding:2.25rem 0 1.75rem;}
+.rpt-section:first-of-type{padding-top:2rem;}
 
 /* ── CORE NUMBERS ───────────────────────────────────────────── */
 .core-num-card{
@@ -365,10 +365,11 @@
 
 /* ── SEC-LABEL ───────────────────────────────────────────────── */
 .sec-label{
-  font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;
+  font-size:11px;letter-spacing:.15em;text-transform:uppercase;
   font-family:var(--font-sans,sans-serif);font-weight:700;
-  color:#0e7490;margin-bottom:1.25rem;
+  color:#0e7490;margin-bottom:1rem;
   display:flex;align-items:center;gap:.7rem;
+  line-height:1.4;
 }
 .sec-label::before{
   content:'';display:inline-block;width:28px;height:2.5px;
@@ -560,10 +561,14 @@ hr.divider{display:none;}
 
   <hr class="divider"/>
 
-  <!-- ─ 4. 3-YEAR FORECAST ───────────────────────────────────── -->
+  <!-- ─ 4. 5-YEAR FORECAST ───────────────────────────────────── -->
   <div class="rpt-section" style="padding-top:0;">
     <div class="sec-label">5-Year Personal Year Forecast</div>
-    <p style="font-size:13px;color:var(--text2);font-family:sans-serif;margin-bottom:1.5rem;">Your Personal Year cycles are derived from your Chaldean birth numbers and govern how planetary energies affect each year. Certain years act as <strong>activation points</strong> — decisions taken in those years carry long-term impact. Below are your next five cycles, personalised to your DOB.</p>
+    <p style="font-size:13px;color:var(--text2);font-family:sans-serif;margin-bottom:.75rem;">Your Personal Year cycles are derived from your <strong>Chaldean birth numbers</strong> and influence how planetary energies affect your life each year.</p>
+    <div style="background:linear-gradient(135deg,rgba(220,38,38,.08),rgba(201,162,39,.06));border:1px solid rgba(201,162,39,.3);border-left:4px solid #c9a227;border-radius:var(--r);padding:.85rem 1.1rem;margin-bottom:1.25rem;font-family:sans-serif;font-size:13px;color:var(--text);line-height:1.55;">
+      ⚡ <strong>Certain years act as activation points</strong> where decisions carry long-term impact. Knowing which years are yours gives you a decisive edge.
+    </div>
+    <p style="font-size:11.5px;color:var(--text3);font-family:sans-serif;font-style:italic;margin-bottom:1.25rem;">Based on Chaldean numerology principles · Used for sound-based destiny alignment · Focuses on vibration, not just numbers.</p>
     <div id="forecastContainer">
       <!-- Injected by JS -->
     </div>
@@ -574,7 +579,8 @@ hr.divider{display:none;}
   <!-- ─ 5. CAREER & WEALTH ───────────────────────────────────── -->
   <div class="rpt-section" style="padding-top:0;">
     <div class="sec-label">Career &amp; Wealth Domains</div>
-    <p style="font-size:13px;color:var(--text2);font-family:sans-serif;margin-bottom:1.5rem;">Your Moolank shapes your natural work style and raw talent; your Bhagyank shows the domains where destiny compounds your effort into wealth.</p>
+    <p style="font-size:13px;color:var(--text2);font-family:sans-serif;margin-bottom:.5rem;">Your Moolank shapes your natural work style and raw talent; your Bhagyank shows where destiny compounds your effort into wealth.</p>
+    <p style="font-size:11.5px;color:var(--text3);font-family:sans-serif;font-style:italic;margin-bottom:1.25rem;">Based on Chaldean numerology principles — planetary ruler alignment, not generic career advice.</p>
     <div class="grid-2" id="careerGrid">
       <!-- Injected by JS -->
     </div>
@@ -582,30 +588,39 @@ hr.divider{display:none;}
 
   <hr class="divider"/>
 
-  <!-- ─ 6. RELATIONSHIP COMPASS ──────────────────────────────── -->
+  <!-- ─ 6. CHALDEAN COMPATIBILITY INSIGHT ─────────────────────── -->
   <div class="rpt-section" style="padding-top:0;">
-    <div class="sec-label">Relationship Compass</div>
-    <p style="font-size:13px;color:var(--text2);font-family:sans-serif;margin-bottom:1.5rem;">🔗 <strong>Chaldean Compatibility Insight</strong> — In Chaldean numerology, compatibility is determined by the interplay of planetary rulers, not just shared birth months. Your Moolank <strong id="birthNumRel"></strong> is ruled by <strong id="birthPlanetRel"></strong>. Here is how each number interacts with your energy.</p>
+    <div class="sec-label">🔗 Chaldean Compatibility Insight</div>
+    <p style="font-size:13px;color:var(--text2);font-family:sans-serif;margin-bottom:.5rem;">In Chaldean numerology, compatibility is determined by <strong>planetary interactions</strong> between numbers — not just shared traits or birth months. Your Moolank <strong id="birthNumRel"></strong> is ruled by <strong id="birthPlanetRel"></strong>.</p>
+    <p style="font-size:11.5px;color:var(--text3);font-family:sans-serif;font-style:italic;margin-bottom:1.25rem;">Focuses on vibration, not just numbers — based on Chaldean numerology principles.</p>
     <div id="compatContainer">
       <!-- Injected by JS -->
     </div>
+  </div>
 
-    <!-- Compatibility CTAs (Partner / Child / Business) -->
-    <div style="margin-top:1.75rem;padding:1.25rem;background:linear-gradient(135deg,rgba(124,58,237,.08),rgba(201,162,39,.06));border:1px solid rgba(124,58,237,.25);border-radius:12px;">
-      <div style="font-family:sans-serif;font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:#7c3aed;font-weight:700;margin-bottom:.5rem;text-align:center;">Extend Your Chaldean Reading</div>
-      <p style="font-size:13px;color:var(--text2);font-family:sans-serif;text-align:center;margin-bottom:1rem;">Run a Chaldean compatibility check for the people who matter most.</p>
-      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:.6rem;">
-        <a href="/analyzer" style="display:block;background:var(--card);border:1.5px solid var(--border);border-radius:10px;padding:.8rem .5rem;font-family:sans-serif;font-size:12.5px;color:var(--text);text-align:center;text-decoration:none;transition:border-color .2s;">
-          <div style="font-size:18px;margin-bottom:4px;">💞</div>
-          Check Partner<br>Compatibility
+  <hr class="divider"/>
+
+  <!-- ─ 6b. EXTEND YOUR CHALDEAN READING (Standalone CTA section) ── -->
+  <div class="rpt-section" style="padding-top:0;">
+    <div style="background:linear-gradient(160deg,#1a0e52 0%,#3a1d80 60%,#0c3347 100%);border-radius:14px;padding:1.75rem 1.5rem;border:1.5px solid rgba(201,162,39,.4);">
+      <div style="font-family:'DM Sans',sans-serif;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:#c9a227;text-align:center;margin-bottom:.5rem;">🔗 Extend Your Chaldean Reading</div>
+      <h3 style="font-family:Georgia,serif;font-size:20px;font-weight:700;color:#f5d060;text-align:center;margin:0 0 .5rem;">Check the people who matter most</h3>
+      <p style="font-family:sans-serif;font-size:13px;color:#cbb8e8;text-align:center;margin:0 0 1.25rem;line-height:1.6;">Run a Chaldean name analysis for your partner, child or business. Sound-based alignment applies to every name.</p>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:.75rem;">
+        <a href="/analyzer" style="display:block;background:rgba(255,255,255,.08);border:1.5px solid rgba(201,162,39,.4);border-radius:12px;padding:1rem .75rem;font-family:sans-serif;font-size:13px;color:#f0ece0;text-align:center;text-decoration:none;transition:all .2s;line-height:1.4;" onmouseover="this.style.background='rgba(201,162,39,.18)'" onmouseout="this.style.background='rgba(255,255,255,.08)'">
+          <div style="font-size:24px;margin-bottom:6px;">💞</div>
+          <strong style="display:block;margin-bottom:3px;">Partner</strong>
+          <span style="font-size:11px;color:#9eb1c0;">Compatibility check</span>
         </a>
-        <a href="/analyzer" style="display:block;background:var(--card);border:1.5px solid var(--border);border-radius:10px;padding:.8rem .5rem;font-family:sans-serif;font-size:12.5px;color:var(--text);text-align:center;text-decoration:none;transition:border-color .2s;">
-          <div style="font-size:18px;margin-bottom:4px;">👶</div>
-          Check Child<br>Name Alignment
+        <a href="/analyzer" style="display:block;background:rgba(255,255,255,.08);border:1.5px solid rgba(201,162,39,.4);border-radius:12px;padding:1rem .75rem;font-family:sans-serif;font-size:13px;color:#f0ece0;text-align:center;text-decoration:none;transition:all .2s;line-height:1.4;" onmouseover="this.style.background='rgba(201,162,39,.18)'" onmouseout="this.style.background='rgba(255,255,255,.08)'">
+          <div style="font-size:24px;margin-bottom:6px;">👶</div>
+          <strong style="display:block;margin-bottom:3px;">Child's Name</strong>
+          <span style="font-size:11px;color:#9eb1c0;">Alignment check</span>
         </a>
-        <a href="/analyzer" style="display:block;background:var(--card);border:1.5px solid var(--border);border-radius:10px;padding:.8rem .5rem;font-family:sans-serif;font-size:12.5px;color:var(--text);text-align:center;text-decoration:none;transition:border-color .2s;">
-          <div style="font-size:18px;margin-bottom:4px;">🏢</div>
-          Check Business<br>Name
+        <a href="/analyzer" style="display:block;background:rgba(255,255,255,.08);border:1.5px solid rgba(201,162,39,.4);border-radius:12px;padding:1rem .75rem;font-family:sans-serif;font-size:13px;color:#f0ece0;text-align:center;text-decoration:none;transition:all .2s;line-height:1.4;" onmouseover="this.style.background='rgba(201,162,39,.18)'" onmouseout="this.style.background='rgba(255,255,255,.08)'">
+          <div style="font-size:24px;margin-bottom:6px;">🏢</div>
+          <strong style="display:block;margin-bottom:3px;">Business Name</strong>
+          <span style="font-size:11px;color:#9eb1c0;">Chaldean score</span>
         </a>
       </div>
     </div>
@@ -616,7 +631,8 @@ hr.divider{display:none;}
   <!-- ─ 7. REMEDIES ─────────────────────────────────────────── -->
   <div class="rpt-section" style="padding-top:0;">
     <div class="sec-label">Remedies &amp; Planetary Activation</div>
-    <p style="font-size:13px;color:var(--text2);font-family:sans-serif;margin-bottom:1.25rem;">Tick each remedy as you adopt it. These practices are calibrated specifically to your planetary ruler and are most effective when done consistently.</p>
+    <p style="font-size:13px;color:var(--text2);font-family:sans-serif;margin-bottom:.5rem;">Practical habits calibrated to your planetary ruler. Tick each remedy as you adopt it — consistency activates the vibration.</p>
+    <p style="font-size:11.5px;color:var(--text3);font-family:sans-serif;font-style:italic;margin-bottom:1.25rem;">Used for sound-based name alignment · Focuses on vibration, not just numbers.</p>
     <div id="remediesGrid" style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
       <!-- Injected by JS -->
     </div>
@@ -993,12 +1009,88 @@ hr.divider{display:none;}
     9:'Mars-powered humanitarian. Courage, energy and service to a higher cause bring ultimate fulfilment.',
   };
 
+  // Build compact letter-by-letter Chaldean breakdown for a name
+  function buildNameBreakdownHTML(fullName){
+    var parts = fullName.trim().split(/\s+/);
+    var wordRows = parts.map(function(word){
+      var total = 0;
+      var tiles = Array.from(word.toUpperCase()).map(function(ch){
+        var v = CHALDEAN[ch]||0; total += v;
+        return '<span style="display:inline-flex;flex-direction:column;align-items:center;margin:0 2px;">'+
+          '<span style="background:rgba(201,162,39,.15);border:1px solid rgba(201,162,39,.3);border-radius:5px;width:24px;height:24px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#f0ece0;">'+ch+'</span>'+
+          '<span style="font-size:10px;color:#c9a227;margin-top:2px;">'+v+'</span>'+
+        '</span>';
+      }).join('');
+      return '<div style="display:flex;align-items:flex-end;flex-wrap:wrap;gap:2px;margin-bottom:4px;">'+
+        tiles+
+        '<span style="font-size:12px;color:rgba(200,220,235,.6);margin-left:4px;align-self:center;">= '+total+'</span>'+
+      '</div>';
+    });
+    // reduction
+    var steps = [];
+    var n = nameRaw;
+    steps.push(nameRaw.toString());
+    while(n > 9){
+      var digits = n.toString().split('').map(Number);
+      n = digits.reduce(function(a,b){return a+b;},0);
+      steps.push(digits.join('+')+'='+n);
+    }
+    var reductionLine = (nameRaw !== nameNum)
+      ? '<div style="font-size:11px;font-family:sans-serif;color:rgba(200,220,235,.55);margin-top:4px;">'+
+          'Sum '+nameRaw+' → '+steps.slice(1).join(' → ')+' = <strong style="color:#c9a227;">'+nameNum+'</strong>'+
+        '</div>'
+      : '';
+    return '<div style="margin-top:.9rem;padding-top:.9rem;border-top:1px dashed rgba(201,162,39,.25);">'+
+      '<div style="font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:rgba(201,162,39,.6);font-family:sans-serif;margin-bottom:6px;">Chaldean letter values</div>'+
+      wordRows.join('')+
+      reductionLine+
+    '</div>';
+  }
+
+  // Compact birth-date breakdown (DOB → Moolank)
+  function buildDobBreakdownHTML(label, dob, result){
+    if(!dob) return '';
+    var parts = dob.split('-'); // yyyy-mm-dd
+    if(parts.length < 3) return '';
+    var day = parseInt(parts[2],10);
+    var steps = [];
+    var n = day;
+    while(n > 9){
+      var d = n.toString().split('').map(Number);
+      n = d.reduce(function(a,b){return a+b;},0);
+      steps.push(d.join('+')+' = '+n);
+    }
+    return '<div style="margin-top:.9rem;padding-top:.9rem;border-top:1px dashed rgba(201,162,39,.25);font-size:11px;font-family:sans-serif;color:rgba(200,220,235,.55);">'+
+      'Born on <strong style="color:#f0ece0;">'+day+'</strong>'+
+      (steps.length ? ' → '+steps.join(' → ') : '')+
+      ' = <strong style="color:#c9a227;">'+result+'</strong>'+
+    '</div>';
+  }
+
+  // Compact destiny breakdown (sum all DOB digits → Bhagyank)
+  function buildDestinyBreakdownHTML(dob, result){
+    if(!dob) return '';
+    var digits = dob.replace(/-/g,'').split('').filter(function(c){return /\d/.test(c);}).map(Number);
+    var raw = digits.reduce(function(a,b){return a+b;},0);
+    var steps = [digits.join('+')+'='+raw];
+    var n = raw;
+    while(n > 9){
+      var d = n.toString().split('').map(Number);
+      n = d.reduce(function(a,b){return a+b;},0);
+      steps.push(d.join('+')+' = '+n);
+    }
+    return '<div style="margin-top:.9rem;padding-top:.9rem;border-top:1px dashed rgba(201,162,39,.25);font-size:11px;font-family:sans-serif;color:rgba(200,220,235,.55);">'+
+      steps.join(' → ')+
+      ' = <strong style="color:#c9a227;">'+result+'</strong>'+
+    '</div>';
+  }
+
   function buildCoreNumbers(){
     var grid = qs('coreNumbersGrid');
     var nums = [
-      {num:birthNum, label:'Moolank (Birth Number)', planet:birthPlanet, meaning:CORE_MEANINGS[birthNum]||''},
-      {num:destNum,  label:'Bhagyank (Destiny Number)', planet:destPlanet, meaning:CORE_MEANINGS[destNum]||''},
-      {num:nameNum,  label:'Name Number (Chaldean)', planet:namePlanet, meaning:CORE_MEANINGS[nameNum]||''},
+      {num:birthNum,  label:'Moolank (Birth Number)',    planet:birthPlanet, meaning:CORE_MEANINGS[birthNum]||'',  extra:buildDobBreakdownHTML('Day of birth', dob, birthNum)},
+      {num:destNum,   label:'Bhagyank (Destiny Number)', planet:destPlanet,  meaning:CORE_MEANINGS[destNum]||'',   extra:buildDestinyBreakdownHTML(dob, destNum)},
+      {num:nameNum,   label:'Name Number (Chaldean)',    planet:namePlanet,  meaning:CORE_MEANINGS[nameNum]||'',   extra:buildNameBreakdownHTML(name)},
     ];
     nums.forEach(function(n){
       var card = el('div','core-num-card');
@@ -1006,7 +1098,8 @@ hr.divider{display:none;}
         '<div class="core-num-label">'+n.label+'</div>'+
         '<div class="core-num-big">'+n.num+'</div>'+
         '<div class="core-num-planet">Ruled by <strong>'+n.planet+'</strong></div>'+
-        '<div class="core-num-meaning">'+n.meaning+'</div>';
+        '<div class="core-num-meaning">'+n.meaning+'</div>'+
+        (n.extra||'');
       grid.appendChild(card);
     });
     qs('birthNumLabel').textContent = birthNum;
