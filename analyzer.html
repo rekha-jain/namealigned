@@ -379,10 +379,10 @@
           </button>
         </div>
 
-        <!-- Caption preview — shows what gets posted alongside -->
+        <!-- What gets shared — explains the new link-based UX -->
         <div style="margin-top:.85rem;background:rgba(124,58,237,.04);border:1px dashed rgba(124,58,237,.35);border-left:3px solid #7c3aed;border-radius:8px;padding:.65rem .9rem;font-family:sans-serif;font-size:12px;color:var(--text2);line-height:1.6;">
-          <div style="font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:#7c3aed;font-weight:700;margin-bottom:3px;">Caption that goes with the image</div>
-          <em style="font-style:italic;">"This was weirdly accurate 😅 — Check what your name says → namealigned.com/analyzer"</em>
+          <div style="font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:#7c3aed;font-weight:700;margin-bottom:3px;">What gets shared</div>
+          <em style="font-style:italic;">A link to your card. When pasted in WhatsApp, Telegram, Facebook or Twitter, it auto-shows a rich preview — receivers tap to see it and discover their own.</em>
         </div>
       </div>
     </div>
@@ -796,23 +796,32 @@ async function captureEmail(){
   document.getElementById('emailDone').style.display='block';
 }
 
+// Build the personalized share-card URL. Lands on /share which previews
+// nicely in WhatsApp/Twitter/Facebook (Open Graph) and gives anyone who
+// taps it a CTA to discover their own.
+function buildShareUrl(){
+  const params = new URLSearchParams();
+  if(S.name)     params.set('n', S.name);
+  if(S.dob)      params.set('d', S.dob);
+  if(S.birthNum) params.set('m', String(S.birthNum));
+  return 'https://namealigned.com/share?' + params.toString();
+}
+
 function copyAnalyzerLink(){
   trackEvent('share_clicked',{channel:'copy_link'});
-  const url = 'https://namealigned.com/analyzer';
-  navigator.clipboard.writeText(url).then(()=>{
+  const url = buildShareUrl();
+  const showCopied = () => {
     const btn = document.getElementById('copyLinkText');
-    btn.textContent = '✓ Copied!';
+    btn.textContent = '✓ Link copied!';
     setTimeout(()=>{ btn.textContent = '📋 Copy link'; }, 2500);
-  }).catch(()=>{
-    // Fallback for older browsers
+  };
+  navigator.clipboard.writeText(url).then(showCopied).catch(()=>{
     const ta = document.createElement('textarea');
     ta.value = url; ta.style.position='fixed'; ta.style.opacity='0';
     document.body.appendChild(ta); ta.select();
     document.execCommand('copy');
     document.body.removeChild(ta);
-    const btn = document.getElementById('copyLinkText');
-    btn.textContent = '✓ Copied!';
-    setTimeout(()=>{ btn.textContent = '📋 Copy link'; }, 2500);
+    showCopied();
   });
 }
 
@@ -1241,49 +1250,44 @@ function canvasToBlob(canvas){
   });
 }
 
-const SHARE_CAPTION =
-  'This was weirdly accurate 😅\n' +
-  'Check what your name says → https://namealigned.com/analyzer';
+// SHARING STRATEGY
+// ────────────────
+// Primary path: send a personalized LINK (https://namealigned.com/share?…)
+// instead of a PNG attachment. The /share page has Open Graph meta, so when
+// the link is pasted into WhatsApp/Twitter/FB/Telegram, those platforms
+// auto-fetch a rich preview. Receiver taps it → lands on a personalized
+// page → sees the card → clicks "Try yours" → conversion loop.
+//
+// PNG download is kept as a secondary "Save image" affordance for users who
+// want to attach it manually (Instagram Stories, etc).
+
+function buildShareCaption(){
+  return 'This was weirdly accurate 😅 — see what your name says: ' + buildShareUrl();
+}
 
 async function shareCardWA(){
   trackEvent('share_card_clicked', {channel:'whatsapp'});
-  const canvas = document.getElementById('shareCanvas');
-  const blob = await canvasToBlob(canvas);
-  const file = new File([blob], 'namealigned-card.png', {type:'image/png'});
-
-  // Try Web Share API with files (mobile — user picks WhatsApp from sheet)
-  if(navigator.canShare && navigator.canShare({files:[file]})){
-    try {
-      await navigator.share({files:[file], text: SHARE_CAPTION, title:'My name reading'});
-      trackEvent('share_card_completed', {channel:'whatsapp'});
-      return;
-    } catch(e){ /* user cancelled — fall through */ }
-  }
-  // Desktop / unsupported: download image + open WhatsApp Web with text
-  downloadBlob(blob, 'namealigned-card.png');
-  setTimeout(() => {
-    window.open('https://wa.me/?text=' + encodeURIComponent(SHARE_CAPTION), '_blank');
-  }, 600);
-  showShareHint('Image saved! Now attach it in WhatsApp along with the message.');
+  const text = buildShareCaption();
+  // Mobile + desktop: wa.me works everywhere and opens WhatsApp/Web with
+  // text pre-filled. WhatsApp auto-fetches the OG preview from the URL.
+  window.open('https://wa.me/?text=' + encodeURIComponent(text), '_blank');
+  trackEvent('share_card_completed', {channel:'whatsapp'});
 }
 
 async function shareCardIG(){
   trackEvent('share_card_clicked', {channel:'instagram'});
-  const canvas = document.getElementById('shareCanvas');
-  const blob = await canvasToBlob(canvas);
-  const file = new File([blob], 'namealigned-card.png', {type:'image/png'});
-
-  // Web Share API — on mobile, sheet shows Instagram (Stories / Feed / Reels share)
-  if(navigator.canShare && navigator.canShare({files:[file]})){
-    try {
-      await navigator.share({files:[file], text: SHARE_CAPTION, title:'My name reading'});
-      trackEvent('share_card_completed', {channel:'instagram'});
-      return;
-    } catch(e){ /* user cancelled */ }
+  // Instagram has no web share-as-link API. Best UX: copy the link and
+  // let the user paste it in DM / bio / Story sticker.
+  const url = buildShareUrl();
+  try {
+    await navigator.clipboard.writeText(url);
+    showShareHint('Link copied! Open Instagram, paste it in a DM or Story sticker.');
+  } catch(e){
+    showShareHint('Copy this link manually: ' + url);
   }
-  // Desktop fallback — Instagram has no web post URL; download + instruct
-  downloadBlob(blob, 'namealigned-card.png');
-  showShareHint('Image saved! Open Instagram on your phone to post it as a Story or Feed.');
+  // Best-effort open of Instagram (mobile app deep-links work; desktop opens web)
+  setTimeout(()=>{ window.open('https://www.instagram.com/', '_blank'); }, 800);
+  trackEvent('share_card_completed', {channel:'instagram'});
 }
 
 async function downloadShareCard(){
@@ -1291,7 +1295,7 @@ async function downloadShareCard(){
   const canvas = document.getElementById('shareCanvas');
   const blob = await canvasToBlob(canvas);
   downloadBlob(blob, 'namealigned-card.png');
-  showShareHint('Saved to your downloads. Share it anywhere ✦');
+  showShareHint('Image saved — useful for Instagram Stories or printing.');
 }
 
 function downloadBlob(blob, filename){
