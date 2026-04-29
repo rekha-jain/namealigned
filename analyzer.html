@@ -731,28 +731,8 @@ function renderAnalysis(){
   document.getElementById('confidencePill').innerHTML =
     `✓ This insight matches <strong style="margin:0 4px">${confidencePct}%</strong> of users with Moolank ${birthNum}`;
 
-  // 4. LOCKED PREVIEWS — personalise the blurred teasers
-  const bC = (CAREER_DOMAINS[birthNum]||[]).slice(0,3).join(', ');
-  const rc = COMPAT_PARTNERS[birthNum] || {best:[],good:[],avoid:[]};
-  const rems = REMEDIES[birthNum] || [];
-  document.getElementById('lcCareerTease').textContent =
-    `Your aligned career domains include ${bC}. Combined with Bhagyank ${destNum} (${getPlanet(destNum)}), the deeper analysis reveals which paths…`;
-  document.getElementById('lcLoveTease').textContent =
-    `Your most compatible partner numbers are ${rc.best.join(', ')} — but the avoid-list (${rc.avoid.join(', ')}) is what most people get wrong. Full breakdown shows…`;
-  document.getElementById('lcCorrectionTease').textContent =
-    pct >= 97
-      ? `Your name is already strongly Chaldean-aligned with Moolank ${birthNum} (${getPlanet(birthNum)}) — the report shows gentle compound-vibration polish to enhance it further…`
-      : `Your current name already carries strengths. 3 phonetic enhancements — adding A, H, I, K-style sounds — can support stronger Chaldean alignment with Moolank ${birthNum}. Pronunciation stays nearly identical. Math + planet + benefit shown…`;
-  // Future Cycles teaser — uses current Personal Year
-  try {
-    const py = getPersonalYear(dob, new Date().getFullYear());
-    const theme = (typeof YEAR_THEMES !== 'undefined' && YEAR_THEMES[py]) ? YEAR_THEMES[py] : 'a major energy shift';
-    document.getElementById('lcCyclesTease').textContent =
-      `Your current Personal Year is ${py} — a cycle of ${theme.toLowerCase()}. The next 4 years follow a Chaldean planetary sequence that determines which years act as activation points…`;
-  } catch(e){
-    document.getElementById('lcCyclesTease').textContent =
-      `Your personal-year cycle is derived from Chaldean reduction of your DOB. Each year activates a different planetary energy — some accelerate, some test. Full 5-year arc included…`;
-  }
+  // 4. LOCKED PREVIEWS — new card design uses static value-prop bullets;
+  //    no per-card teaser elements to populate. Keep block as no-op for now.
 
   // 5. CTA — wire link with prefilled params
   document.getElementById('upgradeBtn').href =
