@@ -241,6 +241,36 @@
 .align-mini-fill.high{background:linear-gradient(90deg,#2a7a2a,#4caf84)}
 .align-mini-fill.mid{background:linear-gradient(90deg,#c9a227,#f5d060)}
 .align-mini-fill.low{background:linear-gradient(90deg,#a32d2d,#dc2626)}
+
+/* ── MINI-ANALYZER MODAL (Partner / Child / Business — free) ── */
+.mini-modal{position:fixed;inset:0;background:rgba(10,8,32,.75);backdrop-filter:blur(6px);z-index:9999;display:flex;align-items:flex-start;justify-content:center;padding:2rem 1rem;overflow-y:auto;animation:miniFade .25s ease}
+@keyframes miniFade{from{opacity:0}to{opacity:1}}
+.mini-card{background:#fff;border:1.5px solid rgba(245,196,81,.35);border-radius:18px;max-width:520px;width:100%;padding:1.75rem 1.5rem 1.5rem;position:relative;box-shadow:0 30px 80px rgba(26,14,82,.5);margin:auto;animation:miniSlide .3s ease}
+@keyframes miniSlide{from{transform:translateY(20px);opacity:0}to{transform:none;opacity:1}}
+.mini-close{position:absolute;top:14px;right:14px;width:30px;height:30px;border-radius:50%;background:rgba(124,58,237,.08);border:1px solid rgba(124,58,237,.2);color:#6d4ed1;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-weight:700;transition:background .2s}
+.mini-close:hover{background:rgba(124,58,237,.18)}
+.mini-eyebrow{font-family:sans-serif;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#9d4edd;font-weight:700;margin-bottom:.4rem}
+.mini-title{font-family:'Playfair Display',Georgia,serif;font-size:24px;font-weight:700;color:var(--text);margin:0 0 .35rem;line-height:1.2}
+.mini-sub{font-family:sans-serif;font-size:13px;color:var(--text2);line-height:1.55;margin:0 0 1.25rem}
+.mini-form .fg{margin-bottom:.85rem}
+.mini-form label{display:block;font-family:sans-serif;font-size:12px;color:var(--text2);font-weight:600;margin-bottom:5px;letter-spacing:.02em}
+.mini-form input{width:100%;padding:.7rem .85rem;border:1.5px solid var(--border);border-radius:10px;font-family:sans-serif;font-size:14px;background:#fff;color:var(--text);box-sizing:border-box;transition:border-color .2s}
+.mini-form input:focus{border-color:#9d4edd;outline:none}
+.mini-err{display:none;background:rgba(220,38,38,.08);border:1px solid rgba(220,38,38,.3);border-radius:8px;padding:.5rem .75rem;font-family:sans-serif;font-size:12.5px;color:#a32d2d;margin:.5rem 0}
+.mini-btn{width:100%;background:linear-gradient(135deg,#7c3aed 0%,#4a2da6 100%);color:#fff;border:none;padding:.85rem 1rem;border-radius:10px;font-family:sans-serif;font-size:14.5px;font-weight:700;cursor:pointer;letter-spacing:.01em;box-shadow:0 4px 14px rgba(124,58,237,.35);transition:transform .15s}
+.mini-btn:hover{transform:translateY(-1px)}
+.mini-result-card{background:linear-gradient(160deg,#1a0e52 0%,#3a1d80 60%,#1a0e52 100%);color:#f0eaff;border-radius:14px;padding:1.5rem 1.25rem;margin-bottom:1rem;text-align:center;border:1px solid rgba(245,196,81,.4);position:relative;overflow:hidden}
+.mini-result-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,rgba(245,196,81,.7),transparent)}
+.mini-score{font-family:'Playfair Display',Georgia,serif;font-size:54px;line-height:1;color:#f5d060;font-weight:700;margin:.15rem 0;text-shadow:0 0 22px rgba(245,196,81,.45)}
+.mini-tag{display:inline-block;font-family:sans-serif;font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;padding:5px 12px;border-radius:20px;margin-top:.5rem}
+.mini-tag.high{background:rgba(76,175,132,.18);color:#7ce0b0;border:1px solid rgba(76,175,132,.4)}
+.mini-tag.mid{background:rgba(245,196,81,.18);color:#f5d060;border:1px solid rgba(245,196,81,.4)}
+.mini-tag.low{background:rgba(220,38,38,.18);color:#ff9b9b;border:1px solid rgba(220,38,38,.4)}
+.mini-pair{font-family:Georgia,serif;font-size:14.5px;line-height:1.55;color:#f0eaff;margin:.85rem 0 0;font-style:italic}
+.mini-narrative{background:rgba(124,58,237,.04);border:1px solid rgba(124,58,237,.2);border-radius:10px;padding:.95rem 1rem;font-family:sans-serif;font-size:13.5px;line-height:1.6;color:var(--text);margin-bottom:1rem}
+.mini-narrative strong{color:#6d4ed1}
+.mini-cta{background:linear-gradient(135deg,#f5d060 0%,#c9a227 100%);color:#1a0e52;border:none;padding:.75rem 1rem;border-radius:10px;font-family:sans-serif;font-size:13.5px;font-weight:700;cursor:pointer;width:100%;text-decoration:none;display:inline-block;text-align:center;letter-spacing:.01em;box-shadow:0 4px 14px rgba(245,196,81,.35)}
+.mini-back{background:transparent;border:none;color:var(--text3);font-family:sans-serif;font-size:12.5px;cursor:pointer;margin-top:.6rem;text-decoration:underline;text-underline-offset:3px}
 </style>
 </head>
 <body>
@@ -518,20 +548,20 @@
       <div style="font-family:'Playfair Display',Georgia,serif;font-size:18px;font-weight:700;color:var(--text);margin-bottom:.4rem;">🔗 Extend This Insight</div>
       <p style="font-family:sans-serif;font-size:13px;color:var(--text2);line-height:1.6;margin-bottom:1rem;">Your alignment is also influenced by close relationships and decisions like naming a child or business. Each carries its own vibration.</p>
       <div class="extend-grid">
-        <button class="engage-btn" onclick="extendInsight('partner')" style="display:flex;flex-direction:column;align-items:center;gap:4px;padding:1rem .5rem;">
+        <button class="engage-btn" onclick="openMiniAnalyzer('partner')" style="display:flex;flex-direction:column;align-items:center;gap:4px;padding:1rem .5rem;">
           <span style="font-size:22px">💞</span>
           <span style="font-size:12.5px;font-weight:600;">Partner Compatibility</span>
-          <span style="font-size:10.5px;color:var(--text3);">Check together</span>
+          <span style="font-size:10.5px;color:var(--text3);">Free · 20 sec</span>
         </button>
-        <button class="engage-btn" onclick="extendInsight('child')" style="display:flex;flex-direction:column;align-items:center;gap:4px;padding:1rem .5rem;">
+        <button class="engage-btn" onclick="openMiniAnalyzer('child')" style="display:flex;flex-direction:column;align-items:center;gap:4px;padding:1rem .5rem;">
           <span style="font-size:22px">👶</span>
           <span style="font-size:12.5px;font-weight:600;">Child Name Alignment</span>
-          <span style="font-size:10.5px;color:var(--text3);">For new parents</span>
+          <span style="font-size:10.5px;color:var(--text3);">Free · 20 sec</span>
         </button>
-        <button class="engage-btn" onclick="extendInsight('business')" style="display:flex;flex-direction:column;align-items:center;gap:4px;padding:1rem .5rem;">
+        <button class="engage-btn" onclick="openMiniAnalyzer('business')" style="display:flex;flex-direction:column;align-items:center;gap:4px;padding:1rem .5rem;">
           <span style="font-size:22px">🏢</span>
           <span style="font-size:12.5px;font-weight:600;">Business Name</span>
-          <span style="font-size:10.5px;color:var(--text3);">Brand vibration</span>
+          <span style="font-size:10.5px;color:var(--text3);">Free · 20 sec</span>
         </button>
       </div>
       <div style="text-align:center;margin-top:1rem;">
@@ -559,6 +589,14 @@
   </div>
 
 </div><!-- /tool-wrap -->
+
+<!-- ── MINI-ANALYZER MODAL (Partner / Child / Business) ── -->
+<div id="miniModal" class="mini-modal" style="display:none" onclick="if(event.target===this)closeMiniAnalyzer()">
+  <div class="mini-card">
+    <button class="mini-close" onclick="closeMiniAnalyzer()" aria-label="Close">✕</button>
+    <div id="miniContent"></div>
+  </div>
+</div>
 
 <script src="assets/numerology.js"></script>
 <script>
@@ -966,18 +1004,256 @@ function checkAnotherName(){
 function checkCompatibility(){
   extendInsight('partner');
 }
-function extendInsight(kind){
-  trackEvent('extend_insight_clicked', {kind});
-  const labels = {partner:'Partner Compatibility', child:'Child Name Alignment', business:'Business Name'};
-  const note = {
-    partner:'Partner compatibility check is included in your full Chaldean Destiny Report — you\'ll see how your name vibration interacts with your partner\'s, with planetary alignment for relationship harmony.',
-    child:'Child name alignment is included in your full Chaldean Destiny Report — you\'ll see suggested names that support your child\'s Moolank, with phonetic options that preserve cultural meaning.',
-    business:'Business name vibration is included in your full Chaldean Destiny Report — you\'ll see how a brand name interacts with your founder Moolank, with optimization paths for stronger commercial alignment.'
-  };
-  alert(`✨ ${labels[kind]}\n\n${note[kind]}\n\nUnlock the full report below — ₹199 one-time.`);
-  const cta = document.getElementById('ctaPro');
-  if(cta) cta.scrollIntoView({behavior:'smooth', block:'center'});
+// ═══════════════════════════════════════════════════════════════════════
+// ── FREE MINI-ANALYZERS: Partner / Child / Business ──────────────────
+// Each opens a modal with a focused form, computes Chaldean alignment
+// with the same math the main analyzer uses (compatPct, FRIENDLY, CD),
+// and shows a 1-card narrative + soft upsell to the ₹199 report.
+// ═══════════════════════════════════════════════════════════════════════
+const MINI_META = {
+  partner:{
+    eyebrow:'💞 Partner Compatibility',
+    title:'Check your compatibility',
+    sub:'Drop your partner\'s name and date of birth. We\'ll show you how your Chaldean numbers interact — friction, flow, and where harmony lives.',
+    btn:'Reveal compatibility →'
+  },
+  child:{
+    eyebrow:'👶 Child Name Alignment',
+    title:'Align a child\'s name',
+    sub:'Enter the name you\'re considering and your child\'s date of birth. We\'ll check if the name vibration supports their Moolank.',
+    btn:'Check alignment →'
+  },
+  business:{
+    eyebrow:'🏢 Business Name Vibration',
+    title:'Score your brand name',
+    sub:'Enter the business name and the founder\'s date of birth. We\'ll show how the brand vibrates and whether it amplifies the founder\'s energy.',
+    btn:'Score the brand →'
+  }
+};
+
+function openMiniAnalyzer(kind){
+  trackEvent('mini_analyzer_opened', {kind});
+  document.getElementById('miniModal').style.display = 'flex';
+  document.body.style.overflow = 'hidden';
+  renderMiniForm(kind);
 }
+function closeMiniAnalyzer(){
+  document.getElementById('miniModal').style.display = 'none';
+  document.body.style.overflow = '';
+}
+function renderMiniForm(kind){
+  const m = MINI_META[kind];
+  // Prefill from main analyzer state (S) where it makes sense
+  const yourDob   = S.dob || '';
+  const yourName  = S.name || '';
+
+  let formHtml = '';
+  if(kind==='partner'){
+    formHtml = `
+      <div class="fg"><label>Your name</label><input type="text" id="miPartnerYouName" value="${escapeAttr(yourName)}" placeholder="e.g. Rekha Jain"/></div>
+      <div class="fg"><label>Your date of birth</label><input type="date" id="miPartnerYouDob" value="${yourDob}"/></div>
+      <div class="fg"><label>Partner's name</label><input type="text" id="miPartnerName" placeholder="e.g. Arjun Mehta"/></div>
+      <div class="fg"><label>Partner's date of birth</label><input type="date" id="miPartnerDob"/></div>`;
+  } else if(kind==='child'){
+    formHtml = `
+      <div class="fg"><label>Child's proposed name</label><input type="text" id="miChildName" placeholder="e.g. Aanya Sharma"/></div>
+      <div class="fg"><label>Child's date of birth</label><input type="date" id="miChildDob"/></div>`;
+  } else if(kind==='business'){
+    formHtml = `
+      <div class="fg"><label>Business / brand name</label><input type="text" id="miBizName" placeholder="e.g. Saanvi Designs"/></div>
+      <div class="fg"><label>Founder's date of birth</label><input type="date" id="miBizDob" value="${yourDob}"/></div>`;
+  }
+
+  document.getElementById('miniContent').innerHTML = `
+    <div class="mini-eyebrow">${m.eyebrow}</div>
+    <h2 class="mini-title">${m.title}</h2>
+    <p class="mini-sub">${m.sub}</p>
+    <div class="mini-form">${formHtml}</div>
+    <div class="mini-err" id="miErr"></div>
+    <button class="mini-btn" onclick="runMiniAnalyzer('${kind}')">${m.btn}</button>
+  `;
+}
+function escapeAttr(s){ return String(s).replace(/"/g,'&quot;'); }
+
+function runMiniAnalyzer(kind){
+  const errEl = document.getElementById('miErr');
+  errEl.style.display = 'none';
+  const showErr = (msg) => { errEl.textContent = msg; errEl.style.display = 'block'; };
+
+  if(kind==='partner'){
+    const yn = document.getElementById('miPartnerYouName').value.trim();
+    const yd = document.getElementById('miPartnerYouDob').value;
+    const pn = document.getElementById('miPartnerName').value.trim();
+    const pd = document.getElementById('miPartnerDob').value;
+    if(!yn || !yd) return showErr('Please fill your name and date of birth.');
+    if(!pn || !pd) return showErr('Please fill your partner\'s name and date of birth.');
+    showPartnerResult(yn,yd,pn,pd);
+  } else if(kind==='child'){
+    const cn = document.getElementById('miChildName').value.trim();
+    const cd = document.getElementById('miChildDob').value;
+    if(!cn || !cd) return showErr('Please fill the child\'s name and date of birth.');
+    showChildResult(cn,cd);
+  } else if(kind==='business'){
+    const bn = document.getElementById('miBizName').value.trim();
+    const bd = document.getElementById('miBizDob').value;
+    if(!bn || !bd) return showErr('Please fill the business name and founder\'s date of birth.');
+    showBusinessResult(bn,bd);
+  }
+}
+
+// ── Result tier helpers ─────────────────────────────────────────────
+function tierOf(pct){
+  if(pct>=70) return {cls:'high',label:'STRONG HARMONY',icon:'✓'};
+  if(pct>=45) return {cls:'mid', label:'WORKABLE',       icon:'~'};
+  return       {cls:'low', label:'NEEDS AWARENESS', icon:'◇'};
+}
+function tierBrand(pct){
+  if(pct>=70) return {cls:'high',label:'STRONG BRAND ALIGNMENT',icon:'✓'};
+  if(pct>=45) return {cls:'mid', label:'WORKABLE VIBRATION',     icon:'~'};
+  return       {cls:'low', label:'LOW BRAND ALIGNMENT',          icon:'◇'};
+}
+function tierChild(pct){
+  if(pct>=70) return {cls:'high',label:'STRONGLY ALIGNED', icon:'✓'};
+  if(pct>=45) return {cls:'mid', label:'WORKABLE',          icon:'~'};
+  return       {cls:'low', label:'LOW ALIGNMENT',           icon:'◇'};
+}
+
+// ── Partner result ──────────────────────────────────────────────────
+const PARTNER_DYNAMICS = {
+  // keyed by sorted "Aplanet-Bplanet"
+  default:'Two distinct rhythms — patience and clear communication amplify the harmony, while assumptions create most of the friction.'
+};
+function partnerScore(aMoo,aBhag,bMoo,bBhag){
+  const fA = FRIENDLY[aMoo]||[], fB = FRIENDLY[bMoo]||[];
+  let score = 30;
+  if(fA.includes(bMoo) && fB.includes(aMoo)) score += 35;       // mutual friend
+  else if(fA.includes(bMoo) || fB.includes(aMoo)) score += 18;  // one-way
+  if(FRIENDLY[aBhag]?.includes(bBhag)) score += 15;             // bhagyank harmony
+  if(aMoo === bMoo) score += 8;                                 // same driver — easy understanding
+  if((CAUTION_NAME_NUMS||[4,8]).includes(aMoo) && (CAUTION_NAME_NUMS||[4,8]).includes(bMoo)) score -= 5;
+  return Math.max(15, Math.min(96, score));
+}
+function showPartnerResult(yn,yd,pn,pd){
+  const yMoo = getBirthNum(yd), yBhag = getDestinyNum(yd);
+  const pMoo = getBirthNum(pd), pBhag = getDestinyNum(pd);
+  const score = partnerScore(yMoo,yBhag,pMoo,pBhag);
+  const t = tierOf(score);
+  const yPlanet = getPlanet(yMoo), pPlanet = getPlanet(pMoo);
+  const yArche = ARCHETYPES[yMoo], pArche = ARCHETYPES[pMoo];
+  trackEvent('mini_analyzer_result', {kind:'partner', score});
+
+  // Narrative — connects core archetypes
+  let narrative;
+  if(t.cls==='high'){
+    narrative = `<strong>${yPlanet} meets ${pPlanet}</strong> — your Chaldean numbers reinforce each other. The ${yArche.toLowerCase()} in you finds genuine ease with the ${pArche.toLowerCase()} in them. Most disagreements resolve themselves once spoken aloud.`;
+  } else if(t.cls==='mid'){
+    narrative = `<strong>${yPlanet} meets ${pPlanet}</strong> — workable, with conscious effort. Your rhythms differ, which is why you irritate each other in small ways and complement each other in big ones. Patience and explicit communication amplify the harmony.`;
+  } else {
+    narrative = `<strong>${yPlanet} meets ${pPlanet}</strong> — different rhythms, which doesn't mean wrong. The bond can work, but it asks for honest naming of needs. Assumptions are where most friction lives in this pairing.`;
+  }
+
+  document.getElementById('miniContent').innerHTML = miniResultHTML({
+    eyebrow:'💞 Partner Compatibility',
+    title:`${firstWord(yn)} ✦ ${firstWord(pn)}`,
+    score, tier:t,
+    pair:`${yArche} <span style="opacity:.55">×</span> ${pArche}`,
+    narrative,
+    upsell:'Unlock the full compatibility chapter — planetary interaction map, friction-points, harmony-builders.',
+    kind:'partner'
+  });
+}
+
+// ── Child result ────────────────────────────────────────────────────
+function showChildResult(cn,cd){
+  const moo = getBirthNum(cd), bhag = getDestinyNum(cd);
+  const {raw, reduced} = getNameNum(cn);
+  const score = compatPct(reduced, raw, moo, bhag);
+  const t = tierChild(score);
+  const corePlanet = getPlanet(moo), namePlanet = getPlanet(reduced);
+  const arche = ARCHETYPES[moo];
+  trackEvent('mini_analyzer_result', {kind:'child', score});
+
+  let narrative;
+  if(t.cls==='high'){
+    narrative = `<strong>${firstWord(cn)}</strong> vibrates as ${reduced} (${namePlanet}) — and that energy genuinely supports a Moolank ${moo} (${corePlanet}) child. The name strengthens "${arche.toLowerCase()}" qualities rather than fighting them.`;
+  } else if(t.cls==='mid'){
+    narrative = `<strong>${firstWord(cn)}</strong> vibrates as ${reduced} (${namePlanet}). It's workable for a Moolank ${moo} (${corePlanet}) child — neither amplifying nor suppressing their core. A small phonetic adjustment could lift this into strong alignment.`;
+  } else {
+    narrative = `<strong>${firstWord(cn)}</strong> vibrates as ${reduced} (${namePlanet}), which sits in tension with a Moolank ${moo} (${corePlanet}) core. The child's natural ${arche.toLowerCase()} energy will work harder than it needs to. A phonetic variant can fix this without changing pronunciation.`;
+  }
+
+  document.getElementById('miniContent').innerHTML = miniResultHTML({
+    eyebrow:'👶 Child Name Alignment',
+    title:firstWord(cn),
+    score, tier:t,
+    pair:`Name ${reduced} (${namePlanet}) <span style="opacity:.55">×</span> Moolank ${moo} (${corePlanet})`,
+    narrative,
+    upsell:'Get 3 phonetic name variants tuned to your child\'s Moolank — same pronunciation, stronger Chaldean alignment.',
+    kind:'child'
+  });
+}
+
+// ── Business result ─────────────────────────────────────────────────
+function showBusinessResult(bn,bd){
+  const moo = getBirthNum(bd), bhag = getDestinyNum(bd);
+  const {raw, reduced} = getNameNum(bn);
+  const score = compatPct(reduced, raw, moo, bhag);
+  const t = tierBrand(score);
+  const founderPlanet = getPlanet(moo), brandPlanet = getPlanet(reduced);
+  const compound = (typeof CD!=='undefined' && CD[raw]) ? CD[raw] : null;
+  trackEvent('mini_analyzer_result', {kind:'business', score});
+
+  let narrative;
+  if(t.cls==='high'){
+    narrative = `<strong>${bn}</strong> reduces to ${reduced} (${brandPlanet}) — a vibration that amplifies a founder operating on ${founderPlanet} energy. The brand name does the heavy lifting for you.`;
+  } else if(t.cls==='mid'){
+    narrative = `<strong>${bn}</strong> reduces to ${reduced} (${brandPlanet}). It's a workable brand vibration for a ${founderPlanet} founder — neither helping nor hurting much. Small phonetic tweaks can move it into strongly amplifying territory.`;
+  } else {
+    narrative = `<strong>${bn}</strong> reduces to ${reduced} (${brandPlanet}), which works against a ${founderPlanet} founder's energy. The brand will feel like effort rather than flow. A short phonetic adjustment usually fixes it.`;
+  }
+  if(compound){
+    narrative += ` <em style="color:var(--text2)">Compound ${raw}: ${compound.l}.</em>`;
+  }
+
+  document.getElementById('miniContent').innerHTML = miniResultHTML({
+    eyebrow:'🏢 Business Name Vibration',
+    title:bn,
+    score, tier:t,
+    pair:`Brand ${reduced} (${brandPlanet}) <span style="opacity:.55">×</span> Founder Moolank ${moo} (${founderPlanet})`,
+    narrative,
+    upsell:'Get a full brand-name audit + phonetic variants tuned to amplify the founder\'s energy.',
+    kind:'business'
+  });
+}
+
+// ── Shared result-card HTML builder ─────────────────────────────────
+function miniResultHTML({eyebrow,title,score,tier,pair,narrative,upsell,kind}){
+  return `
+    <div class="mini-eyebrow">${eyebrow}</div>
+    <h2 class="mini-title">${title}</h2>
+    <div class="mini-result-card">
+      <div style="font-family:sans-serif;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#9d7fff;font-weight:700">Chaldean Score</div>
+      <div class="mini-score">${score}%</div>
+      <span class="mini-tag ${tier.cls}">${tier.icon} ${tier.label}</span>
+      <p class="mini-pair">${pair}</p>
+    </div>
+    <div class="mini-narrative">${narrative}</div>
+    <div style="background:rgba(245,196,81,.08);border:1px dashed rgba(245,196,81,.5);border-radius:10px;padding:.8rem 1rem;font-family:sans-serif;font-size:12.5px;color:var(--text);line-height:1.55;margin-bottom:.85rem;">
+      <strong style="color:#9d4edd">Want the full picture?</strong> ${upsell}
+    </div>
+    <a href="report?ref=mini_${kind}" class="mini-cta" onclick="trackEvent('mini_cta_clicked',{kind:'${kind}'})">Unlock Full Chaldean Report — ₹199 →</a>
+    <div style="text-align:center"><button class="mini-back" onclick="renderMiniForm('${kind}')">← Check another</button></div>
+  `;
+}
+
+function firstWord(s){ return String(s||'').trim().split(/\s+/)[0]; }
+
+// ESC closes modal
+document.addEventListener('keydown', (e)=>{
+  if(e.key==='Escape' && document.getElementById('miniModal')?.style.display==='flex'){
+    closeMiniAnalyzer();
+  }
+});
 
 function renderSuggestions(){
   // Name suggestions are only shown in the paid full report.
