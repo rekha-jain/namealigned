@@ -159,15 +159,19 @@
 .locked-section-sub{font-family:sans-serif;font-size:13px;color:var(--text2);text-align:center;margin-bottom:1rem}
 .locked-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:1rem}
 @media(max-width:520px){.locked-grid{grid-template-columns:1fr}}
-.locked-card{position:relative;background:var(--card);border:1.5px solid var(--border);border-radius:var(--rl);padding:1rem 1rem 1.1rem;overflow:hidden;cursor:pointer;transition:transform .15s,border-color .2s,box-shadow .2s}
-.locked-card:hover{transform:translateY(-2px);border-color:var(--gold-b);box-shadow:0 6px 24px rgba(240,180,41,.18)}
-.locked-card .lc-icon{font-size:22px;margin-bottom:6px}
-.locked-card .lc-title{font-family:'Playfair Display',Georgia,serif;font-size:16px;font-weight:700;color:var(--text);margin-bottom:4px}
-.locked-card .lc-teaser{font-family:sans-serif;font-size:12px;color:var(--text2);line-height:1.5;margin-bottom:8px;font-style:italic}
-.locked-card .lc-blur{position:relative;height:48px;overflow:hidden;border-radius:6px}
-.locked-card .lc-blur-content{font-family:sans-serif;font-size:11px;color:var(--text);filter:blur(4px);opacity:.7;line-height:1.5;padding:4px 6px}
-.locked-card .lc-blur::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,transparent 0%,var(--card) 100%)}
-.locked-card .lc-lock{position:absolute;top:10px;right:12px;width:26px;height:26px;border-radius:50%;background:rgba(201,162,39,.18);border:1px solid var(--gold-b);display:flex;align-items:center;justify-content:center;font-size:13px;color:var(--gold)}
+.locked-card{position:relative;background:linear-gradient(160deg,#1a1340 0%,#241651 60%,#1a1340 100%);border:1px solid rgba(157,127,255,.25);border-radius:14px;padding:1.4rem 1.1rem 1.1rem;overflow:hidden;cursor:pointer;transition:transform .2s,border-color .25s,box-shadow .25s;color:#f0eaff}
+.locked-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,rgba(245,196,81,.7),transparent)}
+.locked-card::after{content:'';position:absolute;inset:0;background:radial-gradient(circle at 80% 0%,rgba(245,196,81,.10) 0%,transparent 50%);pointer-events:none}
+.locked-card:hover{transform:translateY(-3px);border-color:rgba(245,196,81,.45);box-shadow:0 10px 32px rgba(124,92,255,.30),0 0 60px rgba(245,196,81,.12)}
+.locked-card .lc-icon{font-size:26px;margin-bottom:8px;display:inline-block;width:46px;height:46px;line-height:46px;text-align:center;border-radius:12px;background:rgba(157,127,255,.14);border:1px solid rgba(157,127,255,.25)}
+.locked-card .lc-title{font-family:'Playfair Display',Georgia,serif;font-size:17px;font-weight:700;color:#ffffff;margin-bottom:5px;letter-spacing:.005em}
+.locked-card .lc-teaser{font-family:sans-serif;font-size:12.5px;color:rgba(240,234,255,.72);line-height:1.55;margin-bottom:12px;font-style:normal}
+.locked-card .lc-blur{display:none}
+.locked-card .lc-bullets{list-style:none;padding:0;margin:0 0 12px;font-family:sans-serif;font-size:11.5px;color:rgba(240,234,255,.68);line-height:1.65}
+.locked-card .lc-bullets li{position:relative;padding-left:14px;margin-bottom:3px}
+.locked-card .lc-bullets li::before{content:'✦';position:absolute;left:0;color:#f5c451;font-size:9px;top:1px}
+.locked-card .lc-pill{display:inline-flex;align-items:center;gap:6px;font-family:sans-serif;font-size:10.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#f5c451;background:rgba(245,196,81,.10);border:1px solid rgba(245,196,81,.30);padding:5px 11px;border-radius:20px;margin-top:2px}
+.locked-card .lc-lock{position:absolute;top:12px;right:12px;width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,#f5c451 0%,#d4a431 100%);display:flex;align-items:center;justify-content:center;font-size:12px;color:#1a1340;box-shadow:0 4px 12px rgba(245,196,81,.35)}
 
 .cta-pro{background:linear-gradient(135deg,#1a0e52 0%,#3a1d80 60%,#0c3347 100%);border-radius:var(--rl);padding:2rem 1.5rem;color:#f0ece0;text-align:center;margin-top:1rem;border:1.5px solid rgba(201,162,39,.5);box-shadow:0 6px 30px rgba(26,14,82,.3)}
 .cta-pro h3{font-family:'Playfair Display',Georgia,serif;font-size:24px;font-weight:700;margin:0 0 .35rem;color:#f5d060}
@@ -414,28 +418,48 @@
         <div class="lc-icon">💼</div>
         <div class="lc-title">Career Alignment</div>
         <div class="lc-teaser">Chaldean-aligned career domains for your numbers</div>
-        <div class="lc-blur"><div class="lc-blur-content" id="lcCareerTease">Your Chaldean-aligned career domains include high-finance, technology leadership, and structured creative roles. The Saturn-Rahu combination indicates…</div></div>
+        <ul class="lc-bullets">
+          <li>Industries that match your Moolank + Bhagyank planets</li>
+          <li>Roles where your name vibration thrives</li>
+          <li>Areas to approach with awareness</li>
+        </ul>
+        <span class="lc-pill">✦ In ₹199 Report</span>
       </div>
       <div class="locked-card" onclick="trackAndScrollCTA('locked_love')">
         <div class="lc-lock">🔒</div>
         <div class="lc-icon">❤️</div>
         <div class="lc-title">Relationship Compatibility</div>
         <div class="lc-teaser">Planetary interaction — who harmonises with you</div>
-        <div class="lc-blur"><div class="lc-blur-content" id="lcLoveTease">In Chaldean numerology, compatibility comes from planetary interaction. Your most aligned partner numbers reveal a clear pattern. You harmonise best with people whose Moolank…</div></div>
+        <ul class="lc-bullets">
+          <li>Most-compatible partner numbers (Chaldean)</li>
+          <li>Good match · neutral · challenging dynamics</li>
+          <li>Why some bonds feel effortless</li>
+        </ul>
+        <span class="lc-pill">✦ In ₹199 Report</span>
       </div>
       <div class="locked-card" onclick="trackAndScrollCTA('locked_optimization')">
         <div class="lc-lock">🔒</div>
         <div class="lc-icon">✨</div>
         <div class="lc-title">Name Optimization <span style="font-size:10px;background:#7c3aed;color:#fff;padding:2px 6px;border-radius:8px;letter-spacing:.04em;font-weight:700;margin-left:4px;text-transform:uppercase;vertical-align:middle">Phonetic</span></div>
-        <div class="lc-teaser">Your name already works — gentle phonetic enhancements can support it further</div>
-        <div class="lc-blur"><div class="lc-blur-content" id="lcCorrectionTease">Your current name already carries strengths. Optimization simply enhances alignment further. 3 phonetic adjustments — adding A, H, I, K-style sounds — bring your name into stronger Chaldean alignment with your Moolank, without changing pronunciation…</div></div>
+        <div class="lc-teaser">Gentle spelling variants that strengthen alignment</div>
+        <ul class="lc-bullets">
+          <li>3 phonetic variants with Chaldean scores</li>
+          <li>Same pronunciation — stronger vibration</li>
+          <li>Pick what feels right, no forced change</li>
+        </ul>
+        <span class="lc-pill">✦ In ₹199 Report</span>
       </div>
       <div class="locked-card" onclick="trackAndScrollCTA('locked_hidden')">
         <div class="lc-lock">🔒</div>
         <div class="lc-icon">🌀</div>
         <div class="lc-title">Hidden Traits &amp; Cycles</div>
         <div class="lc-teaser">Quiet strengths most people miss + your activation years</div>
-        <div class="lc-blur"><div class="lc-blur-content" id="lcCyclesTease">Beyond your visible Moolank traits, your name vibration carries hidden strengths most people don't notice in themselves. Combined with your personal-year cycle, certain years act as activation points where decisions create long-term outcomes. Your next 5 years…</div></div>
+        <ul class="lc-bullets">
+          <li>Latent traits inside your name vibration</li>
+          <li>5-year personal-year forecast</li>
+          <li>Activation years for big decisions</li>
+        </ul>
+        <span class="lc-pill">✦ In ₹199 Report</span>
       </div>
     </div>
 
