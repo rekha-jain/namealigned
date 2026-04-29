@@ -9,24 +9,24 @@
 <meta name="keywords" content="numerology analyzer, chaldean name calculator, free numerology tool, name alignment score, moolank bhagyank, name compatibility check, free numerology India"/>
 <meta name="author" content="NameAligned.com"/>
 <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1"/>
-<link rel="canonical" href="https://namealigned.com/analyzer.html"/>
+<link rel="canonical" href="https://www.namealigned.com/analyzer"/>
 <!-- Open Graph -->
 <meta property="og:title" content="Free Chaldean Numerology Analyzer — Instant Name Alignment Score"/>
 <meta property="og:description" content="Score your name alignment with your birth numbers. Lucky colours, career insights, relationship compass, personal year forecast — all free."/>
 <meta property="og:type" content="website"/>
-<meta property="og:url" content="https://namealigned.com/analyzer.html"/>
+<meta property="og:url" content="https://www.namealigned.com/analyzer"/>
 <meta property="og:site_name" content="NameAligned.com"/>
 <meta property="og:locale" content="en_IN"/>
-<meta property="og:image" content="https://namealigned.com/assets/namealigned-logo-full.svg"/>
+<meta property="og:image" content="https://www.namealigned.com/assets/namealigned-logo-full.svg"/>
 <meta property="og:image:alt" content="NameAligned.com Chaldean Numerology Analyzer"/>
 <!-- Twitter Card -->
 <meta name="twitter:card" content="summary_large_image"/>
 <meta name="twitter:title" content="Free Chaldean Numerology Analyzer — NameAligned.com"/>
 <meta name="twitter:description" content="Score your name alignment in seconds. Lucky colours, career insights, personal year forecast — free."/>
-<meta name="twitter:image" content="https://namealigned.com/assets/namealigned-logo-full.svg"/>
+<meta name="twitter:image" content="https://www.namealigned.com/assets/namealigned-logo-full.svg"/>
 <!-- Structured data -->
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"WebApplication","name":"Free Chaldean Numerology Name Analyzer","url":"https://namealigned.com/analyzer.html","description":"Score your name alignment with your Chaldean birth numbers. Get lucky colours, career domains, relationship compass and personal year forecast.","applicationCategory":"LifestyleApplication","operatingSystem":"Any","inLanguage":"en-IN","offers":{"@type":"Offer","price":"0","priceCurrency":"INR"},"publisher":{"@type":"Organization","name":"NameAligned.com","url":"https://namealigned.com/"}}
+{"@context":"https://schema.org","@type":"WebApplication","name":"Free Chaldean Numerology Name Analyzer","url":"https://www.namealigned.com/analyzer","description":"Score your name alignment with your Chaldean birth numbers. Get lucky colours, career domains, relationship compass and personal year forecast.","applicationCategory":"LifestyleApplication","operatingSystem":"Any","inLanguage":"en-IN","offers":{"@type":"Offer","price":"0","priceCurrency":"INR"},"publisher":{"@type":"Organization","name":"NameAligned.com","url":"https://www.namealigned.com/"}}
 </script>
 <link rel="stylesheet" href="assets/style.css"/>
 <link rel="stylesheet" href="assets/theme-cosmic-light.css"/>
@@ -1022,7 +1022,7 @@ function buildShareUrl(){
   if(S.name) params.set('n', S.name);
   const m  = (S.birthNum >= 1 && S.birthNum <= 9) ? S.birthNum : 1;
   const qs = params.toString();
-  return 'https://namealigned.com/share/' + m + (qs ? '?' + qs : '');
+  return 'https://www.namealigned.com/share/' + m + (qs ? '?' + qs : '');
 }
 
 function copyAnalyzerLink(){
@@ -1235,26 +1235,29 @@ function buildShareCard(){
 
   // Big italic name
   ctx.fillStyle = '#ffffff';
-  let nameSize = 76;
+  let nameSize = 70;
   ctx.font = 'italic 700 ' + nameSize + 'px Georgia, serif';
-  while(ctx.measureText(displayName).width > 480 && nameSize > 38){
+  while(ctx.measureText(displayName).width > 480 && nameSize > 36){
     nameSize -= 4;
     ctx.font = 'italic 700 ' + nameSize + 'px Georgia, serif';
   }
-  ctx.fillText(displayName, lcx, 215);
+  ctx.fillText(displayName, lcx, 210);
 
   // Gold accent underline
   ctx.strokeStyle = 'rgba(201,162,39,0.85)';
   ctx.lineWidth = 1.5;
-  ctx.beginPath(); ctx.moveTo(lcx-70, 240); ctx.lineTo(lcx+70, 240); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(lcx-70, 232); ctx.lineTo(lcx+70, 232); ctx.stroke();
 
-  // "Your Driver Number" — Moolank, the day-of-birth number that
-  // determines the ruling planet & personality traits shown on this card.
-  // (Bhagyank/"destiny" maps to life path, not personality, and would
-  //  conflict with the Moolank-keyed strengths/insight to its right.)
-  ctx.fillStyle = 'rgba(255,255,255,0.7)';
-  ctx.font = 'italic 18px Georgia, serif';
-  ctx.fillText('Your Driver Number', lcx, 268);
+  // ARCHETYPE — single identity anchor (the new strategy)
+  const archetypeShare = ARCHETYPES[moolank] || ARCHETYPES[1];
+  ctx.fillStyle = '#f5d060';
+  ctx.font = '700 26px Georgia, serif';
+  ctx.fillText(archetypeShare, lcx, 268);
+
+  // Driver Number sub-line
+  ctx.fillStyle = 'rgba(255,255,255,0.55)';
+  ctx.font = '500 12px "Helvetica Neue", Arial, sans-serif';
+  ctx.fillText('YOUR DRIVER NUMBER', lcx, 292);
 
   // Cosmic ring around number
   const ringX = lcx, ringY = 395, ringR = 92;
@@ -1315,65 +1318,63 @@ function buildShareCard(){
   const rcx = 640;
   ctx.textAlign = 'left';
 
-  // Eyebrow
+  // EMOTIONAL TRUTH — the viral hook (top of right column)
   ctx.fillStyle = '#c9a227';
   ctx.font = '700 13px "Helvetica Neue", Arial, sans-serif';
-  ctx.fillText('YOUR CORE STRENGTHS', rcx, 138);
-
-  // 3 strengths
-  const startY = 170, rowH = 72;
-  profile.strengths.forEach((s, i) => {
-    const y = startY + i * rowH;
-    // Icon circle
-    const cx = rcx + 22, cy = y + 18;
-    ctx.fillStyle = 'rgba(245,208,96,0.13)';
-    ctx.beginPath(); ctx.arc(cx, cy, 22, 0, Math.PI*2); ctx.fill();
-    ctx.strokeStyle = 'rgba(201,162,39,0.5)';
-    ctx.lineWidth = 1.2;
-    ctx.beginPath(); ctx.arc(cx, cy, 22, 0, Math.PI*2); ctx.stroke();
-    // Glyph
-    ctx.fillStyle = '#f5d060';
-    ctx.font = '600 22px Georgia, serif';
-    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-    ctx.fillText(s.icon, cx, cy + 1);
-    ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic';
-
-    // Title
-    ctx.fillStyle = '#ffffff';
-    ctx.font = '700 18px "Helvetica Neue", Arial, sans-serif';
-    ctx.fillText(s.title, rcx + 60, y + 14);
-    // Description
-    ctx.fillStyle = 'rgba(255,255,255,0.7)';
-    ctx.font = '400 14px "Helvetica Neue", Arial, sans-serif';
-    ctx.fillText(s.desc, rcx + 60, y + 36);
-  });
-
-  // Divider
-  ctx.strokeStyle = 'rgba(201,162,39,0.25)';
-  ctx.lineWidth = 1;
-  ctx.beginPath(); ctx.moveTo(rcx, 392); ctx.lineTo(W - 50, 392); ctx.stroke();
-
-  // INSIGHT eyebrow
-  ctx.fillStyle = '#c9a227';
-  ctx.font = '700 13px "Helvetica Neue", Arial, sans-serif';
-  ctx.fillText('INSIGHT THAT RELATES TO YOU', rcx, 422);
+  ctx.fillText('THE TRUTH MOST PEOPLE MISS', rcx, 138);
 
   // Open quote glyph
   ctx.fillStyle = 'rgba(245,208,96,0.7)';
   ctx.font = '700 56px Georgia, serif';
-  ctx.fillText('“', rcx - 4, 470);
+  ctx.fillText('"', rcx - 4, 188);
 
-  // Insight body
-  ctx.fillStyle = 'rgba(255,255,255,0.92)';
-  ctx.font = 'italic 22px Georgia, serif';
-  wrapTextLeft(ctx, profile.insight, rcx + 36, 458, W - 90 - rcx, 30, 3);
+  // Truth body — emotionally specific, archetype-anchored
+  const truthShare = EMOTIONAL_TRUTHS[moolank] || EMOTIONAL_TRUTHS[1];
+  ctx.fillStyle = '#ffffff';
+  ctx.font = 'italic 21px Georgia, serif';
+  wrapTextLeft(ctx, truthShare, rcx + 32, 178, W - 90 - rcx, 30, 4);
 
   // Close quote glyph
   ctx.fillStyle = 'rgba(245,208,96,0.7)';
   ctx.font = '700 56px Georgia, serif';
   ctx.textAlign = 'right';
-  ctx.fillText('”', W - 50, 540);
+  ctx.fillText('"', W - 50, 290);
   ctx.textAlign = 'left';
+
+  // Divider
+  ctx.strokeStyle = 'rgba(201,162,39,0.25)';
+  ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(rcx, 320); ctx.lineTo(W - 50, 320); ctx.stroke();
+
+  // STRENGTHS eyebrow
+  ctx.fillStyle = '#c9a227';
+  ctx.font = '700 13px "Helvetica Neue", Arial, sans-serif';
+  ctx.fillText('WHERE YOUR POWER LIVES', rcx, 350);
+
+  // 3 strengths — clean labels (no description, more breathing room)
+  const sLabels = STRENGTH_LABELS[moolank] || STRENGTH_LABELS[1];
+  const sStartY = 372, sRowH = 50;
+  sLabels.forEach((s, i) => {
+    const y = sStartY + i * sRowH;
+    // Icon circle
+    const cx = rcx + 20, cy = y + 14;
+    ctx.fillStyle = 'rgba(245,208,96,0.13)';
+    ctx.beginPath(); ctx.arc(cx, cy, 18, 0, Math.PI*2); ctx.fill();
+    ctx.strokeStyle = 'rgba(201,162,39,0.5)';
+    ctx.lineWidth = 1.2;
+    ctx.beginPath(); ctx.arc(cx, cy, 18, 0, Math.PI*2); ctx.stroke();
+    // Glyph
+    ctx.fillStyle = '#f5d060';
+    ctx.font = '600 18px Georgia, serif';
+    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillText(s.i, cx, cy + 1);
+    ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic';
+
+    // Label
+    ctx.fillStyle = '#ffffff';
+    ctx.font = '700 18px "Helvetica Neue", Arial, sans-serif';
+    ctx.fillText(s.l, rcx + 52, y + 19);
+  });
 
   // Bottom CTA
   ctx.fillStyle = 'rgba(255,255,255,0.65)';
@@ -1473,7 +1474,7 @@ function canvasToBlob(canvas){
 
 // SHARING STRATEGY
 // ────────────────
-// Primary path: send a personalized LINK (https://namealigned.com/share?…)
+// Primary path: send a personalized LINK (https://www.namealigned.com/share?…)
 // instead of a PNG attachment. The /share page has Open Graph meta, so when
 // the link is pasted into WhatsApp/Twitter/FB/Telegram, those platforms
 // auto-fetch a rich preview. Receiver taps it → lands on a personalized
