@@ -894,7 +894,7 @@ function renderAnalysis(){
 
   // Badge (now lives inside align-mini)
   const badgeEl = document.getElementById('ahBadge');
-  badgeEl.textContent = status==='aligned'?'✓ STRONG ALIGNMENT':status==='neutral'?'~ MODERATE ALIGNMENT':'◇ DIFFERENT ALIGNMENT';
+  badgeEl.textContent = status==='aligned'?'✓ STRONG ALIGNMENT':status==='neutral'?'~ MODERATE ALIGNMENT':'◇ LOW ALIGNMENT';
   badgeEl.className   = 'ah-badge '+status;
 
   // Compact alignment block
