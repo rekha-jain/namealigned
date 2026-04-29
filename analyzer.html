@@ -245,44 +245,18 @@
     <div class="card">
       <div class="card-title">Step 1 — Your details</div>
       <div class="form-grid">
-        <div class="fg">
+        <div class="fg full">
           <label>Your current name</label>
-          <input type="text" id="currentName" placeholder="e.g. Rahul Sharma"/>
+          <input type="text" id="currentName" placeholder="e.g. Rahul Sharma" autocomplete="name"/>
         </div>
-        <div class="fg">
+        <div class="fg full">
           <label>Date of birth</label>
           <input type="date" id="dob"/>
         </div>
-        <div class="fg">
-          <label>Gender</label>
-          <select id="gender">
-            <option value="female">Female</option>
-            <option value="male">Male</option>
-            <option value="other">Other</option>
-          </select>
-        </div>
-        <div class="fg">
-          <label>Primary life focus</label>
-          <select id="focus">
-            <option value="overall">Overall life success</option>
-            <option value="career">Career & business</option>
-            <option value="wealth">Wealth & abundance</option>
-            <option value="love">Love & relationships</option>
-            <option value="health">Health & well-being</option>
-            <option value="spiritual">Spiritual growth</option>
-          </select>
-        </div>
-        <div class="fg">
-          <label>Mobile number <span style="color:var(--text3)">(optional)</span></label>
-          <input type="tel" id="mobileNum" placeholder="10 digits, no country code" maxlength="15"/>
-        </div>
-        <div class="fg full">
-          <label>Brief context <span style="color:var(--text3)">(optional)</span></label>
-          <textarea id="context" placeholder="e.g. Running a small business, recently married…"></textarea>
-        </div>
       </div>
       <div id="errStep1" class="err-box" style="display:none"></div>
-      <button class="btn btn-primary btn-full mt-2" onclick="goToStep2()">Continue → Calculate my numbers</button>
+      <button class="btn btn-primary btn-full mt-2" onclick="goToStep2()">Reveal my Chaldean numbers →</button>
+      <div style="text-align:center;font-size:11.5px;color:var(--text3);margin-top:.6rem;font-family:sans-serif">Takes 10 seconds · 100% free · No signup</div>
     </div>
   </div>
 
@@ -616,10 +590,10 @@ function goToStep2(){
   err.style.display='none';
   S.name    = name;
   S.dob     = dob;
-  S.gender  = document.getElementById('gender').value;
-  S.focus   = document.getElementById('focus').value;
-  S.context = document.getElementById('context').value.trim();
-  S.mobile  = document.getElementById('mobileNum').value.replace(/\D/g,'');
+  S.gender  = '';
+  S.focus   = 'overall';
+  S.context = '';
+  S.mobile  = '';
   S.birthNum = getBirthNum(dob);
   S.destNum  = getDestinyNum(dob);
   const {raw,reduced} = getNameNum(name);
