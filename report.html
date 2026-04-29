@@ -437,7 +437,7 @@ async function redeemFreeReport(){
     });
     const data = await res.json();
     if(data.success){
-      onSuccess(promoToken100, fields.name, fields.dob, fields.email, fields.mobile);
+      onSuccess(promoToken100, '', '', fields.name, fields.dob, fields.email, fields.mobile);
     } else {
       const err=document.getElementById('rErrBox');
       err.style.display='block';
@@ -519,8 +519,51 @@ async function initiateReportPayment(){
   rzp.open();
 }
 
-function onSuccess(paymentId, orderId, signature, name, dob, email, mobile){
-  const params = new URLSearchParams({ paymentId, orderId, signature, name, dob, email });
+function getReportNumbers(name, dob){
+  const birthNum = dob ? getBirthNum(dob) : '';
+  const destNum = dob ? getDestinyNum(dob) : '';
+  const nameInfo = getNameNum(name || '');
+  const nameNum = nameInfo.reduced || '';
+  const pct = (dob && nameNum) ? compatPct(nameNum, nameInfo.raw, birthNum, destNum) : '';
+  return { birthNum, destNum, nameNum, pct };
+}
+
+async function saveReportOrder(paymentId, orderId, signature, name, dob, email, mobile){
+  if(!paymentId || !email) return;
+  const nums = getReportNumbers(name, dob);
+  const res = await fetch('/api/generate-report',{
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({
+      paymentId, orderId: orderId || undefined, signature: signature || undefined,
+      name, dob, email, mobile: mobile || undefined,
+      birthNum: nums.birthNum, destNum: nums.destNum, nameNum: nums.nameNum
+    })
+  });
+  const data = await res.json().catch(()=>({}));
+  if(!res.ok || !data.success) throw new Error(data.error || 'Could not save order');
+}
+
+async function onSuccess(paymentId, orderId, signature, name, dob, email, mobile){
+  const nums = getReportNumbers(name, dob);
+  try{
+    await saveReportOrder(paymentId, orderId, signature, name, dob, email, mobile);
+  }catch(e){
+    console.warn('Order save before redirect failed; report page will retry:', e);
+  }
+
+  const params = new URLSearchParams({
+    paymentId,
+    orderId: orderId || '',
+    signature: signature || '',
+    name,
+    dob,
+    email,
+    birthNum: nums.birthNum || '',
+    destNum: nums.destNum || '',
+    nameNum: nums.nameNum || '',
+    pct: nums.pct || ''
+  });
   if(mobile) params.set('mobile', mobile);
   window.location.href = `generate-report?${params}`;
 }

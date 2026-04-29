@@ -20,6 +20,7 @@
 'use strict';
 
 import crypto from 'crypto';
+import { insertSupabaseRow } from './_supabase.js';
 
 // ---------------------------------------------------------------------------
 // Verify Razorpay webhook signature
@@ -42,36 +43,19 @@ function verifyWebhookSignature(rawBody, signature, secret) {
 // Save order to Supabase (same logic as generate-report.js)
 // ---------------------------------------------------------------------------
 async function saveOrderToSupabase({ paymentId, name, email, dob, mobile, amount }) {
-  const response = await fetch(`${process.env.SUPABASE_URL}/rest/v1/orders`, {
-    method: 'POST',
-    headers: {
-      apikey: process.env.SUPABASE_SERVICE_KEY,
-      Authorization: `Bearer ${process.env.SUPABASE_SERVICE_KEY}`,
-      'Content-Type': 'application/json',
-      Prefer: 'return=minimal',
-    },
-    body: JSON.stringify({
-      razorpay_payment_id: paymentId,
-      name:       name || null,
-      email:      email || null,
-      dob:        dob || null,
-      phone:      mobile || null,
-      amount_paise: amount || null,
-      source:     'webhook',
-      created_at: new Date().toISOString(),
-    }),
-  });
+  const saved = await insertSupabaseRow('orders', {
+    razorpay_payment_id: paymentId,
+    name:       name || null,
+    email:      email || null,
+    dob:        dob || null,
+    phone:      mobile || null,
+    created_at: new Date().toISOString(),
+  }, { duplicateOk: true, prefer: 'return=minimal' });
 
-  if (!response.ok) {
-    const text = await response.text();
-    // 409 = duplicate (already saved by the browser flow) — not an error
-    if (response.status === 409) {
-      console.log(`Order ${paymentId} already exists in Supabase — skipping duplicate`);
-      return null;
-    }
-    throw new Error(`Supabase insert failed [${response.status}]: ${text}`);
+  if (saved === null) {
+    console.log(`Order ${paymentId} already exists in Supabase or was saved with return=minimal`);
   }
-  return true;
+  return saved;
 }
 
 // ---------------------------------------------------------------------------

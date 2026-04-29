@@ -5,12 +5,15 @@
  * and sends a branded transactional email via Brevo.
  *
  * Required environment variables:
- *   SUPABASE_URL      — e.g. https://xyzxyz.supabase.co
- *   SUPABASE_ANON_KEY — Supabase project anon/public key
+ *   SUPABASE_URL         — e.g. https://xyzxyz.supabase.co
+ *   SUPABASE_SERVICE_KEY — Supabase service role key (preferred)
+ *   SUPABASE_ANON_KEY    — fallback only if insert RLS policies allow it
  *   BREVO_API_KEY     — Brevo (Sendinblue) v3 API key
  */
 
 'use strict';
+
+import { insertSupabaseRow } from './_supabase.js';
 
 const CORS_HEADERS = {
   'Access-Control-Allow-Origin': '*',
@@ -29,36 +32,17 @@ function sendJSON(res, statusCode, payload) {
 // Helper: insert lead row into Supabase
 // ---------------------------------------------------------------------------
 async function saveLeadToSupabase({ name, dob, email, mobile, birthNum, destNum, nameNum, pct, source }) {
-  const url = `${process.env.SUPABASE_URL}/rest/v1/leads`;
-
-  const response = await fetch(url, {
-    method: 'POST',
-    headers: {
-      apikey: process.env.SUPABASE_SERVICE_KEY,
-      Authorization: `Bearer ${process.env.SUPABASE_SERVICE_KEY}`,
-      'Content-Type': 'application/json',
-      Prefer: 'return=representation',
-    },
-    body: JSON.stringify({
-      name,
-      dob,
-      email,
-      phone: mobile || null,
-      moolank: birthNum ?? null,
-      bhagyank: destNum ?? null,
-      name_number: nameNum ?? null,
-      alignment_score: pct ?? null,
-      created_at: new Date().toISOString(),
-    }),
-  });
-
-  if (!response.ok) {
-    const errorText = await response.text();
-    throw new Error(`Supabase insert failed [${response.status}]: ${errorText}`);
-  }
-
-  const rows = await response.json();
-  return Array.isArray(rows) ? rows[0] : rows;
+  return await insertSupabaseRow('leads', {
+    name,
+    dob,
+    email,
+    phone: mobile || null,
+    moolank: birthNum ?? null,
+    bhagyank: destNum ?? null,
+    name_number: nameNum ?? null,
+    alignment_score: pct ?? null,
+    created_at: new Date().toISOString(),
+  }, { duplicateOk: true });
 }
 
 // ---------------------------------------------------------------------------

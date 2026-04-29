@@ -15,6 +15,7 @@
 'use strict';
 
 import crypto from 'crypto';
+import { insertSupabaseRow } from './_supabase.js';
 
 const CORS_HEADERS = {
   'Access-Control-Allow-Origin': '*',
@@ -60,7 +61,11 @@ function verifyRazorpaySignature(orderId, paymentId, signature) {
     .createHmac('sha256', process.env.RAZORPAY_KEY_SECRET)
     .update(`${orderId}|${paymentId}`)
     .digest('hex');
-  return crypto.timingSafeEqual(Buffer.from(expected), Buffer.from(signature));
+  try {
+    return crypto.timingSafeEqual(Buffer.from(expected), Buffer.from(signature));
+  } catch {
+    return false;
+  }
 }
 
 // ---------------------------------------------------------------------------
@@ -96,36 +101,17 @@ async function fetchRazorpayPayment(paymentId) {
 async function saveOrderToSupabase({
   paymentId, name, email, dob, mobile, birthNum, destNum, nameNum,
 }) {
-  const url = `${process.env.SUPABASE_URL}/rest/v1/orders`;
-
-  const response = await fetch(url, {
-    method: 'POST',
-    headers: {
-      apikey: process.env.SUPABASE_SERVICE_KEY,
-      Authorization: `Bearer ${process.env.SUPABASE_SERVICE_KEY}`,
-      'Content-Type': 'application/json',
-      Prefer: 'return=representation',
-    },
-    body: JSON.stringify({
-      razorpay_payment_id: paymentId,
-      name,
-      email,
-      dob: dob || null,
-      phone: mobile || null,
-      moolank: birthNum ?? null,
-      bhagyank: destNum ?? null,
-      name_number: nameNum ?? null,
-      created_at: new Date().toISOString(),
-    }),
-  });
-
-  if (!response.ok) {
-    const errorText = await response.text();
-    throw new Error(`Supabase orders insert failed [${response.status}]: ${errorText}`);
-  }
-
-  const rows = await response.json();
-  return Array.isArray(rows) ? rows[0] : rows;
+  return await insertSupabaseRow('orders', {
+    razorpay_payment_id: paymentId,
+    name,
+    email,
+    dob: dob || null,
+    phone: mobile || null,
+    moolank: birthNum ?? null,
+    bhagyank: destNum ?? null,
+    name_number: nameNum ?? null,
+    created_at: new Date().toISOString(),
+  }, { duplicateOk: true });
 }
 
 // ---------------------------------------------------------------------------
@@ -426,9 +412,12 @@ export default async function handler(req, res) {
       }
     }
 
+    let orderSaved = true;
+    let orderInserted = true;
+
     // --- Save order to Supabase ---
     try {
-      await saveOrderToSupabase({
+      const savedOrder = await saveOrderToSupabase({
         paymentId: cleanPaymentId,
         name: cleanName,
         email: cleanEmail,
@@ -438,29 +427,34 @@ export default async function handler(req, res) {
         destNum: destNum ?? null,
         nameNum: nameNum ?? null,
       });
+      orderInserted = savedOrder !== null;
     } catch (dbErr) {
       console.error('Supabase order save error:', dbErr);
+      orderSaved = false;
+      orderInserted = true;
       // Payment is verified — still send the email and return success so the
       // user gets their report, but log the DB failure for investigation.
     }
 
     // --- Send delivery email (best-effort) ---
-    try {
-      await sendReportEmail({
-        paymentId: cleanPaymentId,
-        name: cleanName,
-        email: cleanEmail,
-        dob: dob || '',
-        mobile: mobile || '',
-        birthNum,
-        destNum,
-        nameNum,
-      });
-    } catch (emailErr) {
-      console.error('Brevo unexpected error in generate-report:', emailErr);
+    if (orderInserted) {
+      try {
+        await sendReportEmail({
+          paymentId: cleanPaymentId,
+          name: cleanName,
+          email: cleanEmail,
+          dob: dob || '',
+          mobile: mobile || '',
+          birthNum,
+          destNum,
+          nameNum,
+        });
+      } catch (emailErr) {
+        console.error('Brevo unexpected error in generate-report:', emailErr);
+      }
     }
 
-    return sendJSON(res, 200, { success: true, verified: true });
+    return sendJSON(res, 200, { success: true, verified: true, orderSaved, orderInserted });
   } catch (err) {
     console.error('Unhandled error in generate-report:', err);
     return sendJSON(res, 500, { success: false, error: 'Internal server error' });

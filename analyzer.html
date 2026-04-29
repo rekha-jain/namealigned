@@ -766,11 +766,17 @@ async function captureEmail(){
   const btn = document.querySelector('#emailCapture .btn');
   btn.disabled=true; btn.textContent='Saving…';
   try{
-    await fetch('/api/capture-lead',{
+    const res = await fetch('/api/capture-lead',{
       method:'POST',headers:{'Content-Type':'application/json'},
       body:JSON.stringify({name:S.name,dob:S.dob,email,birthNum:S.birthNum,destNum:S.destNum,nameNum:S.nameNum,pct:compatPct(S.nameNum,S.nameRaw,S.birthNum,S.destNum)})
     });
-  }catch(e){ /* fail silently in static preview */ }
+    const data = await res.json().catch(()=>({}));
+    if(!res.ok || !data.success) throw new Error(data.error || 'Lead capture failed');
+  }catch(e){
+    alert('Could not save your email right now. Please try again.');
+    btn.disabled=false; btn.textContent='Email me my analysis';
+    return;
+  }
   document.getElementById('emailRow').style.display='none';
   document.getElementById('emailDone').style.display='block';
 }
