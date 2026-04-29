@@ -129,6 +129,46 @@
 .hook-foot{font-family:sans-serif;font-size:12.5px;line-height:1.55;color:#9eb1c0;margin:0;padding-top:.65rem;border-top:1px dashed rgba(201,162,39,.3)}
 .hook-foot strong{color:#f5d060}
 
+/* ── IDENTITY CARD (new narrative-led hook) ── */
+.identity-card{background:linear-gradient(160deg,#1a0e52 0%,#3a1d80 60%,#1a0e52 100%);color:#f0eaff;border-radius:var(--rl);padding:2rem 1.5rem 1.75rem;text-align:center;margin-bottom:1.25rem;border:1px solid rgba(245,196,81,.4);box-shadow:0 8px 32px rgba(26,14,82,.3);position:relative;overflow:hidden}
+.identity-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,rgba(245,196,81,.7),transparent)}
+.identity-card::after{content:'';position:absolute;inset:0;background:radial-gradient(circle at 50% 0%,rgba(245,196,81,.10) 0%,transparent 60%);pointer-events:none}
+.id-greet{font-family:'Playfair Display',Georgia,serif;font-size:18px;color:#e2d4f5;margin-bottom:.4rem;letter-spacing:.01em;font-weight:500;position:relative}
+.id-archetype{font-family:'Playfair Display',Georgia,serif;font-size:38px;line-height:1.05;font-weight:700;color:#fff;margin:0 0 .35rem;letter-spacing:-.005em;position:relative}
+@media(max-width:520px){.id-archetype{font-size:30px}}
+.id-num-row{font-family:sans-serif;font-size:11.5px;color:#f5c451;letter-spacing:.16em;text-transform:uppercase;margin-bottom:1rem;font-weight:600;position:relative}
+.id-line{font-family:Georgia,serif;font-size:17px;line-height:1.5;color:#f0eaff;margin:0;font-style:italic;max-width:540px;margin-left:auto;margin-right:auto;position:relative}
+@media(max-width:520px){.id-line{font-size:15px}}
+
+/* ── NARRATIVE CARD (single story thread) ── */
+.narrative-card{background:#fff;border:1.5px solid var(--border);border-radius:var(--rl);padding:1.5rem 1.4rem;margin-bottom:1rem;box-shadow:0 4px 20px rgba(26,14,82,.06)}
+@media(max-width:520px){.narrative-card{padding:1.25rem 1.1rem}}
+.nrr-section{padding:1.1rem 0;border-bottom:1px dashed var(--border)}
+.nrr-section:first-child{padding-top:0}
+.nrr-section:last-child{border-bottom:none;padding-bottom:.25rem}
+.nrr-h{font-family:'Playfair Display',Georgia,serif;font-size:18px;font-weight:700;color:var(--text);margin:0 0 .65rem;letter-spacing:.005em;display:flex;align-items:center;gap:8px}
+.nrr-sub{font-family:sans-serif;font-size:11.5px;color:var(--text3);letter-spacing:.06em;text-transform:uppercase;margin:0 0 .85rem;font-weight:600}
+.nrr-trait{font-family:sans-serif;font-size:14px;line-height:1.6;color:var(--text);padding:.5rem 0 .5rem 18px;position:relative}
+.nrr-trait::before{content:'◆';position:absolute;left:0;top:.55rem;color:#9d7fff;font-size:9px}
+.nrr-name-body{font-family:sans-serif;font-size:14px;line-height:1.65;color:var(--text);background:linear-gradient(135deg,rgba(124,58,237,.05),rgba(245,196,81,.04));border-left:3px solid #7c3aed;padding:.85rem 1rem;border-radius:0 8px 8px 0}
+.nrr-name-body strong{color:#6d4ed1}
+.nrr-truth-body{font-family:Georgia,serif;font-size:16px;line-height:1.55;color:var(--text);font-style:italic;padding:.5rem 0;text-align:center;max-width:520px;margin:0 auto}
+.nrr-truth-body::before{content:'"';font-size:38px;color:#f5c451;line-height:0;vertical-align:-.25em;margin-right:4px;font-family:Georgia,serif}
+.nrr-truth-body::after{content:'"';font-size:38px;color:#f5c451;line-height:0;vertical-align:-.45em;margin-left:2px;font-family:Georgia,serif}
+.nrr-strengths{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:.25rem}
+@media(max-width:520px){.nrr-strengths{grid-template-columns:1fr}}
+.nrr-str{background:linear-gradient(135deg,rgba(124,58,237,.06),rgba(245,196,81,.04));border:1px solid rgba(124,58,237,.18);border-radius:10px;padding:.7rem .65rem;text-align:center;font-family:sans-serif}
+.nrr-str-icon{font-size:18px;margin-bottom:4px}
+.nrr-str-lbl{font-size:13px;font-weight:700;color:var(--text);line-height:1.25}
+.nrr-rec{list-style:none;padding:0;margin:0}
+.nrr-rec li{font-family:sans-serif;font-size:13.5px;line-height:1.55;color:var(--text);padding:.55rem 0 .55rem 26px;position:relative;border-bottom:1px dashed var(--border)}
+.nrr-rec li:last-child{border-bottom:none}
+.nrr-rec li::before{content:'🪞';position:absolute;left:0;top:.55rem;font-size:13px}
+.nrr-bha-body{font-family:Georgia,serif;font-size:14.5px;line-height:1.6;color:var(--text);padding:.85rem 1rem;background:linear-gradient(135deg,#1a0e52 0%,#3a1d80 100%);color:#f0eaff;border-radius:10px;font-style:italic;border:1px solid rgba(245,196,81,.35)}
+.nrr-bha-body strong{color:#f5c451;font-style:normal}
+.nrr-share-prompt{margin-top:1rem;padding:.85rem 1rem;background:rgba(245,196,81,.08);border:1px dashed rgba(245,196,81,.5);border-radius:10px;text-align:center;font-family:sans-serif;font-size:13.5px;color:var(--text);line-height:1.5}
+.nrr-share-prompt strong{color:#9d4edd}
+
 /* Vibration callout — sits just below letter breakdown */
 .vibe-callout{margin-top:1.25rem;background:linear-gradient(135deg,rgba(124,58,237,.08),rgba(201,162,39,.06));border:1px solid rgba(124,58,237,.25);border-left:4px solid #7c3aed;border-radius:var(--r);padding:.95rem 1.1rem}
 .vibe-callout-hd{font-family:sans-serif;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:#7c3aed;font-weight:700;margin-bottom:6px}
@@ -264,12 +304,48 @@
   <div id="page2" class="page" style="display:none">
     <div class="progress-wrap mb-3"><div class="progress-bar" style="width:66%"></div></div>
 
-    <!-- 1. PERSONALIZED HOOK (Chaldean-anchored) -->
-    <div class="hook-card">
-      <div class="hook-eyebrow">🔮 Your Chaldean Numerology Summary</div>
-      <h2 class="hook-greet" id="hookGreet"></h2>
-      <p class="hook-line" id="hookLine"></p>
-      <p class="hook-foot" id="hookFoot"></p>
+    <!-- 1. IDENTITY CARD (archetype-led hook) -->
+    <div class="identity-card">
+      <div class="id-greet" id="idGreet"></div>
+      <h1 class="id-archetype" id="idArchetype">The Harmonizer</h1>
+      <div class="id-num-row" id="idNumRow"></div>
+      <p class="id-line" id="idLine"></p>
+    </div>
+
+    <!-- 1b. NARRATIVE CARD — single story thread -->
+    <div class="narrative-card">
+      <div class="nrr-section">
+        <h3 class="nrr-h">🧠 Who you are at your core</h3>
+        <p class="nrr-sub" id="nrrSub"></p>
+        <div id="nrrCore"></div>
+      </div>
+
+      <div class="nrr-section">
+        <h3 class="nrr-h">⚡ How your name reshapes that</h3>
+        <p class="nrr-name-body" id="nrrName"></p>
+      </div>
+
+      <div class="nrr-section">
+        <h3 class="nrr-h">💔 The truth most people miss</h3>
+        <p class="nrr-truth-body" id="nrrTruth"></p>
+      </div>
+
+      <div class="nrr-section">
+        <h3 class="nrr-h">✨ Where your power lives</h3>
+        <div class="nrr-strengths" id="nrrStrengths"></div>
+      </div>
+
+      <div class="nrr-section">
+        <h3 class="nrr-h">🪞 You might recognise yourself in these</h3>
+        <ul class="nrr-rec" id="nrrRec"></ul>
+      </div>
+
+      <div class="nrr-section">
+        <h3 class="nrr-h">🌟 Your destiny's quiet engine</h3>
+        <p class="nrr-bha-body" id="nrrBha"></p>
+      </div>
+
+      <div class="nrr-share-prompt" id="nrrShare"></div>
     </div>
 
     <!-- 2. CORE FREE RESULT -->
@@ -292,23 +368,6 @@
         <div style="font-family:sans-serif;font-size:12px;color:var(--text3);letter-spacing:.06em;text-transform:uppercase;margin-bottom:8px">Chaldean letter values</div>
         <div id="letterGrid"></div>
         <div id="lbEq"></div>
-      </div>
-
-      <!-- ⚡ How Your Name Vibration Affects You (Chaldean-specific callout) -->
-      <div class="vibe-callout">
-        <div class="vibe-callout-hd">⚡ How Your Name Vibration Affects You</div>
-        <div class="vibe-callout-body" id="vibeCallout"></div>
-      </div>
-
-      <!-- 4-5 personality insights (curiosity-gap teaser) -->
-      <div style="margin-top:1.25rem;padding-top:1rem;border-top:1px dashed var(--border);">
-        <div style="font-family:'Playfair Display',Georgia,serif;font-size:16px;font-weight:700;color:var(--text);margin-bottom:.25rem;">⚡ Insight You Might Recognize</div>
-        <div style="font-family:sans-serif;font-size:12px;color:var(--text3);margin-bottom:.5rem;letter-spacing:.02em;">Patterns most people with your Moolank quietly notice in themselves</div>
-      </div>
-      <div class="insights-list" id="insightsList"></div>
-
-      <div style="text-align:center">
-        <span class="confidence-pill" id="confidencePill"></span>
       </div>
 
       <!-- ── Dynamic share-card generator (1080×1080, Canvas-rendered) ── -->
@@ -557,6 +616,182 @@ const MOOLANK_INSIGHTS = {
       surprise:'Moolank 9 often signals a recurring theme of conflict-then-resolution — relationships, careers, even health follow this rhythm'}
 };
 
+// ── ARCHETYPE NARRATIVE TABLES (per Moolank 1–9) ──────────────────────
+// Used by the new identity-driven Step 2 layout. One archetype, one
+// identity line, four core traits, an emotional truth, three strengths,
+// three "you might notice…" recognition moments — all written to feel
+// observational and "this is so me," not generic horoscope copy.
+const ARCHETYPES = {
+  1:'The Trailblazer', 2:'The Empath',     3:'The Storyteller',
+  4:'The Maverick',    5:'The Explorer',   6:'The Harmonizer',
+  7:'The Seeker',      8:'The Architect',  9:'The Warrior'
+};
+
+const IDENTITY_LINES = {
+  1:"You're built to lead — even on the days no one tells you it's allowed.",
+  2:"You feel the room twice — once for you, once for them.",
+  3:"You turn moments into stories, and strangers into rooms that listen.",
+  4:"You see the cracks in systems most people are still defending.",
+  5:"You are the curiosity people borrow when their own runs out.",
+  6:"You are the room people calm down in — even when no one notices you're the one carrying it.",
+  7:"You are most yourself when no one is watching — and most misread when they are.",
+  8:"You're building something quietly that the world will only notice once it's already standing.",
+  9:"You move at the speed of conviction — and pay for every second of it."
+};
+
+const CORE_TRAITS = {
+  1:[
+    "You don't ask for permission — you give yourself the role and grow into it.",
+    "You can be magnetic in a room and lonely the moment you leave it.",
+    "You take feedback as a personal verdict, even when it isn't.",
+    "You'd rather be respected than liked — but you secretly want both."
+  ],
+  2:[
+    "You read the temperature of a room before anyone speaks.",
+    "You absorb other people's moods and call them your own by evening.",
+    "You'd rather over-give than feel the small ache of being unneeded.",
+    "Your softness is read as weakness by people who haven't seen you decide."
+  ],
+  3:[
+    "You can charm a stranger in 30 seconds and lose interest in 30 minutes.",
+    "Your mind moves faster than your follow-through — ideas pile up.",
+    "You're funniest when you're slightly sad, and you know it.",
+    "You feel most alive when an audience starts leaning in."
+  ],
+  4:[
+    "You see what others quietly agreed to ignore — and can't unsee it.",
+    "You move in cycles: long stable stretches, then sudden full-pivots.",
+    "You don't trust ladders. You build your own door.",
+    "You're misread as 'difficult' by people who confuse honesty with friction."
+  ],
+  5:[
+    "You learn fast and lose interest faster — depth scares you a little.",
+    "You'd rather have ten doors half-open than one fully shut.",
+    "You think in tabs. Closing one feels like loss, even when it should be relief.",
+    "You're the friend people call when they need an honest, fast take."
+  ],
+  6:[
+    "You don't try to read people; you just do — temperatures, tones, tiny shifts.",
+    "You give early, give fully, and quietly track whether the people around you are okay.",
+    "Beauty matters to you in a way you don't always explain — disorder tires you faster than effort ever does.",
+    "You're loyal long after loyalty has stopped being earned."
+  ],
+  7:[
+    "You'd rather think a thing through ten times than say it half-formed.",
+    "You're refilled by solitude in the same way most people are refilled by company.",
+    "You mistrust easy answers — and easy people.",
+    "You can be in a crowd and still feel like the only one in the room."
+  ],
+  8:[
+    "You don't chase fast wins — you build things that outlast the noise.",
+    "You feel under-credited often, and rarely say it out loud.",
+    "You measure yourself by responsibility carried, not applause received.",
+    "You can be slow to trust — and almost impossible to lose once you do."
+  ],
+  9:[
+    "You move first and reflect later — usually in the shower, usually too late.",
+    "Your loyalty is fierce; your forgiveness is conditional.",
+    "You feel things at full volume — boredom included.",
+    "You're best in a crisis and worst in a long, slow afternoon."
+  ]
+};
+
+const NAME_INFLUENCE = {
+  1:"adds a sharp, leader-coded edge — you push to be in charge of your own story, and bristle when something tries to box you in.",
+  2:"adds emotional softness on top — you read people more than the math of your core would suggest, and trust your gut before your logic.",
+  3:"adds expressive, performative energy — you light up in front of people and process life out loud, even when your core wants to stay private.",
+  4:"adds restless rebellion on top — you question the very systems your core wants to thrive inside, which creates a productive friction.",
+  5:"adds speed, wit, and restlessness — you process ideas in seconds, get bored of slowness, and switch lanes more than feels like 'you.'",
+  6:"adds warmth and beauty-orientation — you soften toward people more than your core would naturally, and you carry an unspoken aesthetic standard.",
+  7:"adds depth and introspection — you disappear inward without warning, and need quiet stretches before showing up fully again.",
+  8:"adds discipline and slow-burn ambition — you commit longer than most and quietly take on more weight than is yours to carry.",
+  9:"adds courage and combative directness — you say the harder thing sooner, even when your core would rather hold it in."
+};
+
+const EMOTIONAL_TRUTHS = {
+  1:"You'd rather be the one carrying it than the one who has to ask for help — and that loneliness is the price of how capable you look.",
+  2:"You spend so much energy reading the room that the question 'what do I actually feel?' lands harder than it should.",
+  3:"You sound the most fine when you're the least fine — and you've gotten too good at it.",
+  4:"You're tired of being called difficult by people who just don't want to be questioned.",
+  5:"You're scared that if you slow down, you'll have to face what you've been outrunning.",
+  6:"You hold space for everyone so naturally that the question 'what do I actually want?' lands harder than it should.",
+  7:"You're not distant — you're just protecting a softer version of yourself than people have earned the right to see.",
+  8:"You keep waiting for the recognition that proves you weren't crazy to keep going — and you're tired of waiting alone.",
+  9:"You're not always angry. You just feel things at a volume the world keeps asking you to turn down."
+};
+
+const STRENGTH_LABELS = {
+  1:[{i:'☀',l:'Self-Starting'},{i:'◎',l:'Magnetic Authority'},{i:'✦',l:'Decisive Mind'}],
+  2:[{i:'☾',l:'Emotional Radar'},{i:'◇',l:'Quiet Influence'},{i:'✧',l:'Patient Listening'}],
+  3:[{i:'✦',l:'Verbal Charisma'},{i:'☼',l:'Creative Range'},{i:'✧',l:'Quick Connection'}],
+  4:[{i:'◈',l:'Pattern Vision'},{i:'⚙',l:'Original Thinking'},{i:'◉',l:'Calm Under Disruption'}],
+  5:[{i:'⚡',l:'Adaptive Mind'},{i:'✶',l:'Verbal Agility'},{i:'✦',l:'Curiosity at Scale'}],
+  6:[{i:'❤',l:'Emotional Fluency'},{i:'✿',l:'Quiet Magnetism'},{i:'✦',l:'Aesthetic Eye'}],
+  7:[{i:'◉',l:'Deep Insight'},{i:'✦',l:'Independent Mind'},{i:'◇',l:'Calm Under Pressure'}],
+  8:[{i:'⚖',l:'Long-Game Discipline'},{i:'◆',l:'Earned Authority'},{i:'✦',l:'Quiet Resilience'}],
+  9:[{i:'⚔',l:'Courage in Action'},{i:'❤',l:'Loyal Force'},{i:'✦',l:'Cuts Through Noise'}]
+};
+
+const RECOGNITION_MOMENTS = {
+  1:[
+    "You replay 'I should've said that better' more often than the people you said it to.",
+    "You'd rather lead a thing imperfectly than follow someone doing it 'wrong.'",
+    "You're the friend people text right before they make a hard decision."
+  ],
+  2:[
+    "You remember exactly what someone wore the day they were upset.",
+    "You say 'it's fine' faster than you say 'I'm hurt.'",
+    "The days you spend alone are the days your head is finally quiet."
+  ],
+  3:[
+    "You turn boring stories into funny ones automatically — even your own pain.",
+    "You have at least 8 half-finished projects you still emotionally consider 'in progress.'",
+    "You go quiet around people who don't laugh at the things you say."
+  ],
+  4:[
+    "You can predict how a meeting will go in the first three minutes.",
+    "You've quietly outgrown rooms a year before you actually leave them.",
+    "You trust a stranger faster than someone who's been around 'too long.'"
+  ],
+  5:[
+    "You over-explain when you're bored, and under-explain when you're not.",
+    "You can hold three conversations and still finish your work fastest.",
+    "You've changed your idea of 'what I want next' at least four times this year."
+  ],
+  6:[
+    "You remember tiny things people told you months ago — what they ordered, what they were anxious about — without ever trying.",
+    "You'd rather absorb tension than name it, even when naming it would help you more.",
+    "You 'perform okayness' really well on the days you're not okay."
+  ],
+  7:[
+    "You replay conversations at 1 a.m. that nobody else thought twice about.",
+    "You can be in a group and still feel completely alone — and you almost prefer it.",
+    "You spot the 'off' detail in a story before you spot the point."
+  ],
+  8:[
+    "You keep score of fairness silently — even with people you love.",
+    "You say 'I'm fine, just tired' when the actual word is 'unappreciated.'",
+    "You trust patterns over promises."
+  ],
+  9:[
+    "You've ended things 24 hours before you 'decided' to.",
+    "You defend strangers harder than you defend yourself.",
+    "Your calm and your fury share the same face."
+  ]
+};
+
+const BHAGYANK_BRIDGE = {
+  1:"Your destiny pushes you toward standing alone in your own light — even on days your nature would rather lean on someone.",
+  2:"Your destiny is partnership-shaped — your life keeps placing you in moments where what you build, you build with someone.",
+  3:"Your destiny is voice-shaped — your life keeps pulling you toward expression, audiences, and being heard out loud.",
+  4:"Your destiny is rebellion-shaped — you'll keep being placed in systems you're meant to question, not obey.",
+  5:"Your destiny is movement-shaped — your life rewards travel, change, and the kind of freedom that scares slower people.",
+  6:"Your destiny is love-and-beauty-shaped — your life keeps returning you to people, harmony, and what you choose to nurture.",
+  7:"Your destiny is depth-shaped — your life keeps stripping the surface away until only the truth is left.",
+  8:"Your destiny is structure-shaped — your life rewards what you build slowly, and tests what you try to rush.",
+  9:"Your destiny is courage-shaped — your life keeps placing you in moments where the only way out is through."
+};
+
 // ── State ──────────────────────────────────────────────────────────────
 let S = {name:'',dob:'',gender:'',focus:'',context:'',mobile:'',
   birthNum:0,destNum:0,nameNum:0,nameRaw:0,loshu:new Set(),missing:[]};
@@ -612,46 +847,50 @@ function renderAnalysis(){
   const ba = PLANET_ATTRS[birthNum] || PLANET_ATTRS[1];
   const insights = MOOLANK_INSIGHTS[birthNum] || MOOLANK_INSIGHTS[1];
 
-  // 1. HOOK — Chaldean-anchored template
+  // 1. IDENTITY CARD + NARRATIVE CARD (single story thread, archetype-led)
   const firstName = name.trim().split(/\s+/)[0];
   const namePlanet = getPlanet(nameNum);
-  // Outcome potential by Moolank (positive framing — what alignment supports)
-  const OUTCOMES = {
-    1:'clear leadership, decisive action and recognised authority',
-    2:'deep intuition, harmonious partnerships and emotional balance',
-    3:'expressive creativity, influential communication and joyful momentum',
-    4:'original thinking, technological breakthroughs and unconventional success',
-    5:'fast learning, freedom of movement and versatile income streams',
-    6:'magnetic relationships, aesthetic mastery and abundant beauty',
-    7:'deep insight, philosophical clarity and respected expertise',
-    8:'lasting wealth, structural authority and earned recognition',
-    9:'courageous action, protective leadership and decisive completion'
-  };
-  const outcome = OUTCOMES[birthNum] || OUTCOMES[1];
+  const corePlanet = getPlanet(birthNum);
+  const archetype = ARCHETYPES[birthNum] || ARCHETYPES[1];
 
-  document.getElementById('hookGreet').textContent = firstName + ',';
-  // Identity → Life pattern → Outcome → Curiosity gap
-  document.getElementById('hookLine').innerHTML =
-    `based on Chaldean numerology — which focuses on the sound vibration of your name — your current name carries the energy of number <strong style="color:#f5d060">${nameNum} (${namePlanet})</strong>. This vibration is associated with ${insights.hook}.<br><br>` +
-    `You may have noticed that ${insights.pattern.toLowerCase()}. This is influenced by how your name vibration interacts with your birth numbers (Moolank ${birthNum}, Bhagyank ${destNum}).<br><br>` +
-    `When aligned well, your numbers support <strong style="color:#f5d060">${outcome}</strong>.`;
-  document.getElementById('hookFoot').innerHTML =
-    `👉 This is only a part of your full Chaldean numerology profile. Read on for your alignment score, recognition moments and how to enhance alignment further. <strong>Scroll down to explore ↓</strong>`;
+  // Identity Card
+  document.getElementById('idGreet').textContent = firstName + ',';
+  document.getElementById('idArchetype').textContent = archetype;
+  document.getElementById('idNumRow').textContent = `Moolank ${birthNum} · ${corePlanet}`;
+  document.getElementById('idLine').textContent = IDENTITY_LINES[birthNum] || IDENTITY_LINES[1];
 
-  // Vibration callout — explains how name number affects daily life
-  const vibePatterns = {
-    1:'creates a leadership-driven mental pattern. You initiate fast, but may struggle when forced to follow.',
-    2:'creates a sensitive, emotionally-attuned pattern. You feel deeply, but may absorb others\' moods.',
-    3:'creates an expressive, communicative pattern. You generate ideas fast, but may scatter your focus.',
-    4:'creates an unconventional, system-breaking pattern. You see what others miss, but face sudden shifts.',
-    5:'creates a fast-moving, adaptive mental pattern. You think quickly and adapt easily, but may struggle with consistency.',
-    6:'creates a harmonising, magnetic pattern. You attract people, but may overgive emotionally.',
-    7:'creates a deep, analytical pattern. You see hidden layers, but may overthink decisions.',
-    8:'creates a disciplined, justice-driven pattern. You build slowly and lastingly, but may feel under-recognised early on.',
-    9:'creates a courageous, action-driven pattern. You move with intensity, but cycle through high-low energy bursts.'
-  };
-  document.getElementById('vibeCallout').innerHTML =
-    `Your name number <strong>${nameNum} (${namePlanet})</strong> ${vibePatterns[nameNum]||vibePatterns[1]}`;
+  // Narrative — Core
+  document.getElementById('nrrSub').textContent = `Moolank ${birthNum} · ${corePlanet}`;
+  const traits = CORE_TRAITS[birthNum] || CORE_TRAITS[1];
+  document.getElementById('nrrCore').innerHTML =
+    traits.map(t => `<div class="nrr-trait">${t}</div>`).join('');
+
+  // Narrative — Name Influence (connect core ↔ name)
+  const nameInf = NAME_INFLUENCE[nameNum] || NAME_INFLUENCE[1];
+  document.getElementById('nrrName').innerHTML =
+    `Your core wants one thing — your <strong>name vibration ${nameNum} (${namePlanet})</strong> ${nameInf}`;
+
+  // Narrative — Emotional Truth
+  document.getElementById('nrrTruth').textContent = EMOTIONAL_TRUTHS[birthNum] || EMOTIONAL_TRUTHS[1];
+
+  // Narrative — Strengths
+  const strengths = STRENGTH_LABELS[birthNum] || STRENGTH_LABELS[1];
+  document.getElementById('nrrStrengths').innerHTML =
+    strengths.map(s => `<div class="nrr-str"><div class="nrr-str-icon">${s.i}</div><div class="nrr-str-lbl">${s.l}</div></div>`).join('');
+
+  // Narrative — Recognition Moments
+  const rec = RECOGNITION_MOMENTS[birthNum] || RECOGNITION_MOMENTS[1];
+  document.getElementById('nrrRec').innerHTML =
+    rec.map(r => `<li>${r}</li>`).join('');
+
+  // Narrative — Bhagyank Bridge (destiny tension)
+  const bha = BHAGYANK_BRIDGE[destNum] || BHAGYANK_BRIDGE[1];
+  document.getElementById('nrrBha').innerHTML =
+    `${bha} <strong>That tension — between who you are and where life keeps pointing — is your quiet engine.</strong>`;
+
+  // Narrative — Share prompt
+  document.getElementById('nrrShare').innerHTML =
+    `Send this to the friend who'd say <em>"this is so you"</em> — let them see if their numbers match yours. <strong>👀</strong>`;
 
   // Badge (now lives inside align-mini)
   const badgeEl = document.getElementById('ahBadge');
@@ -690,20 +929,7 @@ function renderAnalysis(){
   const pill=compound?compound.q:'n', pillLabel=compound?compound.l:'Standard vibration';
   document.getElementById('lbEq').innerHTML=`<div class="lb-eq-row"><span>${eqNums} =</span><span class="lb-raw">${nameRaw}</span><span style="color:var(--text3)">→</span><span class="lb-reduced">${nameNum}</span><span class="lb-cpill ${pill}">${nameRaw}/${nameNum} · ${pillLabel}</span></div>`;
 
-  // 3. INSIGHTS (free — 4–5 with one surprise)
-  const traitIcons = ['◆','◆','◆'];
-  const insightsHtml =
-    insights.traits.map((t,i)=>
-      `<div class="insight-row"><div class="insight-icon">${traitIcons[i]||'◆'}</div><div class="insight-text">${t}.</div></div>`
-    ).join('') +
-    `<div class="insight-row"><div class="insight-icon">◇</div><div class="insight-text"><strong>Behaviour pattern:</strong> ${insights.pattern}.</div></div>` +
-    `<div class="insight-row"><div class="insight-icon spark">⚡</div><div class="insight-text"><span class="surprise-tag">Surprising</span>${insights.surprise}.</div></div>`;
-  document.getElementById('insightsList').innerHTML = insightsHtml;
-
-  // Confidence pill
-  const confidencePct = 78 + (birthNum % 5) * 2; // 78–86%
-  document.getElementById('confidencePill').innerHTML =
-    `✓ This insight matches <strong style="margin:0 4px">${confidencePct}%</strong> of users with Moolank ${birthNum}`;
+  // 3. INSIGHTS — replaced by the new narrative card above (no-op).
 
   // 4. LOCKED PREVIEWS — new card design uses static value-prop bullets;
   //    no per-card teaser elements to populate. Keep block as no-op for now.
