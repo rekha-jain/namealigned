@@ -1234,6 +1234,7 @@ function showBusinessResult(bn,bd){
     score, tier:t,
     pair:`Brand ${reduced} (${brandPlanet}) <span style="opacity:.55">×</span> Founder Moolank ${moo} (${founderPlanet})`,
     narrative,
+    extraHtml: buildBusinessToolkit(moo, bhag, bn),
     upsellLead:'Build your foundation:',
     upsell:'Your own Chaldean Destiny Report shows the founder\'s numbers, planetary alignment and 5-year personal-year cycle — so you know which year favours launching, scaling or rebranding. ₹199 one-time.',
     kind:'business'
@@ -1241,7 +1242,7 @@ function showBusinessResult(bn,bd){
 }
 
 // ── Shared result-card HTML builder ─────────────────────────────────
-function miniResultHTML({eyebrow,title,score,tier,pair,narrative,upsellLead,upsell,kind}){
+function miniResultHTML({eyebrow,title,score,tier,pair,narrative,extraHtml,upsellLead,upsell,kind}){
   const lead = upsellLead || 'Want the full picture?';
   return `
     <div class="mini-eyebrow">${eyebrow}</div>
@@ -1253,11 +1254,144 @@ function miniResultHTML({eyebrow,title,score,tier,pair,narrative,upsellLead,upse
       <p class="mini-pair">${pair}</p>
     </div>
     <div class="mini-narrative">${narrative}</div>
+    ${extraHtml || ''}
     <div style="background:rgba(245,196,81,.08);border:1px dashed rgba(245,196,81,.5);border-radius:10px;padding:.8rem 1rem;font-family:sans-serif;font-size:12.5px;color:var(--text);line-height:1.55;margin-bottom:.85rem;">
       <strong style="color:#9d4edd">${lead}</strong> ${upsell}
     </div>
     <a href="report?ref=mini_${kind}" class="mini-cta" onclick="trackEvent('mini_cta_clicked',{kind:'${kind}'})">Unlock Full Chaldean Report — ₹199 →</a>
     <div style="text-align:center"><button class="mini-back" onclick="renderMiniForm('${kind}')">← Check another</button></div>
+  `;
+}
+
+// ── Business helpers: brand-building toolkit ────────────────────────
+function bestBrandTargets(moo){
+  const friends = FRIENDLY[moo] || [];
+  const ranked = [];
+  for(let n=1;n<=9;n++){
+    if(CAUTION_NAME_NUMS.includes(n)) continue;
+    let s = 0;
+    if(PREFERRED.includes(n)) s += 10;
+    if(friends.includes(n))   s += 12;
+    if(n === moo)             s += 4;
+    ranked.push({n, s});
+  }
+  ranked.sort((a,b)=>b.s-a.s);
+  return ranked.slice(0,3).map(x=>x.n);
+}
+
+function suggestBrandVariants(name, moo, bhag){
+  const targets = new Set(bestBrandTargets(moo));
+  const base = String(name||'').trim();
+  if(!base) return [];
+  const variants = new Set();
+  const pushV = v => { if(v && v !== base) variants.add(v); };
+  const lower = base.toLowerCase();
+  for(const a of ['a','e','i','o','y','h','s','ah','ya']) pushV(base + a);
+  pushV(base.slice(0,-1));
+  const last = lower.slice(-1);
+  if('bcdfghjklmnpqrstvwxz'.includes(last)) pushV(base + last);
+  const swaps = [['c','k'],['k','c'],['i','y'],['y','i'],['ph','f'],['f','ph'],['s','z'],['z','s'],['ck','k'],['v','w'],['w','v']];
+  for(const [a,b] of swaps){
+    if(lower.includes(a)){
+      const idx = lower.indexOf(a);
+      pushV(base.slice(0,idx) + b + base.slice(idx+a.length));
+    }
+  }
+  for(let i=0;i<base.length;i++){
+    if('aeiouAEIOU'.includes(base[i])) pushV(base.slice(0,i)+base.slice(i+1));
+  }
+  if(base.length>=2){
+    pushV(base.slice(0,-1) + 'a' + base.slice(-1));
+    pushV(base.slice(0,-1) + 'e' + base.slice(-1));
+  }
+  const scored = [];
+  for(const v of variants){
+    const {raw, reduced} = getNameNum(v);
+    if(!targets.has(reduced)) continue;
+    const score = compatPct(reduced, raw, moo, bhag);
+    const compound = (typeof CD!=='undefined' && CD[raw]) ? CD[raw] : null;
+    if(compound && compound.q==='b') continue;
+    scored.push({name:v, reduced, raw, score, compound});
+  }
+  scored.sort((a,b)=>b.score-a.score || a.name.length-b.name.length);
+  const seen = new Set(), out = [];
+  for(const x of scored){
+    if(seen.has(x.reduced)) continue;
+    seen.add(x.reduced);
+    out.push(x);
+    if(out.length===3) break;
+  }
+  return out;
+}
+
+const BRAND_FOCUS = {
+  1:{ headline:'Lead from the front', body:'Sun energy wins with founder-led brand voice, bold positioning and category leadership. Avoid hiding behind committees.' },
+  2:{ headline:'Build on relationships', body:'Moon energy converts through trust and storytelling. Lean into customer testimonials, partnerships and emotional copy — not feature lists.' },
+  3:{ headline:'Teach to sell', body:'Jupiter energy expands through advisory positioning, content and education. Thought-leadership > paid ads. Webinars, frameworks, books work.' },
+  4:{ headline:'Disruptive angles', body:'Rahu energy thrives on unconventional GTM — alternative channels, contrarian positioning, technology-led plays. Avoid me-too markets.' },
+  5:{ headline:'Move fast, distribute wide', body:'Mercury energy wins through speed, communication and multi-channel sales. Short cycles, frequent launches, sharp copy.' },
+  6:{ headline:'Design and repeat-buy', body:'Venus energy converts through aesthetics, lifestyle branding and customer experience. Premium positioning and repeat-purchase models compound best.' },
+  7:{ headline:'Niche depth, not mass', body:'Ketu energy rewards specialist positioning. Pick a narrow domain and own it — research, mysticism, healing, deep tech. Avoid mass-market plays.' },
+  8:{ headline:'Play the long game', body:'Saturn energy compounds slowly. B2B contracts, systems, infrastructure, real estate — businesses that reward patience and process discipline.' },
+  9:{ headline:'Compete and conquer', body:'Mars energy wins in competitive arenas — sports, defence, surgery, trades, performance. Direct positioning, action-oriented brand voice.' }
+};
+
+function powerDaysFor(moo){
+  const days = [];
+  for(let d=1;d<=31;d++) if(reduce(d)===moo) days.push(d);
+  return days;
+}
+
+function buildBusinessToolkit(moo, bhag, brandName){
+  const targets = bestBrandTargets(moo);
+  const variants = suggestBrandVariants(brandName, moo, bhag);
+  const focus = BRAND_FOCUS[moo] || BRAND_FOCUS[1];
+  const days = powerDaysFor(moo);
+  const founderPlanet = getPlanet(moo);
+
+  const variantsHtml = variants.length ? `
+    <div style="margin-bottom:.9rem">
+      <div style="font-family:sans-serif;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#6d4ed1;font-weight:700;margin-bottom:.5rem">✦ Stronger brand-name variants</div>
+      <div style="display:flex;flex-direction:column;gap:.45rem">
+        ${variants.map(v=>`
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:.6rem;background:rgba(124,58,237,.06);border:1px solid rgba(124,58,237,.18);border-radius:8px;padding:.55rem .75rem">
+            <span style="font-family:'Playfair Display',Georgia,serif;font-size:15.5px;font-weight:700;color:var(--text)">${v.name}</span>
+            <span style="font-family:sans-serif;font-size:11.5px;color:var(--text2);text-align:right;line-height:1.35">
+              <strong style="color:#7c3aed">${v.score}%</strong> · Brand ${v.reduced} (${getPlanet(v.reduced)})
+              ${v.compound ? `<br><span style="font-size:10.5px;color:var(--text3);font-style:italic">CD ${v.raw}: ${v.compound.l.split('·')[0].trim()}</span>` : ''}
+            </span>
+          </div>
+        `).join('')}
+      </div>
+      <p style="font-family:sans-serif;font-size:11px;color:var(--text3);margin:.4rem 0 0;line-height:1.45;font-style:italic">Phonetic tweaks of your input that hit your founder-friendly target numbers (${targets.join(', ')}). Pronunciation stays close — vibration changes.</p>
+    </div>
+  ` : `
+    <div style="margin-bottom:.9rem;background:rgba(76,175,132,.08);border:1px solid rgba(76,175,132,.25);border-radius:8px;padding:.65rem .85rem;font-family:sans-serif;font-size:12.5px;color:var(--text);line-height:1.55">
+      ✓ Your brand name already aligns with a founder-friendly number. Focus on positioning and timing below.
+    </div>
+  `;
+
+  return `
+    <div style="background:linear-gradient(160deg,rgba(124,58,237,.04),rgba(245,196,81,.04));border:1px solid rgba(245,196,81,.3);border-radius:12px;padding:1rem 1rem .85rem;margin-bottom:1rem">
+      <div style="font-family:'Playfair Display',Georgia,serif;font-size:15.5px;font-weight:700;color:var(--text);margin-bottom:.6rem;letter-spacing:.01em">🎯 Brand-Building Toolkit <span style="font-family:sans-serif;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#9d4edd;font-weight:700;margin-left:.4rem">Free</span></div>
+
+      ${variantsHtml}
+
+      <div style="margin-bottom:.85rem">
+        <div style="font-family:sans-serif;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#6d4ed1;font-weight:700;margin-bottom:.35rem">✦ Founder-friendly brand numbers</div>
+        <p style="font-family:sans-serif;font-size:12.5px;color:var(--text);line-height:1.55;margin:0">For a Moolank ${moo} (${founderPlanet}) founder, target a brand that reduces to <strong>${targets.join(', ')}</strong>. Avoid 4 and 8 — they slow business cash flow.</p>
+      </div>
+
+      <div style="margin-bottom:.85rem">
+        <div style="font-family:sans-serif;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#6d4ed1;font-weight:700;margin-bottom:.35rem">✦ Power days for launches &amp; signings</div>
+        <p style="font-family:sans-serif;font-size:12.5px;color:var(--text);line-height:1.55;margin:0">Use <strong>${days.join(', ')}</strong> of any month for incorporation, launches, contract signings or major announcements — they amplify ${founderPlanet} energy.</p>
+      </div>
+
+      <div>
+        <div style="font-family:sans-serif;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#6d4ed1;font-weight:700;margin-bottom:.35rem">✦ ${focus.headline}</div>
+        <p style="font-family:sans-serif;font-size:12.5px;color:var(--text);line-height:1.55;margin:0">${focus.body}</p>
+      </div>
+    </div>
   `;
 }
 
