@@ -2,6 +2,12 @@ User-agent: *
 Allow: /
 
 # Block internal/utility pages from indexing
+Disallow: /generate-report
 Disallow: /generate-report.html
+Disallow: /index-preview
+Disallow: /analyzer-preview
+Disallow: /report-preview
+Disallow: /wordmark-preview
+Disallow: /samples/
 
-Sitemap: https://namealigned.com/sitemap.xml
+Sitemap: https://www.namealigned.com/sitemap.xml
