@@ -1158,7 +1158,8 @@ function showPartnerResult(yn,yd,pn,pd){
     score, tier:t,
     pair:`${yArche} <span style="opacity:.55">×</span> ${pArche}`,
     narrative,
-    upsell:'Unlock the full compatibility chapter — planetary interaction map, friction-points, harmony-builders.',
+    upsellLead:'Go deeper:',
+    upsell:'Your full Chaldean Destiny Report includes a dedicated Compatibility Insight chapter — planetary interaction map, friction-points and harmony-builders for your own numbers.',
     kind:'partner'
   });
 }
@@ -1188,7 +1189,8 @@ function showChildResult(cn,cd){
     score, tier:t,
     pair:`Name ${reduced} (${namePlanet}) <span style="opacity:.55">×</span> Moolank ${moo} (${corePlanet})`,
     narrative,
-    upsell:'Get 3 phonetic name variants tuned to your child\'s Moolank — same pronunciation, stronger Chaldean alignment.',
+    upsellLead:'Build your foundation:',
+    upsell:'Your own Chaldean Destiny Report shows your Moolank, planetary alignment and 5-year personal-year cycle — so you understand the energy you\'re balancing when naming your child. ₹199 one-time.',
     kind:'child'
   });
 }
@@ -1221,13 +1223,15 @@ function showBusinessResult(bn,bd){
     score, tier:t,
     pair:`Brand ${reduced} (${brandPlanet}) <span style="opacity:.55">×</span> Founder Moolank ${moo} (${founderPlanet})`,
     narrative,
-    upsell:'Get a full brand-name audit + phonetic variants tuned to amplify the founder\'s energy.',
+    upsellLead:'Build your foundation:',
+    upsell:'Your own Chaldean Destiny Report shows the founder\'s numbers, planetary alignment and 5-year personal-year cycle — so you know which year favours launching, scaling or rebranding. ₹199 one-time.',
     kind:'business'
   });
 }
 
 // ── Shared result-card HTML builder ─────────────────────────────────
-function miniResultHTML({eyebrow,title,score,tier,pair,narrative,upsell,kind}){
+function miniResultHTML({eyebrow,title,score,tier,pair,narrative,upsellLead,upsell,kind}){
+  const lead = upsellLead || 'Want the full picture?';
   return `
     <div class="mini-eyebrow">${eyebrow}</div>
     <h2 class="mini-title">${title}</h2>
@@ -1239,7 +1243,7 @@ function miniResultHTML({eyebrow,title,score,tier,pair,narrative,upsell,kind}){
     </div>
     <div class="mini-narrative">${narrative}</div>
     <div style="background:rgba(245,196,81,.08);border:1px dashed rgba(245,196,81,.5);border-radius:10px;padding:.8rem 1rem;font-family:sans-serif;font-size:12.5px;color:var(--text);line-height:1.55;margin-bottom:.85rem;">
-      <strong style="color:#9d4edd">Want the full picture?</strong> ${upsell}
+      <strong style="color:#9d4edd">${lead}</strong> ${upsell}
     </div>
     <a href="report?ref=mini_${kind}" class="mini-cta" onclick="trackEvent('mini_cta_clicked',{kind:'${kind}'})">Unlock Full Chaldean Report — ₹199 →</a>
     <div style="text-align:center"><button class="mini-back" onclick="renderMiniForm('${kind}')">← Check another</button></div>
