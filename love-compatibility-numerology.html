@@ -23,6 +23,7 @@
 <meta name="twitter:image" content="https://www.namealigned.com/assets/namealigned-logo-full.svg"/>
 <link rel="stylesheet" href="assets/style.css"/>
 <link rel="stylesheet" href="assets/theme-cosmic-light.css"/>
+<link rel="stylesheet" href="assets/mini-analyzers.css"/>
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -115,9 +116,27 @@
   <h1>Love Compatibility Numerology — <em>two birth dates, one honest read.</em></h1>
   <p>Free instant Chaldean compatibility check for couples. Drop in both names and dates of birth. We tell you where your rhythms harmonise, where they grate, and exactly what each partner needs to feel met.</p>
   <div class="cta-row">
-    <a href="analyzer?tool=partner" class="tool-cta-gold">Try Free — Open Tool →</a>
+    <a href="#tool" class="tool-cta-gold">Try Free — Run a Check ↓</a>
     <a href="#how-it-works" class="tool-cta-ghost">How does it work?</a>
   </div>
+</section>
+
+<!-- ── EMBEDDED TOOL ─────────────────────────────────────────── -->
+<section id="tool" style="padding:2.5rem 1.5rem;background:#fafafa;border-top:1px solid var(--border);border-bottom:1px solid var(--border)">
+  <div class="mini-form-card">
+    <div class="mini-eyebrow">💞 Partner Compatibility</div>
+    <h2 class="mini-title">Check your compatibility</h2>
+    <p class="mini-sub">Drop in both names and dates of birth. We'll show how your Chaldean numbers interact — friction, flow, and where harmony lives. Run as many partner checks as you like — no signup, no limit.</p>
+    <div class="mini-form">
+      <div class="fg"><label>Your name</label><input type="text" id="youName" placeholder="e.g. Rekha Jain"/></div>
+      <div class="fg"><label>Your date of birth</label><input type="date" id="youDob"/></div>
+      <div class="fg"><label>Partner's name</label><input type="text" id="partnerName" placeholder="e.g. Arjun Mehta"/></div>
+      <div class="fg"><label>Partner's date of birth</label><input type="date" id="partnerDob"/></div>
+    </div>
+    <div class="mini-err" id="partnerErr"></div>
+    <button class="mini-btn" onclick="runPartner()">Reveal compatibility →</button>
+  </div>
+  <div id="partnerResult" style="max-width:560px;margin:0 auto"></div>
 </section>
 
 <section class="section">
@@ -171,11 +190,11 @@
 </section>
 
 <section class="section" style="text-align:center">
-  <div class="eyebrow-tag">Free · 30 seconds · No signup</div>
-  <h2>Run the check on your relationship right now.</h2>
-  <p>You'll see the compatibility score, tier label, planetary mapping and a rhythm-narrative tuned to your exact pairing — all in one card.</p>
+  <div class="eyebrow-tag">Free · Unlimited checks · No signup</div>
+  <h2>Run the check on every pairing on your mind.</h2>
+  <p>Compare past relationships, current partners or potential matches — back-to-back, all in the same session. The tool above stays open. Change inputs, hit "Reveal compatibility" again.</p>
   <div style="margin-top:1.4rem">
-    <a href="analyzer?tool=partner" class="tool-cta-gold">Open Free Tool →</a>
+    <a href="#tool" class="tool-cta-gold">Back to the tool ↑</a>
   </div>
 </section>
 
@@ -289,9 +308,30 @@
 </footer>
 
 <script src="assets/numerology.js"></script>
+<script src="assets/mini-analyzers.js"></script>
 <script>
 const navHam=document.getElementById('navHamburger'), navMob=document.getElementById('navMobile');
 if(navHam&&navMob) navHam.addEventListener('click',()=>navMob.classList.toggle('open'));
+
+function runPartner(){
+  const errEl = document.getElementById('partnerErr');
+  const showErr = msg => { errEl.textContent = msg; errEl.style.display = 'block'; };
+  errEl.style.display = 'none';
+  const yn = document.getElementById('youName').value.trim();
+  const yd = document.getElementById('youDob').value;
+  const pn = document.getElementById('partnerName').value.trim();
+  const pd = document.getElementById('partnerDob').value;
+  if(!yn || !yd) return showErr('Please fill your name and date of birth.');
+  if(!pn || !pd) return showErr('Please fill your partner\'s name and date of birth.');
+
+  const html = buildPartnerResultHTML(yn, yd, pn, pd, {inline:true});
+  const target = document.getElementById('partnerResult');
+  target.innerHTML =
+    `<div class="mini-result-inline">${html}
+      <div class="mini-rerun-hint">✦ Try another pairing above — change names or dates and click <strong>Reveal compatibility</strong> again. <a href="#tool">Back to form ↑</a></div>
+    </div>`;
+  target.scrollIntoView({behavior:'smooth', block:'start'});
+}
 </script>
 </body>
 </html>

@@ -23,6 +23,7 @@
 <meta name="twitter:image" content="https://www.namealigned.com/assets/namealigned-logo-full.svg"/>
 <link rel="stylesheet" href="assets/style.css"/>
 <link rel="stylesheet" href="assets/theme-cosmic-light.css"/>
+<link rel="stylesheet" href="assets/mini-analyzers.css"/>
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -117,9 +118,25 @@
   <h1>Business Name Numerology — <em>does your brand match its founder?</em></h1>
   <p>Free instant Chaldean check. Drop in your brand name and the founder's date of birth. We tell you whether the name amplifies, neutralises or fights the founder's energy — and surface stronger phonetic variants that hit 100% alignment.</p>
   <div class="cta-row">
-    <a href="analyzer?tool=business" class="tool-cta-gold">Try Free — Open Tool →</a>
+    <a href="#tool" class="tool-cta-gold">Try Free — Run a Check ↓</a>
     <a href="#how-it-works" class="tool-cta-ghost">How does it work?</a>
   </div>
+</section>
+
+<!-- ── EMBEDDED TOOL ─────────────────────────────────────────── -->
+<section id="tool" style="padding:2.5rem 1.5rem;background:#fafafa;border-top:1px solid var(--border);border-bottom:1px solid var(--border)">
+  <div class="mini-form-card">
+    <div class="mini-eyebrow">🏢 Business Name Vibration</div>
+    <h2 class="mini-title">Score your brand name</h2>
+    <p class="mini-sub">Enter the business name and the founder's date of birth. We'll show how the brand vibrates and whether it amplifies the founder's energy. Run as many names as you like — no signup, no limit.</p>
+    <div class="mini-form">
+      <div class="fg"><label>Business / brand name</label><input type="text" id="bizName" placeholder="e.g. Saanvi Designs"/></div>
+      <div class="fg"><label>Founder's date of birth</label><input type="date" id="bizDob"/></div>
+    </div>
+    <div class="mini-err" id="bizErr"></div>
+    <button class="mini-btn" onclick="runBusiness()">Score the brand →</button>
+  </div>
+  <div id="bizResult" style="max-width:560px;margin:0 auto"></div>
 </section>
 
 <!-- ── INTRO ──────────────────────────────────────────────────── -->
@@ -179,11 +196,11 @@
 
 <!-- ── TRY FREE CTA ──────────────────────────────────────────── -->
 <section class="section" style="text-align:center">
-  <div class="eyebrow-tag">Free · 20 seconds · No signup</div>
-  <h2>Run the check on your brand right now.</h2>
-  <p>You'll see the alignment score, planetary mapping, compound meaning, stronger 100%-alignment variants of your brand, lucky launch dates and your founder-positioning guidance — all in one card.</p>
+  <div class="eyebrow-tag">Free · Unlimited checks · No signup</div>
+  <h2>Run the check on every brand idea you have.</h2>
+  <p>Try multiple variants of your brand name back-to-back. The tool above stays open — change the name, hit "Score the brand" again, compare results.</p>
   <div style="margin-top:1.4rem">
-    <a href="analyzer?tool=business" class="tool-cta-gold">Open Free Tool →</a>
+    <a href="#tool" class="tool-cta-gold">Back to the tool ↑</a>
   </div>
 </section>
 
@@ -304,9 +321,27 @@
 </footer>
 
 <script src="assets/numerology.js"></script>
+<script src="assets/mini-analyzers.js"></script>
 <script>
 const navHam=document.getElementById('navHamburger'), navMob=document.getElementById('navMobile');
 if(navHam&&navMob) navHam.addEventListener('click',()=>navMob.classList.toggle('open'));
+
+function runBusiness(){
+  const errEl = document.getElementById('bizErr');
+  const showErr = msg => { errEl.textContent = msg; errEl.style.display = 'block'; };
+  errEl.style.display = 'none';
+  const bn = document.getElementById('bizName').value.trim();
+  const bd = document.getElementById('bizDob').value;
+  if(!bn || !bd) return showErr('Please fill the business name and founder\'s date of birth.');
+
+  const html = buildBusinessResultHTML(bn, bd, {inline:true});
+  const target = document.getElementById('bizResult');
+  target.innerHTML =
+    `<div class="mini-result-inline">${html}
+      <div class="mini-rerun-hint">✦ Try another brand name above — change the name and click <strong>Score the brand</strong> again. <a href="#tool">Back to form ↑</a></div>
+    </div>`;
+  target.scrollIntoView({behavior:'smooth', block:'start'});
+}
 </script>
 </body>
 </html>

@@ -23,6 +23,7 @@
 <meta name="twitter:image" content="https://www.namealigned.com/assets/namealigned-logo-full.svg"/>
 <link rel="stylesheet" href="assets/style.css"/>
 <link rel="stylesheet" href="assets/theme-cosmic-light.css"/>
+<link rel="stylesheet" href="assets/mini-analyzers.css"/>
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -115,9 +116,25 @@
   <h1>Baby Name Numerology — <em>does the name match your child's energy?</em></h1>
   <p>Free instant Chaldean check. Drop in your baby's proposed name and date of birth. We tell you whether the name strengthens your child's natural qualities — and surface the core-friendly target numbers, auspicious ceremony dates and parenting cues their Moolank responds to.</p>
   <div class="cta-row">
-    <a href="analyzer?tool=child" class="tool-cta-gold">Try Free — Open Tool →</a>
+    <a href="#tool" class="tool-cta-gold">Try Free — Run a Check ↓</a>
     <a href="#how-it-works" class="tool-cta-ghost">How does it work?</a>
   </div>
+</section>
+
+<!-- ── EMBEDDED TOOL ─────────────────────────────────────────── -->
+<section id="tool" style="padding:2.5rem 1.5rem;background:#fafafa;border-top:1px solid var(--border);border-bottom:1px solid var(--border)">
+  <div class="mini-form-card">
+    <div class="mini-eyebrow">👶 Child Name Alignment</div>
+    <h2 class="mini-title">Align a child's name</h2>
+    <p class="mini-sub">Enter the name you're considering and your child's date of birth. We'll check if the name vibration supports their Moolank. Try as many candidate names as you like — no signup, no limit.</p>
+    <div class="mini-form">
+      <div class="fg"><label>Child's proposed name</label><input type="text" id="childName" placeholder="e.g. Aanya Sharma"/></div>
+      <div class="fg"><label>Child's date of birth</label><input type="date" id="childDob"/></div>
+    </div>
+    <div class="mini-err" id="childErr"></div>
+    <button class="mini-btn" onclick="runChild()">Check alignment →</button>
+  </div>
+  <div id="childResult" style="max-width:560px;margin:0 auto"></div>
 </section>
 
 <section class="section">
@@ -172,11 +189,11 @@
 </section>
 
 <section class="section" style="text-align:center">
-  <div class="eyebrow-tag">Free · 20 seconds · No signup</div>
-  <h2>Run the check on your baby's name right now.</h2>
-  <p>You'll see the alignment score, planetary mapping, compound meaning, core-friendly target numbers, ceremony dates and a parenting paragraph keyed to your child's exact Moolank — all in one card.</p>
+  <div class="eyebrow-tag">Free · Unlimited checks · No signup</div>
+  <h2>Test every name on your shortlist.</h2>
+  <p>Try multiple candidate names back-to-back. The DOB stays — just change the name field, hit "Check alignment" again, and compare results.</p>
   <div style="margin-top:1.4rem">
-    <a href="analyzer?tool=child" class="tool-cta-gold">Open Free Tool →</a>
+    <a href="#tool" class="tool-cta-gold">Back to the tool ↑</a>
   </div>
 </section>
 
@@ -290,9 +307,27 @@
 </footer>
 
 <script src="assets/numerology.js"></script>
+<script src="assets/mini-analyzers.js"></script>
 <script>
 const navHam=document.getElementById('navHamburger'), navMob=document.getElementById('navMobile');
 if(navHam&&navMob) navHam.addEventListener('click',()=>navMob.classList.toggle('open'));
+
+function runChild(){
+  const errEl = document.getElementById('childErr');
+  const showErr = msg => { errEl.textContent = msg; errEl.style.display = 'block'; };
+  errEl.style.display = 'none';
+  const cn = document.getElementById('childName').value.trim();
+  const cd = document.getElementById('childDob').value;
+  if(!cn || !cd) return showErr('Please fill the child\'s name and date of birth.');
+
+  const html = buildChildResultHTML(cn, cd, {inline:true});
+  const target = document.getElementById('childResult');
+  target.innerHTML =
+    `<div class="mini-result-inline">${html}
+      <div class="mini-rerun-hint">✦ Try another candidate name above — change the name and click <strong>Check alignment</strong> again. <a href="#tool">Back to form ↑</a></div>
+    </div>`;
+  target.scrollIntoView({behavior:'smooth', block:'start'});
+}
 </script>
 </body>
 </html>

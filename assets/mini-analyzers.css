@@ -1,0 +1,38 @@
+/* ═════════════════════════════════════════════════════════════════
+   MINI-ANALYZER STYLES
+   Used by landing pages (/business-name-numerology, /baby-name-numerology,
+   /love-compatibility-numerology) and embedded result cards.
+   ════════════════════════════════════════════════════════════════ */
+
+/* Inline form (no modal, used directly on landing pages) */
+.mini-form-card{background:#fff;border:1.5px solid rgba(245,196,81,.35);border-radius:18px;padding:1.75rem 1.5rem 1.5rem;margin:0 auto;max-width:560px;box-shadow:0 18px 48px rgba(26,14,82,.18)}
+.mini-eyebrow{font-family:sans-serif;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#9d4edd;font-weight:700;margin-bottom:.4rem}
+.mini-title{font-family:'Playfair Display',Georgia,serif;font-size:24px;font-weight:700;color:var(--text);margin:0 0 .35rem;line-height:1.2}
+.mini-sub{font-family:sans-serif;font-size:13px;color:var(--text2);line-height:1.55;margin:0 0 1.25rem}
+.mini-form .fg{margin-bottom:.85rem}
+.mini-form label{display:block;font-family:sans-serif;font-size:12px;color:var(--text2);font-weight:600;margin-bottom:5px;letter-spacing:.02em}
+.mini-form input{width:100%;padding:.7rem .85rem;border:1.5px solid var(--border);border-radius:10px;font-family:sans-serif;font-size:14px;background:#fff;color:var(--text);box-sizing:border-box;transition:border-color .2s}
+.mini-form input:focus{border-color:#9d4edd;outline:none}
+.mini-err{display:none;background:rgba(220,38,38,.08);border:1px solid rgba(220,38,38,.3);border-radius:8px;padding:.5rem .75rem;font-family:sans-serif;font-size:12.5px;color:#a32d2d;margin:.5rem 0}
+.mini-btn{width:100%;background:linear-gradient(135deg,#7c3aed 0%,#4a2da6 100%);color:#fff;border:none;padding:.85rem 1rem;border-radius:10px;font-family:sans-serif;font-size:14.5px;font-weight:700;cursor:pointer;letter-spacing:.01em;box-shadow:0 4px 14px rgba(124,58,237,.35);transition:transform .15s}
+.mini-btn:hover{transform:translateY(-1px)}
+
+/* Result card */
+.mini-result-card{background:linear-gradient(160deg,#1a0e52 0%,#3a1d80 60%,#1a0e52 100%);color:#f0eaff;border-radius:14px;padding:1.5rem 1.25rem;margin-bottom:1rem;text-align:center;border:1px solid rgba(245,196,81,.4);position:relative;overflow:hidden}
+.mini-result-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,rgba(245,196,81,.7),transparent)}
+.mini-score{font-family:'Playfair Display',Georgia,serif;font-size:54px;line-height:1;color:#f5d060;font-weight:700;margin:.15rem 0;text-shadow:0 0 22px rgba(245,196,81,.45)}
+.mini-tag{display:inline-block;font-family:sans-serif;font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;padding:5px 12px;border-radius:20px;margin-top:.5rem}
+.mini-tag.high{background:rgba(76,175,132,.18);color:#7ce0b0;border:1px solid rgba(76,175,132,.4)}
+.mini-tag.mid{background:rgba(245,196,81,.18);color:#f5d060;border:1px solid rgba(245,196,81,.4)}
+.mini-tag.low{background:rgba(220,38,38,.18);color:#ff9b9b;border:1px solid rgba(220,38,38,.4)}
+.mini-pair{font-family:Georgia,serif;font-size:14.5px;line-height:1.55;color:#f0eaff;margin:.85rem 0 0;font-style:italic}
+.mini-narrative{background:rgba(124,58,237,.04);border:1px solid rgba(124,58,237,.2);border-radius:10px;padding:.95rem 1rem;font-family:sans-serif;font-size:13.5px;line-height:1.6;color:var(--text);margin-bottom:1rem}
+.mini-narrative strong{color:#6d4ed1}
+.mini-cta{background:linear-gradient(135deg,#f5d060 0%,#c9a227 100%);color:#1a0e52;border:none;padding:.75rem 1rem;border-radius:10px;font-family:sans-serif;font-size:13.5px;font-weight:700;cursor:pointer;width:100%;text-decoration:none;display:inline-block;text-align:center;letter-spacing:.01em;box-shadow:0 4px 14px rgba(245,196,81,.35)}
+.mini-back{background:transparent;border:none;color:var(--text3);font-family:sans-serif;font-size:12.5px;cursor:pointer;margin-top:.6rem;text-decoration:underline;text-underline-offset:3px}
+
+/* Inline-page result wrapper */
+.mini-result-inline{background:#fff;border:1.5px solid rgba(245,196,81,.35);border-radius:18px;padding:1.75rem 1.5rem 1.5rem;max-width:560px;margin:1.25rem auto 0;box-shadow:0 18px 48px rgba(26,14,82,.18)}
+.mini-rerun-hint{font-family:sans-serif;font-size:13px;color:var(--text2);text-align:center;margin-top:1rem;padding:.7rem 1rem;background:rgba(124,58,237,.05);border:1px dashed rgba(124,58,237,.3);border-radius:10px}
+.mini-rerun-hint a{color:#7c3aed;font-weight:600;text-decoration:none;border-bottom:1px solid rgba(124,58,237,.4)}
+.mini-rerun-hint a:hover{border-bottom-color:#7c3aed}
