@@ -334,11 +334,19 @@ function runBusiness(){
   const bd = document.getElementById('bizDob').value;
   if(!bn || !bd) return showErr('Please fill the business name and founder\'s date of birth.');
 
-  const html = buildBusinessResultHTML(bn, bd, {inline:true});
+  // Inline mode: hide the ₹199 upsell + CTA from the result card; in
+  // their place we render a prominent retest panel that pulls the user
+  // straight back into trying another brand name.
+  const html = buildBusinessResultHTML(bn, bd, {inline:true, hideUpsell:true});
   const target = document.getElementById('bizResult');
   target.innerHTML =
     `<div class="mini-result-inline">${html}
-      <div class="mini-rerun-hint">✦ Try another brand name above — change the name and click <strong>Score the brand</strong> again. <a href="#tool">Back to form ↑</a></div>
+      <div class="mini-rerun-panel">
+        <div class="rr-eye">✦ Free · Unlimited</div>
+        <div class="rr-h">Got more brand names in mind? <em>Test them all.</em></div>
+        <div class="rr-sub">Try as many variants as you want — the founder DOB stays, just change the name.</div>
+        <a href="#tool" class="mini-rerun-btn" onclick="document.getElementById('bizName').value='';return true;">Score another brand →</a>
+      </div>
     </div>`;
   target.scrollIntoView({behavior:'smooth', block:'start'});
 }

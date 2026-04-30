@@ -328,9 +328,15 @@ function partnerScore(aMoo,aBhag,bMoo,bBhag){
 }
 
 // ── Result HTML builders (return strings; caller writes to DOM) ────
-function miniResultHTML({eyebrow,title,score,tier,pair,narrative,extraHtml,upsellLead,upsell,kind,inline}){
+function miniResultHTML({eyebrow,title,score,tier,pair,narrative,extraHtml,upsellLead,upsell,kind,inline,hideUpsell}){
   const lead = upsellLead || 'Want the full picture?';
   const backBtn = inline ? '' : `<div style="text-align:center"><button class="mini-back" onclick="renderMiniForm('${kind}')">← Check another</button></div>`;
+  const upsellBlock = hideUpsell ? '' : `
+    <div style="background:rgba(245,196,81,.08);border:1px dashed rgba(245,196,81,.5);border-radius:10px;padding:.8rem 1rem;font-family:sans-serif;font-size:12.5px;color:var(--text);line-height:1.55;margin-bottom:.85rem;">
+      <strong style="color:#9d4edd">${lead}</strong> ${upsell}
+    </div>
+    <a href="report?ref=mini_${kind}" class="mini-cta" onclick="trackEvent('mini_cta_clicked',{kind:'${kind}'})">Unlock Full Chaldean Report — ₹199 →</a>
+  `;
   return `
     <div class="mini-eyebrow">${eyebrow}</div>
     <h2 class="mini-title">${title}</h2>
@@ -342,10 +348,7 @@ function miniResultHTML({eyebrow,title,score,tier,pair,narrative,extraHtml,upsel
     </div>
     <div class="mini-narrative">${narrative}</div>
     ${extraHtml || ''}
-    <div style="background:rgba(245,196,81,.08);border:1px dashed rgba(245,196,81,.5);border-radius:10px;padding:.8rem 1rem;font-family:sans-serif;font-size:12.5px;color:var(--text);line-height:1.55;margin-bottom:.85rem;">
-      <strong style="color:#9d4edd">${lead}</strong> ${upsell}
-    </div>
-    <a href="report?ref=mini_${kind}" class="mini-cta" onclick="trackEvent('mini_cta_clicked',{kind:'${kind}'})">Unlock Full Chaldean Report — ₹199 →</a>
+    ${upsellBlock}
     ${backBtn}
   `;
 }
@@ -447,6 +450,7 @@ function buildBusinessResultHTML(bn,bd, opts){
     upsellLead:'Build your foundation:',
     upsell:UPSELL_BUSINESS,
     kind:'business',
-    inline: !!(opts&&opts.inline)
+    inline: !!(opts&&opts.inline),
+    hideUpsell: !!(opts&&opts.hideUpsell)
   });
 }

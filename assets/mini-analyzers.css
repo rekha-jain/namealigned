@@ -36,3 +36,15 @@
 .mini-rerun-hint{font-family:sans-serif;font-size:13px;color:var(--text2);text-align:center;margin-top:1rem;padding:.7rem 1rem;background:rgba(124,58,237,.05);border:1px dashed rgba(124,58,237,.3);border-radius:10px}
 .mini-rerun-hint a{color:#7c3aed;font-weight:600;text-decoration:none;border-bottom:1px solid rgba(124,58,237,.4)}
 .mini-rerun-hint a:hover{border-bottom-color:#7c3aed}
+
+/* PROMINENT RERUN PANEL — fills the slot vacated by the ₹199 upsell on
+   the inline business tool. Mimics the gold-CTA visual hierarchy so
+   users feel pulled to test another brand immediately. */
+.mini-rerun-panel{margin-top:1rem;background:linear-gradient(160deg,rgba(124,58,237,.06) 0%,rgba(245,196,81,.10) 100%);border:1.5px solid rgba(245,196,81,.5);border-radius:14px;padding:1.25rem 1.25rem 1.1rem;text-align:center;position:relative;overflow:hidden}
+.mini-rerun-panel::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,rgba(245,196,81,.7),transparent)}
+.mini-rerun-panel .rr-eye{font-family:sans-serif;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:#9d4edd;font-weight:700;margin-bottom:.45rem}
+.mini-rerun-panel .rr-h{font-family:'Playfair Display',Georgia,serif;font-size:19px;font-weight:700;color:var(--text);line-height:1.25;margin-bottom:.55rem}
+.mini-rerun-panel .rr-h em{color:#7c3aed;font-style:normal}
+.mini-rerun-panel .rr-sub{font-family:sans-serif;font-size:13px;color:var(--text2);line-height:1.55;margin-bottom:1rem}
+.mini-rerun-btn{display:inline-block;background:linear-gradient(135deg,#f5d060 0%,#c9a227 100%);color:#1a0e52;padding:.85rem 1.6rem;border-radius:10px;font-family:sans-serif;font-size:14.5px;font-weight:700;text-decoration:none;letter-spacing:.01em;box-shadow:0 6px 18px rgba(245,196,81,.4);transition:transform .15s,box-shadow .15s}
+.mini-rerun-btn:hover{transform:translateY(-1px);box-shadow:0 8px 22px rgba(245,196,81,.5)}
