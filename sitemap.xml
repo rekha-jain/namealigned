@@ -75,6 +75,31 @@
 
   <!-- Blog articles -->
   <url>
+    <loc>https://www.namealigned.com/blog/what-is-name-numerology</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.75</priority>
+  </url>
+  <url>
+    <loc>https://www.namealigned.com/blog/how-numerology-works-for-names</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.75</priority>
+  </url>
+  <url>
+    <loc>https://www.namealigned.com/blog/is-name-correction-effective</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.75</priority>
+  </url>
+  <url>
+    <loc>https://www.namealigned.com/blog/how-to-choose-lucky-name</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.75</priority>
+  </url>
+  <url>
+    <loc>https://www.namealigned.com/blog/chaldean-vs-pythagorean-numerology</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.75</priority>
+  </url>
+  <url>
     <loc>https://www.namealigned.com/blog/chaldean-numerology-guide</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
