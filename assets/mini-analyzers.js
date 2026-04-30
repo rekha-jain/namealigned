@@ -97,10 +97,16 @@ function _phoneticTransforms(s){
 }
 function _isReadable(v){
   const lo = v.toLowerCase();
-  if(/(.)\1\1/.test(lo)) return false;
+  if(/(.)\1\1/.test(lo)) return false;            // no triple anything
   if(/[bcdfghjklmnpqrstvwxz]{4,}/.test(lo)) return false;
-  if(/^(.)\1/.test(lo)) return false;
-  if(/[aeiou]{3,}/.test(lo)) return false;
+  if(/^(.)\1/.test(lo)) return false;             // no double-letter start
+  if(/[aeiou]{3,}/.test(lo)) return false;        // no 3+ vowels in a row
+  // Reject visually-awkward respellings produced by the transform stack
+  if(/ii/.test(lo)) return false;                 // no 'ii' (Shaktii, Wellniis)
+  if(/yy/.test(lo)) return false;                 // no 'yy' (Shaktyy)
+  if(/zs|sz/.test(lo)) return false;              // no 'zs'/'sz' (Wellnezs)
+  if(/[bcdfghjklmnpqrstvwxz]z[bcdfghjklmnpqrstvwxz]/.test(lo)) return false; // consonant-z-consonant
+  if(/yi(?=[bcdfghjklmnpqrstvwxz])/.test(lo)) return false; // 'yi' before consonant (Shaktyi)
   return true;
 }
 function _applyToLongestWord(name, transformFn){
@@ -120,7 +126,9 @@ function _applyToLongestWord(name, transformFn){
   for(const variant of transformFn(name)) wholeOut.add(variant);
   return wholeOut;
 }
-function suggestNameVariants(name, target, moo, bhag){
+// Generate scored variants whose Chaldean reduction matches `target`.
+// Returns a flat array (no top-N cut) so callers can merge across targets.
+function _variantsForTarget(name, target, moo, bhag){
   const base = String(name||'').trim();
   if(!base) return [];
   const pass1 = _applyToLongestWord(base, _phoneticTransforms);
@@ -139,31 +147,59 @@ function suggestNameVariants(name, target, moo, bhag){
     const {raw, reduced} = getNameNum(v);
     if(reduced !== target) continue;
     const compound = (typeof CD!=='undefined' && CD[raw]) ? CD[raw] : null;
-    if(compound && compound.q==='b') continue;
-    const baseScore = compatPct(reduced, raw, moo, bhag);
-    const isPerfect = (reduced === moo) && (!compound || compound.q !== 'b');
-    const displayScore = isPerfect ? 100 : baseScore;
+    if(compound && compound.q==='b') continue;       // never recommend bad CD
+    const score = compatPct(reduced, raw, moo, bhag); // honest score
     const lenPenalty = Math.max(0, Math.abs(v.length - base.length) - 2);
-    scored.push({name:v, reduced, raw, score:displayScore, compound, lenPenalty, isPerfect});
+    scored.push({name:v, reduced, raw, score, compound, lenPenalty});
   }
-  scored.sort((a,b)=>
-    (b.isPerfect?1:0) - (a.isPerfect?1:0)
-    || b.score - a.score
-    || a.lenPenalty - b.lenPenalty
-    || a.name.length - b.name.length
-  );
-  const seen = new Set(), out = [];
-  for(const x of scored){
-    const key = x.name.toLowerCase();
-    if(seen.has(key)) continue;
-    seen.add(key);
-    out.push(x);
+  return scored;
+}
+
+// Public: backward-compatible single-target search (used by the future
+// child-name flow if we ever bring it back).
+function suggestNameVariants(name, target, moo, bhag){
+  return _variantsForTarget(name, target, moo, bhag)
+    .sort((a,b)=> b.score - a.score || a.lenPenalty - b.lenPenalty || a.name.length - b.name.length)
+    .slice(0,3);
+}
+
+// Brand variant search — try ALL top founder-friendly targets, rank by
+// real Chaldean score, return up to 3 high-quality picks (≥ 80% only).
+// This avoids the trap where targeting moo for a Moolank-4/8 founder
+// produces variants that score ≤ 50% under compatPct.
+function suggestBrandVariants(name, moo, bhag){
+  const targets = bestBrandTargets(moo);   // already excludes 4 and 8
+  const allVariants = new Map();           // dedupe by lower(name)
+  for(const target of targets){
+    for(const v of _variantsForTarget(name, target, moo, bhag)){
+      const key = v.name.toLowerCase();
+      const existing = allVariants.get(key);
+      if(!existing || existing.score < v.score){
+        allVariants.set(key, v);
+      }
+    }
+  }
+  const STRONG_THRESHOLD = 70;             // tierBrand: ≥70 = "Strong Brand Alignment"
+  const sorted = [...allVariants.values()]
+    .filter(v => v.score >= STRONG_THRESHOLD)
+    .sort((a,b)=> b.score - a.score || a.lenPenalty - b.lenPenalty || a.name.length - b.name.length);
+  // Prefer diversity in reduced-number across the 3 picks (one per target),
+  // but if fewer than 3 unique reduceds clear the bar, fill with next best.
+  const out = [], seenReduced = new Set();
+  for(const v of sorted){
+    if(seenReduced.has(v.reduced)) continue;
+    seenReduced.add(v.reduced);
+    out.push(v);
     if(out.length===3) break;
   }
+  if(out.length<3){
+    for(const v of sorted){
+      if(out.includes(v)) continue;
+      out.push(v);
+      if(out.length===3) break;
+    }
+  }
   return out;
-}
-function suggestBrandVariants(name, moo, bhag){
-  return suggestNameVariants(name, moo, moo, bhag);
 }
 
 // ── Brand helpers ──────────────────────────────────────────────────
@@ -235,7 +271,6 @@ function buildBusinessToolkit(moo, bhag, brandName){
   const focus = BRAND_FOCUS[moo] || BRAND_FOCUS[1];
   const days = powerDaysFor(moo);
   const founderPlanet = getPlanet(moo);
-  const currentReduced = getNameNum(brandName).reduced;
 
   const variantsHtml = variants.length ? `
     <div style="margin-bottom:.9rem">
@@ -251,17 +286,13 @@ function buildBusinessToolkit(moo, bhag, brandName){
           </div>
         `).join('')}
       </div>
-      <p style="font-family:sans-serif;font-size:11px;color:var(--text3);margin:.4rem 0 0;line-height:1.45;font-style:italic">Each variant above hits 100% Chaldean alignment — same pronunciation as your input, vibrationally locked to your founder Moolank ${moo}.</p>
-    </div>
-  ` : (currentReduced === moo ? `
-    <div style="margin-bottom:.9rem;background:rgba(76,175,132,.10);border:1px solid rgba(76,175,132,.3);border-radius:8px;padding:.65rem .85rem;font-family:sans-serif;font-size:12.5px;color:var(--text);line-height:1.55">
-      ✓ Your brand name <strong>already locks to your founder Moolank ${moo}</strong>. Focus on positioning and timing below.
+      <p style="font-family:sans-serif;font-size:11px;color:var(--text3);margin:.4rem 0 0;line-height:1.45;font-style:italic">Each variant above scores in the "Strong Brand Alignment" tier (70%+) — same pronunciation as your input, brand number tuned to your founder Moolank ${moo}. Paste any of these back into the form to verify.</p>
     </div>
   ` : `
     <div style="margin-bottom:.9rem;background:rgba(245,196,81,.08);border:1px dashed rgba(245,196,81,.4);border-radius:8px;padding:.65rem .85rem;font-family:sans-serif;font-size:12.5px;color:var(--text);line-height:1.55">
-      ✦ No phonetic tweak of "<strong>${brandName}</strong>" reaches 100% alignment with your founder Moolank ${moo} (${founderPlanet}). A different brand name may serve better — try one that reduces to <strong>${targets.join(', ')}</strong>, or use the founder-friendly numbers below as targets when brainstorming.
+      ✦ No phonetic tweak of "<strong>${brandName}</strong>" lands in the Strong Alignment tier (70%+) for a Moolank ${moo} (${founderPlanet}) founder. A different brand name may serve better — try one that reduces to <strong>${targets.join(', ')}</strong>, or use the founder-friendly numbers below as targets when brainstorming.
     </div>
-  `);
+  `;
 
   return `
     <div style="background:linear-gradient(160deg,rgba(124,58,237,.04),rgba(245,196,81,.04));border:1px solid rgba(245,196,81,.3);border-radius:12px;padding:1rem 1rem .85rem;margin-bottom:1rem">
