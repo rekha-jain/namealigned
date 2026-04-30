@@ -126,19 +126,73 @@ function _applyToLongestWord(name, transformFn){
   for(const variant of transformFn(name)) wholeOut.add(variant);
   return wholeOut;
 }
+// Classify the type of move that turns `orig` into `variant`. Used both
+// for the human-readable 'Move:' line and for ranking — single-step
+// recognised patterns (phoneme swap, vowel drop, doubled letter) beat
+// multi-step compounds, which look more like typos than brand respellings.
+function _classifyMove(orig, variant){
+  const o = orig.toLowerCase(), v = variant.toLowerCase();
+  if(v.length === o.length){
+    let diffs = 0, di = -1;
+    for(let i=0;i<o.length;i++){ if(o[i] !== v[i]){ diffs++; di = i; } }
+    if(diffs === 1){
+      const a = o[di], b = v[di];
+      const swaps = [['c','k'],['k','c'],['i','y'],['y','i'],['s','z'],['z','s'],['v','w'],['w','v']];
+      for(const [x,y] of swaps) if(a===x && b===y) return {kind:'phoneme-swap', label:`swapped ${x} → ${y}`};
+      return {kind:'letter-swap', label:`swapped ${a} → ${b}`};
+    }
+    if(diffs === 2){
+      // Phoneme cluster swap (ph↔f shifts surrounding indices)
+      if(o.includes('ph') && v.includes('f') && !v.includes('ph')) return {kind:'phoneme-swap', label:'swapped ph → f'};
+      if(o.includes('f') && !o.includes('ph') && v.includes('ph')) return {kind:'phoneme-swap', label:'swapped f → ph'};
+      if(o.includes('ck') && !v.includes('ck')) return {kind:'phoneme-swap', label:'swapped ck → k'};
+      return {kind:'multi-step', label:'multi-step respelling'};
+    }
+    return {kind:'multi-step', label:'multi-step respelling'};
+  }
+  if(v.length === o.length + 1){
+    for(let i=0;i<v.length;i++){
+      if(v.slice(0,i)+v.slice(i+1) === o){
+        const ch = v[i];
+        if(i>0 && v[i-1]===ch) return {kind:'doubled', label:`doubled '${ch}'`};
+        if(i<v.length-1 && v[i+1]===ch) return {kind:'doubled', label:`doubled '${ch}'`};
+        if(i === v.length-1){
+          if(ch === 'e') return {kind:'silent-add', label:`added silent 'e'`};
+          if(ch === 'h') return {kind:'silent-add', label:`added silent 'h'`};
+          return {kind:'inserted', label:`added trailing '${ch}'`};
+        }
+        return {kind:'inserted', label:`inserted '${ch}'`};
+      }
+    }
+  }
+  if(v.length === o.length - 1){
+    for(let i=0;i<o.length;i++){
+      if(o.slice(0,i)+o.slice(i+1) === v){
+        const ch = o[i];
+        if('aeiou'.includes(ch)) return {kind:'vowel-drop', label:`dropped '${ch}' (Flickr-style)`};
+        return {kind:'consonant-drop', label:`dropped '${ch}'`};
+      }
+    }
+  }
+  return {kind:'multi-step', label:'multi-step respelling'};
+}
+
+// Rank moves by how 'natural' they feel as a brand respelling.
+// Lower number = preferred. Multi-step transforms get the worst rank
+// because they look like typos rather than intentional respellings.
+const _MOVE_RANK = {
+  'phoneme-swap': 1, 'doubled': 1, 'silent-add': 1, 'vowel-drop': 2,
+  'letter-swap': 2, 'inserted': 3, 'consonant-drop': 4, 'multi-step': 9
+};
+
 // Generate scored variants whose Chaldean reduction matches `target`.
-// Returns a flat array (no top-N cut) so callers can merge across targets.
+// SINGLE-STEP transforms only — no pass2 chaining. The user's complaint
+// was that compounded transforms produce 'boring' typo-like names; this
+// keeps every variant exactly one move away from the input.
 function _variantsForTarget(name, target, moo, bhag){
   const base = String(name||'').trim();
   if(!base) return [];
-  const pass1 = _applyToLongestWord(base, _phoneticTransforms);
-  const pass2 = new Set();
-  let budget = 0;
-  for(const v of pass1){
-    if(budget++ > 60) break;
-    for(const w of _applyToLongestWord(v, _phoneticTransforms)) pass2.add(w);
-  }
-  const all = new Set([...pass1, ...pass2]);
+  const all = _applyToLongestWord(base, _phoneticTransforms);
   all.delete(base);
   const scored = [];
   for(const v of all){
@@ -148,9 +202,11 @@ function _variantsForTarget(name, target, moo, bhag){
     if(reduced !== target) continue;
     const compound = (typeof CD!=='undefined' && CD[raw]) ? CD[raw] : null;
     if(compound && compound.q==='b') continue;       // never recommend bad CD
-    const score = compatPct(reduced, raw, moo, bhag); // honest score
-    const lenPenalty = Math.max(0, Math.abs(v.length - base.length) - 2);
-    scored.push({name:v, reduced, raw, score, compound, lenPenalty});
+    const score = compatPct(reduced, raw, moo, bhag);
+    const move = _classifyMove(base, v);
+    if(move.kind === 'multi-step') continue;          // typo-feel — drop
+    const lenPenalty = Math.max(0, Math.abs(v.length - base.length) - 1);
+    scored.push({name:v, reduced, raw, score, compound, lenPenalty, move});
   }
   return scored;
 }
@@ -163,66 +219,16 @@ function suggestNameVariants(name, target, moo, bhag){
     .slice(0,3);
 }
 
-// Diff two strings and emit a short, plain-English description of what
-// changed (e.g. "+ doubled 'n'", "swapped c → k", "added trailing 'h'").
-// Used to make each suggested variant feel intentional, not random.
-function _diffDescription(orig, variant){
-  const o = orig.toLowerCase(), v = variant.toLowerCase();
-  if(v.length === o.length){
-    // Single-char swap
-    let diffs = [];
-    for(let i=0;i<o.length;i++){
-      if(o[i] !== v[i]) diffs.push([o[i], v[i]]);
-    }
-    if(diffs.length === 1){
-      const [a,b] = diffs[0];
-      if((a==='c'&&b==='k')||(a==='k'&&b==='c')) return `swapped ${a} → ${b}`;
-      if((a==='i'&&b==='y')||(a==='y'&&b==='i')) return `swapped ${a} → ${b}`;
-      if((a==='s'&&b==='z')||(a==='z'&&b==='s')) return `swapped ${a} → ${b}`;
-      if((a==='v'&&b==='w')||(a==='w'&&b==='v')) return `swapped ${a} → ${b}`;
-      return `swapped ${a} → ${b}`;
-    }
-    // ph ↔ f or similar two-char swap (length matches because of removal+add)
-    if(o.includes('ph') && !v.includes('ph') && v.includes('f')) return `swapped ph → f`;
-    if(o.includes('f') && !o.includes('ph') && v.includes('ph')) return `swapped f → ph`;
-    return 'phonetic respelling';
-  }
-  if(v.length === o.length + 1){
-    // Letter inserted — find which one
-    for(let i=0;i<v.length;i++){
-      if(v.slice(0,i)+v.slice(i+1) === o){
-        const ch = v[i];
-        // Doubled letter?
-        if(i>0 && v[i-1]===ch) return `doubled '${ch}'`;
-        if(i<v.length-1 && v[i+1]===ch) return `doubled '${ch}'`;
-        if(i === v.length-1) return `added trailing '${ch}'`;
-        return `added '${ch}'`;
-      }
-    }
-  }
-  if(v.length === o.length - 1){
-    // Letter removed
-    for(let i=0;i<o.length;i++){
-      if(o.slice(0,i)+o.slice(i+1) === v) return `dropped '${o[i]}'`;
-    }
-  }
-  return 'phonetic respelling';
-}
-
-// Brand variant search — return up to 3 picks that GENUINELY UPGRADE the
-// input score. We:
-//   1. Compute the input's own Chaldean score first.
-//   2. Generate variants across all top founder-friendly targets.
-//   3. Filter out anything that doesn't beat the input by at least
-//      MIN_UPGRADE points — no point showing equivalents.
-//   4. Annotate each kept variant with the score delta and a one-line
-//      "what changed" reason so the suggestion feels intentional.
+// Brand variant search — return up to 3 picks that genuinely sound like
+// the input AND land in the Strong tier (≥70%). Per user feedback we
+// don't require the variant to beat the input score; tying is fine as
+// long as the respelling is a clean, single-move change that actually
+// reads like the original (Lyft-from-Lift, Foenix-from-Phoenix style).
 function suggestBrandVariants(name, moo, bhag){
-  // Input score — anchor for upgrade comparison
   const {raw: inputRaw, reduced: inputReduced} = getNameNum(name);
   const inputScore = compatPct(inputReduced, inputRaw, moo, bhag);
 
-  const targets = bestBrandTargets(moo);   // already excludes 4 and 8
+  const targets = bestBrandTargets(moo);
   const allVariants = new Map();
   for(const target of targets){
     for(const v of _variantsForTarget(name, target, moo, bhag)){
@@ -234,34 +240,38 @@ function suggestBrandVariants(name, moo, bhag){
     }
   }
 
-  const MIN_UPGRADE = 5;   // variant must beat input by at least 5 points
-  const STRONG_FLOOR = 70; // and land in the Strong tier
-
-  const upgrades = [...allVariants.values()]
-    .filter(v => v.score >= STRONG_FLOOR && v.score >= inputScore + MIN_UPGRADE)
+  const STRONG_FLOOR = 70;
+  const candidates = [...allVariants.values()]
+    .filter(v => v.score >= STRONG_FLOOR)
     .map(v => ({
       ...v,
       delta: v.score - inputScore,
-      reason: _diffDescription(name, v.name)
+      reason: v.move.label,
+      moveRank: _MOVE_RANK[v.move.kind] || 9
     }))
-    .sort((a,b)=> b.score - a.score || a.lenPenalty - b.lenPenalty || a.name.length - b.name.length);
+    // Sort: highest score first, then most natural move, then closest length to input.
+    .sort((a,b)=>
+      b.score - a.score
+      || a.moveRank - b.moveRank
+      || a.lenPenalty - b.lenPenalty
+      || a.name.length - b.name.length
+    );
 
-  // Prefer diversity in reduced-number across the picks
+  // Prefer diversity in reduced-number across the picks (one per brand-target).
   const out = [], seenReduced = new Set();
-  for(const v of upgrades){
+  for(const v of candidates){
     if(seenReduced.has(v.reduced)) continue;
     seenReduced.add(v.reduced);
     out.push(v);
     if(out.length===3) break;
   }
   if(out.length<3){
-    for(const v of upgrades){
+    for(const v of candidates){
       if(out.includes(v)) continue;
       out.push(v);
       if(out.length===3) break;
     }
   }
-  // Stash inputScore on the array for the caller's fallback messaging.
   out._inputScore = inputScore;
   return out;
 }
@@ -357,9 +367,15 @@ function buildBusinessToolkit(moo, bhag, brandName){
       </div>`;
   }
 
+  // Header copy varies by whether any variant actually beats the input.
+  const hasUpgrade = variants.some(v => v.delta > 0);
+  const headerNote = hasUpgrade
+    ? `· some beat your ${inputScore}% input`
+    : `· same Strong tier as your ${inputScore}% input · alternative vibrational targets`;
+
   const variantsHtml = variants.length ? `
     <div style="margin-bottom:.9rem">
-      <div style="font-family:sans-serif;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#6d4ed1;font-weight:700;margin-bottom:.5rem">✦ Stronger brand-name variants <span style="color:var(--text3);font-weight:600;letter-spacing:.06em">· each beats your ${inputScore}% input</span></div>
+      <div style="font-family:sans-serif;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#6d4ed1;font-weight:700;margin-bottom:.5rem">✦ Phonetically similar variants <span style="color:var(--text3);font-weight:600;letter-spacing:.06em">${headerNote}</span></div>
       <div style="display:flex;flex-direction:column;gap:.55rem">
         ${variants.map(v=>`
           <div style="background:rgba(124,58,237,.06);border:1px solid rgba(124,58,237,.2);border-radius:9px;padding:.7rem .85rem">
@@ -367,16 +383,19 @@ function buildBusinessToolkit(moo, bhag, brandName){
               <span style="font-family:'Playfair Display',Georgia,serif;font-size:16px;font-weight:700;color:var(--text)">${v.name}</span>
               <span style="font-family:sans-serif;font-size:12px;text-align:right;line-height:1.3;white-space:nowrap">
                 <strong style="color:#7c3aed;font-size:14px">${v.score}%</strong>
-                <span style="display:inline-block;background:rgba(76,175,132,.18);color:#2e7d4f;border:1px solid rgba(76,175,132,.4);font-weight:700;letter-spacing:.04em;padding:1px 7px;border-radius:10px;font-size:10.5px;margin-left:4px">↑ +${v.delta}%</span>
+                ${v.delta > 0
+                  ? `<span style="display:inline-block;background:rgba(76,175,132,.18);color:#2e7d4f;border:1px solid rgba(76,175,132,.4);font-weight:700;letter-spacing:.04em;padding:1px 7px;border-radius:10px;font-size:10.5px;margin-left:4px">↑ +${v.delta}%</span>`
+                  : ''
+                }
               </span>
             </div>
             <div style="font-family:sans-serif;font-size:11.5px;color:var(--text2);line-height:1.5">
-              ${v.reason ? `<span style="color:#9d4edd;font-weight:600">Move:</span> ${v.reason} · ` : ''}Brand ${v.reduced} (${getPlanet(v.reduced)})${v.compound ? ` · CD ${v.raw} <em style="color:var(--text3)">${v.compound.l.split('·')[0].trim()}</em>` : ''}
+              <span style="color:#9d4edd;font-weight:600">Move:</span> ${v.reason} · Brand ${v.reduced} (${getPlanet(v.reduced)})${v.compound ? ` · CD ${v.raw} <em style="color:var(--text3)">${v.compound.l.split('·')[0].trim()}</em>` : ''}
             </div>
           </div>
         `).join('')}
       </div>
-      <p style="font-family:sans-serif;font-size:11px;color:var(--text3);margin:.55rem 0 0;line-height:1.5;font-style:italic">Each variant strictly improves on your input score, preserves pronunciation, and shifts your brand-number into your Moolank's friend zone. Paste any back into the form to verify.</p>
+      <p style="font-family:sans-serif;font-size:11px;color:var(--text3);margin:.55rem 0 0;line-height:1.5;font-style:italic">Each variant is a single-step respelling that preserves pronunciation. Same Strong tier or better. Paste any back into the form to verify.</p>
     </div>
   ` : noVariantsMsg;
 
