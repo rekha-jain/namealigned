@@ -1200,6 +1200,7 @@ function showChildResult(cn,cd){
     score, tier:t,
     pair:`Name ${reduced} (${namePlanet}) <span style="opacity:.55">×</span> Moolank ${moo} (${corePlanet})`,
     narrative,
+    extraHtml: buildChildToolkit(moo, bhag, cn),
     upsellLead:'Build your foundation:',
     upsell:'Your own Chaldean Destiny Report shows your Moolank, planetary alignment and 5-year personal-year cycle — so you understand the energy you\'re balancing when naming your child. ₹199 one-time.',
     kind:'child'
@@ -1279,17 +1280,21 @@ function bestBrandTargets(moo){
   return ranked.slice(0,3).map(x=>x.n);
 }
 
-function suggestBrandVariants(name, moo, bhag){
-  const targets = new Set(bestBrandTargets(moo));
+// Reusable variant generator — name perturbations targeting given numbers.
+function suggestNameVariants(name, targetSet, moo, bhag){
   const base = String(name||'').trim();
   if(!base) return [];
   const variants = new Set();
-  const pushV = v => { if(v && v !== base) variants.add(v); };
+  const pushV = v => { if(v && v !== base && v.length >= 2) variants.add(v); };
   const lower = base.toLowerCase();
-  for(const a of ['a','e','i','o','y','h','s','ah','ya']) pushV(base + a);
-  pushV(base.slice(0,-1));
+  // Trailing-vowel additions (most natural across English / Indian names)
+  for(const a of ['a','e','i','y','h','s']) pushV(base + a);
+  // Drop trailing letter (only if it leaves >=3 chars to avoid stubs)
+  if(base.length>=4) pushV(base.slice(0,-1));
+  // Double last consonant
   const last = lower.slice(-1);
   if('bcdfghjklmnpqrstvwxz'.includes(last)) pushV(base + last);
+  // Phoneme swaps (preserve pronunciation, change vibration)
   const swaps = [['c','k'],['k','c'],['i','y'],['y','i'],['ph','f'],['f','ph'],['s','z'],['z','s'],['ck','k'],['v','w'],['w','v']];
   for(const [a,b] of swaps){
     if(lower.includes(a)){
@@ -1297,23 +1302,29 @@ function suggestBrandVariants(name, moo, bhag){
       pushV(base.slice(0,idx) + b + base.slice(idx+a.length));
     }
   }
+  // Drop a single vowel (works for shortening over-long names)
   for(let i=0;i<base.length;i++){
-    if('aeiouAEIOU'.includes(base[i])) pushV(base.slice(0,i)+base.slice(i+1));
+    if('aeiouAEIOU'.includes(base[i]) && base.length>=5) pushV(base.slice(0,i)+base.slice(i+1));
   }
+  // Insert vowel between last two chars (smoother phonetics)
   if(base.length>=2){
     pushV(base.slice(0,-1) + 'a' + base.slice(-1));
     pushV(base.slice(0,-1) + 'e' + base.slice(-1));
   }
+  const baseLen = base.length;
   const scored = [];
   for(const v of variants){
     const {raw, reduced} = getNameNum(v);
-    if(!targets.has(reduced)) continue;
+    if(!targetSet.has(reduced)) continue;
     const score = compatPct(reduced, raw, moo, bhag);
     const compound = (typeof CD!=='undefined' && CD[raw]) ? CD[raw] : null;
-    if(compound && compound.q==='b') continue;
-    scored.push({name:v, reduced, raw, score, compound});
+    if(compound && compound.q==='b') continue;          // skip bad compounds
+    // Readability: penalize length deviation from original (>1 char drift)
+    const lenPenalty = Math.max(0, Math.abs(v.length - baseLen) - 1);
+    scored.push({name:v, reduced, raw, score, compound, lenPenalty});
   }
-  scored.sort((a,b)=>b.score-a.score || a.name.length-b.name.length);
+  // Best score wins; ties broken by closer length to original.
+  scored.sort((a,b)=> b.score-a.score || a.lenPenalty-b.lenPenalty || a.name.length-b.name.length);
   const seen = new Set(), out = [];
   for(const x of scored){
     if(seen.has(x.reduced)) continue;
@@ -1322,6 +1333,10 @@ function suggestBrandVariants(name, moo, bhag){
     if(out.length===3) break;
   }
   return out;
+}
+
+function suggestBrandVariants(name, moo, bhag){
+  return suggestNameVariants(name, new Set(bestBrandTargets(moo)), moo, bhag);
 }
 
 const BRAND_FOCUS = {
@@ -1335,6 +1350,94 @@ const BRAND_FOCUS = {
   8:{ headline:'Play the long game', body:'Saturn energy compounds slowly. B2B contracts, systems, infrastructure, real estate — businesses that reward patience and process discipline.' },
   9:{ headline:'Compete and conquer', body:'Mars energy wins in competitive arenas — sports, defence, surgery, trades, performance. Direct positioning, action-oriented brand voice.' }
 };
+
+// ── Child helpers: naming toolkit ───────────────────────────────────
+function bestChildTargets(moo){
+  // For children: lean toward the child's own Moolank + close friends in
+  // the PREFERRED set. The child's name should support — not redirect —
+  // their core energy.
+  const friends = FRIENDLY[moo] || [];
+  const ranked = [];
+  for(let n=1;n<=9;n++){
+    if(CAUTION_NAME_NUMS.includes(n)) continue;
+    let s = 0;
+    if(n === moo)              s += 14;                  // strongest match
+    if(friends.includes(n))    s += 10;
+    if(PREFERRED.includes(n))  s += 6;
+    ranked.push({n, s});
+  }
+  ranked.sort((a,b)=>b.s-a.s);
+  return ranked.slice(0,3).map(x=>x.n);
+}
+
+function suggestChildVariants(name, moo, bhag){
+  return suggestNameVariants(name, new Set(bestChildTargets(moo)), moo, bhag);
+}
+
+const CHILD_FOCUS = {
+  1:{ headline:'Independence and clarity', body:'Sun children thrive when given leadership opportunities, decision-making space, and a clear sense of purpose. Avoid suppressing their natural authority — channel it.' },
+  2:{ headline:'Emotional safety first', body:'Moon children are sensitive and intuitive. Stable home rhythms, gentle correction, and creative outlets (music, art, water-based activities) bring out their best.' },
+  3:{ headline:'Learning and expression', body:'Jupiter children love to teach and absorb knowledge early. Books, philosophy, debate clubs, and travel feed their growth. They mature through wisdom, not pressure.' },
+  4:{ headline:'Structure with surprise', body:'Rahu children need structure, but get bored fast. Mix routine with novelty — tech projects, unusual hobbies, problem-solving challenges. Watch for restlessness.' },
+  5:{ headline:'Movement and variety', body:'Mercury children learn through doing, talking and travelling. Multiple interests at once is healthy. Sports, languages, performance — keep their nervous system engaged.' },
+  6:{ headline:'Beauty and belonging', body:'Venus children blossom in aesthetic, harmonious environments. Art, design, music, gardening, gentle social spaces. They protect those they love early.' },
+  7:{ headline:'Solitude and depth', body:'Ketu children need quiet time and books. Don\'t over-schedule. They mature through introspection — research, nature, mysticism, niche obsessions.' },
+  8:{ headline:'Patience and self-trust', body:'Saturn children mature slowly but powerfully. Avoid comparing them to faster peers. They reward patience with discipline and long-arc achievement.' },
+  9:{ headline:'Action and courage', body:'Mars children need physical outlets and clear missions. Sports, martial arts, social causes. Channel their fire into purpose or it turns into temper.' }
+};
+
+function buildChildToolkit(moo, bhag, childName){
+  const targets = bestChildTargets(moo);
+  const variants = suggestChildVariants(childName, moo, bhag);
+  const focus = CHILD_FOCUS[moo] || CHILD_FOCUS[1];
+  const days = powerDaysFor(moo);
+  const corePlanet = getPlanet(moo);
+
+  const variantsHtml = variants.length ? `
+    <div style="margin-bottom:.9rem">
+      <div style="font-family:sans-serif;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#6d4ed1;font-weight:700;margin-bottom:.5rem">✦ Stronger phonetic variants</div>
+      <div style="display:flex;flex-direction:column;gap:.45rem">
+        ${variants.map(v=>`
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:.6rem;background:rgba(124,58,237,.06);border:1px solid rgba(124,58,237,.18);border-radius:8px;padding:.55rem .75rem">
+            <span style="font-family:'Playfair Display',Georgia,serif;font-size:15.5px;font-weight:700;color:var(--text)">${v.name}</span>
+            <span style="font-family:sans-serif;font-size:11.5px;color:var(--text2);text-align:right;line-height:1.35">
+              <strong style="color:#7c3aed">${v.score}%</strong> · Name ${v.reduced} (${getPlanet(v.reduced)})
+              ${v.compound ? `<br><span style="font-size:10.5px;color:var(--text3);font-style:italic">CD ${v.raw}: ${v.compound.l.split('·')[0].trim()}</span>` : ''}
+            </span>
+          </div>
+        `).join('')}
+      </div>
+      <p style="font-family:sans-serif;font-size:11px;color:var(--text3);margin:.4rem 0 0;line-height:1.45;font-style:italic">Spelling tweaks of your input that hit your child's core-friendly numbers (${targets.join(', ')}). Pronunciation stays close — vibration aligns.</p>
+    </div>
+  ` : `
+    <div style="margin-bottom:.9rem;background:rgba(76,175,132,.08);border:1px solid rgba(76,175,132,.25);border-radius:8px;padding:.65rem .85rem;font-family:sans-serif;font-size:12.5px;color:var(--text);line-height:1.55">
+      ✓ The name already aligns with your child's core energy. Focus on parenting cues and timing below.
+    </div>
+  `;
+
+  return `
+    <div style="background:linear-gradient(160deg,rgba(124,58,237,.04),rgba(245,196,81,.04));border:1px solid rgba(245,196,81,.3);border-radius:12px;padding:1rem 1rem .85rem;margin-bottom:1rem">
+      <div style="font-family:'Playfair Display',Georgia,serif;font-size:15.5px;font-weight:700;color:var(--text);margin-bottom:.6rem;letter-spacing:.01em">🎯 Naming Toolkit <span style="font-family:sans-serif;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#9d4edd;font-weight:700;margin-left:.4rem">Free</span></div>
+
+      ${variantsHtml}
+
+      <div style="margin-bottom:.85rem">
+        <div style="font-family:sans-serif;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#6d4ed1;font-weight:700;margin-bottom:.35rem">✦ Core-friendly name numbers</div>
+        <p style="font-family:sans-serif;font-size:12.5px;color:var(--text);line-height:1.55;margin:0">For a Moolank ${moo} (${corePlanet}) child, the ideal name reduces to <strong>${targets.join(', ')}</strong>. Avoid 4 and 8 — they add karmic friction in early life.</p>
+      </div>
+
+      <div style="margin-bottom:.85rem">
+        <div style="font-family:sans-serif;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#6d4ed1;font-weight:700;margin-bottom:.35rem">✦ Auspicious days for naming &amp; ceremonies</div>
+        <p style="font-family:sans-serif;font-size:12.5px;color:var(--text);line-height:1.55;margin:0">Use <strong>${days.join(', ')}</strong> of any month for the naming ceremony, annaprashan, school admission or other milestone events — they amplify ${corePlanet} energy.</p>
+      </div>
+
+      <div>
+        <div style="font-family:sans-serif;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#6d4ed1;font-weight:700;margin-bottom:.35rem">✦ ${focus.headline}</div>
+        <p style="font-family:sans-serif;font-size:12.5px;color:var(--text);line-height:1.55;margin:0">${focus.body}</p>
+      </div>
+    </div>
+  `;
+}
 
 function powerDaysFor(moo){
   const days = [];
