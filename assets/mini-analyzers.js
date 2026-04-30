@@ -163,13 +163,67 @@ function suggestNameVariants(name, target, moo, bhag){
     .slice(0,3);
 }
 
-// Brand variant search — try ALL top founder-friendly targets, rank by
-// real Chaldean score, return up to 3 high-quality picks (≥ 80% only).
-// This avoids the trap where targeting moo for a Moolank-4/8 founder
-// produces variants that score ≤ 50% under compatPct.
+// Diff two strings and emit a short, plain-English description of what
+// changed (e.g. "+ doubled 'n'", "swapped c → k", "added trailing 'h'").
+// Used to make each suggested variant feel intentional, not random.
+function _diffDescription(orig, variant){
+  const o = orig.toLowerCase(), v = variant.toLowerCase();
+  if(v.length === o.length){
+    // Single-char swap
+    let diffs = [];
+    for(let i=0;i<o.length;i++){
+      if(o[i] !== v[i]) diffs.push([o[i], v[i]]);
+    }
+    if(diffs.length === 1){
+      const [a,b] = diffs[0];
+      if((a==='c'&&b==='k')||(a==='k'&&b==='c')) return `swapped ${a} → ${b}`;
+      if((a==='i'&&b==='y')||(a==='y'&&b==='i')) return `swapped ${a} → ${b}`;
+      if((a==='s'&&b==='z')||(a==='z'&&b==='s')) return `swapped ${a} → ${b}`;
+      if((a==='v'&&b==='w')||(a==='w'&&b==='v')) return `swapped ${a} → ${b}`;
+      return `swapped ${a} → ${b}`;
+    }
+    // ph ↔ f or similar two-char swap (length matches because of removal+add)
+    if(o.includes('ph') && !v.includes('ph') && v.includes('f')) return `swapped ph → f`;
+    if(o.includes('f') && !o.includes('ph') && v.includes('ph')) return `swapped f → ph`;
+    return 'phonetic respelling';
+  }
+  if(v.length === o.length + 1){
+    // Letter inserted — find which one
+    for(let i=0;i<v.length;i++){
+      if(v.slice(0,i)+v.slice(i+1) === o){
+        const ch = v[i];
+        // Doubled letter?
+        if(i>0 && v[i-1]===ch) return `doubled '${ch}'`;
+        if(i<v.length-1 && v[i+1]===ch) return `doubled '${ch}'`;
+        if(i === v.length-1) return `added trailing '${ch}'`;
+        return `added '${ch}'`;
+      }
+    }
+  }
+  if(v.length === o.length - 1){
+    // Letter removed
+    for(let i=0;i<o.length;i++){
+      if(o.slice(0,i)+o.slice(i+1) === v) return `dropped '${o[i]}'`;
+    }
+  }
+  return 'phonetic respelling';
+}
+
+// Brand variant search — return up to 3 picks that GENUINELY UPGRADE the
+// input score. We:
+//   1. Compute the input's own Chaldean score first.
+//   2. Generate variants across all top founder-friendly targets.
+//   3. Filter out anything that doesn't beat the input by at least
+//      MIN_UPGRADE points — no point showing equivalents.
+//   4. Annotate each kept variant with the score delta and a one-line
+//      "what changed" reason so the suggestion feels intentional.
 function suggestBrandVariants(name, moo, bhag){
+  // Input score — anchor for upgrade comparison
+  const {raw: inputRaw, reduced: inputReduced} = getNameNum(name);
+  const inputScore = compatPct(inputReduced, inputRaw, moo, bhag);
+
   const targets = bestBrandTargets(moo);   // already excludes 4 and 8
-  const allVariants = new Map();           // dedupe by lower(name)
+  const allVariants = new Map();
   for(const target of targets){
     for(const v of _variantsForTarget(name, target, moo, bhag)){
       const key = v.name.toLowerCase();
@@ -179,26 +233,36 @@ function suggestBrandVariants(name, moo, bhag){
       }
     }
   }
-  const STRONG_THRESHOLD = 70;             // tierBrand: ≥70 = "Strong Brand Alignment"
-  const sorted = [...allVariants.values()]
-    .filter(v => v.score >= STRONG_THRESHOLD)
+
+  const MIN_UPGRADE = 5;   // variant must beat input by at least 5 points
+  const STRONG_FLOOR = 70; // and land in the Strong tier
+
+  const upgrades = [...allVariants.values()]
+    .filter(v => v.score >= STRONG_FLOOR && v.score >= inputScore + MIN_UPGRADE)
+    .map(v => ({
+      ...v,
+      delta: v.score - inputScore,
+      reason: _diffDescription(name, v.name)
+    }))
     .sort((a,b)=> b.score - a.score || a.lenPenalty - b.lenPenalty || a.name.length - b.name.length);
-  // Prefer diversity in reduced-number across the 3 picks (one per target),
-  // but if fewer than 3 unique reduceds clear the bar, fill with next best.
+
+  // Prefer diversity in reduced-number across the picks
   const out = [], seenReduced = new Set();
-  for(const v of sorted){
+  for(const v of upgrades){
     if(seenReduced.has(v.reduced)) continue;
     seenReduced.add(v.reduced);
     out.push(v);
     if(out.length===3) break;
   }
   if(out.length<3){
-    for(const v of sorted){
+    for(const v of upgrades){
       if(out.includes(v)) continue;
       out.push(v);
       if(out.length===3) break;
     }
   }
+  // Stash inputScore on the array for the caller's fallback messaging.
+  out._inputScore = inputScore;
   return out;
 }
 
@@ -272,27 +336,49 @@ function buildBusinessToolkit(moo, bhag, brandName){
   const days = powerDaysFor(moo);
   const founderPlanet = getPlanet(moo);
 
+  const inputScore = variants._inputScore;
+
+  // Tier-aware fallback message when no variants beat the input.
+  let noVariantsMsg;
+  if(inputScore >= 90){
+    noVariantsMsg = `
+      <div style="margin-bottom:.9rem;background:rgba(76,175,132,.10);border:1px solid rgba(76,175,132,.3);border-radius:8px;padding:.85rem 1rem;font-family:sans-serif;font-size:13px;color:var(--text);line-height:1.6">
+        <strong style="color:#2e7d4f">✓ Already at top tier (${inputScore}%).</strong> Your brand is operating at the ceiling for your Moolank — no respelling improves on this. Focus on positioning and timing below.
+      </div>`;
+  } else if(inputScore >= 75){
+    noVariantsMsg = `
+      <div style="margin-bottom:.9rem;background:rgba(76,175,132,.08);border:1px solid rgba(76,175,132,.25);border-radius:8px;padding:.85rem 1rem;font-family:sans-serif;font-size:13px;color:var(--text);line-height:1.6">
+        <strong style="color:#2e7d4f">✓ Already in Strong tier (${inputScore}%).</strong> No phonetic respelling of "<strong style="color:#6d4ed1">${brandName}</strong>" lifts the score meaningfully higher. Your input has hit its phonetic ceiling for a Moolank ${moo} founder — to push higher, you'd need a different brand entirely targeting Brand <strong style="color:#6d4ed1">${targets.join(' or ')}</strong>.
+      </div>`;
+  } else {
+    noVariantsMsg = `
+      <div style="margin-bottom:.9rem;background:rgba(245,196,81,.08);border:1px dashed rgba(245,196,81,.4);border-radius:8px;padding:.85rem 1rem;font-family:sans-serif;font-size:13px;color:var(--text);line-height:1.6">
+        ✦ No phonetic tweak of "<strong style="color:#6d4ed1">${brandName}</strong>" reaches Strong tier (70%+) for your Moolank ${moo} (${founderPlanet}) founder energy. The input is at <strong>${inputScore}%</strong> — a different brand name will likely serve better. Try one that reduces to <strong style="color:#6d4ed1">${targets.join(', ')}</strong>, or use the founder-friendly numbers below as targets when brainstorming.
+      </div>`;
+  }
+
   const variantsHtml = variants.length ? `
     <div style="margin-bottom:.9rem">
-      <div style="font-family:sans-serif;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#6d4ed1;font-weight:700;margin-bottom:.5rem">✦ Stronger brand-name variants</div>
-      <div style="display:flex;flex-direction:column;gap:.45rem">
+      <div style="font-family:sans-serif;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#6d4ed1;font-weight:700;margin-bottom:.5rem">✦ Stronger brand-name variants <span style="color:var(--text3);font-weight:600;letter-spacing:.06em">· each beats your ${inputScore}% input</span></div>
+      <div style="display:flex;flex-direction:column;gap:.55rem">
         ${variants.map(v=>`
-          <div style="display:flex;align-items:center;justify-content:space-between;gap:.6rem;background:rgba(124,58,237,.06);border:1px solid rgba(124,58,237,.18);border-radius:8px;padding:.55rem .75rem">
-            <span style="font-family:'Playfair Display',Georgia,serif;font-size:15.5px;font-weight:700;color:var(--text)">${v.name}</span>
-            <span style="font-family:sans-serif;font-size:11.5px;color:var(--text2);text-align:right;line-height:1.35">
-              <strong style="color:#7c3aed">${v.score}%</strong> · Brand ${v.reduced} (${getPlanet(v.reduced)})
-              ${v.compound ? `<br><span style="font-size:10.5px;color:var(--text3);font-style:italic">CD ${v.raw}: ${v.compound.l.split('·')[0].trim()}</span>` : ''}
-            </span>
+          <div style="background:rgba(124,58,237,.06);border:1px solid rgba(124,58,237,.2);border-radius:9px;padding:.7rem .85rem">
+            <div style="display:flex;align-items:baseline;justify-content:space-between;gap:.6rem;margin-bottom:.3rem">
+              <span style="font-family:'Playfair Display',Georgia,serif;font-size:16px;font-weight:700;color:var(--text)">${v.name}</span>
+              <span style="font-family:sans-serif;font-size:12px;text-align:right;line-height:1.3;white-space:nowrap">
+                <strong style="color:#7c3aed;font-size:14px">${v.score}%</strong>
+                <span style="display:inline-block;background:rgba(76,175,132,.18);color:#2e7d4f;border:1px solid rgba(76,175,132,.4);font-weight:700;letter-spacing:.04em;padding:1px 7px;border-radius:10px;font-size:10.5px;margin-left:4px">↑ +${v.delta}%</span>
+              </span>
+            </div>
+            <div style="font-family:sans-serif;font-size:11.5px;color:var(--text2);line-height:1.5">
+              ${v.reason ? `<span style="color:#9d4edd;font-weight:600">Move:</span> ${v.reason} · ` : ''}Brand ${v.reduced} (${getPlanet(v.reduced)})${v.compound ? ` · CD ${v.raw} <em style="color:var(--text3)">${v.compound.l.split('·')[0].trim()}</em>` : ''}
+            </div>
           </div>
         `).join('')}
       </div>
-      <p style="font-family:sans-serif;font-size:11px;color:var(--text3);margin:.4rem 0 0;line-height:1.45;font-style:italic">Each variant above scores in the "Strong Brand Alignment" tier (70%+) — same pronunciation as your input, brand number tuned to your founder Moolank ${moo}. Paste any of these back into the form to verify.</p>
+      <p style="font-family:sans-serif;font-size:11px;color:var(--text3);margin:.55rem 0 0;line-height:1.5;font-style:italic">Each variant strictly improves on your input score, preserves pronunciation, and shifts your brand-number into your Moolank's friend zone. Paste any back into the form to verify.</p>
     </div>
-  ` : `
-    <div style="margin-bottom:.9rem;background:rgba(245,196,81,.08);border:1px dashed rgba(245,196,81,.4);border-radius:8px;padding:.65rem .85rem;font-family:sans-serif;font-size:12.5px;color:var(--text);line-height:1.55">
-      ✦ No phonetic tweak of "<strong>${brandName}</strong>" lands in the Strong Alignment tier (70%+) for a Moolank ${moo} (${founderPlanet}) founder. A different brand name may serve better — try one that reduces to <strong>${targets.join(', ')}</strong>, or use the founder-friendly numbers below as targets when brainstorming.
-    </div>
-  `;
+  ` : noVariantsMsg;
 
   return `
     <div style="background:linear-gradient(160deg,rgba(124,58,237,.04),rgba(245,196,81,.04));border:1px solid rgba(245,196,81,.3);border-radius:12px;padding:1rem 1rem .85rem;margin-bottom:1rem">
