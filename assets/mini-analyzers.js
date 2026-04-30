@@ -181,9 +181,129 @@ function _classifyMove(orig, variant){
 // Lower number = preferred. Multi-step transforms get the worst rank
 // because they look like typos rather than intentional respellings.
 const _MOVE_RANK = {
+  'word-substitution': 0,                                               // most preferred — keeps the brand identity
   'phoneme-swap': 1, 'doubled': 1, 'silent-add': 1, 'vowel-drop': 2,
   'letter-swap': 2, 'inserted': 3, 'consonant-drop': 4, 'multi-step': 9
 };
+
+// ── Domain-aware word substitution library ─────────────────────────
+// Goal: when the user enters a multi-word brand like 'Prana Shakti
+// healing and wellness', keep the distinctive core ('Prana Shakti') and
+// try alternative suffixes. Numerically very effective — short suffixes
+// shift the Chaldean sum into different (often better) targets without
+// touching the brand identity.
+
+// Words people commonly tack onto a strong core. Detecting these as a
+// 'replaceable suffix' lets us surface much higher-quality alternatives.
+const _GENERIC_SUFFIX_WORDS = new Set([
+  'wellness','healing','health','yoga','spa','studio','centre','center',
+  'hub','co','company','services','solutions','consulting','consultancy',
+  'clinic','therapy','therapies','holistic','rejuvenation','life','living',
+  'care','group','associates','partners','enterprises','industries','tech',
+  'technology','technologies','digital','labs','lab','works','foundry',
+  'design','designs','designers','build','builders','foods','kitchen',
+  'bakery','cafe','restaurant','collective','ventures','capital','and','&'
+]);
+
+// Domain-specific replacement libraries. Empty-string entries mean
+// 'drop the suffix entirely and keep just the core' — frequently the
+// strongest move when the core itself sums to a good compound.
+const _DOMAIN_ALTERNATIVES = {
+  wellness: ['',
+    'Wellness','Healing','Health','Yoga','Yog','Ayurveda','Bliss','Vitality',
+    'Sadhana','Atma','Tejas','Ojas','Veda','Soma','Aura','Chetna','Jeevan',
+    'Way','Hub','Studio','Centre','Co','Living','Path','Care','Life',
+    'Holistic','Rejuvenate','Sanjeevani','Arogya','Aushadhi','Swastha','Dhyana',
+    'Wellness Hub','Wellness Studio','Wellness Way','Wellness Co','Wellness Path',
+    'Healing Hub','Healing Path','Healing Co','Yoga Studio','Yoga Centre',
+    'Sadhana Hub','Bliss Co','Vitality Hub','Holistic Care','Life Studio',
+    'Health Hub','Health Co','Health Path','Soma Co','Veda Path','Yog Hub'
+  ],
+  tech: ['',
+    'Labs','Lab','Tech','AI','Digital','Works','Stack','Cloud','Co','Group',
+    'Studio','Foundry','Forge','Systems','Apps','App','Build','Builder',
+    'OS','HQ','Hub','Ventures','Bytes','Bit',
+    'Tech Labs','AI Labs','Digital Labs','Cloud Labs','Stack Labs',
+    'Tech Works','Build Co','Tech Co','Cloud Co','AI Co','Digital Co'
+  ],
+  food: ['',
+    'Kitchen','Bakery','Cafe','Bites','Foods','Eats','Co','Plate','Table',
+    'Bistro','Pantry','Gourmet','Provisions','Mart','Co','Spice','Studio',
+    'Kitchen Co','Foods Co','Bakery Co','Cafe Co','Plate Co','Table Co'
+  ],
+  business: ['',
+    'Hub','Co','Group','Studio','Labs','Collective','Works','Ventures',
+    'Capital','Partners','Advisors','Consulting','Strategy','Solutions',
+    'Co','Ventures Hub','Capital Group','Strategy Co','Advisors Co'
+  ],
+  // 'default' — used when no specific category is detected.
+  default: ['',
+    'Hub','Studio','Co','Group','Labs','Collective','Works','Ventures',
+    'Living','Way','Path','House','Lane','Lab','HQ','Co','Studio Co',
+    'Hub Co','Group Co','Lab Co','Living Co','Way Co'
+  ]
+};
+
+function _detectDomain(name){
+  const lo = name.toLowerCase();
+  if(/\b(yoga|wellness|healing|health|ayurveda|spa|holistic|prana|shakti|atma|veda|chakra|meditation|mindful|sadhana|bliss|vitality|reiki|massage|therapy|chi|dhyana|nirog|swastha)\b/.test(lo)) return 'wellness';
+  if(/\b(tech|technology|technologies|digital|ai|data|labs|cloud|software|app|saas|cyber|crypto|nft|blockchain|robot)\b/.test(lo)) return 'tech';
+  if(/\b(food|kitchen|bakery|cafe|restaurant|eats|dine|chef|cook|spice|bistro|grill|pizza|bites|gourmet)\b/.test(lo)) return 'food';
+  if(/\b(consulting|consultancy|capital|ventures|advisors|advisor|finance|invest|wealth|equity|strategy)\b/.test(lo)) return 'business';
+  return 'default';
+}
+
+// Find boundary between distinctive core and replaceable generic suffix.
+// Returns null if input is single-word OR has no detectable suffix
+// (we shouldn't substitute words off a name where everything is core).
+function _splitCoreAndSuffix(name){
+  const words = name.trim().split(/\s+/).filter(Boolean);
+  if(words.length <= 1) return null;
+  let coreEnd = words.length;
+  for(let i=0;i<words.length;i++){
+    if(_GENERIC_SUFFIX_WORDS.has(words[i].toLowerCase())){ coreEnd = i; break; }
+  }
+  if(coreEnd === 0 || coreEnd === words.length) return null;
+  return {
+    core: words.slice(0, coreEnd).join(' '),
+    suffix: words.slice(coreEnd).join(' ')
+  };
+}
+
+// Generate variants by keeping the core and substituting the generic
+// suffix with category-relevant alternatives.
+function _substitutionVariants(name, moo, bhag){
+  const split = _splitCoreAndSuffix(name);
+  if(!split) return [];
+  const domain = _detectDomain(name);
+  const alternatives = _DOMAIN_ALTERNATIVES[domain] || _DOMAIN_ALTERNATIVES.default;
+  const out = [];
+  const seen = new Set();
+  for(const alt of alternatives){
+    const candidate = alt ? `${split.core} ${alt}` : split.core;
+    const key = candidate.toLowerCase().trim();
+    if(seen.has(key)) continue;
+    seen.add(key);
+    if(key === name.trim().toLowerCase()) continue;       // skip identity
+    if(candidate.length < 2) continue;
+    const {raw, reduced} = getNameNum(candidate);
+    if(CAUTION_NAME_NUMS.includes(reduced)) continue;     // skip 4 / 8
+    const compound = (typeof CD!=='undefined' && CD[raw]) ? CD[raw] : null;
+    if(compound && compound.q==='b') continue;            // skip bad CDs
+    const score = compatPct(reduced, raw, moo, bhag);
+    if(score < 70) continue;                              // Strong tier only
+    const moveLabel = alt
+      ? `kept "${split.core}" · replaced suffix with "${alt}"`
+      : `kept "${split.core}" · dropped generic suffix`;
+    out.push({
+      name: candidate,
+      reduced, raw, score, compound,
+      lenPenalty: 0,
+      move: { kind:'word-substitution', label: moveLabel }
+    });
+  }
+  return out;
+}
 
 // Generate scored variants whose Chaldean reduction matches `target`.
 // SINGLE-STEP transforms only — no pass2 chaining. The user's complaint
@@ -230,6 +350,8 @@ function suggestBrandVariants(name, moo, bhag){
 
   const targets = bestBrandTargets(moo);
   const allVariants = new Map();
+
+  // 1. Phonetic respellings of the input (single-step letter-level moves)
   for(const target of targets){
     for(const v of _variantsForTarget(name, target, moo, bhag)){
       const key = v.name.toLowerCase();
@@ -237,6 +359,17 @@ function suggestBrandVariants(name, moo, bhag){
       if(!existing || existing.score < v.score){
         allVariants.set(key, v);
       }
+    }
+  }
+
+  // 2. Word-substitution variants (keep distinctive core, swap generic suffix)
+  // — preferred when input has a clear core + replaceable suffix pattern,
+  // e.g. 'Prana Shakti healing and wellness' → 'Prana Shakti Way'.
+  for(const v of _substitutionVariants(name, moo, bhag)){
+    const key = v.name.toLowerCase();
+    const existing = allVariants.get(key);
+    if(!existing || existing.score < v.score){
+      allVariants.set(key, v);
     }
   }
 
@@ -257,19 +390,20 @@ function suggestBrandVariants(name, moo, bhag){
       || a.name.length - b.name.length
     );
 
+  const MAX_PICKS = 4;
   // Prefer diversity in reduced-number across the picks (one per brand-target).
   const out = [], seenReduced = new Set();
   for(const v of candidates){
     if(seenReduced.has(v.reduced)) continue;
     seenReduced.add(v.reduced);
     out.push(v);
-    if(out.length===3) break;
+    if(out.length===MAX_PICKS) break;
   }
-  if(out.length<3){
+  if(out.length<MAX_PICKS){
     for(const v of candidates){
       if(out.includes(v)) continue;
       out.push(v);
-      if(out.length===3) break;
+      if(out.length===MAX_PICKS) break;
     }
   }
   out._inputScore = inputScore;
