@@ -15,6 +15,11 @@
 
   <!-- Free tool landing pages (SEO) -->
   <url>
+    <loc>https://www.namealigned.com/name-numerology-calculator</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.95</priority>
+  </url>
+  <url>
     <loc>https://www.namealigned.com/business-name-numerology</loc>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
