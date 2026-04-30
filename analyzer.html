@@ -851,6 +851,11 @@ window.addEventListener('DOMContentLoaded',()=>{
   if(p.get('name')) document.getElementById('currentName').value = p.get('name');
   if(p.get('dob'))  document.getElementById('dob').value  = p.get('dob');
   if(p.get('name') && p.get('dob')) setTimeout(goToStep2, 100);
+  // Direct tool entry from SEO landing pages: /analyzer?tool=business
+  const tool = p.get('tool');
+  if(tool && ['partner','child','business'].includes(tool)){
+    setTimeout(()=>openMiniAnalyzer(tool), 200);
+  }
 });
 
 function showPage(n){
@@ -1280,55 +1285,161 @@ function bestBrandTargets(moo){
   return ranked.slice(0,3).map(x=>x.n);
 }
 
-// Reusable variant generator — name perturbations targeting given numbers.
-function suggestNameVariants(name, targetSet, moo, bhag){
-  const base = String(name||'').trim();
-  if(!base) return [];
-  const variants = new Set();
-  const pushV = v => { if(v && v !== base && v.length >= 2) variants.add(v); };
-  const lower = base.toLowerCase();
-  // Trailing-vowel additions (most natural across English / Indian names)
-  for(const a of ['a','e','i','y','h','s']) pushV(base + a);
-  // Drop trailing letter (only if it leaves >=3 chars to avoid stubs)
-  if(base.length>=4) pushV(base.slice(0,-1));
-  // Double last consonant
-  const last = lower.slice(-1);
-  if('bcdfghjklmnpqrstvwxz'.includes(last)) pushV(base + last);
-  // Phoneme swaps (preserve pronunciation, change vibration)
-  const swaps = [['c','k'],['k','c'],['i','y'],['y','i'],['ph','f'],['f','ph'],['s','z'],['z','s'],['ck','k'],['v','w'],['w','v']];
-  for(const [a,b] of swaps){
-    if(lower.includes(a)){
-      const idx = lower.indexOf(a);
-      pushV(base.slice(0,idx) + b + base.slice(idx+a.length));
+// ── Phonetic respellings — preserve pronunciation, shift vibration ──
+// Generates creative misspellings the way brands do (Destiny → Destyny,
+// Destiiny, Destinee). All transforms keep the name pronounceable.
+function _phoneticTransforms(s){
+  const out = new Set();
+  const lo = s.toLowerCase();
+  const isV = c => 'aeiou'.includes(c);
+  const isC = c => 'bcdfghjklmnpqrstvwxz'.includes(c);
+  const matchCase = (src, ch) => src===src.toUpperCase() ? ch.toUpperCase() : ch;
+
+  // 1. DOUBLE A VOWEL — Destiny → Destiiny, Sara → Saara
+  for(let i=0;i<s.length;i++){
+    if(!isV(lo[i])) continue;
+    if(i>0 && lo[i-1]===lo[i]) continue;          // skip if already doubled
+    if(i<s.length-1 && lo[i+1]===lo[i]) continue;
+    out.add(s.slice(0,i+1) + s[i] + s.slice(i+1));
+  }
+
+  // 2. I ↔ Y — Destiny → Destyny, Lyla → Lila (preserves pronunciation)
+  for(let i=0;i<s.length;i++){
+    if(lo[i]==='i') out.add(s.slice(0,i) + matchCase(s[i],'y') + s.slice(i+1));
+    if(lo[i]==='y' && i>0) out.add(s.slice(0,i) + matchCase(s[i],'i') + s.slice(i+1));
+  }
+
+  // 3. DOUBLE CONSONANT BETWEEN VOWELS — Lola → Lolla, Beta → Betta
+  for(let i=1;i<s.length-1;i++){
+    if(isC(lo[i]) && isV(lo[i-1]) && isV(lo[i+1])){
+      // avoid already-doubled and certain unnatural doubles
+      if(lo[i-1]===lo[i] || lo[i+1]===lo[i]) continue;
+      if('hwxy'.includes(lo[i])) continue;        // 'hh','ww','xx','yy' rare
+      out.add(s.slice(0,i+1) + s[i] + s.slice(i+1));
     }
   }
-  // Drop a single vowel (works for shortening over-long names)
-  for(let i=0;i<base.length;i++){
-    if('aeiouAEIOU'.includes(base[i]) && base.length>=5) pushV(base.slice(0,i)+base.slice(i+1));
+
+  // 4. SILENT 'E' AT END — after final consonant (Lol → Lole, Mar → Mare)
+  if(s.length>=2 && isC(lo[lo.length-1]) && !isV(lo[lo.length-2]) === false){
+    out.add(s + matchCase(s[s.length-1],'e'));
   }
-  // Insert vowel between last two chars (smoother phonetics)
-  if(base.length>=2){
-    pushV(base.slice(0,-1) + 'a' + base.slice(-1));
-    pushV(base.slice(0,-1) + 'e' + base.slice(-1));
+  // Also allow simple final-e add when name ends in single consonant
+  if(s.length>=3 && isC(lo[lo.length-1])){
+    out.add(s + 'e');
   }
-  const baseLen = base.length;
+
+  // 5. ADD 'H' AFTER FINAL VOWEL — Sara → Sarah, Lila → Lilah (Indic style)
+  if(s.length>=2 && isV(lo[lo.length-1])){
+    out.add(s + 'h');
+  }
+
+  // 6. PHONEME-PRESERVING SWAPS — c↔k, ph↔f, ck↔k, z↔s
+  const swaps = [['c','k'],['k','c'],['ph','f'],['f','ph'],['ck','k'],['z','s'],['s','z']];
+  for(const [a,b] of swaps){
+    let idx = -1;
+    while((idx = lo.indexOf(a, idx+1)) !== -1){
+      // preserve case of the first char of the swap region
+      const head = s[idx]===s[idx].toUpperCase() ? b.toUpperCase() : b;
+      const tail = b.length>1 ? b.slice(1) : '';
+      out.add(s.slice(0,idx) + head + tail + s.slice(idx+a.length));
+    }
+  }
+
+  // 7. -EE / -IE / -Y endings — Destiny → Destinee, Marie → Maree
+  if(s.length>=3){
+    const last2 = lo.slice(-2);
+    if(last2==='ie') out.add(s.slice(0,-2) + matchCase(s[s.length-2],'e') + s[s.length-1]);
+    if(last2==='ee') out.add(s.slice(0,-2) + matchCase(s[s.length-2],'i') + matchCase(s[s.length-1],'e'));
+    if(lo.slice(-1)==='y') out.add(s.slice(0,-1) + 'ee');
+    if(lo.slice(-1)==='y') out.add(s.slice(0,-1) + 'ie');
+  }
+
+  return out;
+}
+
+// Reject variants that produce awkward letter clusters (triple letters,
+// trailing 'ae'/'oe' after consonants, etc.).
+function _isReadable(v){
+  const lo = v.toLowerCase();
+  if(/(.)\1\1/.test(lo)) return false;            // no triple anything
+  if(/[bcdfghjklmnpqrstvwxz]{4,}/.test(lo)) return false;  // 4+ consonants
+  if(/^(.)\1/.test(lo)) return false;             // no double-letter start
+  if(/[aeiou]{3,}/.test(lo)) return false;        // 3+ vowels in a row
+  return true;
+}
+
+// Apply phonetic transforms to the longest token (so multi-word brands
+// like "jet leads" get tweaks on "leads", preserving "jet").
+function _applyToLongestWord(name, transformFn){
+  const parts = name.split(/(\s+)/);              // keep separators
+  let bestIdx = -1, bestLen = 0;
+  for(let i=0;i<parts.length;i++){
+    if(/^\s+$/.test(parts[i])) continue;
+    if(parts[i].length > bestLen){ bestLen = parts[i].length; bestIdx = i; }
+  }
+  if(bestIdx === -1) return new Set();
+  const wholeOut = new Set();
+  for(const variant of transformFn(parts[bestIdx])){
+    const copy = parts.slice();
+    copy[bestIdx] = variant;
+    wholeOut.add(copy.join(''));
+  }
+  // Also include whole-string transforms (catches cases where the join
+  // boundary matters, e.g. casing of full input)
+  for(const variant of transformFn(name)) wholeOut.add(variant);
+  return wholeOut;
+}
+
+// Reusable variant search — generates phonetic respellings, scores them
+// against a target name-number, returns top picks. When the variant's
+// reduced number === founder Moolank AND compound quality is good, the
+// score is presented as 100% (true vibrational match).
+function suggestNameVariants(name, target, moo, bhag){
+  const base = String(name||'').trim();
+  if(!base) return [];
+  // 1-step variants
+  const pass1 = _applyToLongestWord(base, _phoneticTransforms);
+  // 2-step variants — apply transforms to each pass1 result, broadens
+  // search to compound respellings (Destiny → Destyny → Destyni).
+  const pass2 = new Set();
+  let budget = 0;
+  for(const v of pass1){
+    if(budget++ > 60) break;                      // cap candidate explosion
+    for(const w of _applyToLongestWord(v, _phoneticTransforms)) pass2.add(w);
+  }
+  const all = new Set([...pass1, ...pass2]);
+  all.delete(base);
+
   const scored = [];
-  for(const v of variants){
+  for(const v of all){
+    if(!_isReadable(v)) continue;
+    if(v.length < 2) continue;
     const {raw, reduced} = getNameNum(v);
-    if(!targetSet.has(reduced)) continue;
-    const score = compatPct(reduced, raw, moo, bhag);
+    if(reduced !== target) continue;              // strict: must hit target
     const compound = (typeof CD!=='undefined' && CD[raw]) ? CD[raw] : null;
-    if(compound && compound.q==='b') continue;          // skip bad compounds
-    // Readability: penalize length deviation from original (>1 char drift)
-    const lenPenalty = Math.max(0, Math.abs(v.length - baseLen) - 1);
-    scored.push({name:v, reduced, raw, score, compound, lenPenalty});
+    if(compound && compound.q==='b') continue;    // never recommend bad CD
+    const baseScore = compatPct(reduced, raw, moo, bhag);
+    // True vibrational match: name reduces to founder Moolank AND CD is
+    // good/neutral. Display as 100% — matches Chaldean tradition.
+    const isPerfect = (reduced === moo) && (!compound || compound.q !== 'b');
+    const displayScore = isPerfect ? 100 : baseScore;
+    const lenPenalty = Math.max(0, Math.abs(v.length - base.length) - 2);
+    scored.push({name:v, reduced, raw, score:displayScore, compound, lenPenalty, isPerfect});
   }
-  // Best score wins; ties broken by closer length to original.
-  scored.sort((a,b)=> b.score-a.score || a.lenPenalty-b.lenPenalty || a.name.length-b.name.length);
+  // Rank: perfect matches first, then best score, then closer length.
+  scored.sort((a,b)=>
+    (b.isPerfect?1:0) - (a.isPerfect?1:0)
+    || b.score - a.score
+    || a.lenPenalty - b.lenPenalty
+    || a.name.length - b.name.length
+  );
+  // Dedupe: prefer different respelling shapes — but allow same reduced
+  // number across picks since perfect matches all share moo.
   const seen = new Set(), out = [];
   for(const x of scored){
-    if(seen.has(x.reduced)) continue;
-    seen.add(x.reduced);
+    const key = x.name.toLowerCase();
+    if(seen.has(key)) continue;
+    seen.add(key);
     out.push(x);
     if(out.length===3) break;
   }
@@ -1336,7 +1447,8 @@ function suggestNameVariants(name, targetSet, moo, bhag){
 }
 
 function suggestBrandVariants(name, moo, bhag){
-  return suggestNameVariants(name, new Set(bestBrandTargets(moo)), moo, bhag);
+  // Brand strict target = founder's Moolank (true vibrational lock).
+  return suggestNameVariants(name, moo, moo, bhag);
 }
 
 const BRAND_FOCUS = {
@@ -1370,10 +1482,6 @@ function bestChildTargets(moo){
   return ranked.slice(0,3).map(x=>x.n);
 }
 
-function suggestChildVariants(name, moo, bhag){
-  return suggestNameVariants(name, new Set(bestChildTargets(moo)), moo, bhag);
-}
-
 const CHILD_FOCUS = {
   1:{ headline:'Independence and clarity', body:'Sun children thrive when given leadership opportunities, decision-making space, and a clear sense of purpose. Avoid suppressing their natural authority — channel it.' },
   2:{ headline:'Emotional safety first', body:'Moon children are sensitive and intuitive. Stable home rhythms, gentle correction, and creative outlets (music, art, water-based activities) bring out their best.' },
@@ -1388,38 +1496,13 @@ const CHILD_FOCUS = {
 
 function buildChildToolkit(moo, bhag, childName){
   const targets = bestChildTargets(moo);
-  const variants = suggestChildVariants(childName, moo, bhag);
   const focus = CHILD_FOCUS[moo] || CHILD_FOCUS[1];
   const days = powerDaysFor(moo);
   const corePlanet = getPlanet(moo);
 
-  const variantsHtml = variants.length ? `
-    <div style="margin-bottom:.9rem">
-      <div style="font-family:sans-serif;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#6d4ed1;font-weight:700;margin-bottom:.5rem">✦ Stronger phonetic variants</div>
-      <div style="display:flex;flex-direction:column;gap:.45rem">
-        ${variants.map(v=>`
-          <div style="display:flex;align-items:center;justify-content:space-between;gap:.6rem;background:rgba(124,58,237,.06);border:1px solid rgba(124,58,237,.18);border-radius:8px;padding:.55rem .75rem">
-            <span style="font-family:'Playfair Display',Georgia,serif;font-size:15.5px;font-weight:700;color:var(--text)">${v.name}</span>
-            <span style="font-family:sans-serif;font-size:11.5px;color:var(--text2);text-align:right;line-height:1.35">
-              <strong style="color:#7c3aed">${v.score}%</strong> · Name ${v.reduced} (${getPlanet(v.reduced)})
-              ${v.compound ? `<br><span style="font-size:10.5px;color:var(--text3);font-style:italic">CD ${v.raw}: ${v.compound.l.split('·')[0].trim()}</span>` : ''}
-            </span>
-          </div>
-        `).join('')}
-      </div>
-      <p style="font-family:sans-serif;font-size:11px;color:var(--text3);margin:.4rem 0 0;line-height:1.45;font-style:italic">Spelling tweaks of your input that hit your child's core-friendly numbers (${targets.join(', ')}). Pronunciation stays close — vibration aligns.</p>
-    </div>
-  ` : `
-    <div style="margin-bottom:.9rem;background:rgba(76,175,132,.08);border:1px solid rgba(76,175,132,.25);border-radius:8px;padding:.65rem .85rem;font-family:sans-serif;font-size:12.5px;color:var(--text);line-height:1.55">
-      ✓ The name already aligns with your child's core energy. Focus on parenting cues and timing below.
-    </div>
-  `;
-
   return `
     <div style="background:linear-gradient(160deg,rgba(124,58,237,.04),rgba(245,196,81,.04));border:1px solid rgba(245,196,81,.3);border-radius:12px;padding:1rem 1rem .85rem;margin-bottom:1rem">
       <div style="font-family:'Playfair Display',Georgia,serif;font-size:15.5px;font-weight:700;color:var(--text);margin-bottom:.6rem;letter-spacing:.01em">🎯 Naming Toolkit <span style="font-family:sans-serif;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#9d4edd;font-weight:700;margin-left:.4rem">Free</span></div>
-
-      ${variantsHtml}
 
       <div style="margin-bottom:.85rem">
         <div style="font-family:sans-serif;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#6d4ed1;font-weight:700;margin-bottom:.35rem">✦ Core-friendly name numbers</div>
@@ -1466,13 +1549,17 @@ function buildBusinessToolkit(moo, bhag, brandName){
           </div>
         `).join('')}
       </div>
-      <p style="font-family:sans-serif;font-size:11px;color:var(--text3);margin:.4rem 0 0;line-height:1.45;font-style:italic">Phonetic tweaks of your input that hit your founder-friendly target numbers (${targets.join(', ')}). Pronunciation stays close — vibration changes.</p>
+      <p style="font-family:sans-serif;font-size:11px;color:var(--text3);margin:.4rem 0 0;line-height:1.45;font-style:italic">Each variant above hits 100% Chaldean alignment — same pronunciation as your input, vibrationally locked to your founder Moolank ${moo}.</p>
+    </div>
+  ` : (getNameNum(brandName).reduced === moo ? `
+    <div style="margin-bottom:.9rem;background:rgba(76,175,132,.10);border:1px solid rgba(76,175,132,.3);border-radius:8px;padding:.65rem .85rem;font-family:sans-serif;font-size:12.5px;color:var(--text);line-height:1.55">
+      ✓ Your brand name <strong>already locks to your founder Moolank ${moo}</strong>. Focus on positioning and timing below.
     </div>
   ` : `
-    <div style="margin-bottom:.9rem;background:rgba(76,175,132,.08);border:1px solid rgba(76,175,132,.25);border-radius:8px;padding:.65rem .85rem;font-family:sans-serif;font-size:12.5px;color:var(--text);line-height:1.55">
-      ✓ Your brand name already aligns with a founder-friendly number. Focus on positioning and timing below.
+    <div style="margin-bottom:.9rem;background:rgba(245,196,81,.08);border:1px dashed rgba(245,196,81,.4);border-radius:8px;padding:.65rem .85rem;font-family:sans-serif;font-size:12.5px;color:var(--text);line-height:1.55">
+      ✦ No phonetic tweak of "<strong>${brandName}</strong>" reaches 100% alignment with your founder Moolank ${moo} (${founderPlanet}). A different brand name may serve better — try one that reduces to <strong>${targets.join(', ')}</strong>, or use the founder-friendly numbers below as targets when brainstorming.
     </div>
-  `;
+  `);
 
   return `
     <div style="background:linear-gradient(160deg,rgba(124,58,237,.04),rgba(245,196,81,.04));border:1px solid rgba(245,196,81,.3);border-radius:12px;padding:1rem 1rem .85rem;margin-bottom:1rem">

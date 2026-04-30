@@ -12,6 +12,24 @@
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
+
+  <!-- Free tool landing pages (SEO) -->
+  <url>
+    <loc>https://www.namealigned.com/business-name-numerology</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://www.namealigned.com/baby-name-numerology</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://www.namealigned.com/love-compatibility-numerology</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
   <url>
     <loc>https://www.namealigned.com/report</loc>
     <changefreq>monthly</changefreq>
