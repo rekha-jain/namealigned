@@ -320,11 +320,19 @@ function runChild(){
   const cd = document.getElementById('childDob').value;
   if(!cn || !cd) return showErr('Please fill the child\'s name and date of birth.');
 
-  const html = buildChildResultHTML(cn, cd, {inline:true});
+  // Inline mode: hide the ₹199 upsell + CTA from the result card; in
+  // their place we render a prominent retest panel that pulls the user
+  // straight back into trying another candidate name.
+  const html = buildChildResultHTML(cn, cd, {inline:true, hideUpsell:true});
   const target = document.getElementById('childResult');
   target.innerHTML =
     `<div class="mini-result-inline">${html}
-      <div class="mini-rerun-hint">✦ Try another candidate name above — change the name and click <strong>Check alignment</strong> again. <a href="#tool">Back to form ↑</a></div>
+      <div class="mini-rerun-panel">
+        <div class="rr-eye">✦ Free · Unlimited</div>
+        <div class="rr-h">Got a shortlist of names? <em>Test every one.</em></div>
+        <div class="rr-sub">Try as many candidate names as you want — the date of birth stays, just change the name.</div>
+        <a href="#tool" class="mini-rerun-btn" onclick="document.getElementById('childName').value='';return true;">Check another name →</a>
+      </div>
     </div>`;
   target.scrollIntoView({behavior:'smooth', block:'start'});
 }

@@ -416,7 +416,8 @@ function buildChildResultHTML(cn,cd, opts){
     upsellLead:'Build your foundation:',
     upsell:UPSELL_CHILD,
     kind:'child',
-    inline: !!(opts&&opts.inline)
+    inline: !!(opts&&opts.inline),
+    hideUpsell: !!(opts&&opts.hideUpsell)
   });
 }
 
