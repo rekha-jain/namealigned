@@ -293,6 +293,34 @@
   </div>
 </section>
 
+<!-- ── SHARE WITH A FRIEND ─────────────────────────────────────── -->
+<section style="background:#ffffff;padding:4rem 1.5rem;border-top:1px solid var(--border);">
+  <div class="container" style="text-align:center;max-width:600px;">
+    <div style="font-size:32px;margin-bottom:.75rem;">✍️</div>
+    <div class="section-eyebrow" style="color:var(--gold-d);justify-content:center;margin-bottom:.75rem;">Spread the wisdom</div>
+    <h2 style="color:var(--text);font-size:clamp(22px,3.5vw,32px);margin-bottom:1rem;">Know someone wondering if they should change their name?</h2>
+    <p style="color:var(--text2);font-family:var(--font-sans);font-size:15px;line-height:1.7;margin-bottom:2rem;">Share the free Chaldean name correction check. It shows whether their current spelling is working for them, and what aligned options actually exist.</p>
+    <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;">
+      <a href="https://wa.me/?text=Free%20Chaldean%20name%20correction%20check%20on%20NameAligned.com%20%F0%9F%91%87%0Ahttps%3A%2F%2Fwww.namealigned.com%2Fname-correction-numerology" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:8px;background:#25D366;color:#fff;padding:14px 28px;border-radius:10px;font-family:var(--font-sans);font-size:15px;font-weight:600;text-decoration:none;">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 2C6.477 2 2 6.477 2 12c0 1.89.525 3.66 1.438 5.168L2 22l4.985-1.418A9.956 9.956 0 0012 22c5.523 0 10-4.477 10-10S17.523 2 12 2zm0 18a7.946 7.946 0 01-4.337-1.284l-.31-.186-3.224.917.874-3.147-.203-.323A7.944 7.944 0 014 12c0-4.411 3.589-8 8-8s8 3.589 8 8-3.589 8-8 8z"/></svg>
+        Share on WhatsApp
+      </a>
+      <button onclick="copyShareLink_nameCorrection()" style="display:inline-flex;align-items:center;gap:8px;background:rgba(240,180,41,.12);color:var(--gold-d);border:1.5px solid rgba(240,180,41,.5);padding:14px 28px;border-radius:10px;font-family:var(--font-sans);font-size:15px;font-weight:600;cursor:pointer;">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+        <span id="copyText_nameCorrection">Copy link</span>
+      </button>
+    </div>
+    <p style="color:var(--text3);font-size:12px;font-family:var(--font-sans);margin-top:1.25rem;">Free · No sign-up · Results in 30 seconds</p>
+  </div>
+</section>
+<script>
+function copyShareLink_nameCorrection(){
+  const url='https://www.namealigned.com/name-correction-numerology';
+  const cb=()=>{const el=document.getElementById('copyText_nameCorrection');el.textContent='✓ Copied!';setTimeout(()=>{el.textContent='Copy link';},2500);};
+  if(navigator.clipboard){navigator.clipboard.writeText(url).then(cb).catch(()=>{const ta=document.createElement('textarea');ta.value=url;ta.style.position='fixed';ta.style.opacity='0';document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);cb();});}else{const ta=document.createElement('textarea');ta.value=url;ta.style.position='fixed';ta.style.opacity='0';document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);cb();}
+}
+</script>
+
 <footer class="footer">
   <div class="container">
     <div class="footer-grid">
