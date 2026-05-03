@@ -482,41 +482,52 @@ function buildBusinessToolkit(moo, bhag, brandName){
 
   const inputScore = variants._inputScore;
 
-  // When the user is already at a strong alignment (≥85%), don't show any
-  // lower-scoring variant suggestions — they're noise and confuse the message.
-  const suppressVariants = inputScore >= 85;
+  // ── Variant filtering rules ──────────────────────────────────────────
+  //   ≥90%:  only show variants that hit a perfect 100%. If none, tell
+  //          the user the current name is great and move on.
+  //   70-89: only show variants STRICTLY better than the input score.
+  //   50-69: same — only show strict improvements.
+  //   <50%:  only show strict improvements. If none, recommend a different
+  //          brand entirely targeting the founder-friendly numbers.
+  // Same-score "alternatives" are noise and were the source of confusion.
+  // ─────────────────────────────────────────────────────────────────────
+  const minVariantScore = inputScore >= 90 ? 100 : inputScore + 1;
+  const qualifyingVariants = variants.filter(v => v.score >= minVariantScore);
 
-  // Tier-aware fallback message when no variants beat the input (or when
-  // we're suppressing them because the input is already strong).
+  // Build the right empty-state message for each tier.
   let noVariantsMsg;
-  if(inputScore >= 85){
+  if (inputScore >= 90) {
     noVariantsMsg = `
       <div style="margin-bottom:.9rem;background:rgba(76,175,132,.10);border:1px solid rgba(76,175,132,.3);border-radius:8px;padding:.85rem 1rem;font-family:sans-serif;font-size:13px;color:var(--text);line-height:1.6">
-        <strong style="color:#2e7d4f">✓ Already at top tier (${inputScore}%).</strong> Your brand is operating at the ceiling for your Moolank — no respelling improves on this. Focus on positioning and timing below.
+        <strong style="color:#2e7d4f">✓ Your brand name is excellent (${inputScore}%).</strong> Nothing improves on this. Go forward with confidence — focus on positioning, timing and the launch dates below.
       </div>`;
-  } else if(inputScore >= 75){
+  } else if (inputScore >= 70) {
     noVariantsMsg = `
       <div style="margin-bottom:.9rem;background:rgba(76,175,132,.08);border:1px solid rgba(76,175,132,.25);border-radius:8px;padding:.85rem 1rem;font-family:sans-serif;font-size:13px;color:var(--text);line-height:1.6">
-        <strong style="color:#2e7d4f">✓ Already in Strong tier (${inputScore}%).</strong> No phonetic respelling of "<strong style="color:#6d4ed1">${brandName}</strong>" lifts the score meaningfully higher. Your input has hit its phonetic ceiling for a Moolank ${moo} founder — to push higher, you'd need a different brand entirely targeting Brand <strong style="color:#6d4ed1">${targets.join(' or ')}</strong>.
+        <strong style="color:#2e7d4f">✓ Strong alignment (${inputScore}%).</strong> No phonetic respelling of "<strong style="color:#6d4ed1">${brandName}</strong>" lifts the score higher — your name has hit its ceiling for a Moolank ${moo} founder. To push beyond this, you'd need a different brand entirely targeting Brand <strong style="color:#6d4ed1">${targets.join(' or ')}</strong>.
+      </div>`;
+  } else if (inputScore >= 50) {
+    noVariantsMsg = `
+      <div style="margin-bottom:.9rem;background:rgba(245,196,81,.10);border:1px solid rgba(245,196,81,.4);border-radius:8px;padding:.85rem 1rem;font-family:sans-serif;font-size:13px;color:var(--text);line-height:1.6">
+        ◇ Moderate alignment (${inputScore}%). No phonetic tweak of "<strong style="color:#6d4ed1">${brandName}</strong>" lifts it further. To reach Strong tier (70%+), you'd need a different brand name targeting Brand <strong style="color:#6d4ed1">${targets.join(' or ')}</strong> for your Moolank ${moo} (${founderPlanet}) energy.
       </div>`;
   } else {
     noVariantsMsg = `
-      <div style="margin-bottom:.9rem;background:rgba(245,196,81,.08);border:1px dashed rgba(245,196,81,.4);border-radius:8px;padding:.85rem 1rem;font-family:sans-serif;font-size:13px;color:var(--text);line-height:1.6">
-        ✦ No phonetic tweak of "<strong style="color:#6d4ed1">${brandName}</strong>" reaches Strong tier (70%+) for your Moolank ${moo} (${founderPlanet}) founder energy. The input is at <strong>${inputScore}%</strong> — a different brand name will likely serve better. Try one that reduces to <strong style="color:#6d4ed1">${targets.join(', ')}</strong>, or use the founder-friendly numbers below as targets when brainstorming.
+      <div style="margin-bottom:.9rem;background:rgba(220,38,38,.08);border:1px dashed rgba(220,38,38,.35);border-radius:8px;padding:.85rem 1rem;font-family:sans-serif;font-size:13px;color:var(--text);line-height:1.6">
+        ✦ Low alignment (${inputScore}%). No phonetic tweak of "<strong style="color:#6d4ed1">${brandName}</strong>" reaches Strong tier for a Moolank ${moo} (${founderPlanet}) founder. A different brand name will serve better — try one that reduces to <strong style="color:#6d4ed1">${targets.join(', ')}</strong>.
       </div>`;
   }
 
-  // Header copy varies by whether any variant actually beats the input.
-  const hasUpgrade = variants.some(v => v.delta > 0);
-  const headerNote = hasUpgrade
-    ? `· some beat your ${inputScore}% input`
-    : `· same Strong tier as your ${inputScore}% input · alternative vibrational targets`;
+  // Header copy when we DO have qualifying variants to show.
+  const headerNote = inputScore >= 90
+    ? `· perfect 100% upgrades only`
+    : `· each one beats your ${inputScore}% input`;
 
-  const variantsHtml = (variants.length && !suppressVariants) ? `
+  const variantsHtml = qualifyingVariants.length ? `
     <div style="margin-bottom:.9rem">
       <div style="font-family:sans-serif;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#6d4ed1;font-weight:700;margin-bottom:.5rem">✦ Phonetically similar variants <span style="color:var(--text3);font-weight:600;letter-spacing:.06em">${headerNote}</span></div>
       <div style="display:flex;flex-direction:column;gap:.55rem">
-        ${variants.map(v=>`
+        ${qualifyingVariants.map(v=>`
           <div style="background:rgba(124,58,237,.06);border:1px solid rgba(124,58,237,.2);border-radius:9px;padding:.7rem .85rem">
             <div style="display:flex;align-items:baseline;justify-content:space-between;gap:.6rem;margin-bottom:.3rem">
               <span style="font-family:'Playfair Display',Georgia,serif;font-size:16px;font-weight:700;color:var(--text)">${v.name}</span>
@@ -534,7 +545,7 @@ function buildBusinessToolkit(moo, bhag, brandName){
           </div>
         `).join('')}
       </div>
-      <p style="font-family:sans-serif;font-size:11px;color:var(--text3);margin:.55rem 0 0;line-height:1.5;font-style:italic">Each variant is a single-step respelling that preserves pronunciation. Same Strong tier or better. Paste any back into the form to verify.</p>
+      <p style="font-family:sans-serif;font-size:11px;color:var(--text3);margin:.55rem 0 0;line-height:1.5;font-style:italic">Each variant is a single-step respelling that preserves pronunciation, and scores strictly higher than your input. Paste any back into the form to verify.</p>
     </div>
   ` : noVariantsMsg;
 
