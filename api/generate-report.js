@@ -15,7 +15,7 @@
 'use strict';
 
 import crypto from 'crypto';
-import { insertSupabaseRow } from './_supabase.js';
+import { insertSupabaseRow, findLeadIdByEmail } from './_supabase.js';
 
 const CORS_HEADERS = {
   'Access-Control-Allow-Origin': '*',
@@ -101,11 +101,23 @@ async function fetchRazorpayPayment(paymentId) {
 async function saveOrderToSupabase({
   paymentId, name, email, dob, mobile, birthNum, destNum, nameNum,
 }) {
+  // Resolve lead_id from the leads table by email (best-effort — null is OK).
+  let lead_id = null;
+  try {
+    lead_id = await findLeadIdByEmail(email);
+  } catch (e) {
+    console.error('[orders] lead_id lookup error (continuing with null):', e);
+  }
+
+  // EXACT shape required by the orders table. payment_status was missing
+  // before — that's why every insert was rejected and silently swallowed.
   return await insertSupabaseRow('orders', {
-    razorpay_payment_id: paymentId,
+    lead_id,
     name,
-    email,
     dob: dob || null,
+    payment_status: 'paid',
+    razorpay_payment_id: paymentId,
+    email,
     phone: mobile || null,
     moolank: birthNum ?? null,
     bhagyank: destNum ?? null,
@@ -412,10 +424,10 @@ export default async function handler(req, res) {
       }
     }
 
-    let orderSaved = true;
-    let orderInserted = true;
+    let orderSaved = false;
+    let orderInserted = false;
 
-    // --- Save order to Supabase ---
+    // --- Save order to Supabase (LOUD — surface DB errors instead of hiding) ---
     try {
       const savedOrder = await saveOrderToSupabase({
         paymentId: cleanPaymentId,
@@ -427,13 +439,21 @@ export default async function handler(req, res) {
         destNum: destNum ?? null,
         nameNum: nameNum ?? null,
       });
+      // savedOrder===null only on duplicate (409); both cases mean a row exists.
+      orderSaved = true;
       orderInserted = savedOrder !== null;
+      console.log(
+        `[orders] saved payment=${cleanPaymentId} email=${cleanEmail} inserted=${orderInserted}`
+      );
     } catch (dbErr) {
-      console.error('Supabase order save error:', dbErr);
-      orderSaved = false;
-      orderInserted = true;
-      // Payment is verified — still send the email and return success so the
-      // user gets their report, but log the DB failure for investigation.
+      console.error('[orders] CRITICAL save failed:', dbErr?.message || dbErr);
+      // Return 500 so the frontend doesn't show a false "success" UI — and so
+      // the failure is loud in Vercel logs and any monitoring you have.
+      return sendJSON(res, 500, {
+        success: false,
+        verified: true,
+        error: 'Payment captured but order could not be saved. Support has been alerted.',
+      });
     }
 
     // --- Send delivery email (best-effort) ---

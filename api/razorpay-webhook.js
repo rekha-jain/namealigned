@@ -20,7 +20,7 @@
 'use strict';
 
 import crypto from 'crypto';
-import { insertSupabaseRow } from './_supabase.js';
+import { insertSupabaseRow, findLeadIdByEmail } from './_supabase.js';
 
 // ---------------------------------------------------------------------------
 // Verify Razorpay webhook signature
@@ -43,17 +43,30 @@ function verifyWebhookSignature(rawBody, signature, secret) {
 // Save order to Supabase (same logic as generate-report.js)
 // ---------------------------------------------------------------------------
 async function saveOrderToSupabase({ paymentId, name, email, dob, mobile, amount }) {
+  let lead_id = null;
+  try {
+    lead_id = await findLeadIdByEmail(email);
+  } catch (e) {
+    console.error('[orders/webhook] lead_id lookup error (continuing with null):', e);
+  }
+
+  // Same shape as generate-report.js — payment_status was the missing column
+  // that made every prior insert fail.
   const saved = await insertSupabaseRow('orders', {
+    lead_id,
+    name:                name || null,
+    dob:                 dob || null,
+    payment_status:      'paid',
     razorpay_payment_id: paymentId,
-    name:       name || null,
-    email:      email || null,
-    dob:        dob || null,
-    phone:      mobile || null,
-    created_at: new Date().toISOString(),
+    email:               email || null,
+    phone:               mobile || null,
+    created_at:          new Date().toISOString(),
   }, { duplicateOk: true, prefer: 'return=minimal' });
 
   if (saved === null) {
-    console.log(`Order ${paymentId} already exists in Supabase or was saved with return=minimal`);
+    console.log(`[orders/webhook] ${paymentId} duplicate or return=minimal`);
+  } else {
+    console.log(`[orders/webhook] saved ${paymentId} email=${email}`);
   }
   return saved;
 }
