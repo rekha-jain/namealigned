@@ -482,9 +482,14 @@ function buildBusinessToolkit(moo, bhag, brandName){
 
   const inputScore = variants._inputScore;
 
-  // Tier-aware fallback message when no variants beat the input.
+  // When the user is already at a strong alignment (≥85%), don't show any
+  // lower-scoring variant suggestions — they're noise and confuse the message.
+  const suppressVariants = inputScore >= 85;
+
+  // Tier-aware fallback message when no variants beat the input (or when
+  // we're suppressing them because the input is already strong).
   let noVariantsMsg;
-  if(inputScore >= 90){
+  if(inputScore >= 85){
     noVariantsMsg = `
       <div style="margin-bottom:.9rem;background:rgba(76,175,132,.10);border:1px solid rgba(76,175,132,.3);border-radius:8px;padding:.85rem 1rem;font-family:sans-serif;font-size:13px;color:var(--text);line-height:1.6">
         <strong style="color:#2e7d4f">✓ Already at top tier (${inputScore}%).</strong> Your brand is operating at the ceiling for your Moolank — no respelling improves on this. Focus on positioning and timing below.
@@ -507,7 +512,7 @@ function buildBusinessToolkit(moo, bhag, brandName){
     ? `· some beat your ${inputScore}% input`
     : `· same Strong tier as your ${inputScore}% input · alternative vibrational targets`;
 
-  const variantsHtml = variants.length ? `
+  const variantsHtml = (variants.length && !suppressVariants) ? `
     <div style="margin-bottom:.9rem">
       <div style="font-family:sans-serif;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#6d4ed1;font-weight:700;margin-bottom:.5rem">✦ Phonetically similar variants <span style="color:var(--text3);font-weight:600;letter-spacing:.06em">${headerNote}</span></div>
       <div style="display:flex;flex-direction:column;gap:.55rem">
