@@ -16,6 +16,7 @@
 
 import crypto from 'crypto';
 import { insertSupabaseRow, findLeadIdByEmail } from './_supabase.js';
+import { mpTrack } from './_mixpanel.js';
 
 const CORS_HEADERS = {
   'Access-Control-Allow-Origin': '*',
@@ -445,6 +446,29 @@ export default async function handler(req, res) {
       console.log(
         `[orders] saved payment=${cleanPaymentId} email=${cleanEmail} inserted=${orderInserted}`
       );
+
+      // ── Mixpanel server-side: only fire on a fresh insert. The $insert_id
+      // in mpTrack already de-dupes within Mixpanel, but skipping the call
+      // entirely on duplicates also avoids re-tracking webhook+browser races.
+      if (orderInserted) {
+        try {
+          const eventProps = {
+            payment_id:  cleanPaymentId,
+            order_id:    orderId || null,
+            name:        cleanName,
+            dob:         dob || null,
+            mobile:      mobile || null,
+            moolank:     birthNum ?? null,
+            bhagyank:    destNum ?? null,
+            name_number: nameNum ?? null,
+            promo:       isPromo,
+          };
+          await mpTrack('Payment Completed', cleanEmail, eventProps);
+          await mpTrack('Order Created',     cleanEmail, eventProps);
+        } catch (mpErr) {
+          console.error('[mixpanel] Payment/Order events failed:', mpErr);
+        }
+      }
     } catch (dbErr) {
       console.error('[orders] CRITICAL save failed:', dbErr?.message || dbErr);
       // Return 500 so the frontend doesn't show a false "success" UI — and so

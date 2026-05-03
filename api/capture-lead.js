@@ -14,6 +14,7 @@
 'use strict';
 
 import { insertSupabaseRow } from './_supabase.js';
+import { mpTrack, mpSetPeople } from './_mixpanel.js';
 
 const CORS_HEADERS = {
   'Access-Control-Allow-Origin': '*',
@@ -299,6 +300,22 @@ export default async function handler(req, res) {
     } catch (dbErr) {
       console.error('Supabase error:', dbErr);
       return sendJSON(res, 500, { success: false, error: 'Failed to save lead' });
+    }
+
+    // --- Mixpanel: Lead Created (server-side, reliable) ---
+    try {
+      await mpSetPeople(cleanEmail, { name: cleanName });
+      await mpTrack('Lead Created', cleanEmail, {
+        name:     cleanName,
+        dob:      dob || null,
+        moolank:  birthNum ?? null,
+        bhagyank: destNum ?? null,
+        name_number: nameNum ?? null,
+        alignment_score: pct ?? null,
+        source:   source || 'website',
+      });
+    } catch (mpErr) {
+      console.error('[mixpanel] Lead Created failed:', mpErr);
     }
 
     // --- Send welcome email (best-effort) ---

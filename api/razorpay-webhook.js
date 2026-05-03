@@ -21,6 +21,7 @@
 
 import crypto from 'crypto';
 import { insertSupabaseRow, findLeadIdByEmail } from './_supabase.js';
+import { mpTrack } from './_mixpanel.js';
 
 // ---------------------------------------------------------------------------
 // Verify Razorpay webhook signature
@@ -207,11 +208,32 @@ export default async function handler(req, res) {
   console.log(`Webhook: payment.captured ${paymentId} — ${email}`);
 
   // Save to Supabase (skips silently if browser flow already saved it)
+  let savedRow = null;
   try {
-    await saveOrderToSupabase({ paymentId, name, email, dob, mobile, amount });
+    savedRow = await saveOrderToSupabase({ paymentId, name, email, dob, mobile, amount });
   } catch (err) {
     console.error('Webhook Supabase error:', err);
     // Don't return error — still try to send the email
+  }
+
+  // Mixpanel: fire server-side events only when this webhook actually
+  // inserted the row (savedRow !== null). If the browser flow already
+  // recorded the order, generate-report.js has already tracked it.
+  if (savedRow !== null && email) {
+    const eventProps = {
+      payment_id: paymentId,
+      name:       name || null,
+      dob:        dob || null,
+      mobile:     mobile || null,
+      amount:     amount || null,
+      source_handler: 'webhook',
+    };
+    try {
+      await mpTrack('Payment Completed', email, eventProps);
+      await mpTrack('Order Created',     email, eventProps);
+    } catch (mpErr) {
+      console.error('[mixpanel] webhook Payment/Order events failed:', mpErr);
+    }
   }
 
   // Send delivery email if we have an address

@@ -68,6 +68,7 @@
   .order-card{position:static!important;margin-top:2rem;}
 }
 </style>
+<script src="/assets/mixpanel.js"></script>
 </head>
 <body>
 
@@ -500,6 +501,19 @@ async function initiateReportPayment(){
     payBtn.textContent = '✦ Pay — Generate my report';
     return;
   }
+
+  // Mixpanel: identify on the email collected at the report form, fire
+  // Email Captured (only first time per page-load) and Payment Started
+  // right before opening the Razorpay sheet.
+  if (window.naIdentify) window.naIdentify(email, { name: name });
+  if (window.naTrack && !window._naEmailCapturedFired) {
+    window.naTrack('Email Captured', { name: name, location: 'report_form' });
+    window._naEmailCapturedFired = true;
+  }
+  if (window.naTrack) window.naTrack('Payment Started', {
+    amount: amount, currency: 'INR', order_id: orderId, label: label,
+    promo_discount: promoDiscount || 0,
+  });
 
   const options = {
     key:         razorpayKey,

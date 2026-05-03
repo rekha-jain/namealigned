@@ -252,6 +252,7 @@
 .align-mini-fill.low{background:linear-gradient(90deg,#a32d2d,#dc2626)}
 
 </style>
+<script src="/assets/mixpanel.js"></script>
 </head>
 <body>
 
@@ -604,11 +605,12 @@
 
 <script src="assets/numerology.js"></script>
 <script>
-// ── Tracking (works with GA4 dataLayer / fallback no-op) ───────────────
+// ── Tracking (GA4 dataLayer + Mixpanel + console fallback) ────────────
 function trackEvent(name, params){
   try{
     if(window.dataLayer){ window.dataLayer.push({event:name, ...(params||{})}); }
     if(window.gtag){ window.gtag('event', name, params||{}); }
+    if(window.naTrack){ window.naTrack(name, params||{}); }
     console.log('[track]', name, params||{});
   }catch(e){}
 }
@@ -871,6 +873,8 @@ function goToStep2(){
   S.focus   = 'overall';
   S.context = '';
   S.mobile  = '';
+  // Mixpanel canonical event
+  if (window.naTrack) window.naTrack('Analyzer Started', { name_length: name.length, has_dob: !!dob });
   S.birthNum = getBirthNum(dob);
   S.destNum  = getDestinyNum(dob);
   const {raw,reduced} = getNameNum(name);
@@ -1017,10 +1021,14 @@ function renderAnalysis(){
   // Build dynamic share card
   buildShareCard();
 
-  // Track result viewed
+  // Track result viewed (legacy snake_case + Mixpanel canonical name)
   trackEvent('result_viewed', {
     moolank: birthNum, bhagyank: destNum, nameNum: nameNum,
     pct: pct, status: status
+  });
+  if (window.naTrack) window.naTrack('Result Viewed', {
+    moolank: birthNum, bhagyank: destNum, name_number: nameNum,
+    alignment: pct, status: status,
   });
 }
 
@@ -1056,6 +1064,12 @@ async function captureEmail(){
     btn.disabled=false; btn.textContent='Email me my analysis';
     return;
   }
+  // Mixpanel: identify the user against this email and fire Email Captured
+  if (window.naIdentify) window.naIdentify(email, { name: S.name });
+  if (window.naTrack)    window.naTrack('Email Captured', {
+    moolank: S.birthNum, bhagyank: S.destNum, name_number: S.nameNum,
+    location: 'analyzer',
+  });
   document.getElementById('emailRow').style.display='none';
   document.getElementById('emailDone').style.display='block';
 }
