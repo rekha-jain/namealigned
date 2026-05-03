@@ -2,8 +2,8 @@
  * Server-side Mixpanel tracking via raw HTTP (no npm dep).
  *
  * Required env on Vercel:
- *   MIXPANEL_TOKEN   — same public project token used in assets/mixpanel.js
- *   MIXPANEL_SECRET  — project secret (used for the import API; safer auth)
+ *   MIXPANEL_TOKEN , same public project token used in assets/mixpanel.js
+ *   MIXPANEL_SECRET, project secret (used for the import API; safer auth)
  *
  * Server events use the /import endpoint so they don't get rate-limited like
  * /track and so they survive client-side ad-blockers. distinct_id should be
@@ -32,11 +32,11 @@ function getCreds() {
 export async function mpTrack(eventName, distinctId, props = {}) {
   const creds = getCreds();
   if (!creds) {
-    console.warn(`[mixpanel] skipping "${eventName}" — MIXPANEL_TOKEN/SECRET not set`);
+    console.warn(`[mixpanel] skipping "${eventName}", MIXPANEL_TOKEN/SECRET not set`);
     return { skipped: true };
   }
   if (!distinctId) {
-    console.warn(`[mixpanel] skipping "${eventName}" — no distinct_id`);
+    console.warn(`[mixpanel] skipping "${eventName}", no distinct_id`);
     return { skipped: true };
   }
 

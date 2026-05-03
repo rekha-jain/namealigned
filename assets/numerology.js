@@ -1,5 +1,5 @@
 /* ═══════════════════════════════════════════════════════════════
-   NUMEROLOGY ENGINE — Chaldean system (shared across all pages)
+   NUMEROLOGY ENGINE, Chaldean system (shared across all pages)
    ═══════════════════════════════════════════════════════════════ */
 
 const CHALDEAN={A:1,B:2,C:3,D:4,E:5,F:8,G:3,H:5,I:1,J:1,K:2,L:3,M:4,N:5,O:7,P:8,Q:1,R:2,S:3,T:4,U:6,V:6,W:6,X:5,Y:1,Z:7};
@@ -91,15 +91,15 @@ const YEAR_THEMES={
 };
 
 const REMEDIES={
-  1:['Wear gold, orange or red on Sundays to strengthen Sun energy','Face East for important decisions — Sun amplifies eastward','Keep a ruby or red jasper on your desk','Spend 10 minutes in morning sunlight before your workday'],
-  2:['Wear white or silver on Mondays to strengthen Moon energy','Journal emotions each evening — Moon energy loves clarity','Keep a pearl or moonstone near your bed','Drink water from a silver vessel'],
-  3:['Wear yellow on Thursdays to strengthen Jupiter energy','Teach or share knowledge on Thursdays — Jupiter rewards generosity','Keep a yellow sapphire or citrine in your workspace','Donate books or educational material on Thursdays'],
+  1:['Wear gold, orange or red on Sundays to strengthen Sun energy','Face East for important decisions, Sun amplifies eastward','Keep a ruby or red jasper on your desk','Spend 10 minutes in morning sunlight before your workday'],
+  2:['Wear white or silver on Mondays to strengthen Moon energy','Journal emotions each evening, Moon energy loves clarity','Keep a pearl or moonstone near your bed','Drink water from a silver vessel'],
+  3:['Wear yellow on Thursdays to strengthen Jupiter energy','Teach or share knowledge on Thursdays, Jupiter rewards generosity','Keep a yellow sapphire or citrine in your workspace','Donate books or educational material on Thursdays'],
   4:['Channel Rahu energy into innovation, not routine','Wear deep blue or grey on Saturdays','Avoid starting ventures on dates that add to 4 or 8','Keep hessonite (gomed) only after consulting a gemologist'],
   5:['Wear green on Wednesdays to strengthen Mercury energy','Speak and write with precision on Wednesdays','Keep an emerald or green tourmaline on your desk','Donate green vegetables or books on Wednesdays'],
-  6:['Wear white or pale pink on Fridays to strengthen Venus energy','Spend Fridays in creative work — art, music, cooking','Keep a diamond or white sapphire on your person','Offer white flowers in your home on Fridays'],
-  7:['Meditate 20 minutes daily — Ketu rewards inner stillness','Wear violet or grey on Mondays','Visit a body of water weekly for grounding','Keep a cat\'s eye after consulting a gemologist'],
-  8:['Build daily routines — Saturn rewards discipline above all','Wear black or dark blue on Saturdays','Donate iron or black sesame on Saturdays','Avoid new launches on dates summing to 8'],
-  9:['Exercise on Tuesdays — Mars responds to physical action','Wear red or coral on Tuesdays','Keep red coral set in copper, worn on right ring finger','Offer red flowers on Tuesdays'],
+  6:['Wear white or pale pink on Fridays to strengthen Venus energy','Spend Fridays in creative work, art, music, cooking','Keep a diamond or white sapphire on your person','Offer white flowers in your home on Fridays'],
+  7:['Meditate 20 minutes daily, Ketu rewards inner stillness','Wear violet or grey on Mondays','Visit a body of water weekly for grounding','Keep a cat\'s eye after consulting a gemologist'],
+  8:['Build daily routines, Saturn rewards discipline above all','Wear black or dark blue on Saturdays','Donate iron or black sesame on Saturdays','Avoid new launches on dates summing to 8'],
+  9:['Exercise on Tuesdays, Mars responds to physical action','Wear red or coral on Tuesdays','Keep red coral set in copper, worn on right ring finger','Offer red flowers on Tuesdays'],
 };
 
 const MISSING_MEANINGS={
@@ -145,7 +145,7 @@ document.addEventListener('DOMContentLoaded',initFaq);
 // ── ALIGNED NAME CORRECTION ENGINE ───────────────────────────
 // Tweaks FIRST NAME ONLY with phonetic additions (same sound) to
 // make reduce(chalSum(fullName)) === moolank  → 100% alignment.
-// Rule: never add new words / initials — only add letters within
+// Rule: never add new words / initials, only add letters within
 // the first name (extra vowel, soft consonant, doubled letter).
 function generateAlignedCorrectedNames(fullName, moolank){
   var parts=fullName.trim().split(/\s+/);
@@ -160,7 +160,7 @@ function generateAlignedCorrectedNames(fullName, moolank){
   var delta=target-total;
   if(delta===0) return {corrections:[],delta:0,target:total,currentSum:total,alreadyAligned:true};
 
-  // Phonetic addition pool — apply(name_lowercase) → string|null
+  // Phonetic addition pool, apply(name_lowercase) → string|null
   var ADDS=[
     {v:1,apply:function(n){return n+'a';}},                                    // A at end
     {v:1,apply:function(n){                                                    // I at first vowel-consonant boundary

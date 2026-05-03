@@ -1,5 +1,5 @@
 /**
- * NameAligned.com — Local Development Server
+ * NameAligned.com, Local Development Server
  * Serves all static files + mocks API endpoints
  * Usage: node dev-server.js
  */
@@ -70,7 +70,7 @@ function serveFile(filePath, res) {
   fs.readFile(filePath, (err, data) => {
     if (err) {
       res.writeHead(404, { 'Content-Type': 'text/html' });
-      res.end('<h2>404 — Not found</h2><p>' + filePath + '</p>');
+      res.end('<h2>404, Not found</h2><p>' + filePath + '</p>');
       return;
     }
     const ext  = path.extname(filePath).toLowerCase();
@@ -122,7 +122,7 @@ const server = http.createServer((req, res) => {
 server.listen(PORT, () => {
   console.log('');
   console.log('╔════════════════════════════════════════════════════╗');
-  console.log('║    ☽  NameAligned.com  —  Dev Server Running       ║');
+  console.log('║    ☽  NameAligned.com,  Dev Server Running       ║');
   console.log('╠════════════════════════════════════════════════════╣');
   console.log('║                                                    ║');
   console.log('║  Home       →  http://localhost:' + PORT + '/             ║');

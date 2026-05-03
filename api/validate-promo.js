@@ -6,9 +6,9 @@
  * that generate-report.js will accept in place of a Razorpay payment ID.
  *
  * Env vars (set in Vercel dashboard):
- *   PROMO_50_CODES   — comma-separated list of 50%-off codes
- *   PROMO_100_CODES  — comma-separated list of 100%-off codes
- *   PROMO_SECRET     — random secret for HMAC signing (generate once, keep private)
+ *   PROMO_50_CODES , comma-separated list of 50%-off codes
+ *   PROMO_100_CODES, comma-separated list of 100%-off codes
+ *   PROMO_SECRET   , random secret for HMAC signing (generate once, keep private)
  *
  * Example codes you can set:
  *   PROMO_50_CODES  = NA50JYOTI,ALIGNED50,CHALDEAN50XK

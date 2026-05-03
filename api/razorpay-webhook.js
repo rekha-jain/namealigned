@@ -1,16 +1,16 @@
 /**
- * Vercel Serverless Function — POST /api/razorpay-webhook
+ * Vercel Serverless Function, POST /api/razorpay-webhook
  *
  * Receives Razorpay webhook events, verifies the signature, and handles
- * payment.captured events — saving the order to Supabase and sending the
+ * payment.captured events, saving the order to Supabase and sending the
  * delivery email. This covers UPI / async payments where the browser
  * redirect may not fire reliably.
  *
  * Required environment variables:
- *   RAZORPAY_WEBHOOK_SECRET — set in Razorpay Dashboard → Webhooks
- *   SUPABASE_URL            — e.g. https://xyzxyz.supabase.co
- *   SUPABASE_SERVICE_KEY    — Supabase service role key
- *   BREVO_API_KEY           — Brevo v3 API key
+ *   RAZORPAY_WEBHOOK_SECRET, set in Razorpay Dashboard → Webhooks
+ *   SUPABASE_URL          , e.g. https://xyzxyz.supabase.co
+ *   SUPABASE_SERVICE_KEY  , Supabase service role key
+ *   BREVO_API_KEY         , Brevo v3 API key
  *
  * Register this URL in Razorpay Dashboard → Webhooks:
  *   https://namealigned.com/api/razorpay-webhook
@@ -51,7 +51,7 @@ async function saveOrderToSupabase({ paymentId, name, email, dob, mobile, amount
     console.error('[orders/webhook] lead_id lookup error (continuing with null):', e);
   }
 
-  // Same shape as generate-report.js — payment_status was the missing column
+  // Same shape as generate-report.js, payment_status was the missing column
   // that made every prior insert fail.
   const saved = await insertSupabaseRow('orders', {
     lead_id,
@@ -205,7 +205,7 @@ export default async function handler(req, res) {
   const mobile    = payment.contact?.replace(/\D/g, '').slice(0, 10) || payment.notes?.mobile || '';
   const amount    = payment.amount;
 
-  console.log(`Webhook: payment.captured ${paymentId} — ${email}`);
+  console.log(`Webhook: payment.captured ${paymentId}, ${email}`);
 
   // Save to Supabase (skips silently if browser flow already saved it)
   let savedRow = null;
@@ -213,7 +213,7 @@ export default async function handler(req, res) {
     savedRow = await saveOrderToSupabase({ paymentId, name, email, dob, mobile, amount });
   } catch (err) {
     console.error('Webhook Supabase error:', err);
-    // Don't return error — still try to send the email
+    // Don't return error, still try to send the email
   }
 
   // Mixpanel: fire server-side events only when this webhook actually

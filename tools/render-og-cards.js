@@ -47,7 +47,7 @@ async function main(){
   // 1. Boot dev-server (skip if something is already serving on PORT)
   let server = null;
   if(await pingServer(BASE + '/share?m=1')){
-    console.log('▸ dev-server already up on :' + PORT + ' — reusing');
+    console.log('▸ dev-server already up on :' + PORT + ', reusing');
   } else {
     console.log('▸ starting dev-server on :' + PORT);
     // dev-server.js is CJS but package.json declares ESM, so invoke with -e wrapper

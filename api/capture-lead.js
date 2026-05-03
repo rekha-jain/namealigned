@@ -1,14 +1,14 @@
 /**
- * Vercel Serverless Function — POST /api/capture-lead
+ * Vercel Serverless Function, POST /api/capture-lead
  *
  * Receives a lead from the free numerology tool, persists it to Supabase,
  * and sends a branded transactional email via Brevo.
  *
  * Required environment variables:
- *   SUPABASE_URL         — e.g. https://xyzxyz.supabase.co
- *   SUPABASE_SERVICE_KEY — Supabase service role key (preferred)
- *   SUPABASE_ANON_KEY    — fallback only if insert RLS policies allow it
- *   BREVO_API_KEY     — Brevo (Sendinblue) v3 API key
+ *   SUPABASE_URL       , e.g. https://xyzxyz.supabase.co
+ *   SUPABASE_SERVICE_KEY, Supabase service role key (preferred)
+ *   SUPABASE_ANON_KEY  , fallback only if insert RLS policies allow it
+ *   BREVO_API_KEY   , Brevo (Sendinblue) v3 API key
  */
 
 'use strict';
@@ -111,7 +111,7 @@ async function sendBrevoEmail({ name, dob, email, birthNum, destNum, nameNum }) 
                     <p style="margin:0 0 6px;font-size:11px;letter-spacing:2px;
                                text-transform:uppercase;color:#7c3aed;">Moolank</p>
                     <p style="margin:0 0 4px;font-size:48px;font-weight:bold;
-                               color:#1a0533;line-height:1;">${escapeHtml(String(birthNum ?? '—'))}</p>
+                               color:#1a0533;line-height:1;">${escapeHtml(String(birthNum ?? ''))}</p>
                     <p style="margin:0;font-size:11px;color:#9ca3af;">Birth Number</p>
                   </td>
                   <td width="2%"></td>
@@ -121,7 +121,7 @@ async function sendBrevoEmail({ name, dob, email, birthNum, destNum, nameNum }) 
                     <p style="margin:0 0 6px;font-size:11px;letter-spacing:2px;
                                text-transform:uppercase;color:#7c3aed;">Bhagyank</p>
                     <p style="margin:0 0 4px;font-size:48px;font-weight:bold;
-                               color:#1a0533;line-height:1;">${escapeHtml(String(destNum ?? '—'))}</p>
+                               color:#1a0533;line-height:1;">${escapeHtml(String(destNum ?? ''))}</p>
                     <p style="margin:0;font-size:11px;color:#9ca3af;">Destiny Number</p>
                   </td>
                   <td width="2%"></td>
@@ -131,7 +131,7 @@ async function sendBrevoEmail({ name, dob, email, birthNum, destNum, nameNum }) 
                     <p style="margin:0 0 6px;font-size:11px;letter-spacing:2px;
                                text-transform:uppercase;color:#7c3aed;">Name Number</p>
                     <p style="margin:0 0 4px;font-size:48px;font-weight:bold;
-                               color:#1a0533;line-height:1;">${escapeHtml(String(nameNum ?? '—'))}</p>
+                               color:#1a0533;line-height:1;">${escapeHtml(String(nameNum ?? ''))}</p>
                     <p style="margin:0;font-size:11px;color:#9ca3af;">Namank</p>
                   </td>
                 </tr>
@@ -178,7 +178,7 @@ async function sendBrevoEmail({ name, dob, email, birthNum, destNum, nameNum }) 
                         background:linear-gradient(135deg,#f0b429,#f5d060);
                         color:#1a0533;text-decoration:none;border-radius:8px;
                         font-size:16px;font-weight:700;letter-spacing:0.5px;">
-                Get Your 5-Year Destiny Report — ₹199 →
+                Get Your 5-Year Destiny Report, ₹199 →
               </a>
             </td>
           </tr>
@@ -191,7 +191,7 @@ async function sendBrevoEmail({ name, dob, email, birthNum, destNum, nameNum }) 
                 ✦ 5-year personalised forecast<br>
                 ✦ Year-by-year career, love, wealth &amp; health &nbsp;·&nbsp;
                 ✦ Mobile number analysis<br>
-                ✦ Downloadable PDF — One-time ₹199, instant delivery
+                ✦ Downloadable PDF, One-time ₹199, instant delivery
               </p>
             </td>
           </tr>
@@ -204,7 +204,7 @@ async function sendBrevoEmail({ name, dob, email, birthNum, destNum, nameNum }) 
                 You're receiving this because you requested a free numerology reading at
                 <a href="https://namealigned.com" style="color:#7c3aed;text-decoration:none;">
                   namealigned.com</a>.<br>
-                © ${new Date().getFullYear()} NameAligned.com — All rights reserved.
+                © ${new Date().getFullYear()} NameAligned.com, All rights reserved.
               </p>
             </td>
           </tr>
@@ -232,7 +232,7 @@ async function sendBrevoEmail({ name, dob, email, birthNum, destNum, nameNum }) 
 
   if (!response.ok) {
     const errorText = await response.text();
-    // Non-fatal: log but don't throw — we don't want email failure to fail the lead capture
+    // Non-fatal: log but don't throw, we don't want email failure to fail the lead capture
     console.error(`Brevo email failed [${response.status}]: ${errorText}`);
     return null;
   }
@@ -241,7 +241,7 @@ async function sendBrevoEmail({ name, dob, email, birthNum, destNum, nameNum }) 
 }
 
 // ---------------------------------------------------------------------------
-// Tiny HTML escaper — prevents XSS in the email template
+// Tiny HTML escaper, prevents XSS in the email template
 // ---------------------------------------------------------------------------
 function escapeHtml(str) {
   return String(str)

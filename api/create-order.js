@@ -1,13 +1,13 @@
 /**
- * Vercel Serverless Function — POST /api/create-order
+ * Vercel Serverless Function, POST /api/create-order
  *
  * Creates a Razorpay order server-side and returns the order_id.
  * The frontend uses this order_id when opening the Razorpay checkout,
  * which is required for live payments and enables signature verification.
  *
  * Required environment variables:
- *   RAZORPAY_KEY_ID     — Razorpay live key ID
- *   RAZORPAY_KEY_SECRET — Razorpay live key secret
+ *   RAZORPAY_KEY_ID   , Razorpay live key ID
+ *   RAZORPAY_KEY_SECRET, Razorpay live key secret
  */
 
 'use strict';

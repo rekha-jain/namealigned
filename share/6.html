@@ -13,8 +13,8 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
 <link rel="icon" type="image/svg+xml" href="/assets/namealigned-favicon.svg"/>
-<title>Numerology Insight Card — NameAligned.com</title>
-<meta name="description" content="Every name carries its own strengths. Discover what yours already supports — Chaldean numerology insight in 30 seconds."/>
+<title>Numerology Insight Card, NameAligned.com</title>
+<meta name="description" content="Every name carries its own strengths. Discover what yours already supports, Chaldean numerology insight in 30 seconds."/>
 <meta name="robots" content="noindex,follow"/>
 
 <!-- Open Graph: link preview that auto-renders on WhatsApp/FB/Twitter when shared -->
@@ -26,7 +26,7 @@
 <meta property="og:image" content="https://www.namealigned.com/assets/og/moolank-6.png"/>
 <meta property="og:image:width" content="1200"/>
 <meta property="og:image:height" content="630"/>
-<meta property="og:image:alt" content="NameAligned — Discover what your name says about you"/>
+<meta property="og:image:alt" content="NameAligned, Discover what your name says about you"/>
 <meta property="og:locale" content="en_IN"/>
 
 <meta name="twitter:card" content="summary_large_image"/>
@@ -88,7 +88,7 @@ footer a{color:var(--gold-l);text-decoration:none;}
 
 <section class="hero">
   <h1 id="heroTitle">Someone you know just discovered their name's strengths ✦</h1>
-  <p>Every name carries its own vibration. This is what theirs says — based on Chaldean numerology, a sound-based system used for over 2,500 years.</p>
+  <p>Every name carries its own vibration. This is what theirs says, based on Chaldean numerology, a sound-based system used for over 2,500 years.</p>
 </section>
 
 <div class="card-wrap">
@@ -100,7 +100,7 @@ footer a{color:var(--gold-l);text-decoration:none;}
 <section class="cta-block">
   <div class="cta-eyebrow">Curious what yours says?</div>
   <h2 class="cta-h">Discover your own numerology insight</h2>
-  <p class="cta-p">Free analysis — takes 30 seconds. Strengths-led, not judgmental. No sign-up required.</p>
+  <p class="cta-p">Free analysis, takes 30 seconds. Strengths-led, not judgmental. No sign-up required.</p>
   <a href="/analyzer" class="cta-btn" id="ctaBtn">Discover my insight →</a>
 
   <div class="share-row">
@@ -142,7 +142,7 @@ if(sName){
 }
 
 // Pass-through name+dob to analyzer for one-tap "try yours with same context"
-// (commented out by default — the analyzer landing handles its own form;
+// (commented out by default, the analyzer landing handles its own form;
 //  prefilling someone else's name when a NEW visitor arrives is wrong UX)
 
 // ── Per-Moolank profile (mirrors analyzer.html) ──────────────────
@@ -156,17 +156,17 @@ const MOOLANK_PROFILES = {
      strengths:[{icon:'☾',title:'Empathic Listener',desc:'You sense what others feel before they say it.'},
                 {icon:'◇',title:'Diplomatic',desc:'You bring people together with quiet grace.'},
                 {icon:'✧',title:'Imaginative',desc:'Your inner world is rich, gentle, and creative.'}],
-     insight:'You feel things deeply, but rarely show how much — until the right person earns it.'},
+     insight:'You feel things deeply, but rarely show how much, until the right person earns it.'},
   3:{planet:'Jupiter',planetIcon:'♃',qualities:'Expression · Optimism · Joy',
      strengths:[{icon:'✦',title:'Natural Communicator',desc:'Your words carry warmth and energy.'},
                 {icon:'☼',title:'Optimist',desc:'You see the upside in almost any situation.'},
                 {icon:'✧',title:'Creative Spark',desc:'You make life feel lighter for everyone around you.'}],
-     insight:'You make life feel lighter for everyone — except, sometimes, yourself.'},
+     insight:'You make life feel lighter for everyone, except, sometimes, yourself.'},
   4:{planet:'Rahu',planetIcon:'◈',qualities:'Innovation · Logic · Structure',
      strengths:[{icon:'◈',title:'Systems Thinker',desc:'You spot patterns most people miss.'},
                 {icon:'⚙',title:'Unconventional',desc:'You challenge the status quo with substance.'},
                 {icon:'◉',title:'Quietly Reliable',desc:'You build things that genuinely last.'}],
-     insight:'You see what others miss — and quietly fix it without taking credit.'},
+     insight:'You see what others miss, and quietly fix it without taking credit.'},
   5:{planet:'Mercury',planetIcon:'☿',qualities:'Adaptability · Wit · Communication',
      strengths:[{icon:'⚡',title:'Quick Mind',desc:'You absorb and process at lightning speed.'},
                 {icon:'✶',title:'Versatile',desc:'You move comfortably between very different worlds.'},
@@ -176,12 +176,12 @@ const MOOLANK_PROFILES = {
      strengths:[{icon:'❤',title:'Caretaker',desc:'You hold others together with quiet strength.'},
                 {icon:'✿',title:'Aesthetic Sense',desc:'You bring beauty into ordinary moments.'},
                 {icon:'✦',title:'Devoted',desc:'Your loyalty runs deep and steady.'}],
-     insight:'You hold others together — even when nobody asks who holds you.'},
+     insight:'You hold others together, even when nobody asks who holds you.'},
   7:{planet:'Ketu',planetIcon:'◉',qualities:'Wisdom · Introspection · Depth',
      strengths:[{icon:'◉',title:'Analytical',desc:'You think deeply before you speak.'},
                 {icon:'✦',title:'Spiritual Seeker',desc:'You ask the questions others quietly avoid.'},
                 {icon:'◇',title:'Discerning',desc:'You see through surfaces to what\'s real.'}],
-     insight:'You research everything for weeks — then decide in a single moment.'},
+     insight:'You research everything for weeks, then decide in a single moment.'},
   8:{planet:'Saturn',planetIcon:'♄',qualities:'Discipline · Authority · Resilience',
      strengths:[{icon:'⚖',title:'Strategic',desc:'You play long games most people can\'t see.'},
                 {icon:'◆',title:'Resilient',desc:'You hold steady when others panic.'},
@@ -412,7 +412,7 @@ function showHint(msg){
   window._hintT = setTimeout(()=>h.classList.remove('show'), 3500);
 }
 function shareToWA(){
-  const text = 'This was weirdly accurate 😅 — see what your name says: ' + getThisLink();
+  const text = 'This was weirdly accurate 😅, see what your name says: ' + getThisLink();
   window.open('https://wa.me/?text=' + encodeURIComponent(text), '_blank');
 }
 function copyLink(){
@@ -422,7 +422,7 @@ function copyLink(){
     const original = b.textContent;
     b.textContent = '✓ Copied!';
     setTimeout(()=>{ b.textContent = original; }, 2500);
-  }).catch(()=>showHint('Could not copy — long-press the URL bar and copy manually.'));
+  }).catch(()=>showHint('Could not copy, long-press the URL bar and copy manually.'));
 }
 </script>
 </body>

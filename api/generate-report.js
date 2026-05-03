@@ -1,15 +1,15 @@
 /**
- * Vercel Serverless Function — POST /api/generate-report
+ * Vercel Serverless Function, POST /api/generate-report
  *
  * Verifies a Razorpay payment (via HMAC signature), saves the order to
  * Supabase, and sends a delivery email via Brevo containing the report link.
  *
  * Required environment variables:
- *   SUPABASE_URL          — e.g. https://xyzxyz.supabase.co
- *   SUPABASE_SERVICE_KEY  — Supabase service role key
- *   BREVO_API_KEY         — Brevo (Sendinblue) v3 API key
- *   RAZORPAY_KEY_ID       — Razorpay live key ID
- *   RAZORPAY_KEY_SECRET   — Razorpay live key secret
+ *   SUPABASE_URL        , e.g. https://xyzxyz.supabase.co
+ *   SUPABASE_SERVICE_KEY, Supabase service role key
+ *   BREVO_API_KEY       , Brevo (Sendinblue) v3 API key
+ *   RAZORPAY_KEY_ID     , Razorpay live key ID
+ *   RAZORPAY_KEY_SECRET , Razorpay live key secret
  */
 
 'use strict';
@@ -54,7 +54,7 @@ function verifyPromoToken(token) {
 // ---------------------------------------------------------------------------
 // Helper: verify Razorpay payment signature (HMAC-SHA256)
 // Razorpay signs: orderId + "|" + paymentId with your key secret.
-// We verify this instead of a round-trip API call — faster and more reliable.
+// We verify this instead of a round-trip API call, faster and more reliable.
 // ---------------------------------------------------------------------------
 function verifyRazorpaySignature(orderId, paymentId, signature) {
   if (!orderId || !paymentId || !signature) return false;
@@ -102,7 +102,7 @@ async function fetchRazorpayPayment(paymentId) {
 async function saveOrderToSupabase({
   paymentId, name, email, dob, mobile, birthNum, destNum, nameNum,
 }) {
-  // Resolve lead_id from the leads table by email (best-effort — null is OK).
+  // Resolve lead_id from the leads table by email (best-effort, null is OK).
   let lead_id = null;
   try {
     lead_id = await findLeadIdByEmail(email);
@@ -111,7 +111,7 @@ async function saveOrderToSupabase({
   }
 
   // EXACT shape required by the orders table. payment_status was missing
-  // before — that's why every insert was rejected and silently swallowed.
+  // before, that's why every insert was rejected and silently swallowed.
   return await insertSupabaseRow('orders', {
     lead_id,
     name,
@@ -203,7 +203,7 @@ async function sendReportEmail({ paymentId, name, email, dob, mobile, birthNum, 
                         </td>
                         <td style="padding:4px 0;font-size:18px;font-weight:bold;
                                    color:#1a0533;font-family:Arial,sans-serif;">
-                          &nbsp;&nbsp;${escapeHtml(String(birthNum ?? '—'))}
+                          &nbsp;&nbsp;${escapeHtml(String(birthNum ?? ''))}
                         </td>
                       </tr>
                       <tr>
@@ -213,7 +213,7 @@ async function sendReportEmail({ paymentId, name, email, dob, mobile, birthNum, 
                         </td>
                         <td style="padding:4px 0;font-size:18px;font-weight:bold;
                                    color:#1a0533;font-family:Arial,sans-serif;">
-                          &nbsp;&nbsp;${escapeHtml(String(destNum ?? '—'))}
+                          &nbsp;&nbsp;${escapeHtml(String(destNum ?? ''))}
                         </td>
                       </tr>
                       <tr>
@@ -223,7 +223,7 @@ async function sendReportEmail({ paymentId, name, email, dob, mobile, birthNum, 
                         </td>
                         <td style="padding:4px 0;font-size:18px;font-weight:bold;
                                    color:#1a0533;font-family:Arial,sans-serif;">
-                          &nbsp;&nbsp;${escapeHtml(String(nameNum ?? '—'))}
+                          &nbsp;&nbsp;${escapeHtml(String(nameNum ?? ''))}
                         </td>
                       </tr>
                     </table>
@@ -238,7 +238,7 @@ async function sendReportEmail({ paymentId, name, email, dob, mobile, birthNum, 
             <td style="padding:0 48px 32px;">
               <p style="margin:0;font-size:15px;color:#6b7280;line-height:1.7;">
                 Your report includes in-depth interpretations of each number, compatibility
-                insights, and personalised guidance for 2025–2026 — crafted using the
+                insights, and personalised guidance for 2025–2026, crafted using the
                 authentic Chaldean system.
               </p>
             </td>
@@ -280,7 +280,7 @@ async function sendReportEmail({ paymentId, name, email, dob, mobile, birthNum, 
                 Questions? Reply to this email or contact us at
                 <a href="mailto:hello@namealigned.com"
                    style="color:#7c3aed;text-decoration:none;">hello@namealigned.com</a><br>
-                © ${new Date().getFullYear()} NameAligned.com — All rights reserved.
+                © ${new Date().getFullYear()} NameAligned.com, All rights reserved.
               </p>
             </td>
           </tr>
@@ -316,7 +316,7 @@ async function sendReportEmail({ paymentId, name, email, dob, mobile, birthNum, 
 }
 
 // ---------------------------------------------------------------------------
-// Tiny HTML escaper — prevents XSS in the email template
+// Tiny HTML escaper, prevents XSS in the email template
 // ---------------------------------------------------------------------------
 function escapeHtml(str) {
   return String(str)
@@ -376,7 +376,7 @@ export default async function handler(req, res) {
       }
       console.log(`Promo 100% redemption accepted for ${cleanEmail}`);
     } else {
-      // Normal Razorpay payment — verify HMAC signature first (fast & secure)
+      // Normal Razorpay payment, verify HMAC signature first (fast & secure)
       if (orderId && signature) {
         // Preferred path: signature verification (no extra API call needed)
         const sigValid = verifyRazorpaySignature(orderId, cleanPaymentId, signature);
@@ -404,7 +404,7 @@ export default async function handler(req, res) {
         }
 
         if (payment.status !== 'captured') {
-          console.warn(`Payment ${cleanPaymentId} status "${payment.status}" — expected "captured"`);
+          console.warn(`Payment ${cleanPaymentId} status "${payment.status}", expected "captured"`);
           return sendJSON(res, 402, {
             success: false,
             verified: false,
@@ -428,7 +428,7 @@ export default async function handler(req, res) {
     let orderSaved = false;
     let orderInserted = false;
 
-    // --- Save order to Supabase (LOUD — surface DB errors instead of hiding) ---
+    // --- Save order to Supabase (LOUD, surface DB errors instead of hiding) ---
     try {
       const savedOrder = await saveOrderToSupabase({
         paymentId: cleanPaymentId,
@@ -471,7 +471,7 @@ export default async function handler(req, res) {
       }
     } catch (dbErr) {
       console.error('[orders] CRITICAL save failed:', dbErr?.message || dbErr);
-      // Return 500 so the frontend doesn't show a false "success" UI — and so
+      // Return 500 so the frontend doesn't show a false "success" UI, and so
       // the failure is loud in Vercel logs and any monitoring you have.
       return sendJSON(res, 500, {
         success: false,

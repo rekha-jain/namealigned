@@ -1,5 +1,5 @@
 /* ═════════════════════════════════════════════════════════════════
-   MINI-ANALYZERS — Partner / Child / Business
+   MINI-ANALYZERS, Partner / Child / Business
    Shared logic used by /analyzer (locked-card links) and the three
    standalone landing pages:
      /business-name-numerology
@@ -46,7 +46,7 @@ function tierChild(pct){
 function firstWord(s){ return String(s||'').trim().split(/\s+/)[0]; }
 function escapeAttr(s){ return String(s).replace(/"/g,'&quot;'); }
 
-// ── Phonetic respellings — preserve pronunciation, shift vibration ──
+// ── Phonetic respellings, preserve pronunciation, shift vibration ──
 function _phoneticTransforms(s){
   const out = new Set();
   const lo = s.toLowerCase();
@@ -127,7 +127,7 @@ function _applyToLongestWord(name, transformFn){
   return wholeOut;
 }
 // Classify the type of move that turns `orig` into `variant`. Used both
-// for the human-readable 'Move:' line and for ranking — single-step
+// for the human-readable 'Move:' line and for ranking, single-step
 // recognised patterns (phoneme swap, vowel drop, doubled letter) beat
 // multi-step compounds, which look more like typos than brand respellings.
 function _classifyMove(orig, variant){
@@ -181,7 +181,7 @@ function _classifyMove(orig, variant){
 // Lower number = preferred. Multi-step transforms get the worst rank
 // because they look like typos rather than intentional respellings.
 const _MOVE_RANK = {
-  'word-substitution': 0,                                               // most preferred — keeps the brand identity
+  'word-substitution': 0,                                               // most preferred, keeps the brand identity
   'phoneme-swap': 1, 'doubled': 1, 'silent-add': 1, 'vowel-drop': 2,
   'letter-swap': 2, 'inserted': 3, 'consonant-drop': 4, 'multi-step': 9
 };
@@ -189,7 +189,7 @@ const _MOVE_RANK = {
 // ── Domain-aware word substitution library ─────────────────────────
 // Goal: when the user enters a multi-word brand like 'Prana Shakti
 // healing and wellness', keep the distinctive core ('Prana Shakti') and
-// try alternative suffixes. Numerically very effective — short suffixes
+// try alternative suffixes. Numerically very effective, short suffixes
 // shift the Chaldean sum into different (often better) targets without
 // touching the brand identity.
 
@@ -206,7 +206,7 @@ const _GENERIC_SUFFIX_WORDS = new Set([
 ]);
 
 // Domain-specific replacement libraries. Empty-string entries mean
-// 'drop the suffix entirely and keep just the core' — frequently the
+// 'drop the suffix entirely and keep just the core', frequently the
 // strongest move when the core itself sums to a good compound.
 const _DOMAIN_ALTERNATIVES = {
   wellness: ['',
@@ -236,7 +236,7 @@ const _DOMAIN_ALTERNATIVES = {
     'Capital','Partners','Advisors','Consulting','Strategy','Solutions',
     'Co','Ventures Hub','Capital Group','Strategy Co','Advisors Co'
   ],
-  // 'default' — used when no specific category is detected.
+  // 'default', used when no specific category is detected.
   default: ['',
     'Hub','Studio','Co','Group','Labs','Collective','Works','Ventures',
     'Living','Way','Path','House','Lane','Lab','HQ','Co','Studio Co',
@@ -306,7 +306,7 @@ function _substitutionVariants(name, moo, bhag){
 }
 
 // Generate scored variants whose Chaldean reduction matches `target`.
-// SINGLE-STEP transforms only — no pass2 chaining. The user's complaint
+// SINGLE-STEP transforms only, no pass2 chaining. The user's complaint
 // was that compounded transforms produce 'boring' typo-like names; this
 // keeps every variant exactly one move away from the input.
 function _variantsForTarget(name, target, moo, bhag){
@@ -324,7 +324,7 @@ function _variantsForTarget(name, target, moo, bhag){
     if(compound && compound.q==='b') continue;       // never recommend bad CD
     const score = compatPct(reduced, raw, moo, bhag);
     const move = _classifyMove(base, v);
-    if(move.kind === 'multi-step') continue;          // typo-feel — drop
+    if(move.kind === 'multi-step') continue;          // typo-feel, drop
     const lenPenalty = Math.max(0, Math.abs(v.length - base.length) - 1);
     scored.push({name:v, reduced, raw, score, compound, lenPenalty, move});
   }
@@ -339,7 +339,7 @@ function suggestNameVariants(name, target, moo, bhag){
     .slice(0,3);
 }
 
-// Brand variant search — return up to 3 picks that genuinely sound like
+// Brand variant search, return up to 3 picks that genuinely sound like
 // the input AND land in the Strong tier (≥70%). Per user feedback we
 // don't require the variant to beat the input score; tying is fine as
 // long as the respelling is a clean, single-move change that actually
@@ -363,7 +363,7 @@ function suggestBrandVariants(name, moo, bhag){
   }
 
   // 2. Word-substitution variants (keep distinctive core, swap generic suffix)
-  // — preferred when input has a clear core + replaceable suffix pattern,
+  //, preferred when input has a clear core + replaceable suffix pattern,
   // e.g. 'Prana Shakti healing and wellness' → 'Prana Shakti Way'.
   for(const v of _substitutionVariants(name, moo, bhag)){
     const key = v.name.toLowerCase();
@@ -428,14 +428,14 @@ function bestBrandTargets(moo){
 
 const BRAND_FOCUS = {
   1:{ headline:'Lead from the front', body:'Sun energy wins with founder-led brand voice, bold positioning and category leadership. Avoid hiding behind committees.' },
-  2:{ headline:'Build on relationships', body:'Moon energy converts through trust and storytelling. Lean into customer testimonials, partnerships and emotional copy — not feature lists.' },
+  2:{ headline:'Build on relationships', body:'Moon energy converts through trust and storytelling. Lean into customer testimonials, partnerships and emotional copy, not feature lists.' },
   3:{ headline:'Teach to sell', body:'Jupiter energy expands through advisory positioning, content and education. Thought-leadership > paid ads. Webinars, frameworks, books work.' },
-  4:{ headline:'Disruptive angles', body:'Rahu energy thrives on unconventional GTM — alternative channels, contrarian positioning, technology-led plays. Avoid me-too markets.' },
+  4:{ headline:'Disruptive angles', body:'Rahu energy thrives on unconventional GTM, alternative channels, contrarian positioning, technology-led plays. Avoid me-too markets.' },
   5:{ headline:'Move fast, distribute wide', body:'Mercury energy wins through speed, communication and multi-channel sales. Short cycles, frequent launches, sharp copy.' },
   6:{ headline:'Design and repeat-buy', body:'Venus energy converts through aesthetics, lifestyle branding and customer experience. Premium positioning and repeat-purchase models compound best.' },
-  7:{ headline:'Niche depth, not mass', body:'Ketu energy rewards specialist positioning. Pick a narrow domain and own it — research, mysticism, healing, deep tech. Avoid mass-market plays.' },
-  8:{ headline:'Play the long game', body:'Saturn energy compounds slowly. B2B contracts, systems, infrastructure, real estate — businesses that reward patience and process discipline.' },
-  9:{ headline:'Compete and conquer', body:'Mars energy wins in competitive arenas — sports, defence, surgery, trades, performance. Direct positioning, action-oriented brand voice.' }
+  7:{ headline:'Niche depth, not mass', body:'Ketu energy rewards specialist positioning. Pick a narrow domain and own it, research, mysticism, healing, deep tech. Avoid mass-market plays.' },
+  8:{ headline:'Play the long game', body:'Saturn energy compounds slowly. B2B contracts, systems, infrastructure, real estate, businesses that reward patience and process discipline.' },
+  9:{ headline:'Compete and conquer', body:'Mars energy wins in competitive arenas, sports, defence, surgery, trades, performance. Direct positioning, action-oriented brand voice.' }
 };
 
 // ── Child helpers ──────────────────────────────────────────────────
@@ -455,13 +455,13 @@ function bestChildTargets(moo){
 }
 
 const CHILD_FOCUS = {
-  1:{ headline:'Independence and clarity', body:'Sun children thrive when given leadership opportunities, decision-making space, and a clear sense of purpose. Avoid suppressing their natural authority — channel it.' },
+  1:{ headline:'Independence and clarity', body:'Sun children thrive when given leadership opportunities, decision-making space, and a clear sense of purpose. Avoid suppressing their natural authority, channel it.' },
   2:{ headline:'Emotional safety first', body:'Moon children are sensitive and intuitive. Stable home rhythms, gentle correction, and creative outlets (music, art, water-based activities) bring out their best.' },
   3:{ headline:'Learning and expression', body:'Jupiter children love to teach and absorb knowledge early. Books, philosophy, debate clubs, and travel feed their growth. They mature through wisdom, not pressure.' },
-  4:{ headline:'Structure with surprise', body:'Rahu children need structure, but get bored fast. Mix routine with novelty — tech projects, unusual hobbies, problem-solving challenges. Watch for restlessness.' },
-  5:{ headline:'Movement and variety', body:'Mercury children learn through doing, talking and travelling. Multiple interests at once is healthy. Sports, languages, performance — keep their nervous system engaged.' },
+  4:{ headline:'Structure with surprise', body:'Rahu children need structure, but get bored fast. Mix routine with novelty, tech projects, unusual hobbies, problem-solving challenges. Watch for restlessness.' },
+  5:{ headline:'Movement and variety', body:'Mercury children learn through doing, talking and travelling. Multiple interests at once is healthy. Sports, languages, performance, keep their nervous system engaged.' },
   6:{ headline:'Beauty and belonging', body:'Venus children blossom in aesthetic, harmonious environments. Art, design, music, gardening, gentle social spaces. They protect those they love early.' },
-  7:{ headline:'Solitude and depth', body:'Ketu children need quiet time and books. Don\'t over-schedule. They mature through introspection — research, nature, mysticism, niche obsessions.' },
+  7:{ headline:'Solitude and depth', body:'Ketu children need quiet time and books. Don\'t over-schedule. They mature through introspection, research, nature, mysticism, niche obsessions.' },
   8:{ headline:'Patience and self-trust', body:'Saturn children mature slowly but powerfully. Avoid comparing them to faster peers. They reward patience with discipline and long-arc achievement.' },
   9:{ headline:'Action and courage', body:'Mars children need physical outlets and clear missions. Sports, martial arts, social causes. Channel their fire into purpose or it turns into temper.' }
 };
@@ -486,7 +486,7 @@ function buildBusinessToolkit(moo, bhag, brandName){
   //   ≥90%:  only show variants that hit a perfect 100%. If none, tell
   //          the user the current name is great and move on.
   //   70-89: only show variants STRICTLY better than the input score.
-  //   50-69: same — only show strict improvements.
+  //   50-69: same, only show strict improvements.
   //   <50%:  only show strict improvements. If none, recommend a different
   //          brand entirely targeting the founder-friendly numbers.
   // Same-score "alternatives" are noise and were the source of confusion.
@@ -499,12 +499,12 @@ function buildBusinessToolkit(moo, bhag, brandName){
   if (inputScore >= 90) {
     noVariantsMsg = `
       <div style="margin-bottom:.9rem;background:rgba(76,175,132,.10);border:1px solid rgba(76,175,132,.3);border-radius:8px;padding:.85rem 1rem;font-family:sans-serif;font-size:13px;color:var(--text);line-height:1.6">
-        <strong style="color:#2e7d4f">✓ Your brand name is excellent (${inputScore}%).</strong> Nothing improves on this. Go forward with confidence — focus on positioning, timing and the launch dates below.
+        <strong style="color:#2e7d4f">✓ Your brand name is excellent (${inputScore}%).</strong> Nothing improves on this. Go forward with confidence, focus on positioning, timing and the launch dates below.
       </div>`;
   } else if (inputScore >= 70) {
     noVariantsMsg = `
       <div style="margin-bottom:.9rem;background:rgba(76,175,132,.08);border:1px solid rgba(76,175,132,.25);border-radius:8px;padding:.85rem 1rem;font-family:sans-serif;font-size:13px;color:var(--text);line-height:1.6">
-        <strong style="color:#2e7d4f">✓ Strong alignment (${inputScore}%).</strong> No phonetic respelling of "<strong style="color:#6d4ed1">${brandName}</strong>" lifts the score higher — your name has hit its ceiling for a Moolank ${moo} founder. To push beyond this, you'd need a different brand entirely targeting Brand <strong style="color:#6d4ed1">${targets.join(' or ')}</strong>.
+        <strong style="color:#2e7d4f">✓ Strong alignment (${inputScore}%).</strong> No phonetic respelling of "<strong style="color:#6d4ed1">${brandName}</strong>" lifts the score higher, your name has hit its ceiling for a Moolank ${moo} founder. To push beyond this, you'd need a different brand entirely targeting Brand <strong style="color:#6d4ed1">${targets.join(' or ')}</strong>.
       </div>`;
   } else if (inputScore >= 50) {
     noVariantsMsg = `
@@ -514,7 +514,7 @@ function buildBusinessToolkit(moo, bhag, brandName){
   } else {
     noVariantsMsg = `
       <div style="margin-bottom:.9rem;background:rgba(220,38,38,.08);border:1px dashed rgba(220,38,38,.35);border-radius:8px;padding:.85rem 1rem;font-family:sans-serif;font-size:13px;color:var(--text);line-height:1.6">
-        ✦ Low alignment (${inputScore}%). No phonetic tweak of "<strong style="color:#6d4ed1">${brandName}</strong>" reaches Strong tier for a Moolank ${moo} (${founderPlanet}) founder. A different brand name will serve better — try one that reduces to <strong style="color:#6d4ed1">${targets.join(', ')}</strong>.
+        ✦ Low alignment (${inputScore}%). No phonetic tweak of "<strong style="color:#6d4ed1">${brandName}</strong>" reaches Strong tier for a Moolank ${moo} (${founderPlanet}) founder. A different brand name will serve better, try one that reduces to <strong style="color:#6d4ed1">${targets.join(', ')}</strong>.
       </div>`;
   }
 
@@ -557,12 +557,12 @@ function buildBusinessToolkit(moo, bhag, brandName){
 
       <div style="margin-bottom:.85rem">
         <div style="font-family:sans-serif;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#6d4ed1;font-weight:700;margin-bottom:.35rem">✦ Founder-friendly brand numbers</div>
-        <p style="font-family:sans-serif;font-size:12.5px;color:var(--text);line-height:1.55;margin:0">For a Moolank ${moo} (${founderPlanet}) founder, target a brand that reduces to <strong>${targets.join(', ')}</strong>. Avoid 4 and 8 — they slow business cash flow.</p>
+        <p style="font-family:sans-serif;font-size:12.5px;color:var(--text);line-height:1.55;margin:0">For a Moolank ${moo} (${founderPlanet}) founder, target a brand that reduces to <strong>${targets.join(', ')}</strong>. Avoid 4 and 8, they slow business cash flow.</p>
       </div>
 
       <div style="margin-bottom:.85rem">
         <div style="font-family:sans-serif;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#6d4ed1;font-weight:700;margin-bottom:.35rem">✦ Power days for launches &amp; signings</div>
-        <p style="font-family:sans-serif;font-size:12.5px;color:var(--text);line-height:1.55;margin:0">Use <strong>${days.join(', ')}</strong> of any month for incorporation, launches, contract signings or major announcements — they amplify ${founderPlanet} energy.</p>
+        <p style="font-family:sans-serif;font-size:12.5px;color:var(--text);line-height:1.55;margin:0">Use <strong>${days.join(', ')}</strong> of any month for incorporation, launches, contract signings or major announcements, they amplify ${founderPlanet} energy.</p>
       </div>
 
       <div>
@@ -585,12 +585,12 @@ function buildChildToolkit(moo, bhag, childName){
 
       <div style="margin-bottom:.85rem">
         <div style="font-family:sans-serif;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#6d4ed1;font-weight:700;margin-bottom:.35rem">✦ Core-friendly name numbers</div>
-        <p style="font-family:sans-serif;font-size:12.5px;color:var(--text);line-height:1.55;margin:0">For a Moolank ${moo} (${corePlanet}) child, the ideal name reduces to <strong>${targets.join(', ')}</strong>. Avoid 4 and 8 — they add karmic friction in early life.</p>
+        <p style="font-family:sans-serif;font-size:12.5px;color:var(--text);line-height:1.55;margin:0">For a Moolank ${moo} (${corePlanet}) child, the ideal name reduces to <strong>${targets.join(', ')}</strong>. Avoid 4 and 8, they add karmic friction in early life.</p>
       </div>
 
       <div style="margin-bottom:.85rem">
         <div style="font-family:sans-serif;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#6d4ed1;font-weight:700;margin-bottom:.35rem">✦ Auspicious days for naming &amp; ceremonies</div>
-        <p style="font-family:sans-serif;font-size:12.5px;color:var(--text);line-height:1.55;margin:0">Use <strong>${days.join(', ')}</strong> of any month for the naming ceremony, annaprashan, school admission or other milestone events — they amplify ${corePlanet} energy.</p>
+        <p style="font-family:sans-serif;font-size:12.5px;color:var(--text);line-height:1.55;margin:0">Use <strong>${days.join(', ')}</strong> of any month for the naming ceremony, annaprashan, school admission or other milestone events, they amplify ${corePlanet} energy.</p>
       </div>
 
       <div>
@@ -621,7 +621,7 @@ function miniResultHTML({eyebrow,title,score,tier,pair,narrative,extraHtml,upsel
     <div style="background:rgba(245,196,81,.08);border:1px dashed rgba(245,196,81,.5);border-radius:10px;padding:.8rem 1rem;font-family:sans-serif;font-size:12.5px;color:var(--text);line-height:1.55;margin-bottom:.85rem;">
       <strong style="color:#9d4edd">${lead}</strong> ${upsell}
     </div>
-    <a href="report?ref=mini_${kind}" class="mini-cta" onclick="trackEvent('mini_cta_clicked',{kind:'${kind}'})">Unlock Full Chaldean Report — ₹199 →</a>
+    <a href="report?ref=mini_${kind}" class="mini-cta" onclick="trackEvent('mini_cta_clicked',{kind:'${kind}'})">Unlock Full Chaldean Report, ₹199 →</a>
   `;
   return `
     <div class="mini-eyebrow">${eyebrow}</div>
@@ -641,9 +641,9 @@ function miniResultHTML({eyebrow,title,score,tier,pair,narrative,extraHtml,upsel
 
 // Tightened upsell-pivot copy: connects free brand-tool result to the
 // founder's own ₹199 personal report explicitly.
-const UPSELL_BUSINESS = 'This free check is about <strong>your brand</strong>. The ₹199 Chaldean Destiny Report is about <strong>you, the founder</strong> — your Moolank, planetary alignment and 5-year personal-year cycle, so you know which year favours launching, scaling or rebranding. Brands can change. The founder is constant.';
-const UPSELL_CHILD    = 'This free check tells you about <strong>the name</strong> you\'re considering. The ₹199 Chaldean Destiny Report is about <strong>you, the parent</strong> — your Moolank, planetary alignment and 5-year personal-year cycle, so you understand the energy you carry into naming and raising your child.';
-const UPSELL_PARTNER  = 'This free check shows the pairing. The ₹199 Chaldean Destiny Report includes a dedicated <strong>Compatibility Insight chapter</strong> — planetary interaction map, friction-points and harmony-builders — based on your own complete Chaldean reading.';
+const UPSELL_BUSINESS = 'This free check is about <strong>your brand</strong>. The ₹199 Chaldean Destiny Report is about <strong>you, the founder</strong>, your Moolank, planetary alignment and 5-year personal-year cycle, so you know which year favours launching, scaling or rebranding. Brands can change. The founder is constant.';
+const UPSELL_CHILD    = 'This free check tells you about <strong>the name</strong> you\'re considering. The ₹199 Chaldean Destiny Report is about <strong>you, the parent</strong>, your Moolank, planetary alignment and 5-year personal-year cycle, so you understand the energy you carry into naming and raising your child.';
+const UPSELL_PARTNER  = 'This free check shows the pairing. The ₹199 Chaldean Destiny Report includes a dedicated <strong>Compatibility Insight chapter</strong>, planetary interaction map, friction-points and harmony-builders, based on your own complete Chaldean reading.';
 
 function buildPartnerResultHTML(yn,yd,pn,pd, opts){
   const yMoo = getBirthNum(yd), yBhag = getDestinyNum(yd);
@@ -656,11 +656,11 @@ function buildPartnerResultHTML(yn,yd,pn,pd, opts){
 
   let narrative;
   if(t.cls==='high'){
-    narrative = `<strong>${yPlanet} meets ${pPlanet}</strong> — your Chaldean numbers reinforce each other. The ${yArche.toLowerCase()} in you finds genuine ease with the ${pArche.toLowerCase()} in them. Most disagreements resolve themselves once spoken aloud.`;
+    narrative = `<strong>${yPlanet} meets ${pPlanet}</strong>, your Chaldean numbers reinforce each other. The ${yArche.toLowerCase()} in you finds genuine ease with the ${pArche.toLowerCase()} in them. Most disagreements resolve themselves once spoken aloud.`;
   } else if(t.cls==='mid'){
-    narrative = `<strong>${yPlanet} meets ${pPlanet}</strong> — workable, with conscious effort. Your rhythms differ, which is why you irritate each other in small ways and complement each other in big ones. Patience and explicit communication amplify the harmony.`;
+    narrative = `<strong>${yPlanet} meets ${pPlanet}</strong>, workable, with conscious effort. Your rhythms differ, which is why you irritate each other in small ways and complement each other in big ones. Patience and explicit communication amplify the harmony.`;
   } else {
-    narrative = `<strong>${yPlanet} meets ${pPlanet}</strong> — different rhythms, which doesn't mean wrong. The bond can work, but it asks for honest naming of needs. Assumptions are where most friction lives in this pairing.`;
+    narrative = `<strong>${yPlanet} meets ${pPlanet}</strong>, different rhythms, which doesn't mean wrong. The bond can work, but it asks for honest naming of needs. Assumptions are where most friction lives in this pairing.`;
   }
   return miniResultHTML({
     eyebrow:'💞 Partner Compatibility',
@@ -686,9 +686,9 @@ function buildChildResultHTML(cn,cd, opts){
 
   let narrative;
   if(t.cls==='high'){
-    narrative = `<strong>${firstWord(cn)}</strong> vibrates as ${reduced} (${namePlanet}) — and that energy genuinely supports a Moolank ${moo} (${corePlanet}) child. The name strengthens "${arche.toLowerCase()}" qualities rather than fighting them.`;
+    narrative = `<strong>${firstWord(cn)}</strong> vibrates as ${reduced} (${namePlanet}), and that energy genuinely supports a Moolank ${moo} (${corePlanet}) child. The name strengthens "${arche.toLowerCase()}" qualities rather than fighting them.`;
   } else if(t.cls==='mid'){
-    narrative = `<strong>${firstWord(cn)}</strong> vibrates as ${reduced} (${namePlanet}). It's workable for a Moolank ${moo} (${corePlanet}) child — neither amplifying nor suppressing their core.`;
+    narrative = `<strong>${firstWord(cn)}</strong> vibrates as ${reduced} (${namePlanet}). It's workable for a Moolank ${moo} (${corePlanet}) child, neither amplifying nor suppressing their core.`;
   } else {
     narrative = `<strong>${firstWord(cn)}</strong> vibrates as ${reduced} (${namePlanet}), which sits in tension with a Moolank ${moo} (${corePlanet}) core. The child's natural ${arche.toLowerCase()} energy will work harder than it needs to.`;
   }
@@ -718,9 +718,9 @@ function buildBusinessResultHTML(bn,bd, opts){
 
   let narrative;
   if(t.cls==='high'){
-    narrative = `<strong>${bn}</strong> reduces to ${reduced} (${brandPlanet}) — a vibration that amplifies a founder operating on ${founderPlanet} energy. The brand name does the heavy lifting for you.`;
+    narrative = `<strong>${bn}</strong> reduces to ${reduced} (${brandPlanet}), a vibration that amplifies a founder operating on ${founderPlanet} energy. The brand name does the heavy lifting for you.`;
   } else if(t.cls==='mid'){
-    narrative = `<strong>${bn}</strong> reduces to ${reduced} (${brandPlanet}). It's a workable brand vibration for a ${founderPlanet} founder — neither helping nor hurting much.`;
+    narrative = `<strong>${bn}</strong> reduces to ${reduced} (${brandPlanet}). It's a workable brand vibration for a ${founderPlanet} founder, neither helping nor hurting much.`;
   } else {
     narrative = `<strong>${bn}</strong> reduces to ${reduced} (${brandPlanet}), which works against a ${founderPlanet} founder's energy. The brand will feel like effort rather than flow.`;
   }
