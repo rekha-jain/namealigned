@@ -315,6 +315,15 @@
   <div id="page2" class="page" style="display:none">
     <div class="progress-wrap mb-3"><div class="progress-bar" style="width:66%"></div></div>
 
+    <!-- 0. TL;DR SUMMARY (the conclusive read at a glance) -->
+    <div id="tldrCard" style="background:linear-gradient(135deg,rgba(245,196,81,.10),rgba(245,196,81,.04));border:1px solid var(--gold-b);border-radius:14px;padding:1rem 1.2rem;margin-bottom:1.1rem">
+      <div style="display:flex;align-items:center;gap:.6rem;margin-bottom:.45rem;flex-wrap:wrap">
+        <span style="font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold-d);font-family:sans-serif;font-weight:700">✦ Your reading at a glance</span>
+        <span id="tldrPill" style="font-size:10.5px;font-family:sans-serif;font-weight:700;padding:2px 9px;border-radius:14px;letter-spacing:.04em">·</span>
+      </div>
+      <p id="tldrLine" style="font-family:'Playfair Display',Georgia,serif;font-size:16.5px;line-height:1.5;color:var(--text);margin:0;font-weight:500">·</p>
+    </div>
+
     <!-- 1. IDENTITY CARD (archetype-led hook) -->
     <div class="identity-card">
       <div class="id-greet" id="idGreet"></div>
@@ -386,13 +395,13 @@
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:.8rem;">
           <div style="background:linear-gradient(135deg,rgba(124,58,237,.06),rgba(245,196,81,.05));border:1px solid rgba(245,196,81,.3);border-radius:12px;padding:1rem 1.1rem;">
             <div style="font-family:sans-serif;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:#9d4edd;font-weight:700;margin-bottom:.4rem;">✦ Your lucky numbers</div>
-            <div id="luckyNumsRow" style="font-family:'Playfair Display',Georgia,serif;font-size:22px;font-weight:700;color:var(--gold-d);letter-spacing:.05em;line-height:1.2;margin-bottom:.3rem;">,</div>
+            <div id="luckyNumsRow" style="font-family:'Playfair Display',Georgia,serif;font-size:22px;font-weight:700;color:var(--gold-d);letter-spacing:.05em;line-height:1.2;margin-bottom:.3rem;"></div>
             <div style="font-family:sans-serif;font-size:11.5px;color:var(--text2);line-height:1.5;">Numbers in friendly resonance with your Moolank. Use them for big-decision dates, addresses, transactions.</div>
           </div>
           <div style="background:linear-gradient(135deg,rgba(124,58,237,.06),rgba(245,196,81,.05));border:1px solid rgba(245,196,81,.3);border-radius:12px;padding:1rem 1.1rem;">
             <div style="font-family:sans-serif;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:#9d4edd;font-weight:700;margin-bottom:.4rem;">✦ Your personal year</div>
             <div style="display:flex;align-items:baseline;gap:.5rem;margin-bottom:.3rem;">
-              <span id="pyNumVal" style="font-family:'Playfair Display',Georgia,serif;font-size:30px;font-weight:700;color:var(--gold-d);line-height:1;">,</span>
+              <span id="pyNumVal" style="font-family:'Playfair Display',Georgia,serif;font-size:30px;font-weight:700;color:var(--gold-d);line-height:1;"></span>
               <span id="pyPlanetTag" style="font-family:sans-serif;font-size:11.5px;color:var(--text3);"></span>
             </div>
             <div id="pyTheme" style="font-family:sans-serif;font-size:11.5px;color:var(--text2);line-height:1.5;">,</div>
@@ -455,20 +464,51 @@
       </div>
     </div>
 
+    <!-- 2b. RELATIONSHIP COMPASS + LO SHU + DAILY REMEDIES (free, sleek) -->
+    <div class="card" style="margin-top:1rem">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1.1rem" class="rc-loshu-row">
+
+        <!-- Relationship Compass -->
+        <div>
+          <div style="font-family:'Playfair Display',Georgia,serif;font-size:15.5px;font-weight:700;color:var(--text);margin-bottom:.5rem">💞 Relationship Compass</div>
+          <div style="font-size:10.5px;color:var(--text3);font-family:sans-serif;letter-spacing:.06em;text-transform:uppercase;font-weight:700;margin-bottom:.3rem">Most compatible Moolanks</div>
+          <div id="rcFriendly" style="display:flex;flex-wrap:wrap;gap:5px;margin-bottom:.6rem"></div>
+          <div style="font-size:10.5px;color:var(--text3);font-family:sans-serif;letter-spacing:.06em;text-transform:uppercase;font-weight:700;margin-bottom:.3rem">Needs more awareness</div>
+          <div id="rcCaution" style="display:flex;flex-wrap:wrap;gap:5px"></div>
+        </div>
+
+        <!-- Lo Shu Grid -->
+        <div>
+          <div style="font-family:'Playfair Display',Georgia,serif;font-size:15.5px;font-weight:700;color:var(--text);margin-bottom:.5rem">🔵 Lo Shu Grid</div>
+          <div id="loshuGrid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:4px;max-width:160px;margin-bottom:.55rem"></div>
+          <div style="font-size:11px;color:var(--text2);font-family:sans-serif;line-height:1.5"><span style="color:var(--text3);font-size:10.5px;letter-spacing:.05em;text-transform:uppercase">Missing</span> <span id="loshuMissing" style="font-weight:600;color:#6d4ed1">·</span></div>
+        </div>
+
+      </div>
+
+      <!-- Daily Remedies -->
+      <div style="border-top:1px dashed var(--gold-b);padding-top:.95rem">
+        <div style="font-family:'Playfair Display',Georgia,serif;font-size:15.5px;font-weight:700;color:var(--text);margin-bottom:.5rem">🌿 Daily Remedies</div>
+        <div id="remedyList"></div>
+      </div>
+    </div>
+
+    <style>
+      @media (max-width:560px) {
+        .rc-loshu-row { grid-template-columns: 1fr !important; }
+      }
+    </style>
+
     <!-- 3. TRUST BUILDER (Chaldean-anchored) -->
     <p class="trust-line-top">Based on Chaldean numerology principles · Focused on sound vibration, not just numbers · Used to understand patterns, not predict fate</p>
     <div class="trust-block">
-      <div class="trust-stat">
-        <div class="trust-num" id="analysesCount">10,247</div>
-        <div class="trust-lbl">Chaldean analyses generated</div>
-      </div>
       <div class="trust-stat">
         <div class="trust-num">2,500+ yr</div>
         <div class="trust-lbl">ancient Chaldean tradition</div>
       </div>
       <div class="trust-stat">
-        <div class="trust-num">★ 4.8/5</div>
-        <div class="trust-lbl">avg user rating</div>
+        <div class="trust-num">100%</div>
+        <div class="trust-lbl">free to start, no signup</div>
       </div>
     </div>
 
@@ -975,6 +1015,68 @@ function renderAnalysis(){
   const pill=compound?compound.q:'n', pillLabel=compound?compound.l:'Standard vibration';
   document.getElementById('lbEq').innerHTML=`<div class="lb-eq-row"><span>${eqNums} =</span><span class="lb-raw">${nameRaw}</span><span style="color:var(--text3)">→</span><span class="lb-reduced">${nameNum}</span><span class="lb-cpill ${pill}">${nameRaw}/${nameNum} · ${pillLabel}</span></div>`;
 
+  // 2c. TL;DR SUMMARY (the at-a-glance line that opens the result)
+  try {
+    const tier = pct >= 70 ? {label:'Strong alignment', bg:'rgba(76,175,132,.16)', fg:'#2e7d4f', border:'rgba(76,175,132,.4)'}
+                : pct >= 45 ? {label:'Workable alignment', bg:'rgba(245,196,81,.16)', fg:'#9b6f00', border:'rgba(245,196,81,.45)'}
+                            : {label:'Needs awareness', bg:'rgba(220,38,38,.12)', fg:'#b04545', border:'rgba(220,38,38,.35)'};
+    const pillEl = document.getElementById('tldrPill');
+    pillEl.textContent = `${pct}% · ${tier.label}`;
+    pillEl.style.background = tier.bg;
+    pillEl.style.color = tier.fg;
+    pillEl.style.border = `1px solid ${tier.border}`;
+    document.getElementById('tldrLine').innerHTML =
+      `You're a <strong>Moolank ${birthNum}</strong> (${getPlanet(birthNum)}) with <strong>Bhagyank ${destNum}</strong> (${getPlanet(destNum)}). Your name vibrates at <strong>${nameNum}</strong> (${getPlanet(nameNum)}). ${
+        pct >= 70 ? `That's a clean fit, your name is supporting the energy you arrived with.`
+        : pct >= 45 ? `The fit is workable, some friction in specific areas, smooth in others.`
+        : `The fit is off, your name is pulling against your birth chart in measurable ways.`
+      }`;
+  } catch(e){}
+
+  // 2d. RELATIONSHIP COMPASS + LO SHU + DAILY REMEDIES (free)
+  try {
+    // Relationship Compass: friendly numbers from FRIENDLY[birthNum]
+    const friendly = (typeof FRIENDLY !== 'undefined' && FRIENDLY[birthNum]) ? FRIENDLY[birthNum] : [birthNum];
+    const all = [1,2,3,4,5,6,7,8,9];
+    const caution = all.filter(n => !friendly.includes(n));
+    const friendlyHtml = friendly.map(n => `<span style="background:rgba(76,175,132,.12);color:#2e7d4f;border:1px solid rgba(76,175,132,.3);font-family:'Playfair Display',Georgia,serif;font-size:14px;font-weight:700;padding:3px 10px;border-radius:8px">${n}<span style="font-size:9.5px;color:var(--text3);font-family:sans-serif;font-weight:600;margin-left:4px">${getPlanet(n)}</span></span>`).join('');
+    const cautionHtml = caution.map(n => `<span style="background:rgba(220,38,38,.06);color:#b04545;border:1px solid rgba(220,38,38,.18);font-family:'Playfair Display',Georgia,serif;font-size:14px;font-weight:700;padding:3px 10px;border-radius:8px">${n}<span style="font-size:9.5px;color:var(--text3);font-family:sans-serif;font-weight:600;margin-left:4px">${getPlanet(n)}</span></span>`).join('');
+    document.getElementById('rcFriendly').innerHTML = friendlyHtml;
+    document.getElementById('rcCaution').innerHTML = cautionHtml || '<span style="color:var(--text3);font-size:12px;font-family:sans-serif">None, you partner well across the chart.</span>';
+
+    // Lo Shu Grid: 3x3 grid showing present (gold) vs missing (faded)
+    // Standard Lo Shu placement: 4|9|2 / 3|5|7 / 8|1|6
+    const placement = [4,9,2,3,5,7,8,1,6];
+    const present = loshu instanceof Set ? loshu : new Set();
+    const cells = placement.map(n => {
+      const has = present.has(n);
+      return `<div style="aspect-ratio:1;display:flex;align-items:center;justify-content:center;background:${has?'linear-gradient(135deg,rgba(245,196,81,.18),rgba(245,196,81,.05))':'rgba(124,58,237,.04)'};border:1px solid ${has?'var(--gold-b)':'rgba(124,58,237,.12)'};border-radius:6px;font-family:'Playfair Display',Georgia,serif;font-size:16px;font-weight:700;color:${has?'var(--gold-d)':'rgba(124,58,237,.35)'};">${n}</div>`;
+    }).join('');
+    document.getElementById('loshuGrid').innerHTML = cells;
+    const missingTxt = (Array.isArray(missing) && missing.length) ? missing.join(', ') : 'None, you carry all 9 energies.';
+    document.getElementById('loshuMissing').textContent = missingTxt;
+
+    // Daily Remedies, planet-anchored, per-Moolank
+    const REMEDIES = {
+      1:[{i:'☉',t:'Wear gold or amber tones on Sundays to strengthen Sun energy.'},{i:'🥗',t:'Eat warm, freshly-cooked food; avoid excess cold or stale meals.'},{i:'🚶',t:'Walk in early-morning sunlight for 10 minutes to anchor leadership.'}],
+      2:[{i:'☽',t:'Wear silver or pearl on Mondays to strengthen Moon energy.'},{i:'💧',t:'Drink water from a silver or copper vessel each morning.'},{i:'🌙',t:'Avoid major decisions on no-moon nights; let emotions settle first.'}],
+      3:[{i:'♃',t:'Wear yellow on Thursdays to channel Jupiter expansion.'},{i:'📚',t:'Read or teach something each Thursday, knowledge is your fuel.'},{i:'🍯',t:'Offer turmeric or honey to flowing water on Thursdays.'}],
+      4:[{i:'♅',t:'Wear grey, brown or earthy tones to ground Rahu energy.'},{i:'🌳',t:'Plant or care for a tree, grounded action calms Rahu volatility.'},{i:'🧘',t:'Sit quietly for 10 minutes before sleep to release the day.'}],
+      5:[{i:'☿',t:'Wear green on Wednesdays to channel Mercury clarity.'},{i:'✍️',t:'Write 3 lines a day; communication is your activation key.'},{i:'🚶',t:'Move locations or take a short walk when stuck, motion unblocks.'}],
+      6:[{i:'♀',t:'Wear pink or pastel tones on Fridays to amplify Venus.'},{i:'🌸',t:'Keep fresh flowers at home; beauty in space stabilises Venus.'},{i:'🎨',t:'Spend 10 minutes daily with art, music or aesthetics.'}],
+      7:[{i:'♆',t:'Wear off-white or cream to channel Ketu/Neptune softness.'},{i:'🧘',t:'Meditate or sit in silence for 15 minutes daily, your medicine.'},{i:'📖',t:'Read spiritual or philosophical texts at sunset.'}],
+      8:[{i:'♄',t:'Wear navy, deep blue or black to honour Saturn discipline.'},{i:'⏰',t:'Wake up at the same time daily, Saturn rewards rhythm.'},{i:'🤝',t:'Donate something small monthly, Saturn returns ethical action.'}],
+      9:[{i:'♂',t:'Wear red or coral on Tuesdays to channel Mars courage.'},{i:'🏃',t:'Move your body vigorously each day, Mars energy must discharge.'},{i:'❤️',t:'Forgive one small thing weekly, releases Mars heat.'}],
+    };
+    const remList = REMEDIES[birthNum] || REMEDIES[1];
+    document.getElementById('remedyList').innerHTML = remList.map(r => `
+      <div style="display:flex;align-items:flex-start;gap:10px;padding:.55rem .85rem;background:var(--gold-l);border:1px solid var(--gold-b);border-radius:8px;margin-bottom:6px">
+        <span style="font-family:'Playfair Display',Georgia,serif;font-size:16px;color:var(--gold-d);line-height:1.2;min-width:18px;text-align:center">${r.i}</span>
+        <span style="font-family:sans-serif;font-size:12.5px;color:var(--text);line-height:1.55">${r.t}</span>
+      </div>
+    `).join('');
+  } catch(e) { console.warn('relationship/loshu/remedies render failed:', e); }
+
   // 2b. LUCKY NUMBERS + PERSONAL YEAR (free)
   try {
     const friendly = (typeof FRIENDLY !== 'undefined' && FRIENDLY[birthNum]) ? FRIENDLY[birthNum] : [birthNum];
@@ -1009,14 +1111,6 @@ function renderAnalysis(){
   // 5. CTA, wire link with prefilled params
   document.getElementById('upgradeBtn').href =
     `report?name=${encodeURIComponent(name)}&dob=${encodeURIComponent(dob)}&birthNum=${birthNum}&destNum=${destNum}&nameNum=${nameNum}&pct=${pct}`;
-
-  // Trust counter, gently increment over time so it doesn't feel static
-  try {
-    const base = 10247;
-    const daysSinceLaunch = Math.max(0, Math.floor((Date.now() - new Date('2025-10-01').getTime()) / 86400000));
-    document.getElementById('analysesCount').textContent =
-      (base + daysSinceLaunch * 23).toLocaleString('en-IN');
-  } catch(e){}
 
   // Build dynamic share card
   buildShareCard();
