@@ -14,6 +14,13 @@
 <link rel="alternate" hreflang="en-IN" href="https://www.namealigned.com/"/>
 <link rel="preconnect" href="https://www.clarity.ms" crossorigin/>
 <link rel="preconnect" href="https://cdn.mxpnl.com" crossorigin/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<!-- Hoisted Google Fonts out of style.css @import so they start loading
+     during HTML parse, not after CSS arrives. font-display=swap keeps
+     fallback visible until the file loads. -->
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap"/>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap" media="print" onload="this.media='all';this.onload=null"/>
 <link rel="preload" href="assets/style.css" as="style"/>
 <link rel="preload" href="assets/theme-cosmic-light.css" as="style"/>
 <!-- Open Graph -->
@@ -58,6 +65,60 @@
   <link rel="stylesheet" href="assets/theme-cosmic-light.css"/>
 </noscript>
 <style>
+/* ── CRITICAL CSS — inlined for instant first paint of nav + hero ─
+   Subset of style.css + theme-cosmic-light.css. Full files load
+   non-blocking via the print/onload swap above. */
+:root{
+  --bg:#ffffff;--card:#ffffff;
+  --gold:#f0b429;--gold-d:#d4991a;--gold-l:rgba(240,180,41,.10);--gold-b:rgba(240,180,41,.35);--gold-glow:rgba(240,180,41,.50);
+  --teal:#6d4ed1;--teal-l:rgba(109,78,209,.10);--teal-b:rgba(109,78,209,.28);
+  --text:#1a1340;--text2:#4a3a72;--text3:#8a7ba8;
+  --border:rgba(109,78,209,.18);
+  --r:10px;--rl:16px;--nav-h:88px;
+  --font-serif:'Playfair Display',Georgia,serif;
+  --font-sans:'DM Sans',system-ui,-apple-system,sans-serif;
+}
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-behavior:smooth;background:#fff}
+body{margin:0;font-family:var(--font-sans);font-size:16px;color:var(--text);line-height:1.65;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
+h1,h2,h3,h4{font-family:var(--font-serif);font-weight:600;line-height:1.2;color:var(--text);margin:0 0 .5rem}
+h1{font-size:clamp(28px,5vw,52px)}
+p{margin:0 0 1rem;line-height:1.75;font-size:16px}
+a{color:var(--gold);text-decoration:none;transition:color .2s}
+ul{list-style:none;margin:0;padding:0}
+.container{max-width:1100px;margin:0 auto;padding:0 1.5rem}
+.container-sm{max-width:760px;margin:0 auto;padding:0 1.5rem}
+/* Nav */
+.nav{position:sticky;top:0;z-index:200;background:rgba(255,255,255,.92);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-bottom:1px solid var(--teal-b);height:var(--nav-h);box-shadow:0 1px 12px rgba(109,78,209,.08)}
+.nav-inner{display:flex;align-items:center;justify-content:space-between;height:100%}
+.nav-logo{display:flex;align-items:center;line-height:1}
+.nav-links{display:flex;align-items:center;gap:1.75rem;list-style:none;margin:0;padding:0}
+.nav-links a{font-size:13px;font-family:var(--font-sans);letter-spacing:.06em;color:var(--text2);text-transform:uppercase;font-weight:500;transition:color .2s}
+.nav-links a:hover{color:var(--gold)}
+.nav-cta{background:var(--gold) !important;color:#0f1c26 !important;padding:8px 20px;border-radius:20px;font-weight:600;letter-spacing:.04em;box-shadow:0 0 12px var(--gold-glow);transition:all .25s ease !important}
+.nav-hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:4px}
+.nav-hamburger span{width:22px;height:2px;background:var(--text);border-radius:2px;transition:all .3s}
+.nav-mobile{display:none;position:absolute;top:var(--nav-h);left:0;right:0;background:rgba(255,255,255,.97);border-bottom:1px solid var(--teal-b);padding:1rem 1.5rem;flex-direction:column;gap:.75rem;backdrop-filter:blur(16px)}
+.nav-mobile.open{display:flex}
+@media(max-width:700px){.nav-links{display:none}.nav-hamburger{display:flex}}
+/* Buttons (hero CTA) */
+.btn{display:inline-block;padding:13px 32px;border-radius:var(--r);font-size:15px;font-family:var(--font-sans);font-weight:600;letter-spacing:.04em;cursor:pointer;border:none;text-align:center;transition:all .25s ease;text-decoration:none !important}
+.btn-gold{background:linear-gradient(135deg,var(--gold),#f5d060);color:#03090f;box-shadow:0 2px 12px var(--gold-glow)}
+.btn-gold:hover{box-shadow:0 6px 28px var(--gold-glow);transform:translateY(-2px);color:#03090f}
+.btn-full{width:100%;display:block}
+.btn-sm{padding:8px 20px;font-size:13px}
+/* Hero */
+.hero-dark{background:linear-gradient(160deg,#071e2d 0%,#0c3347 100%);color:#e8f4ff;text-align:center;padding:5rem 1.5rem 4rem;position:relative;overflow:hidden}
+.hero-dark::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 85% 55% at 50% -5%,rgba(6,182,212,.20) 0%,transparent 65%);pointer-events:none}
+.hero-dark::after{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 40% at 50% 60%,rgba(240,180,41,.06) 0%,transparent 65%);pointer-events:none}
+.hero-eyebrow{font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--gold);margin-bottom:16px;font-family:var(--font-sans);font-weight:600;position:relative;display:inline-flex;align-items:center;gap:10px}
+.hero-h1{font-family:var(--font-serif);font-size:clamp(30px,5vw,58px);line-height:1.1;color:#fff;position:relative;margin-bottom:20px;text-shadow:0 2px 20px rgba(6,182,212,.20)}
+.hero-h1 em{color:var(--gold);font-style:italic}
+.hero-sub{font-size:clamp(14px,2vw,17px);color:rgba(232,244,255,.72);max-width:580px;margin:0 auto 2rem;position:relative;font-family:var(--font-sans);font-weight:300;line-height:1.75}
+/* Form bits used in hero */
+.fg{display:flex;flex-direction:column;gap:6px}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+
 /* ── PAGE-SPECIFIC ────────────────────────────────────────────── */
 .hero-stats{display:flex;justify-content:center;gap:3rem;flex-wrap:wrap;margin-top:2.5rem;position:relative}
 .hero-stat{text-align:center}
