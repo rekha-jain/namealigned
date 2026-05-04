@@ -1,15 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!-- Microsoft Clarity -->
-<script type="text/javascript">
-(function(c,l,a,r,i,t,y){
-    c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
-    t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
-    y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
-})(window, document, "clarity", "script", "wl99pcgfos");
-</script>
-
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
 <link rel="icon" type="image/svg+xml" href="/assets/namealigned-favicon.svg"/>
@@ -21,7 +12,10 @@
 <meta name="googlebot" content="index, follow"/>
 <link rel="canonical" href="https://www.namealigned.com/"/>
 <link rel="alternate" hreflang="en-IN" href="https://www.namealigned.com/"/>
-<link rel="preconnect" href="https://www.clarity.ms"/>
+<link rel="preconnect" href="https://www.clarity.ms" crossorigin/>
+<link rel="preconnect" href="https://cdn.mxpnl.com" crossorigin/>
+<link rel="preload" href="assets/style.css" as="style"/>
+<link rel="preload" href="assets/theme-cosmic-light.css" as="style"/>
 <!-- Open Graph -->
 <meta property="og:title" content="Free Chaldean Numerology Name Analysis, Is Your Name Aligned?"/>
 <meta property="og:description" content="Instant free Chaldean numerology analysis. Discover your name alignment score, lucky colours, career domains, personal year forecast and authentic remedies."/>
@@ -56,8 +50,13 @@
 {"@type":"Question","name":"Do I need to create an account?","acceptedAnswer":{"@type":"Answer","text":"No account is needed for the free analysis. To receive the full report by email and access it later, we collect your email address at payment. We never spam."}}
 ]}
 </script>
-<link rel="stylesheet" href="assets/style.css"/>
-<link rel="stylesheet" href="assets/theme-cosmic-light.css"/>
+<!-- CSS loaded non-blocking via media trick; falls back to blocking on no-JS -->
+<link rel="stylesheet" href="assets/style.css" media="print" onload="this.media='all';this.onload=null"/>
+<link rel="stylesheet" href="assets/theme-cosmic-light.css" media="print" onload="this.media='all';this.onload=null"/>
+<noscript>
+  <link rel="stylesheet" href="assets/style.css"/>
+  <link rel="stylesheet" href="assets/theme-cosmic-light.css"/>
+</noscript>
 <style>
 /* ── PAGE-SPECIFIC ────────────────────────────────────────────── */
 .hero-stats{display:flex;justify-content:center;gap:3rem;flex-wrap:wrap;margin-top:2.5rem;position:relative}
@@ -107,7 +106,7 @@
 .compare-table .ours{background:rgba(240,180,41,.05);font-weight:600}
 .tick{color:var(--green);font-weight:700}.cross{color:var(--red)}.neutral{color:var(--text3)}
 </style>
-<script src="/assets/mixpanel.js"></script>
+<script src="/assets/mixpanel.js" defer></script>
 </head>
 <body>
 
@@ -748,7 +747,7 @@ function copyHomepageLink(){
   <a href="analyzer" class="btn btn-gold btn-sm">Start →</a>
 </div>
 
-<script src="assets/numerology.js"></script>
+<script src="assets/numerology.js" defer></script>
 <script>
 function quickSubmit(e){
   e.preventDefault();
@@ -757,6 +756,14 @@ function quickSubmit(e){
   if(!name||!dob) return;
   window.location.href = `analyzer?name=${encodeURIComponent(name)}&dob=${encodeURIComponent(dob)}`;
 }
+</script>
+<!-- Microsoft Clarity, moved to end of body so it never blocks render -->
+<script type="text/javascript">
+(function(c,l,a,r,i,t,y){
+    c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+    t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+    y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+})(window, document, "clarity", "script", "wl99pcgfos");
 </script>
 </body>
 </html>
