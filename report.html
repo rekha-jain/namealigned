@@ -611,21 +611,27 @@ async function onSuccess(paymentId, orderId, signature, name, dob, email, mobile
 
 // ── PayPal button (renders if SDK loaded with a real client id) ──
 function initPayPalButton(){
-  // 1. Hide the entire row if the placeholder hasn't been swapped yet.
-  //    (Must run BEFORE the SDK check, because an invalid client-id stops
-  //    the SDK from loading at all and paypal_sdk would be undefined.)
+  // 1. Guard against an unconfigured SDK script. The placeholder string we
+  //    look for ("__" + "PAYPAL_CLIENT_ID" + "__") is split here so the
+  //    sentinel itself never appears verbatim in the file, which means
+  //    future search-and-replaces on the placeholder can't accidentally
+  //    clobber this guard (the bug that hid the button last time).
   const sdkSrc = document.querySelector('script[src*="paypal.com/sdk"]')?.src || '';
-  if (sdkSrc.includes('AdFemDmanJoRwb8AgNStloN15rdzIABDP9_3XWipjeOBGuzRV5XVYz_fmLFYRVDCIc1k5VPXHPCds4G2')) {
+  const sentinel = '__' + 'PAYPAL_CLIENT' + '_ID__';
+  if (!sdkSrc || sdkSrc.includes(sentinel)) {
     const row = document.getElementById('paypalRow');
     if (row) row.style.display = 'none';
-    console.warn('[paypal] Client ID placeholder not replaced. Hiding PayPal row.');
+    console.warn('[paypal] Client ID not configured. Hiding PayPal row.');
     return;
   }
   // 2. Now check the SDK actually loaded.
   if (!window.paypal_sdk || !paypal_sdk.Buttons) {
-    const row = document.getElementById('paypalRow');
-    if (row) row.style.display = 'none';
-    console.warn('[paypal] SDK failed to load. Hiding PayPal row.');
+    const errEl = document.getElementById('paypalErr');
+    if (errEl) {
+      errEl.style.display = 'block';
+      errEl.textContent = 'PayPal SDK could not load (ad-blocker, browser extension, or network block). Use the Razorpay button above.';
+    }
+    console.warn('[paypal] SDK failed to load. paypal_sdk =', window.paypal_sdk);
     return;
   }
   const container = document.getElementById('paypal-button-container');
