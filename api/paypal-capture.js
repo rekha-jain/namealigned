@@ -157,8 +157,10 @@ export default async function handler(req, res) {
       orderInserted = saved !== null;
       console.log(`[orders/paypal] saved order=${orderID} email=${cleanEmail} inserted=${orderInserted}`);
     } catch (dbErr) {
-      console.error('[orders/paypal] CRITICAL save failed:', dbErr);
-      return sendJSON(res, 500, { success: false, verified: true, error: 'Payment captured but order could not be saved. Support has been alerted.' });
+      // Payment is already captured at PayPal — never fail the user response
+      // for a DB hiccup. Log loudly so we can reconcile from PayPal logs.
+      console.error('[orders/paypal] CRITICAL save failed (continuing to deliver report):', dbErr);
+      orderInserted = false;
     }
 
     // 3. Mixpanel events (only on a fresh insert, dedup with Razorpay path)
