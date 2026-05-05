@@ -344,10 +344,10 @@
 
 <script src="assets/numerology.js"></script>
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
-<!-- PayPal JS SDK. Replace __PAYPAL_CLIENT_ID__ with the value from
+<!-- PayPal JS SDK. Replace AdFemDmanJoRwb8AgNStloN15rdzIABDP9_3XWipjeOBGuzRV5XVYz_fmLFYRVDCIc1k5VPXHPCds4G2 with the value from
      PayPal Dashboard > Apps & Credentials > Sandbox > Default App.
      Keep the &currency=USD param in sync with PAYPAL_CURRENCY env. -->
-<script src="https://www.paypal.com/sdk/js?client-id=__PAYPAL_CLIENT_ID__&currency=USD&intent=capture" data-namespace="paypal_sdk"></script>
+<script src="https://www.paypal.com/sdk/js?client-id=AdFemDmanJoRwb8AgNStloN15rdzIABDP9_3XWipjeOBGuzRV5XVYz_fmLFYRVDCIc1k5VPXHPCds4G2&currency=USD&intent=capture" data-namespace="paypal_sdk"></script>
 <script>
 // ── State ──────────────────────────────────────────────────────
 let promoDiscount  = 0;      // 0 | 50 | 100
@@ -615,7 +615,7 @@ function initPayPalButton(){
   //    (Must run BEFORE the SDK check, because an invalid client-id stops
   //    the SDK from loading at all and paypal_sdk would be undefined.)
   const sdkSrc = document.querySelector('script[src*="paypal.com/sdk"]')?.src || '';
-  if (sdkSrc.includes('__PAYPAL_CLIENT_ID__')) {
+  if (sdkSrc.includes('AdFemDmanJoRwb8AgNStloN15rdzIABDP9_3XWipjeOBGuzRV5XVYz_fmLFYRVDCIc1k5VPXHPCds4G2')) {
     const row = document.getElementById('paypalRow');
     if (row) row.style.display = 'none';
     console.warn('[paypal] Client ID placeholder not replaced. Hiding PayPal row.');
