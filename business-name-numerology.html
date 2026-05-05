@@ -120,14 +120,14 @@
       <li><a href="analyzer">Free Analysis</a></li>
       <li><a href="/blog">Blog</a></li>
       <li><a href="about">About</a></li>
-      <li><a href="report" class="nav-cta">Full Report ₹199</a></li>
+      <li><a href="report" class="nav-cta">Full Report INR 199/-</a></li>
     </ul>
     <div class="nav-hamburger" id="navHamburger"><span></span><span></span><span></span></div>
   </div>
   <div class="nav-mobile" id="navMobile">
     <a href="/">Home</a>
     <a href="analyzer">Free Analysis</a>
-    <a href="report">Full Report ₹199</a>
+    <a href="report">Full Report INR 199/-</a>
     <a href="/blog">Blog</a>
   </div>
 </nav>
@@ -383,7 +383,7 @@ function runBusiness(){
   const bd = document.getElementById('bizDob').value;
   if(!bn || !bd) return showErr('Please fill the business name and founder\'s date of birth.');
 
-  // Inline mode: hide the ₹199 upsell + CTA from the result card; in
+  // Inline mode: hide the INR 199/- upsell + CTA from the result card; in
   // their place we render a prominent retest panel that pulls the user
   // straight back into trying another brand name.
   const html = buildBusinessResultHTML(bn, bd, {inline:true, hideUpsell:true});
