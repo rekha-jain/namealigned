@@ -34,6 +34,14 @@
     {
       "source": "/api/razorpay-webhook",
       "destination": "/api/razorpay-webhook.js"
+    },
+    {
+      "source": "/api/paypal-create-order",
+      "destination": "/api/paypal-create-order.js"
+    },
+    {
+      "source": "/api/paypal-capture",
+      "destination": "/api/paypal-capture.js"
     }
   ],
 

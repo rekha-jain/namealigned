@@ -302,6 +302,14 @@
           <span>💳 UPI / Cards / Wallets</span>
         </div>
 
+        <!-- ── PayPal alternative (for international buyers) ─────── -->
+        <div id="paypalRow" style="margin-top:1rem;padding-top:1rem;border-top:1px dashed var(--gold-b)">
+          <div style="text-align:center;font-size:11.5px;color:var(--text3);font-family:sans-serif;letter-spacing:.06em;text-transform:uppercase;font-weight:600;margin-bottom:.6rem">Or pay with PayPal</div>
+          <div id="paypal-button-container"></div>
+          <div id="paypalErr" class="err-box" style="display:none;margin-top:.5rem"></div>
+          <p style="font-size:10.5px;color:var(--text3);font-family:sans-serif;text-align:center;margin:.5rem 0 0;font-style:italic">International cards, charged in USD via PayPal</p>
+        </div>
+
         <div style="margin-top:1.25rem;border-top:1px solid var(--gold-b);padding-top:1rem;text-align:center">
           <a href="analyzer" style="font-size:12.5px;font-family:sans-serif;color:var(--text3)">
             Try the free analysis first →
@@ -336,6 +344,10 @@
 
 <script src="assets/numerology.js"></script>
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<!-- PayPal JS SDK. Replace __PAYPAL_CLIENT_ID__ with the value from
+     PayPal Dashboard > Apps & Credentials > Sandbox > Default App.
+     Keep the &currency=USD param in sync with PAYPAL_CURRENCY env. -->
+<script src="https://www.paypal.com/sdk/js?client-id=__PAYPAL_CLIENT_ID__&currency=USD&intent=capture" data-namespace="paypal_sdk"></script>
 <script>
 // ── State ──────────────────────────────────────────────────────
 let promoDiscount  = 0;      // 0 | 50 | 100
@@ -596,6 +608,96 @@ async function onSuccess(paymentId, orderId, signature, name, dob, email, mobile
   if(mobile) params.set('mobile', mobile);
   window.location.href = `generate-report?${params}`;
 }
+
+// ── PayPal button (renders if SDK loaded with a real client id) ──
+function initPayPalButton(){
+  if (!window.paypal_sdk || !paypal_sdk.Buttons) return;
+  // Don't render if the placeholder wasn't replaced yet.
+  const sdkSrc = document.querySelector('script[src*="paypal.com/sdk"]')?.src || '';
+  if (sdkSrc.includes('__PAYPAL_CLIENT_ID__')) {
+    document.getElementById('paypalRow').style.display = 'none';
+    return;
+  }
+  const container = document.getElementById('paypal-button-container');
+  if (!container) return;
+
+  paypal_sdk.Buttons({
+    style: { layout:'horizontal', color:'gold', shape:'rect', label:'pay', height:42, tagline:false },
+
+    createOrder: async function(){
+      const fields = validateForm();
+      if (!fields) throw new Error('form invalid');
+      const errEl = document.getElementById('paypalErr');
+      errEl.style.display = 'none';
+
+      // Identify user in Mixpanel before payment starts (mirrors Razorpay path)
+      if (window.naIdentify) window.naIdentify(fields.email, { name: fields.name });
+      if (window.naTrack && !window._naEmailCapturedFired) {
+        window.naTrack('Email Captured', { name: fields.name, location: 'report_form_paypal' });
+        window._naEmailCapturedFired = true;
+      }
+      if (window.naTrack) window.naTrack('Payment Started', { provider:'paypal' });
+
+      const r = await fetch('/api/paypal-create-order', {
+        method:'POST', headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({
+          name: fields.name, dob: fields.dob, email: fields.email, mobile: fields.mobile||''
+        })
+      });
+      const data = await r.json().catch(()=>({}));
+      if (!r.ok || !data.success || !data.id) throw new Error(data.error || 'create-order failed');
+      return data.id;
+    },
+
+    onApprove: async function(data){
+      const fields = validateForm();
+      if (!fields) return;
+      const nums = getReportNumbers(fields.name, fields.dob);
+
+      const r = await fetch('/api/paypal-capture', {
+        method:'POST', headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({
+          orderID: data.orderID,
+          name: fields.name, dob: fields.dob, email: fields.email,
+          mobile: fields.mobile||'',
+          birthNum: nums.birthNum, destNum: nums.destNum, nameNum: nums.nameNum
+        })
+      });
+      const result = await r.json().catch(()=>({}));
+      if (!r.ok || !result.success) {
+        document.getElementById('paypalErr').textContent = result.error || 'Payment captured but report could not be generated. Please contact support.';
+        document.getElementById('paypalErr').style.display = 'block';
+        return;
+      }
+
+      // Reuse the same redirect that Razorpay uses, so the success page is identical.
+      const params = new URLSearchParams({
+        paymentId: result.paymentId, // already prefixed 'PP-'
+        orderId: '', signature: '',
+        name: fields.name, dob: fields.dob, email: fields.email,
+        birthNum: nums.birthNum || '', destNum: nums.destNum || '',
+        nameNum: nums.nameNum || '', pct: nums.pct || ''
+      });
+      if (fields.mobile) params.set('mobile', fields.mobile);
+      window.location.href = `generate-report?${params}`;
+    },
+
+    onError: function(err){
+      console.error('[paypal] button error:', err);
+      const e = document.getElementById('paypalErr');
+      e.textContent = 'PayPal could not start. Please try again or use the ₹199 button above.';
+      e.style.display = 'block';
+    },
+
+    onCancel: function(){
+      // No-op. User cancelled at PayPal, no charge happened.
+    }
+  }).render('#paypal-button-container');
+}
+
+// SDK loads async; wait for it.
+if (document.readyState === 'complete') initPayPalButton();
+else window.addEventListener('load', initPayPalButton);
 </script>
 </body>
 </html>
