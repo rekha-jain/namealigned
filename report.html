@@ -611,11 +611,21 @@ async function onSuccess(paymentId, orderId, signature, name, dob, email, mobile
 
 // ── PayPal button (renders if SDK loaded with a real client id) ──
 function initPayPalButton(){
-  if (!window.paypal_sdk || !paypal_sdk.Buttons) return;
-  // Don't render if the placeholder wasn't replaced yet.
+  // 1. Hide the entire row if the placeholder hasn't been swapped yet.
+  //    (Must run BEFORE the SDK check, because an invalid client-id stops
+  //    the SDK from loading at all and paypal_sdk would be undefined.)
   const sdkSrc = document.querySelector('script[src*="paypal.com/sdk"]')?.src || '';
   if (sdkSrc.includes('__PAYPAL_CLIENT_ID__')) {
-    document.getElementById('paypalRow').style.display = 'none';
+    const row = document.getElementById('paypalRow');
+    if (row) row.style.display = 'none';
+    console.warn('[paypal] Client ID placeholder not replaced. Hiding PayPal row.');
+    return;
+  }
+  // 2. Now check the SDK actually loaded.
+  if (!window.paypal_sdk || !paypal_sdk.Buttons) {
+    const row = document.getElementById('paypalRow');
+    if (row) row.style.display = 'none';
+    console.warn('[paypal] SDK failed to load. Hiding PayPal row.');
     return;
   }
   const container = document.getElementById('paypal-button-container');
