@@ -65,7 +65,7 @@ export async function getAccessToken() {
 /** Default order amount + currency, overridable via env. */
 export function getDefaultAmount() {
   return {
-    value:    process.env.PAYPAL_AMOUNT   || '2.99',
-    currency: process.env.PAYPAL_CURRENCY || 'USD',
+    value:    process.env.PAYPAL_AMOUNT   || '199',
+    currency: process.env.PAYPAL_CURRENCY || 'INR',
   };
 }
