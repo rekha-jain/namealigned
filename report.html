@@ -1,6 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-C1JMQTNHDE"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-C1JMQTNHDE');
+</script>
+
 <!-- Microsoft Clarity -->
 <script type="text/javascript">
 (function(c,l,a,r,i,t,y){
@@ -307,7 +317,7 @@
           <div style="text-align:center;font-size:11.5px;color:var(--text3);font-family:sans-serif;letter-spacing:.06em;text-transform:uppercase;font-weight:600;margin-bottom:.6rem">Or pay with PayPal</div>
           <div id="paypal-button-container"></div>
           <div id="paypalErr" class="err-box" style="display:none;margin-top:.5rem"></div>
-          <p style="font-size:10.5px;color:var(--text3);font-family:sans-serif;text-align:center;margin:.5rem 0 0;font-style:italic">Charged in INR via PayPal</p>
+          <p style="font-size:10.5px;color:var(--text3);font-family:sans-serif;text-align:center;margin:.5rem 0 0;font-style:italic">International cards, charged in USD via PayPal</p>
         </div>
 
         <div style="margin-top:1.25rem;border-top:1px solid var(--gold-b);padding-top:1rem;text-align:center">
@@ -346,8 +356,8 @@
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 <!-- PayPal JS SDK. Replace AdFemDmanJoRwb8AgNStloN15rdzIABDP9_3XWipjeOBGuzRV5XVYz_fmLFYRVDCIc1k5VPXHPCds4G2 with the value from
      PayPal Dashboard > Apps & Credentials > Sandbox > Default App.
-     Keep the &currency=INR param in sync with PAYPAL_CURRENCY env. -->
-<script src="https://www.paypal.com/sdk/js?client-id=AdFemDmanJoRwb8AgNStloN15rdzIABDP9_3XWipjeOBGuzRV5XVYz_fmLFYRVDCIc1k5VPXHPCds4G2&currency=INR&intent=capture" data-namespace="paypal_sdk"></script>
+     Keep the &currency=USD param in sync with PAYPAL_CURRENCY env. -->
+<script src="https://www.paypal.com/sdk/js?client-id=AdFemDmanJoRwb8AgNStloN15rdzIABDP9_3XWipjeOBGuzRV5XVYz_fmLFYRVDCIc1k5VPXHPCds4G2&currency=USD&intent=capture" data-namespace="paypal_sdk"></script>
 <script>
 // ── State ──────────────────────────────────────────────────────
 let promoDiscount  = 0;      // 0 | 50 | 100
