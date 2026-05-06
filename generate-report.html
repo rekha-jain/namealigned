@@ -1510,12 +1510,14 @@ hr.divider{display:none;}
     var traits = PLANET_TRAITS[nameNum] || PLANET_TRAITS[1];
     var bhTraits = PLANET_TRAITS[birthNum] || PLANET_TRAITS[1];
 
-    // Tone-shifted alignment narrative, strengths-led, never judgmental
-    var pctTier = pct >= 75
-        ? 'strong alignment, your name actively supports your natural strengths'
-        : pct >= 50
-        ? 'moderate alignment, your name supports several areas well; a few can be enhanced further'
-        : 'different alignment, your name carries strengths of its own, with room to enhance how they interact with your birth numbers';
+    // Tone-shifted alignment narrative — pull the canonical
+    // tier short-line directly from the new 7-tier interpretation
+    // engine so wording is consistent with the banner above.
+    var __tier = (typeof getAlignmentTier === 'function') ? getAlignmentTier(pct) : null;
+    var pctTier = __tier ? __tier.short.replace(/\.$/, '').toLowerCase() :
+        (pct >= 75 ? 'your name actively supports your natural strengths'
+       : pct >= 55 ? 'your name supports several areas well, with a few that can be enhanced'
+       :            'your name carries strengths of its own, with room to enhance');
 
     // Behavioural pattern + strength area per Moolank
     var BEHAVIOURS = {
@@ -1544,15 +1546,25 @@ hr.divider{display:none;}
     };
     var outcome = OUTCOMES_LONG[birthNum] || OUTCOMES_LONG[1];
 
-    // Closing conclusion synthesises the report into one
-    // actionable line — the user explicitly asked for a stronger
-    // wrap-up paragraph that gives the reader a clear "so what"
-    // takeaway rather than a soft fade-out.
-    var ALIGN_VERDICT = pct >= 75
-      ? 'your name already supports your birth pattern, and the gentle enhancements in the Name Optimization section can fine-tune what is already working.'
-      : pct >= 55
-      ? 'there is real headroom to enhance how your name interacts with your birth numbers — the Name Optimization section offers three natural-sounding options that improve compound quality without changing how your name sounds.'
-      : 'your name carries its own strengths, but the interaction with your birth numbers leaves meaningful room to enhance — the Name Optimization section offers three natural-sounding options worth considering.';
+    // Closing conclusion — verdict tuned per tier (phase 4a) so
+    // every score range gets language that fits its psychological
+    // texture, not a generic "good/medium/needs work" rollup.
+    var __tierKey = __tier ? __tier.key : 'tier-mixed';
+    var ALIGN_VERDICT = ({
+      'tier-rare':            'your name and birth vibrations work together with unusual ease. The gentle enhancements in the Name Optimization section sharpen what is already strong, rather than fixing anything.',
+      'tier-strong':          'your name actively supports your patterns. The Name Optimization section offers refinements for the few areas of natural friction every profile carries.',
+      'tier-supportive':      'the supportive base is strong; the Name Optimization section addresses the recurring areas of tension or overcompensation specifically.',
+      'tier-mixed':           'there is meaningful room to enhance the parts of your personality that currently feel inconsistent or emotionally tiring. The Name Optimization section offers three natural-sounding options.',
+      'tier-friction':        'the recurring friction the score reflects can be steadied — the Name Optimization section offers three natural-sounding options that improve compound quality without changing how your name sounds.',
+      'tier-recalibration':   'growth in this range tends to come through recalibration — the Name Optimization section is a starting point, alongside the boundaries and self-understanding work the profile suggests.',
+      'tier-transformational':'this profile is reinvention-led; alignment can support the journey but never replaces the inner work. The Name Optimization section offers three natural-sounding options worth considering when you are ready.'
+    })[__tierKey] || 'the Name Optimization section offers three natural-sounding options that improve compound quality without changing how your name sounds.';
+
+    // "Friction without failure" — every profile, even highly
+    // aligned ones, gets a growth observation so the user feels
+    // seen rather than flattered. Keyed off Moolank behaviour.
+    var GROWTH_NOTE = 'A recurring growth theme in your profile is the rhythm of '+b.behaviour+' followed by '+b.challenge+
+      ' — not a problem to solve, but a pattern to notice with kindness.';
 
     var html =
       '<p style="margin:0 0 .85rem;"><strong style="color:#8a6a1a;">'+firstName+',</strong> your Chaldean profile is shaped by the interaction between your <strong style="color:#8a6a1a;">name vibration</strong> and your <strong style="color:#8a6a1a;">birth numbers</strong>.</p>'+
@@ -1570,6 +1582,9 @@ hr.divider{display:none;}
         '<div style="font-family:sans-serif;font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:#8a6a1a;font-weight:700;margin-bottom:.4rem;">In Conclusion</div>'+
         '<p style="margin:0 0 .55rem;font-size:13.5px;line-height:1.65;">'+
           firstName+', your numerology blueprint points toward <strong>'+outcome+'</strong>. Your Moolank <strong>'+birthNum+'</strong> sets the <em>how</em> of your daily energy, your Bhagyank <strong>'+destNum+'</strong> sets the <em>where</em> destiny tends to compound your effort, and your Name Number <strong>'+nameNum+'</strong> determines the <em>vibration</em> through which both express in the world.'+
+        '</p>'+
+        '<p style="margin:0 0 .55rem;font-size:13.5px;line-height:1.65;color:#3a2f4a;">'+
+          GROWTH_NOTE+
         '</p>'+
         '<p style="margin:0;font-size:13.5px;line-height:1.65;">'+
           'On the alignment score, '+ALIGN_VERDICT+
@@ -1724,35 +1739,22 @@ hr.divider{display:none;}
 
   // ── 2. ALIGNMENT BANNER ───────────────────────────────────────
   function buildAlignmentBanner(){
-    var status = getAlignmentStatus(pct);
+    // Phase 4a: 7-tier interpretation system (replaces the older
+    // 3-tier aligned/neutral/misaligned banner). Each tier has a
+    // distinct title + 2-4-sentence framing that's strengths-led
+    // and never fear-based.
+    var tier = getAlignmentTier(pct);
+    var legacyStatus = getAlignmentStatus(pct);  // for CSS class compat
     var banner = qs('alignBanner');
-    banner.className = 'align-banner '+status;
-
-    var icon, title, desc;
-    if(status==='aligned'){
-      icon='✦';
-      title='Strong Alignment, Your Name Already Supports You';
-      desc='Your name number '+nameNum+' ('+namePlanet+') resonates well with your birth and destiny energies. '+
-           'The compound energy of your name actively amplifies your natural strengths. Optional fine-tuning is shown below, for those who want to enhance alignment further.';
-    } else if(status==='neutral'){
-      icon='◈';
-      title='Moderate Alignment, Room to Enhance';
-      desc='Your name supports several life areas well. A small phonetic optimisation can lift the alignment further, '+
-           'helping wealth and relationship areas feel less effortful. Suggestions below, your current name is not wrong, only different in strengths.';
-    } else {
-      icon='◇';
-      title='Different Alignment, Optimisation Can Help';
-      desc='Your name carries strengths of its own, and there is meaningful room to enhance how those strengths interact with your birth numbers. '+
-           'Gentle phonetic adjustments shown below can support this further, without changing how your name sounds in everyday use.';
-    }
+    banner.className = 'align-banner '+legacyStatus+' '+tier.key;
 
     banner.innerHTML=
-      '<div class="align-icon">'+icon+'</div>'+
+      '<div class="align-icon">'+tier.icon+'</div>'+
       '<div class="align-text">'+
-        '<div class="align-title '+status+'">'+title+'</div>'+
-        '<div class="align-desc '+status+'">'+desc+'</div>'+
+        '<div class="align-title '+legacyStatus+'">'+tier.title+'</div>'+
+        '<div class="align-desc '+legacyStatus+'">'+tier.description+'</div>'+
       '</div>'+
-      '<div class="align-pct-badge '+status+'">'+pct+'%</div>';
+      '<div class="align-pct-badge '+legacyStatus+'">'+pct+'%</div>';
   }
 
   // ── 3. LUCKY ATTRIBUTES ───────────────────────────────────────

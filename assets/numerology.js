@@ -207,7 +207,12 @@ function compatPctBreakdown(nameNum, nameRaw, birthNum, destNum){
   const ps  = _scorePhoneticStability(nameRaw);
   const amp = _scoreAmplification(nameNum, birthNum, destNum);
   const w = _WEIGHTS;
-  const overall = Math.round(Math.max(35, Math.min(99,
+  // Phase 4a recalibration: floor raised to 45 (so "below 45%" is
+  // genuinely rare and reserved for transformational profiles, per
+  // product direction). Ceiling stays at 99 — the candidate
+  // generator overrides to 100 only when nameNum===moolank, which
+  // is the report's "fully resonant" convention.
+  const overall = Math.round(Math.max(45, Math.min(99,
     (cq*w.cq + nm*w.nm + nb*w.nb + ph*w.ph + ps*w.ps + amp*w.amp) / 100
   )));
   const compoundEntry = CD[nameRaw];
@@ -254,8 +259,65 @@ function _harmonyLabel(a, b){
   return 'Neutral interaction — no strong friction or support';
 }
 
+// Legacy 3-tier status (kept for backwards compat with any caller
+// that still expects 'aligned'/'neutral'/'misaligned'). Prefer
+// getAlignmentTier() below for new code.
 function getAlignmentStatus(pct){
   return pct>=75?'aligned':pct>=55?'neutral':'misaligned';
+}
+
+// ── ALIGNMENT TIER SYSTEM (phase 4a) ──────────────────────────
+// Seven psychological tiers with strengths-led, non-fear-based
+// language. Each tier returns:
+//   key:          machine-friendly id (used for CSS classes)
+//   title:        2-3 word headline
+//   icon:         single-glyph signature
+//   tone:         supportive / balanced / observant — colour key
+//   short:        one-line summary used in summary-box / share copy
+//   description:  2-4 sentence framing per the spec
+function getAlignmentTier(pct){
+  if (pct >= 90) return {
+    key:'tier-rare', tone:'supportive', icon:'✦',
+    title:'Rare Natural Resonance',
+    short:'Your name and birth vibrations work together with unusual ease.',
+    description:'Your name and birth vibrations work together with unusual ease and reinforcement. Strengths tend to express naturally and consistently, though growth still comes through conscious self-awareness rather than comfort alone.'
+  };
+  if (pct >= 85) return {
+    key:'tier-strong', tone:'supportive', icon:'★',
+    title:'Strong Natural Alignment',
+    short:'Your name actively supports your emotional patterns and life direction.',
+    description:'Your name actively supports your emotional patterns, communication style and life direction. While no profile is without friction, your energetic structure generally creates momentum rather than resistance.'
+  };
+  if (pct >= 75) return {
+    key:'tier-supportive', tone:'supportive', icon:'◈',
+    title:'Supportive but Improvable',
+    short:'Strong supportive patterns alongside a few areas of recurring tension.',
+    description:'Your profile contains strong supportive patterns alongside a few recurring areas of tension or overcompensation. Life tends to work best when emotional awareness and conscious decision-making stay balanced.'
+  };
+  if (pct >= 65) return {
+    key:'tier-mixed', tone:'balanced', icon:'◇',
+    title:'Mixed but Workable Energies',
+    short:'A blend of harmony and friction — some areas natural, others uneven.',
+    description:'Your numbers contain both harmony and friction. Certain parts of your personality work very naturally, while others may feel inconsistent, emotionally tiring or difficult to sustain long-term without conscious adjustment.'
+  };
+  if (pct >= 55) return {
+    key:'tier-friction', tone:'balanced', icon:'◉',
+    title:'Noticeable Internal Friction',
+    short:'Recurring tension between instincts, identity and direction — visible but workable.',
+    description:'Your profile suggests recurring tension between emotional instincts, external identity or life direction. This does not block success, but it can create cycles of self-doubt, delayed clarity or emotionally draining patterns if left unconscious.'
+  };
+  if (pct >= 45) return {
+    key:'tier-recalibration', tone:'observant', icon:'◐',
+    title:'Friction-Heavy Patterns',
+    short:'Stronger-than-average internal contradiction — growth comes through recalibration.',
+    description:'Your numbers suggest stronger-than-average internal contradiction or emotional resistance patterns. Growth often comes through recalibration, stronger boundaries, emotional discernment and learning not to repeat exhausting cycles.'
+  };
+  return {
+    key:'tier-transformational', tone:'observant', icon:'◓',
+    title:'Intense Transformational Alignment',
+    short:'A reinvention-led profile — growth comes through deep self-understanding.',
+    description:'This range should remain uncommon. It does not mean your life is "bad" or that success is blocked. Instead, it usually reflects a personality structure carrying stronger internal contradictions, emotional intensity or transformational lessons than average. People in this range often go through deeper reinvention phases, learn important lessons through experience, and develop unusual self-awareness over time. Their growth tends to come less from comfort and more from understanding themselves at a deeper level.'
+  };
 }
 
 // Nav toggle (shared)
