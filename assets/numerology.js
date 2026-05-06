@@ -143,102 +143,117 @@ function initFaq(){
 document.addEventListener('DOMContentLoaded',initFaq);
 
 // ── ALIGNED NAME CORRECTION ENGINE ───────────────────────────
-// Tweaks FIRST NAME ONLY with phonetic additions (same sound) to
-// make reduce(chalSum(fullName)) === moolank  → 100% alignment.
-// Rule: never add new words / initials, only add letters within
-// the first name (extra vowel, soft consonant, doubled letter).
+// Tweaks FIRST NAME ONLY with phonetic additions (same sound) so
+// that reduce(chalSum(fullName)) === moolank  →  100% alignment.
+//
+// Strategy: brute-force candidate generation. We compose 1, 2, or 3
+// phonetic operations (append-A, append-H, double-final-vowel,
+// insert-H-after-first-vowel, insert-Y-before-final-vowel, append
+// soft consonant, etc.) on the first name, then VERIFY the actual
+// Chaldean sum of each candidate against the target. We never trust
+// pre-declared "delta" values — every candidate is recomputed,
+// which is what the previous version got wrong (it skipped real
+// matches because the declared delta of compound ops didn't match
+// what they actually added once concatenated).
+//
+// Returns up to 6 distinct phonetic variants ordered by
+// naturalness (single-op > two-op > three-op).
 function generateAlignedCorrectedNames(fullName, moolank){
   var parts=fullName.trim().split(/\s+/);
   var firstName=parts[0], restStr=parts.slice(1).join(' ');
   var firstSum=chalSum(firstName), restSum=chalSum(restStr);
   var total=firstSum+restSum;
 
-  // Smallest targetSum >= total where reduce(targetSum)===moolank
+  // Smallest targetSum >= total where reduce(targetSum) === moolank
   var target=null;
-  for(var t=total;t<=total+100;t++){ if(reduce(t)===moolank){target=t;break;} }
-  if(!target) return {corrections:[],delta:0,target:total,currentSum:total};
-  var delta=target-total;
-  if(delta===0) return {corrections:[],delta:0,target:total,currentSum:total,alreadyAligned:true};
+  for(var t=total;t<=total+60;t++){ if(reduce(t)===moolank){target=t;break;} }
+  if(target===null) return {corrections:[],delta:0,target:total,currentSum:total};
+  if(target===total) return {corrections:[],delta:0,target:total,currentSum:total,alreadyAligned:true};
 
-  // Phonetic addition pool, apply(name_lowercase) → string|null
-  var ADDS=[
-    {v:1,apply:function(n){return n+'a';}},                                    // A at end
-    {v:1,apply:function(n){                                                    // I at first vowel-consonant boundary
-      var m=n.match(/([aeiou])([^aeiou])/i);
-      return m?n.slice(0,m.index+1)+'i'+n.slice(m.index+1):null;
-    }},
-    {v:1,apply:function(n){                                                    // Y before final vowel
+  // Phonetic operation pool, ordered by naturalness for Indian
+  // names. Each op takes a lowercase string and returns a candidate
+  // string (or null if the op cannot apply to this stem).
+  var OPS=[
+    function(n){ return n+'a'; },                                                    // 0  append A
+    function(n){ return /[aeiou]$/i.test(n) ? n+n.slice(-1) : null; },               // 1  double final vowel
+    function(n){ return n+'h'; },                                                    // 2  append H
+    function(n){ return n+'i'; },                                                    // 3  append I
+    function(n){ return n+'y'; },                                                    // 4  append Y
+    function(n){                                                                     // 5  H after first vowel
+      var m=n.match(/[aeiou]/i);
+      return m ? n.slice(0,m.index+1)+'h'+n.slice(m.index+1) : null;
+    },
+    function(n){                                                                     // 6  Y before final vowel
       var m=n.match(/([^aeiou])([aeiou]+)$/i);
-      return m?n.slice(0,m.index+1)+'y'+n.slice(m.index+1):n+'y';
-    }},
-    {v:2,apply:function(n){                                                    // double ending vowel
-      return /[aeiou]$/i.test(n)?n+n.slice(-1):n+'aa';
-    }},
-    {v:2,apply:function(n){var ki=n.lastIndexOf('k');                          // double last K
-      return ki>=0?n.slice(0,ki+1)+'k'+n.slice(ki+1):null;}},
-    {v:2,apply:function(n){var ri=n.lastIndexOf('r');                          // double last R
-      return ri>=0?n.slice(0,ri+1)+'r'+n.slice(ri+1):null;}},
-    {v:3,apply:function(n){var si=n.lastIndexOf('s');                          // double last S
-      return si>=0?n.slice(0,si+1)+'s'+n.slice(si+1):null;}},
-    {v:3,apply:function(n){var li=n.lastIndexOf('l');                          // double last L
-      return li>=0?n.slice(0,li+1)+'l'+n.slice(li+1):null;}},
-    {v:4,apply:function(n){var mi=n.lastIndexOf('m');                          // double last M
-      return mi>=0?n.slice(0,mi+1)+'m'+n.slice(mi+1):null;}},
-    {v:4,apply:function(n){var ti=n.lastIndexOf('t');                          // double last T
-      return ti>=0?n.slice(0,ti+1)+'t'+n.slice(ti+1):null;}},
-    {v:5,apply:function(n){                                                    // H after first vowel
-      var m=n.match(/[aeiou]/i);
-      return m?n.slice(0,m.index+1)+'h'+n.slice(m.index+1):null;
-    }},
-    {v:5,apply:function(n){var hi=n.indexOf('h');                              // double first H
-      return hi>=0?n.slice(0,hi)+'h'+n.slice(hi):null;}},
-    {v:5,apply:function(n){var ni=n.lastIndexOf('n');                          // double last N
-      return ni>=0?n.slice(0,ni+1)+'n'+n.slice(ni+1):null;}},
-    {v:6,apply:function(n){                                                    // AH ending
-      return /[aeiou]$/i.test(n)?n.slice(0,-1)+'ah':n+'ah';
-    }},
-    {v:7,apply:function(n){                                                    // H-inner + double-end-vowel (5+2=7 combined)
-      var m=n.match(/[aeiou]/i);
-      var h=m?n.slice(0,m.index+1)+'h'+n.slice(m.index+1):'h'+n;
-      return /[aeiou]$/i.test(h)?h+h.slice(-1)+'a':h+'aa';
-    }},
-    {v:8,apply:function(n){                                                    // H-inner + triple A
-      var m=n.match(/[aeiou]/i);
-      var h=m?n.slice(0,m.index+1)+'h'+n.slice(m.index+1):'h'+n;
-      return h+'aaa';
-    }},
+      return m ? n.slice(0,m.index+1)+'y'+n.slice(m.index+1) : null;
+    },
+    function(n){                                                                     // 7  I before final vowel
+      var m=n.match(/([^aeiou])([aeiou]+)$/i);
+      return m ? n.slice(0,m.index+1)+'i'+n.slice(m.index+1) : null;
+    },
+    function(n){ return /[aeiou]$/i.test(n) ? n.slice(0,-1)+'ah' : n+'ah'; },        // 8  ...AH ending
+    function(n){ return n+'aa'; },                                                   // 9  append AA
+    function(n){ return n+'k'; },                                                    // 10 append K
+    function(n){ return n+'l'; },                                                    // 11 append L
+    function(n){ return n+'r'; },                                                    // 12 append R
+    function(n){ return n+'s'; },                                                    // 13 append S
+    function(n){ return n+'n'; },                                                    // 14 append N
+    function(n){                                                                     // 15 double final consonant
+      var m=n.match(/([^aeiou])$/i);
+      return m ? n+m[1] : null;
+    },
+    function(n){                                                                     // 16 prepend A (vowel-safe)
+      return /^[aeiou]/i.test(n) ? null : 'a'+n;
+    },
+    function(n){ return n+'aaa'; },                                                  // 17 append AAA
+    function(n){ return n+'aha'; },                                                  // 18 append AHA
+    function(n){ return n+'ee'; },                                                   // 19 append EE
   ];
 
-  function cap(s){return s.charAt(0).toUpperCase()+s.slice(1);}
-  var results=[],seen=new Set([firstName.toLowerCase()]);
+  var lower=firstName.toLowerCase();
+  var seen=new Set([lower]);
+  var results=[];
 
-  // Try single additions matching delta exactly
-  ADDS.forEach(function(a){
-    if(a.v!==delta||results.length>=3) return;
-    var r=a.apply(firstName.toLowerCase());
-    if(!r||seen.has(r.toLowerCase())) return;
-    var capped=cap(r),nt=chalSum(capped)+restSum;
+  function consider(variant){
+    if(results.length>=6 || !variant) return;
+    var lc=variant.toLowerCase();
+    if(seen.has(lc)) return;
+    var capped=lc.charAt(0).toUpperCase()+lc.slice(1);
+    var nf=chalSum(capped);
+    var nt=nf+restSum;
     if(reduce(nt)!==moolank) return;
-    seen.add(r.toLowerCase());
-    results.push({firstName:capped,fullName:restStr?capped+' '+restStr:capped,
-      newFirstSum:chalSum(capped),restSum:restSum,newTotal:nt,nameNum:moolank});
-  });
+    seen.add(lc);
+    results.push({
+      firstName: capped,
+      fullName:  restStr ? capped+' '+restStr : capped,
+      newFirstSum: nf,
+      restSum: restSum,
+      newTotal: nt,
+      nameNum: moolank
+    });
+  }
 
-  // Try pairs of additions summing to delta
-  for(var i=0;i<ADDS.length&&results.length<3;i++){
-    for(var j=0;j<ADDS.length&&results.length<3;j++){
-      if(ADDS[i].v+ADDS[j].v!==delta) continue;
-      var s1=ADDS[i].apply(firstName.toLowerCase());
-      if(!s1) continue;
-      var s2=ADDS[j].apply(s1);
-      if(!s2||seen.has(s2.toLowerCase())) continue;
-      var capped2=cap(s2),nt2=chalSum(capped2)+restSum;
-      if(reduce(nt2)!==moolank) continue;
-      seen.add(s2.toLowerCase());
-      results.push({firstName:capped2,fullName:restStr?capped2+' '+restStr:capped2,
-        newFirstSum:chalSum(capped2),restSum:restSum,newTotal:nt2,nameNum:moolank});
+  // Pass 1, single op
+  for(var i=0;i<OPS.length && results.length<6;i++){
+    consider(OPS[i](lower));
+  }
+  // Pass 2, two-op composition
+  for(var i2=0;i2<OPS.length && results.length<6;i2++){
+    var v1=OPS[i2](lower); if(!v1) continue;
+    for(var j2=0;j2<OPS.length && results.length<6;j2++){
+      consider(OPS[j2](v1));
+    }
+  }
+  // Pass 3, three-op composition (deep fallback for tricky deltas)
+  for(var i3=0;i3<OPS.length && results.length<6;i3++){
+    var w1=OPS[i3](lower); if(!w1) continue;
+    for(var j3=0;j3<OPS.length && results.length<6;j3++){
+      var w2=OPS[j3](w1); if(!w2) continue;
+      for(var k3=0;k3<OPS.length && results.length<6;k3++){
+        consider(OPS[k3](w2));
+      }
     }
   }
 
-  return {corrections:results,delta:delta,target:target,currentSum:total};
+  return {corrections:results, delta:target-total, target:target, currentSum:total};
 }
