@@ -353,6 +353,16 @@
   .name-options-grid>div{padding:.75rem .8rem!important;}
 
   /* ─ Page-break control ──────────────────────────────────────── */
+  /* DEFAULT: every report section stays whole on one page. Long
+     sections (forecast) opt back into auto-splitting via
+     .long-section. This stops the "headline on page 1, content on
+     page 2" effect users were seeing in printed PDFs. */
+  .rpt-section{break-inside:avoid;page-break-inside:avoid;}
+  .rpt-section.long-section{break-inside:auto;page-break-inside:auto;}
+  /* Force forecast wrap to allow splits since 5 cards rarely fit
+     a single page */
+  .rpt-section:has(#forecastContainer){break-inside:auto;page-break-inside:auto;}
+
   .career-col,.career-domain,.compat-card{break-inside:avoid;}
   #remediesGrid>div{break-inside:avoid;}
   /* Each attribute card stays whole; whole grid stays together */
@@ -360,9 +370,9 @@
   .attr-grid{break-inside:avoid;}
   .align-banner{break-inside:avoid;}
   /* Sections with a single self-contained grid stay together */
-  #attrsGrid,#alignmentBanner{break-inside:avoid;}
-  .core-num-card{break-inside:auto;}
-  .forecast-card{break-inside:auto;}
+  #attrsGrid,#alignmentBanner,#chaldeanAlignBreakdown{break-inside:avoid;}
+  .core-num-card{break-inside:avoid;}
+  .forecast-card{break-inside:avoid;page-break-inside:avoid;}
   .forecast-hdr{break-after:avoid;}
   .forecast-body{break-before:avoid;}
   .forecast-theme{break-after:avoid;}
@@ -370,9 +380,15 @@
   .fda{break-inside:avoid;}
   .forecast-remedy{break-inside:avoid;break-after:avoid;}
   .forecast-chips{break-before:avoid;break-inside:avoid;}
-  .rpt-section>.sec-label{break-after:avoid;}
+  .rpt-section>.sec-label{break-after:avoid;page-break-after:avoid;}
   .rpt-section>p{break-after:avoid;break-inside:avoid;}
   #forecastContainer{break-before:avoid;}
+  /* Name correction options must never split — each card whole */
+  .name-options-grid>div{break-inside:avoid;page-break-inside:avoid;}
+  /* Headings + first paragraph stay together (orphans/widows) */
+  h1,h2,h3,.sec-label{break-after:avoid;page-break-after:avoid;}
+  /* Avoid orphan single lines */
+  p,li{orphans:3;widows:3;}
 
   /* ─ Force CSS grids to maintain columns in print ────────────── */
   .grid-3{display:grid!important;grid-template-columns:repeat(3,1fr)!important;gap:.75rem;}
@@ -459,6 +475,21 @@ hr.divider{display:none;}
   .sc-qr-text{font-size:10.5px!important;}
   .sc-caption{font-size:10.5px!important;max-width:560px!important;}
 }
+
+/* ── Tooltip system (phase 3) ─────────────────────────────────
+   Inline, accessible, keyboard- and touch-friendly. Uses focus-
+   within so taps on mobile open the popover; hover handles
+   desktop. No JS required for the visual behaviour — content is
+   injected by a small helper (window.tt) into the existing DOM. */
+.tt{position:relative;display:inline-flex;align-items:center;gap:3px;cursor:help;}
+.tt-i{display:inline-flex;align-items:center;justify-content:center;width:13px;height:13px;border-radius:50%;background:rgba(201,162,39,.18);border:1px solid rgba(201,162,39,.45);color:#c9a227;font-size:9px;font-weight:700;font-family:sans-serif;font-style:normal;line-height:1;flex-shrink:0;}
+.tt-i:hover{background:rgba(201,162,39,.30);}
+.tt-pop{position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);min-width:240px;max-width:300px;padding:10px 12px;background:#0a0820;color:#f0ece0;border:1px solid rgba(240,180,41,.45);border-radius:8px;font-size:11.5px;font-family:sans-serif;font-style:normal;font-weight:400;line-height:1.55;text-align:left;text-transform:none;letter-spacing:0;z-index:1000;opacity:0;pointer-events:none;transition:opacity .15s ease;box-shadow:0 6px 18px rgba(0,0,0,.35);white-space:normal;}
+.tt-pop::after{content:'';position:absolute;top:100%;left:50%;margin-left:-5px;border:5px solid transparent;border-top-color:rgba(240,180,41,.45);}
+.tt:hover .tt-pop,.tt:focus-within .tt-pop,.tt-pop:hover{opacity:1;pointer-events:auto;}
+.tt-pop strong{color:#f0b429;font-weight:600;}
+@media print{ .tt-i,.tt-pop{display:none!important;} }
+@media (max-width:560px){ .tt-pop{min-width:200px;max-width:240px;font-size:11px;} }
 </style>
 <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
 <script src="/assets/mixpanel.js"></script>
@@ -609,8 +640,8 @@ hr.divider{display:none;}
   <hr class="divider"/>
 
   <!-- ─ 4. 5-YEAR FORECAST ───────────────────────────────────── -->
-  <div class="rpt-section" style="padding-top:0;">
-    <div class="sec-label">5-Year Personal Year Forecast</div>
+  <div class="rpt-section long-section" style="padding-top:0;">
+    <div class="sec-label">5-Year <span class="tt-anchor" data-tt="personalYear">Personal Year</span> Forecast</div>
     <p style="font-size:13px;color:var(--text2);font-family:sans-serif;margin-bottom:.75rem;">Your Personal Year cycles are derived from your <strong>Chaldean birth numbers</strong> and influence how planetary energies affect your life each year.</p>
     <div style="background:linear-gradient(135deg,rgba(220,38,38,.08),rgba(201,162,39,.06));border:1px solid rgba(201,162,39,.3);border-left:4px solid #c9a227;border-radius:var(--r);padding:.85rem 1.1rem;margin-bottom:1.25rem;font-family:sans-serif;font-size:13px;color:var(--text);line-height:1.55;">
       ⚡ <strong>Certain years act as activation points</strong> where decisions carry long-term impact. Knowing which years are yours gives you a decisive edge.
@@ -663,7 +694,7 @@ hr.divider{display:none;}
 
   <!-- ─ 8b. MOBILE NUMBER ANALYSIS ─────────────────────────── -->
   <div class="rpt-section" style="padding-top:0;">
-    <div class="sec-label">Mobile Number Analysis</div>
+    <div class="sec-label"><span class="tt-anchor" data-tt="mobileRoot">Mobile Number</span> Analysis</div>
     <div id="mobileAnalysisSection"><!-- Injected by JS --></div>
   </div>
 
@@ -848,6 +879,67 @@ hr.divider{display:none;}
   // ── HELPERS ───────────────────────────────────────────────────
   function qs(id){return document.getElementById(id);}
   function el(tag,cls,html){var e=document.createElement(tag);if(cls)e.className=cls;if(html!=null)e.innerHTML=html;return e;}
+
+  // ── TOOLTIP DICTIONARY (educational hover/tap explanations) ──
+  // Beginner-friendly, 2-4 lines, emotionally neutral. Each entry
+  // explains what the concept is, why it matters, and (where
+  // useful) whether it's fixed or changeable. Tone is informative,
+  // never mystical-jargony.
+  var TOOLTIPS = {
+    moolank: 'Your <strong>Moolank</strong> (Driver/Birth Number) is the single digit your day of birth reduces to. It is your most powerful and unchangeable number — the core lens through which you experience the world.',
+    bhagyank: 'Your <strong>Bhagyank</strong> (Destiny/Life-Path Number) is the sum of every digit in your full date of birth. It describes the long-arc themes, opportunities and lessons your life tends to gravitate toward.',
+    nameNumber: 'Your <strong>Name Number</strong> is the Chaldean sum of your name reduced to a single digit. Unlike Moolank, this one is changeable — adjusting spelling shifts the vibration without changing how the name sounds.',
+    compoundNumber: 'A <strong>compound number</strong> is the full double-digit total of your name <em>before</em> reduction (like 26 or 41). In Chaldean numerology, compounds carry deeper symbolic meaning than the final single digit and often shape life patterns more strongly.',
+    chaldeanAlignment: '<strong>Chaldean Alignment</strong> measures how well your name vibration interacts with your birth and destiny numbers. Higher alignment means less internal friction; lower alignment doesn\'t mean "bad" — just that the name carries different strengths than the birth pattern.',
+    planetaryRuler: 'Each number 1–9 is ruled by a planet (Sun, Moon, Mars, etc.). The <strong>planetary ruler</strong> describes the energetic style of that number — leadership, sensitivity, discipline, and so on.',
+    personalYear: 'Your <strong>Personal Year</strong> shifts every birthday and runs on a 9-year cycle. Each number has a different theme (foundation-building, change, completion). Knowing the current cycle helps you time decisions to the energy of the year.',
+    mobileRoot: 'Your <strong>Mobile Root Number</strong> is the sum of every digit in your phone number, reduced to a single digit. It influences the type of conversations and opportunities your phone tends to attract.',
+    compoundQuality: '<strong>Compound Quality</strong> rates the symbolic weight of your name\'s unreduced compound. In Chaldean tradition some compounds (like 23, 27, 41) are highly supportive; others (like 26, 29) ask for more conscious handling.',
+    rootHarmony: '<strong>Root Harmony</strong> compares your Name Number against your Moolank or Bhagyank using planetary friendship rules. Identical numbers = strongest match; friendly planetary pairs = supportive; non-friendly = neutral interaction.',
+    planetaryHarmony: '<strong>Planetary Harmony</strong> looks at all three of your rulers together (Name, Moolank, Bhagyank). When all three planets get along, decisions and outcomes feel more coherent.',
+    phoneticStability: '<strong>Phonetic Stability</strong> reflects how heavy your name compound is to "carry". Lighter compounds (10–22) tend to feel settled; very high compounds (45+) carry more karmic weight and ask for steadier handling.',
+    amplification: '<strong>Amplification</strong> measures resonance between your three numbers. When two or three numbers match (e.g. Moolank 2, Bhagyank 2), the energy of that planet is amplified — both its gifts and its lessons.',
+    rootReduction: '<strong>Root reduction</strong> means adding the digits of a number until a single digit (1–9) remains. For example, 26 → 2+6 = 8. Chaldean numerology preserves the unreduced compound for deeper meaning.',
+    friendlyNumbers: '<strong>Friendly numbers</strong> are number-pairs whose ruling planets harmonise — like Sun (1) and Moon (2), or Mercury (5) and Venus (6). Names whose vibration matches a friendly pair tend to feel less effortful.',
+    karmicNumber: 'Some compounds are called <strong>karmic numbers</strong> (like 13, 16, 19) — they don\'t mean "bad luck"; they describe patterns that recur until consciously handled, and tend to develop specific inner strengths once met with awareness.',
+  };
+
+  // Wrap a label with an info icon + tooltip popover. The icon and
+  // popover are completely invisible on print. Pass a key from the
+  // TOOLTIPS dict above.
+  window.tt = function(label, key){
+    var content = TOOLTIPS[key];
+    if (!content) return label;
+    return '<span class="tt" tabindex="0" aria-label="What is '+label.replace(/<[^>]+>/g,'')+'?">'
+      + label
+      + '<i class="tt-i" aria-hidden="true">i</i>'
+      + '<span class="tt-pop" role="tooltip">'+content+'</span>'
+      + '</span>';
+  };
+
+  // Convert static [data-tt] markup in the HTML into full tooltip
+  // wrappers. Lets us add tooltips to non-JS-built parts of the
+  // page (the section headers in the static template) without
+  // having to refactor each spot to use window.tt().
+  function hydrateStaticTooltips(){
+    var anchors = document.querySelectorAll('[data-tt]');
+    anchors.forEach(function(a){
+      var key = a.getAttribute('data-tt');
+      var content = TOOLTIPS[key];
+      if (!content) return;
+      var labelText = a.textContent;
+      a.classList.add('tt');
+      a.classList.remove('tt-anchor');
+      a.setAttribute('tabindex','0');
+      a.setAttribute('aria-label','What is '+labelText+'?');
+      a.innerHTML = labelText + '<i class="tt-i" aria-hidden="true">i</i><span class="tt-pop" role="tooltip">'+content+'</span>';
+    });
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', hydrateStaticTooltips);
+  } else {
+    hydrateStaticTooltips();
+  }
 
   // ── PARSE URL PARAMS ──────────────────────────────────────────
   var params=new URLSearchParams(window.location.search);
@@ -1373,11 +1465,13 @@ hr.divider{display:none;}
     // explainable rather than coming from a black box.
     var bd = compatPctBreakdown(nameNum, nameRaw, birthNum, destNum);
     function rowColor(s){ return s>=80 ? '#2a7a2a' : s>=65 ? '#c9a227' : '#b86a3a'; }
+    var COMPONENT_TT = {cq:'compoundQuality',nm:'rootHarmony',nb:'rootHarmony',ph:'planetaryHarmony',ps:'phoneticStability',amp:'amplification'};
     function row(c){
       var color = rowColor(c.score);
+      var labelHtml = COMPONENT_TT[c.key] ? tt(c.label, COMPONENT_TT[c.key]) : c.label;
       return '<div style="margin-bottom:.7rem;">'+
         '<div style="display:flex;justify-content:space-between;align-items:center;font-family:sans-serif;font-size:13px;margin-bottom:4px;">'+
-          '<span style="color:var(--text);"><strong>'+c.label+'</strong> <span style="color:var(--text3);font-size:10.5px;font-weight:400;">· '+c.weight+'% weight</span></span>'+
+          '<span style="color:var(--text);"><strong>'+labelHtml+'</strong> <span style="color:var(--text3);font-size:10.5px;font-weight:400;">· '+c.weight+'% weight</span></span>'+
           '<span style="color:'+color+';font-weight:700;">'+c.score+'%</span>'+
         '</div>'+
         '<div style="height:7px;background:var(--card2);border:1px solid var(--border);border-radius:4px;overflow:hidden;">'+
@@ -1388,7 +1482,7 @@ hr.divider{display:none;}
     }
     var overallColor = bd.overall>=75?'#2a7a2a':bd.overall>=55?'#c9a227':'#b86a3a';
     el.innerHTML =
-      '<div style="font-family:sans-serif;font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--text3);margin-bottom:.85rem;">Chaldean Alignment Breakdown</div>'+
+      '<div style="font-family:sans-serif;font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--text3);margin-bottom:.85rem;">'+tt('Chaldean Alignment Breakdown','chaldeanAlignment')+'</div>'+
       bd.components.map(row).join('')+
       '<div style="display:flex;justify-content:space-between;align-items:center;padding-top:.75rem;margin-top:.6rem;border-top:1px solid var(--border);font-family:sans-serif;font-size:13px;">'+
         '<span style="color:var(--text);font-weight:700;">Overall Chaldean Alignment</span>'+
@@ -1491,9 +1585,9 @@ hr.divider{display:none;}
   function buildCoreNumbers(){
     var grid = qs('coreNumbersGrid');
     var nums = [
-      {num:birthNum,  label:'Moolank (Birth Number)',    planet:birthPlanet, meaning:CORE_MEANINGS[birthNum]||'',  extra:buildDobBreakdownHTML('Day of birth', dob, birthNum)},
-      {num:destNum,   label:'Bhagyank (Destiny Number)', planet:destPlanet,  meaning:CORE_MEANINGS[destNum]||'',   extra:buildDestinyBreakdownHTML(dob, destNum)},
-      {num:nameNum,   label:'Name Number (Chaldean)',    planet:namePlanet,  meaning:CORE_MEANINGS[nameNum]||'',   extra:buildNameBreakdownHTML(name)},
+      {num:birthNum,  label:tt('Moolank (Birth Number)',    'moolank'),    planet:birthPlanet, meaning:CORE_MEANINGS[birthNum]||'',  extra:buildDobBreakdownHTML('Day of birth', dob, birthNum)},
+      {num:destNum,   label:tt('Bhagyank (Destiny Number)', 'bhagyank'),   planet:destPlanet,  meaning:CORE_MEANINGS[destNum]||'',   extra:buildDestinyBreakdownHTML(dob, destNum)},
+      {num:nameNum,   label:tt('Name Number (Chaldean)',    'nameNumber'), planet:namePlanet,  meaning:CORE_MEANINGS[nameNum]||'',   extra:buildNameBreakdownHTML(name)},
     ];
     nums.forEach(function(n){
       var card = el('div','core-num-card');
@@ -2367,7 +2461,7 @@ hr.divider{display:none;}
       '</div>'+
       '<div style="display:flex;gap:.75rem;flex-wrap:wrap;margin-bottom:.85rem;">'+
         '<div style="flex:1;min-width:160px;background:var(--gold-l);border:1px solid var(--gold-b);border-radius:var(--r);padding:.75rem 1rem;">'+
-          '<div style="font-size:10px;font-family:sans-serif;font-weight:700;color:var(--gold);text-transform:uppercase;letter-spacing:.06em;margin-bottom:.3rem;">Mobile Root Number</div>'+
+          '<div style="font-size:10px;font-family:sans-serif;font-weight:700;color:var(--gold);text-transform:uppercase;letter-spacing:.06em;margin-bottom:.3rem;">'+tt('Mobile Root Number','mobileRoot')+'</div>'+
           '<div style="font-size:20px;color:var(--gold);">'+mRoot+', '+mPlanet+'</div>'+
           '<div style="font-size:11.5px;font-family:sans-serif;color:var(--text2);margin-top:3px;">Sum of all digits reduced to single digit</div>'+
         '</div>'+

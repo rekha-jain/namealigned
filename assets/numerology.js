@@ -276,6 +276,60 @@ function initFaq(){
 }
 document.addEventListener('DOMContentLoaded',initFaq);
 
+// ── NATURALNESS SCORER (phase 2) ─────────────────────────────
+// Rates how natural a generated name spelling looks/sounds. Used
+// to reject awkward outputs like "Aaravhl", "Mohanhk", "Jiyaaaa"
+// that the previous algorithm produced because it optimised only
+// for Chaldean alignment without considering whether the result
+// is a name a human could actually use.
+//
+// Returns 20-100. Below ~55 = reject outright. Combined with
+// alignment score (65/35 weighting) for final ranking.
+function naturalnessScore(name){
+  var lc = (name||'').toLowerCase();
+  var score = 100;
+
+  // 3+ same letter in a row (aaa, hhh, lll) — almost always awkward
+  if (/(.)\1{2,}/.test(lc)) score -= 45;
+
+  // 4+ vowels run (aaaa, eaie) — unreadable
+  if (/[aeiou]{4,}/i.test(lc)) score -= 35;
+  else if (/[aeiou]{3,}/i.test(lc)) score -= 12;
+
+  // Final consonant cluster check. English / Indian names usually
+  // end in a vowel, single consonant, or one of these clusters.
+  var endingClusters = ['th','sh','ch','ck','ll','nn','ng','st','rd','rk','rt','rl','sk','rn','lt','mp','nd','rs','rm','lk','lm','ls','rp','ss','ff','mm','tt','ph','pt'];
+  var clusterMatch = lc.match(/[bcdfghjklmnpqrstvwxyz]{2,}$/);
+  if (clusterMatch){
+    var c = clusterMatch[0];
+    var last2 = c.slice(-2);
+    if (c.length >= 3) score -= 30;                              // 3-letter ending cluster (vhl, nhk)
+    if (endingClusters.indexOf(last2) === -1) score -= 20;       // unusual 2-letter ending (hl, hk, hr, hs)
+  }
+
+  // Awkward H placements: lh, mh, nh, rh — uncommon in Indian/English names
+  // (kh, sh, ch, th, ph are fine; bh, dh, gh are also OK in Indian names).
+  if (/[lmnr]h/.test(lc)) score -= 12;
+
+  // Doubled hard consonants at start (bb-, dd-, gg-) read awkward
+  if (/^(bb|dd|gg|kk|pp|tt|ff)/.test(lc)) score -= 18;
+
+  // Doubled H mid-name ("hh") is almost always awkward
+  if (/hh/.test(lc)) score -= 18;
+
+  // Doubled v/k/x mid-name reads awkward
+  if (/(vv|xx|kk|qq)/.test(lc)) score -= 12;
+
+  // Mid-name H sandwiched between two consonants (ahkr, ehlt) — awkward
+  if (/[bcdfgjklmnpqrstvwxyz]h[bcdfgjklmnpqrstvwxyz]/.test(lc)) score -= 10;
+
+  // Soft, vowel-final endings get a small bonus (most natural)
+  if (/[aeiouy]$/.test(lc)) score += 4;
+  if (/(ya|ia|ja|ah|ai|ee|aa)$/.test(lc)) score += 2;
+
+  return Math.max(20, Math.min(100, score));
+}
+
 // ── ALIGNED NAME CORRECTION ENGINE ───────────────────────────
 // Tweaks FIRST NAME ONLY with phonetic additions (same sound) to
 // improve Chaldean alignment. Brute-forces candidate strings via
@@ -374,6 +428,11 @@ function generateAlignedCorrectedNames(fullName, moolank, destNum){
     // current name so the numbers are directly comparable.
     var pct = (reduced===moolank) ? 100 : compatPct(reduced, nt, moolank, destNum);
     if(pct < 70) return;
+    // Naturalness gate (phase 2). Reject candidates that look or
+    // sound awkward (Aaravhl, Mohanhk, Jiyaaaa-class). Still keep
+    // some headroom so we always have a pool to pick from.
+    var nat = naturalnessScore(capped);
+    if(nat < 55) return;
     seen.add(lc);
     pool.push({
       firstName: capped,
@@ -382,7 +441,11 @@ function generateAlignedCorrectedNames(fullName, moolank, destNum){
       restSum: restSum,
       newTotal: nt,
       nameNum: reduced,
-      alignmentPct: pct
+      alignmentPct: pct,
+      naturalness: nat,
+      // Combined ranking: alignment matters most (paid promise) but
+      // a beautiful name beats a slightly higher-aligned ugly one.
+      combinedScore: Math.round(pct*0.65 + nat*0.35)
     });
   }
 
@@ -406,11 +469,44 @@ function generateAlignedCorrectedNames(fullName, moolank, destNum){
     }
   }
 
-  // Rank: higher score first; on ties, shorter name (more natural).
+  // Rank: combinedScore desc (alignment-weighted naturalness),
+  // then alignmentPct desc, then shortest name (most natural).
   pool.sort(function(a,b){
+    if(b.combinedScore !== a.combinedScore) return b.combinedScore - a.combinedScore;
     if(b.alignmentPct !== a.alignmentPct) return b.alignmentPct - a.alignmentPct;
     return a.firstName.length - b.firstName.length;
   });
+
+  // If the strict naturalness gate left us with fewer than 3
+  // candidates, fall back to a relaxed pass so we still meet the
+  // "always 3 options" contract. This is rare in practice.
+  if (pool.length < 3) {
+    var relaxed = [];
+    for (var ri = 0; ri < OPS.length && relaxed.length + pool.length < 6; ri++){
+      var v = OPS[ri](lower); if (!v) continue;
+      var lc2 = v.toLowerCase();
+      if (seen.has(lc2)) continue;
+      var cap2 = lc2.charAt(0).toUpperCase() + lc2.slice(1);
+      var nf2 = chalSum(cap2);
+      var nt2 = nf2 + restSum;
+      var rd2 = reduce(nt2);
+      var pc2 = (rd2 === moolank) ? 100 : compatPct(rd2, nt2, moolank, destNum);
+      if (pc2 < 70) continue;
+      seen.add(lc2);
+      relaxed.push({
+        firstName: cap2,
+        fullName: restStr ? cap2+' '+restStr : cap2,
+        newFirstSum: nf2,
+        restSum: restSum,
+        newTotal: nt2,
+        nameNum: rd2,
+        alignmentPct: pc2,
+        naturalness: naturalnessScore(cap2),
+        combinedScore: Math.round(pc2*0.65 + naturalnessScore(cap2)*0.35)
+      });
+    }
+    pool = pool.concat(relaxed);
+  }
 
   var top3 = pool.slice(0, 3);
   return {corrections: top3, delta: target-total, target: target, currentSum: total};
