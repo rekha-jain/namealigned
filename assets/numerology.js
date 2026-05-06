@@ -143,32 +143,35 @@ function initFaq(){
 document.addEventListener('DOMContentLoaded',initFaq);
 
 // ── ALIGNED NAME CORRECTION ENGINE ───────────────────────────
-// Tweaks FIRST NAME ONLY with phonetic additions (same sound) so
-// that reduce(chalSum(fullName)) === moolank  →  100% alignment.
+// Tweaks FIRST NAME ONLY with phonetic additions (same sound) to
+// improve Chaldean alignment. Brute-forces candidate strings via
+// 1-, 2-, and 3-op composition over a phonetic pool, scores each
+// candidate using compatPct (same scoring used elsewhere in the
+// report), then returns exactly 3 candidates each scoring ≥ 70%.
+// Higher-scoring candidates rank first; among equal scores the
+// shorter (more natural) name wins.
 //
-// Strategy: brute-force candidate generation. We compose 1, 2, or 3
-// phonetic operations (append-A, append-H, double-final-vowel,
-// insert-H-after-first-vowel, insert-Y-before-final-vowel, append
-// soft consonant, etc.) on the first name, then VERIFY the actual
-// Chaldean sum of each candidate against the target. We never trust
-// pre-declared "delta" values — every candidate is recomputed,
-// which is what the previous version got wrong (it skipped real
-// matches because the declared delta of compound ops didn't match
-// what they actually added once concatenated).
+// Note: compatPct caps at 98%, so we override to 100% when the
+// candidate's reduced name-number equals moolank (perfect resonance
+// — that's the report's existing convention for "fully aligned").
 //
-// Returns up to 6 distinct phonetic variants ordered by
-// naturalness (single-op > two-op > three-op).
-function generateAlignedCorrectedNames(fullName, moolank){
+// Returns: {corrections:[...], delta, target, currentSum, alreadyAligned?}
+// where each correction has alignmentPct ∈ [70, 100].
+function generateAlignedCorrectedNames(fullName, moolank, destNum){
   var parts=fullName.trim().split(/\s+/);
   var firstName=parts[0], restStr=parts.slice(1).join(' ');
   var firstSum=chalSum(firstName), restSum=chalSum(restStr);
   var total=firstSum+restSum;
+  if(destNum==null) destNum=moolank;
 
-  // Smallest targetSum >= total where reduce(targetSum) === moolank
+  // Smallest targetSum >= total where reduce → moolank (used only
+  // for the legacy delta/target fields that the rendering layer
+  // reads to phrase the "phonetic correction requires adding N"
+  // fallback).
   var target=null;
   for(var t=total;t<=total+60;t++){ if(reduce(t)===moolank){target=t;break;} }
-  if(target===null) return {corrections:[],delta:0,target:total,currentSum:total};
-  if(target===total) return {corrections:[],delta:0,target:total,currentSum:total,alreadyAligned:true};
+  if(target===null) target=total;
+  if(reduce(total)===moolank) return {corrections:[],delta:0,target:total,currentSum:total,alreadyAligned:true};
 
   // Phonetic operation pool, ordered by naturalness for Indian
   // names. Each op takes a lowercase string and returns a candidate
@@ -212,48 +215,59 @@ function generateAlignedCorrectedNames(fullName, moolank){
 
   var lower=firstName.toLowerCase();
   var seen=new Set([lower]);
-  var results=[];
+  var pool=[];
 
   function consider(variant){
-    if(results.length>=6 || !variant) return;
+    if(!variant) return;
     var lc=variant.toLowerCase();
     if(seen.has(lc)) return;
     var capped=lc.charAt(0).toUpperCase()+lc.slice(1);
     var nf=chalSum(capped);
     var nt=nf+restSum;
-    if(reduce(nt)!==moolank) return;
+    var reduced=reduce(nt);
+    // Convention: name-number === moolank means full resonance (100%).
+    // Otherwise use the same compatPct scorer used for the user's
+    // current name so the numbers are directly comparable.
+    var pct = (reduced===moolank) ? 100 : compatPct(reduced, nt, moolank, destNum);
+    if(pct < 70) return;
     seen.add(lc);
-    results.push({
+    pool.push({
       firstName: capped,
-      fullName:  restStr ? capped+' '+restStr : capped,
+      fullName: restStr ? capped+' '+restStr : capped,
       newFirstSum: nf,
       restSum: restSum,
       newTotal: nt,
-      nameNum: moolank
+      nameNum: reduced,
+      alignmentPct: pct
     });
   }
 
-  // Pass 1, single op
-  for(var i=0;i<OPS.length && results.length<6;i++){
-    consider(OPS[i](lower));
-  }
+  // Pass 1, single op (most natural)
+  for(var i=0;i<OPS.length;i++){ consider(OPS[i](lower)); }
   // Pass 2, two-op composition
-  for(var i2=0;i2<OPS.length && results.length<6;i2++){
+  for(var i2=0;i2<OPS.length;i2++){
     var v1=OPS[i2](lower); if(!v1) continue;
-    for(var j2=0;j2<OPS.length && results.length<6;j2++){
-      consider(OPS[j2](v1));
-    }
+    for(var j2=0;j2<OPS.length;j2++){ consider(OPS[j2](v1)); }
   }
-  // Pass 3, three-op composition (deep fallback for tricky deltas)
-  for(var i3=0;i3<OPS.length && results.length<6;i3++){
-    var w1=OPS[i3](lower); if(!w1) continue;
-    for(var j3=0;j3<OPS.length && results.length<6;j3++){
-      var w2=OPS[j3](w1); if(!w2) continue;
-      for(var k3=0;k3<OPS.length && results.length<6;k3++){
-        consider(OPS[k3](w2));
+  // Pass 3, three-op composition (only if we still need more variety)
+  if(pool.length < 24){
+    for(var i3=0;i3<OPS.length && pool.length<48;i3++){
+      var w1=OPS[i3](lower); if(!w1) continue;
+      for(var j3=0;j3<OPS.length && pool.length<48;j3++){
+        var w2=OPS[j3](w1); if(!w2) continue;
+        for(var k3=0;k3<OPS.length && pool.length<48;k3++){
+          consider(OPS[k3](w2));
+        }
       }
     }
   }
 
-  return {corrections:results, delta:target-total, target:target, currentSum:total};
+  // Rank: higher score first; on ties, shorter name (more natural).
+  pool.sort(function(a,b){
+    if(b.alignmentPct !== a.alignmentPct) return b.alignmentPct - a.alignmentPct;
+    return a.firstName.length - b.firstName.length;
+  });
+
+  var top3 = pool.slice(0, 3);
+  return {corrections: top3, delta: target-total, target: target, currentSum: total};
 }

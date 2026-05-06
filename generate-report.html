@@ -2160,7 +2160,7 @@ hr.divider{display:none;}
     var cdEntry = CD[nameRaw];
 
     // ── CORRECTION ENGINE ─────────────────────────────────────────
-    var corrResult = generateAlignedCorrectedNames(name, birthNum);
+    var corrResult = generateAlignedCorrectedNames(name, birthNum, destNum);
     var corrections = corrResult.corrections;
 
     // ── CURRENT NAME CARD ─────────────────────────────────────────
@@ -2231,8 +2231,10 @@ hr.divider{display:none;}
                 '<strong style="color:#f0b429;">'+c.newTotal+'</strong> → <strong style="color:#f0b429;">'+c.nameNum+'</strong> ('+getPlanet(c.nameNum)+')'+
                 (cde?'<br><span style="color:rgba(240,180,41,.5);">Compound: '+cpdLabel.slice(3)+'</span>':'')+
               '</div>'+
-              '<div style="color:#f0b429;font-size:40px;font-family:sans-serif;font-weight:700;line-height:1;margin-bottom:3px;">100<span style="font-size:18px;font-weight:400;">%</span></div>'+
-              '<div style="background:#f0b429;color:#03090f;border-radius:20px;padding:4px 14px;font-size:11px;font-weight:700;display:inline-block;margin-top:.5rem;">★ Fully Aligned</div>'+
+              '<div style="color:#f0b429;font-size:40px;font-family:sans-serif;font-weight:700;line-height:1;margin-bottom:3px;">'+(c.alignmentPct||100)+'<span style="font-size:18px;font-weight:400;">%</span></div>'+
+              ((c.alignmentPct||100) >= 100
+                ? '<div style="background:#f0b429;color:#03090f;border-radius:20px;padding:4px 14px;font-size:11px;font-weight:700;display:inline-block;margin-top:.5rem;">★ Fully Aligned</div>'
+                : '<div style="background:rgba(240,180,41,.2);color:#f0b429;border:1px solid rgba(240,180,41,.5);border-radius:20px;padding:4px 14px;font-size:11px;font-weight:700;display:inline-block;margin-top:.5rem;">✦ Strongly Aligned</div>')+
               '<div style="margin-top:.65rem;padding-top:.65rem;border-top:1px dashed rgba(240,180,41,.25);font-family:sans-serif;font-size:11.5px;color:rgba(255,255,255,.7);line-height:1.55;"><strong style="color:#f0b429;">'+getPlanet(c.nameNum)+'</strong> '+(PLANET_BENEFITS[c.nameNum]||'amplifies your core energies')+'</div>'+
             '</div>';
         });
