@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-C1JMQTNHDE"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-C1JMQTNHDE');
+</script>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<meta name="robots" content="noindex, nofollow"/>
+<title>Your Insight Card · NameAligned</title>
+<link rel="icon" type="image/svg+xml" href="/assets/namealigned-favicon.svg"/>
+<style>
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;background:#0a0820;color:#f0ece0;font-family:Inter,system-ui,-apple-system,'Helvetica Neue',Arial,sans-serif;min-height:100%}
+  .wrap{max-width:760px;margin:0 auto;padding:32px 20px 48px;text-align:center}
+  .brand{font-family:Georgia,serif;color:#f5d060;font-size:14px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;margin-bottom:6px}
+  h1{font-family:Georgia,serif;font-size:22px;font-weight:600;color:#fff;margin:0 0 6px;line-height:1.3}
+  .sub{font-size:13px;color:#9d8db2;margin:0 0 24px;line-height:1.55}
+  .card-wrap{position:relative;border-radius:14px;overflow:hidden;box-shadow:0 18px 48px rgba(0,0,0,.5);margin-bottom:18px;background:#1a0e52}
+  canvas{display:block;width:100%;height:auto;max-width:100%}
+  .actions{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;margin-bottom:32px}
+  .btn{display:inline-flex;align-items:center;gap:8px;padding:11px 20px;border-radius:8px;font-size:14px;font-weight:600;text-decoration:none;cursor:pointer;border:0;font-family:inherit;transition:transform .12s ease}
+  .btn:hover{transform:translateY(-1px)}
+  .btn-gold{background:#f0b429;color:#0a0820}
+  .btn-gold:hover{background:#f5c247}
+  .btn-outline{background:rgba(255,255,255,.06);color:#f0ece0;border:1px solid rgba(240,180,41,.45)}
+  .btn-outline:hover{background:rgba(240,180,41,.15)}
+  .footer-cta{margin-top:24px;padding:18px 20px;background:rgba(240,180,41,.06);border:1px solid rgba(240,180,41,.25);border-radius:12px;font-size:13px;color:#9d8db2;line-height:1.6}
+  .footer-cta strong{color:#f5d060;display:block;margin-bottom:4px;font-size:14px}
+  .footer-cta a{color:#f0b429;font-weight:600;text-decoration:none}
+  .footer-cta a:hover{text-decoration:underline}
+  @media (max-width:560px){
+    .wrap{padding:20px 14px 36px}
+    h1{font-size:19px}
+    .actions{flex-direction:column}
+    .btn{width:100%;justify-content:center}
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <div class="brand">✦ NameAligned</div>
+  <h1 id="cardTitle">Your Insight Card</h1>
+  <p class="sub">A strengths-led keepsake based on Chaldean numerology. Save it, share it, or run your own.</p>
+
+  <div class="card-wrap">
+    <canvas id="shareCardCanvas" width="1200" height="630"></canvas>
+  </div>
+
+  <div class="actions">
+    <a id="downloadBtn" href="#" class="btn btn-gold" download="namealigned-insight-card.png">⬇ Save image</a>
+    <a id="waBtn" href="#" target="_blank" rel="noopener" class="btn btn-outline">📲 Share on WhatsApp</a>
+    <a href="/analyzer" class="btn btn-outline">✦ Run my own</a>
+  </div>
+
+  <div class="footer-cta">
+    <strong>Want your full Chaldean reading?</strong>
+    Get a personalised destiny report — name optimisation, 5-year forecast, career & wealth domains and more for <strong style="display:inline">INR 199/-</strong>. <a href="/report">See full report →</a>
+  </div>
+</div>
+
+<script>
+// Per-Moolank profile copy — kept in lockstep with the same data
+// in generate-report.html → MOOLANK_PROFILES_PDF. If you change
+// strengths/insight there, mirror it here.
+var MOOLANK_PROFILES = {
+  1:{planet:'Sun',planetIcon:'☀',qualities:'Leadership · Confidence · Vitality',
+     strengths:[{icon:'☀',title:'Natural Leader',desc:'You inspire and motivate people around you.'},
+                {icon:'◎',title:'Independent Thinker',desc:'You value your freedom and trust your judgment.'},
+                {icon:'✦',title:'Creative & Original',desc:'You bring fresh ideas and unique perspectives.'}],
+     insight:'You take your time before deciding, but once you\'re sure, you move forward with full power.'},
+  2:{planet:'Moon',planetIcon:'☾',qualities:'Sensitivity · Intuition · Harmony',
+     strengths:[{icon:'☾',title:'Empathic Listener',desc:'You sense what others feel before they say it.'},
+                {icon:'◇',title:'Diplomatic',desc:'You bring people together with quiet grace.'},
+                {icon:'✧',title:'Imaginative',desc:'Your inner world is rich, gentle, and creative.'}],
+     insight:'You feel things deeply, but rarely show how much, until the right person earns it.'},
+  3:{planet:'Jupiter',planetIcon:'♃',qualities:'Expression · Optimism · Joy',
+     strengths:[{icon:'✦',title:'Natural Communicator',desc:'Your words carry warmth and energy.'},
+                {icon:'☼',title:'Optimist',desc:'You see the upside in almost any situation.'},
+                {icon:'✧',title:'Creative Spark',desc:'You make life feel lighter for everyone around you.'}],
+     insight:'You make life feel lighter for everyone, except, sometimes, yourself.'},
+  4:{planet:'Rahu',planetIcon:'◈',qualities:'Innovation · Logic · Structure',
+     strengths:[{icon:'◈',title:'Systems Thinker',desc:'You spot patterns most people miss.'},
+                {icon:'⚙',title:'Unconventional',desc:'You challenge the status quo with substance.'},
+                {icon:'◉',title:'Quietly Reliable',desc:'You build things that genuinely last.'}],
+     insight:'You see what others miss, and quietly fix it without taking credit.'},
+  5:{planet:'Mercury',planetIcon:'☿',qualities:'Adaptability · Wit · Communication',
+     strengths:[{icon:'⚡',title:'Quick Mind',desc:'You absorb and process at lightning speed.'},
+                {icon:'✶',title:'Versatile',desc:'You move comfortably between very different worlds.'},
+                {icon:'✦',title:'Charismatic',desc:'People remember the energy you bring into a room.'}],
+     insight:'Your mind moves faster than most rooms can keep up with.'},
+  6:{planet:'Venus',planetIcon:'♀',qualities:'Harmony · Love · Aesthetics',
+     strengths:[{icon:'❤',title:'Caretaker',desc:'You hold others together with quiet strength.'},
+                {icon:'✿',title:'Aesthetic Sense',desc:'You bring beauty into ordinary moments.'},
+                {icon:'✦',title:'Devoted',desc:'Your loyalty runs deep and steady.'}],
+     insight:'You hold others together, even when nobody asks who holds you.'},
+  7:{planet:'Ketu',planetIcon:'◉',qualities:'Wisdom · Introspection · Depth',
+     strengths:[{icon:'◉',title:'Analytical',desc:'You think deeply before you speak.'},
+                {icon:'✦',title:'Spiritual Seeker',desc:'You ask the questions others quietly avoid.'},
+                {icon:'◇',title:'Discerning',desc:'You see through surfaces to what\'s real.'}],
+     insight:'You research everything for weeks, then decide in a single moment.'},
+  8:{planet:'Saturn',planetIcon:'♄',qualities:'Discipline · Authority · Resilience',
+     strengths:[{icon:'⚖',title:'Strategic',desc:'You play long games most people can\'t see.'},
+                {icon:'◆',title:'Resilient',desc:'You hold steady when others panic.'},
+                {icon:'✦',title:'Accountable',desc:'Your word is your reputation.'}],
+     insight:'You look composed, but you carry weight most people never see.'},
+  9:{planet:'Mars',planetIcon:'♂',qualities:'Courage · Energy · Action',
+     strengths:[{icon:'⚔',title:'Bold',desc:'You move first while others wait.'},
+                {icon:'❤',title:'Protective',desc:'You defend the people you love fiercely.'},
+                {icon:'✦',title:'Driven',desc:'Your fire fuels everyone around you.'}],
+     insight:'You move fast, feel hard, and don\'t apologise for either.'}
+};
+
+function pdfRoundRect(ctx,x,y,w,h,r){
+  ctx.beginPath();
+  ctx.moveTo(x+r,y); ctx.lineTo(x+w-r,y);
+  ctx.quadraticCurveTo(x+w,y,x+w,y+r); ctx.lineTo(x+w,y+h-r);
+  ctx.quadraticCurveTo(x+w,y+h,x+w-r,y+h); ctx.lineTo(x+r,y+h);
+  ctx.quadraticCurveTo(x,y+h,x,y+h-r); ctx.lineTo(x,y+r);
+  ctx.quadraticCurveTo(x,y,x+r,y); ctx.closePath();
+}
+
+function wrapTextSC(ctx, text, x, y, maxWidth, lineHeight, maxLines, align){
+  var words = text.split(' ');
+  var lines = [], line = '';
+  for(var n=0;n<words.length;n++){
+    var test = line + words[n] + ' ';
+    if(ctx.measureText(test).width > maxWidth && line){
+      lines.push(line.trim());
+      line = words[n] + ' ';
+      if(lines.length >= maxLines-1){
+        var rest = words.slice(n).join(' ');
+        if(ctx.measureText(rest).width > maxWidth){
+          while(rest.length && ctx.measureText(rest+'…').width > maxWidth) rest = rest.slice(0,-1);
+          rest = rest.trim() + '…';
+        }
+        lines.push(rest); line = ''; break;
+      }
+    } else { line = test; }
+  }
+  if(line.trim()) lines.push(line.trim());
+  for(var i=0;i<lines.length && i<maxLines;i++){
+    ctx.fillText(lines[i], x, y + i*lineHeight);
+  }
+}
+
+function renderCard(displayName, moolank){
+  var canvas = document.getElementById('shareCardCanvas');
+  if(!canvas) return;
+  var ctx = canvas.getContext('2d');
+  var W = 1200, H = 630;
+  var profile = MOOLANK_PROFILES[moolank] || MOOLANK_PROFILES[1];
+
+  // Background
+  var bg = ctx.createLinearGradient(0,0,0,H);
+  bg.addColorStop(0,'#1a0e52'); bg.addColorStop(0.6,'#2a1180'); bg.addColorStop(1,'#0d0521');
+  ctx.fillStyle = bg; ctx.fillRect(0,0,W,H);
+  var horiz = ctx.createLinearGradient(0,H-240,0,H);
+  horiz.addColorStop(0,'rgba(245,200,110,0)');
+  horiz.addColorStop(0.6,'rgba(245,180,100,0.06)');
+  horiz.addColorStop(1,'rgba(245,150,80,0.18)');
+  ctx.fillStyle = horiz; ctx.fillRect(0,H-240,W,240);
+  var glow = ctx.createRadialGradient(320,H/2+30,30,320,H/2+30,280);
+  glow.addColorStop(0,'rgba(245,208,96,0.22)');
+  glow.addColorStop(0.5,'rgba(124,58,237,0.10)');
+  glow.addColorStop(1,'rgba(0,0,0,0)');
+  ctx.fillStyle = glow; ctx.fillRect(0,0,W,H);
+  ctx.fillStyle = 'rgba(255,255,255,0.6)';
+  for(var i=0;i<70;i++){
+    var x = Math.random()*W, y = Math.random()*H, r = Math.random()*1.5 + 0.3;
+    ctx.globalAlpha = Math.random()*0.6 + 0.15;
+    ctx.beginPath(); ctx.arc(x,y,r,0,Math.PI*2); ctx.fill();
+  }
+  ctx.globalAlpha = 1;
+  ctx.strokeStyle = 'rgba(201,162,39,0.18)'; ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(W/2,110); ctx.lineTo(W/2,H-50); ctx.stroke();
+
+  // Header
+  ctx.textAlign = 'left';
+  ctx.fillStyle = '#f5d060';
+  ctx.font = '700 28px "Helvetica Neue", Arial, sans-serif';
+  ctx.fillText('✦  NameAligned', 50, 60);
+  ctx.fillStyle = 'rgba(255,255,255,0.55)';
+  ctx.font = '500 13px "Helvetica Neue", Arial, sans-serif';
+  ctx.fillText('Alignment. Insight. Empowerment.', 50, 82);
+  ctx.font = '600 15px "Helvetica Neue", Arial, sans-serif';
+  var pillT = 'Chaldean Numerology';
+  var pillTW = ctx.measureText(pillT).width;
+  var pillW = pillTW + 64, pillH = 36, pillX = W-50-pillW, pillY = 46;
+  pdfRoundRect(ctx, pillX, pillY, pillW, pillH, 18);
+  ctx.fillStyle = 'rgba(255,255,255,0.06)'; ctx.fill();
+  ctx.strokeStyle = 'rgba(201,162,39,0.45)'; ctx.lineWidth = 1.4; ctx.stroke();
+  ctx.fillStyle = '#f5d060';
+  ctx.fillText(pillT, pillX+18, pillY+23);
+  ctx.fillText('◇', pillX+pillW-26, pillY+24);
+
+  // Left column
+  var lcx = 320;
+  ctx.textAlign = 'center';
+  ctx.fillStyle = 'rgba(245,208,96,0.85)';
+  ctx.font = '600 18px "Helvetica Neue", Arial, sans-serif';
+  ctx.fillText('HEY  ✦', lcx, 145);
+  ctx.fillStyle = '#ffffff';
+  var nameSize = 76;
+  ctx.font = 'italic 700 ' + nameSize + 'px Georgia, serif';
+  while(ctx.measureText(displayName).width > 480 && nameSize > 38){
+    nameSize -= 4;
+    ctx.font = 'italic 700 ' + nameSize + 'px Georgia, serif';
+  }
+  ctx.fillText(displayName, lcx, 215);
+  ctx.strokeStyle = 'rgba(201,162,39,0.85)'; ctx.lineWidth = 1.5;
+  ctx.beginPath(); ctx.moveTo(lcx-70,240); ctx.lineTo(lcx+70,240); ctx.stroke();
+  ctx.fillStyle = 'rgba(255,255,255,0.7)';
+  ctx.font = 'italic 18px Georgia, serif';
+  ctx.fillText('Your Driver Number', lcx, 268);
+
+  var ringX = lcx, ringY = 395, ringR = 92;
+  ctx.strokeStyle = 'rgba(201,162,39,0.55)'; ctx.lineWidth = 1.5;
+  ctx.beginPath(); ctx.arc(ringX,ringY,ringR,0,Math.PI*2); ctx.stroke();
+  ctx.strokeStyle = 'rgba(201,162,39,0.22)'; ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.arc(ringX,ringY,ringR+20,0,Math.PI*2); ctx.stroke();
+  ctx.fillStyle = 'rgba(245,208,96,0.7)';
+  for(var a=0;a<8;a++){
+    var ang = a*Math.PI/4;
+    var px = ringX + Math.cos(ang)*(ringR+20);
+    var py = ringY + Math.sin(ang)*(ringR+20);
+    ctx.beginPath(); ctx.arc(px,py,2.5,0,Math.PI*2); ctx.fill();
+  }
+  ctx.shadowColor = 'rgba(245,208,96,0.55)'; ctx.shadowBlur = 38;
+  ctx.fillStyle = '#f5d060';
+  ctx.font = '700 130px Georgia, serif';
+  ctx.textBaseline = 'middle';
+  ctx.fillText(String(moolank), ringX, ringY+4);
+  ctx.shadowBlur = 0;
+  ctx.textBaseline = 'alphabetic';
+
+  var rpY = 520;
+  ctx.font = '700 11px "Helvetica Neue", Arial, sans-serif';
+  var rpT = 'RULING PLANET', rpTW = ctx.measureText(rpT).width;
+  var rpW = rpTW+60, rpH = 24, rpX = lcx-rpW/2;
+  pdfRoundRect(ctx, rpX, rpY-16, rpW, rpH, 12);
+  ctx.fillStyle = 'rgba(255,255,255,0.04)'; ctx.fill();
+  ctx.strokeStyle = 'rgba(201,162,39,0.55)'; ctx.lineWidth = 1; ctx.stroke();
+  ctx.fillStyle = '#f5d060';
+  ctx.fillText(rpT, lcx, rpY);
+  ctx.fillStyle = '#ffffff';
+  ctx.font = '700 26px Georgia, serif';
+  ctx.fillText(profile.planetIcon + '  ' + profile.planet, lcx, rpY+38);
+  ctx.fillStyle = 'rgba(245,208,96,0.85)';
+  ctx.font = '500 13px "Helvetica Neue", Arial, sans-serif';
+  ctx.fillText(profile.qualities, lcx, rpY+65);
+
+  // Right column
+  var rcx = 640;
+  ctx.textAlign = 'left';
+  ctx.fillStyle = '#c9a227';
+  ctx.font = '700 13px "Helvetica Neue", Arial, sans-serif';
+  ctx.fillText('YOUR CORE STRENGTHS', rcx, 138);
+  var startY = 170, rowH = 72;
+  profile.strengths.forEach(function(s, idx){
+    var y = startY + idx*rowH;
+    var cx = rcx+22, cy = y+18;
+    ctx.fillStyle = 'rgba(245,208,96,0.13)';
+    ctx.beginPath(); ctx.arc(cx,cy,22,0,Math.PI*2); ctx.fill();
+    ctx.strokeStyle = 'rgba(201,162,39,0.5)'; ctx.lineWidth = 1.2;
+    ctx.beginPath(); ctx.arc(cx,cy,22,0,Math.PI*2); ctx.stroke();
+    ctx.fillStyle = '#f5d060';
+    ctx.font = '600 22px Georgia, serif';
+    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillText(s.icon, cx, cy+1);
+    ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic';
+    ctx.fillStyle = '#ffffff';
+    ctx.font = '700 18px "Helvetica Neue", Arial, sans-serif';
+    ctx.fillText(s.title, rcx+60, y+14);
+    ctx.fillStyle = 'rgba(255,255,255,0.7)';
+    ctx.font = '400 14px "Helvetica Neue", Arial, sans-serif';
+    ctx.fillText(s.desc, rcx+60, y+36);
+  });
+
+  ctx.strokeStyle = 'rgba(201,162,39,0.25)'; ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(rcx,392); ctx.lineTo(W-50,392); ctx.stroke();
+
+  ctx.fillStyle = '#c9a227';
+  ctx.font = '700 13px "Helvetica Neue", Arial, sans-serif';
+  ctx.fillText('INSIGHT THAT RELATES TO YOU', rcx, 422);
+  ctx.fillStyle = 'rgba(245,208,96,0.7)';
+  ctx.font = '700 56px Georgia, serif';
+  ctx.fillText('“', rcx-4, 470);
+  ctx.fillStyle = 'rgba(255,255,255,0.92)';
+  ctx.font = 'italic 22px Georgia, serif';
+  wrapTextSC(ctx, profile.insight, rcx+36, 458, W-90-rcx, 30, 3, 'left');
+  ctx.fillStyle = 'rgba(245,208,96,0.7)';
+  ctx.font = '700 56px Georgia, serif';
+  ctx.textAlign = 'right';
+  ctx.fillText('”', W-50, 540);
+  ctx.textAlign = 'left';
+
+  ctx.fillStyle = 'rgba(255,255,255,0.65)';
+  ctx.font = '500 12px "Helvetica Neue", Arial, sans-serif';
+  ctx.fillText('Discover your full numerology report at', rcx, 568);
+  var ctaText = 'namealigned.com/analyzer  →';
+  ctx.font = '700 15px "Helvetica Neue", Arial, sans-serif';
+  var ctaTW = ctx.measureText(ctaText).width;
+  var ctaW = ctaTW+36, ctaH = 36, ctaX = rcx, ctaY = 580;
+  var ctaGrad = ctx.createLinearGradient(ctaX, ctaY, ctaX+ctaW, ctaY);
+  ctaGrad.addColorStop(0,'#f5d060'); ctaGrad.addColorStop(1,'#c9a227');
+  ctx.fillStyle = ctaGrad;
+  pdfRoundRect(ctx, ctaX, ctaY, ctaW, ctaH, 18); ctx.fill();
+  ctx.fillStyle = '#0c1a2e';
+  ctx.fillText(ctaText, ctaX+18, ctaY+23);
+}
+
+(function init(){
+  var params = new URLSearchParams(location.search);
+  var rawName = (params.get('n') || 'You').trim();
+  var moolank = parseInt(params.get('m'), 10);
+  if (!moolank || moolank < 1 || moolank > 9) moolank = 1;
+
+  // Sanitise: only first word, capitalise, max 24 chars
+  var firstName = rawName.split(/\s+/)[0].slice(0, 24);
+  var displayName = firstName ? (firstName.charAt(0).toUpperCase() + firstName.slice(1).toLowerCase()) : 'You';
+
+  document.getElementById('cardTitle').textContent = displayName + '’s Insight Card';
+
+  renderCard(displayName, moolank);
+
+  // Wire up Save image
+  var canvas = document.getElementById('shareCardCanvas');
+  var dl = document.getElementById('downloadBtn');
+  dl.addEventListener('click', function(e){
+    e.preventDefault();
+    try {
+      var url = canvas.toDataURL('image/png');
+      var a = document.createElement('a');
+      a.href = url;
+      a.download = (displayName + '-insight-card.png').toLowerCase();
+      document.body.appendChild(a); a.click(); a.remove();
+    } catch(err){ console.warn('Save failed', err); alert('Could not save the image. Try right-clicking the card and choosing "Save image as".'); }
+  });
+
+  // WhatsApp share — text + URL (most chat apps render OG preview from the URL)
+  var wa = document.getElementById('waBtn');
+  var shareUrl = location.href;
+  var msg = displayName + '’s Chaldean numerology insight — Driver Number ' + moolank + '. ' + shareUrl;
+  wa.href = 'https://wa.me/?text=' + encodeURIComponent(msg);
+})();
+</script>
+
+</body>
+</html>

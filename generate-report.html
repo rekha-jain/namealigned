@@ -751,8 +751,8 @@ hr.divider{display:none;}
       <div class="sc-bottom">
         <img id="shareCardQR" alt="Scan QR" />
         <div class="sc-qr-text">
-          <strong>Scan to share your insight card</strong>
-          Opens a clean keepsake card for your Moolank — no personal details exposed. Safe to share on WhatsApp, Instagram or save.
+          <strong>Scan to open your insight card</strong>
+          Opens just this keepsake card on your phone — no DOB, no full analysis exposed. One tap to save the image or share it on WhatsApp.
         </div>
       </div>
       <div class="sc-caption">"Every name carries its own strengths. Discover what yours already supports, and how to enhance it further. → namealigned.com/analyzer"</div>
@@ -1388,16 +1388,16 @@ hr.divider{display:none;}
     // after page load sometimes refuse to render in print preview;
     // an <img> with a data: URL prints reliably across browsers.
     //
-    // Link target: the per-Moolank insight-card page (e.g.
-    // /share/2). Deliberately NOT the analyzer with name+DOB
-    // prefilled — users were reluctant to share a QR that exposed
-    // their personal data. The /share/<moolank> page shows just
-    // the strengths-led insight card for that Moolank with a
-    // generic CTA to run a fresh analysis.
+    // Link target: the dedicated /share-card page that renders
+    // ONLY this keepsake insight image (no full analysis, no DOB
+    // exposed). Carries first-name + moolank as URL params; the
+    // page sanitises both. Recipients see a clean shareable card
+    // and a CTA to run their own.
     try{
       var qrImg = document.getElementById('shareCardQR');
-      var moolank = (typeof birthNum === 'number' && birthNum >= 1 && birthNum <= 9) ? birthNum : 1;
-      var url = 'https://www.namealigned.com/share/' + moolank + '?ref=pdf-qr';
+      var qrMoolank = (typeof birthNum === 'number' && birthNum >= 1 && birthNum <= 9) ? birthNum : 1;
+      var qrFirstName = encodeURIComponent(((name||'You').trim().split(/\s+/)[0] || 'You').slice(0,24));
+      var url = 'https://www.namealigned.com/share-card?n=' + qrFirstName + '&m=' + qrMoolank + '&ref=pdf-qr';
       if(window.QRCode && qrImg){
         QRCode.toDataURL(url, {
           width: 216, margin: 1,
