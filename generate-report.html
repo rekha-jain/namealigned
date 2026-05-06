@@ -751,8 +751,8 @@ hr.divider{display:none;}
       <div class="sc-bottom">
         <img id="shareCardQR" alt="Scan QR" />
         <div class="sc-qr-text">
-          <strong>Scan to share this card</strong>
-          Opens namealigned.com on your phone with your insight pre-loaded, one tap to share on WhatsApp, Instagram or save.
+          <strong>Scan to share your insight card</strong>
+          Opens a clean keepsake card for your Moolank — no personal details exposed. Safe to share on WhatsApp, Instagram or save.
         </div>
       </div>
       <div class="sc-caption">"Every name carries its own strengths. Discover what yours already supports, and how to enhance it further. → namealigned.com/analyzer"</div>
@@ -1387,12 +1387,17 @@ hr.divider{display:none;}
     // Use <img> + toDataURL instead of <canvas>. Canvases drawn
     // after page load sometimes refuse to render in print preview;
     // an <img> with a data: URL prints reliably across browsers.
+    //
+    // Link target: the per-Moolank insight-card page (e.g.
+    // /share/2). Deliberately NOT the analyzer with name+DOB
+    // prefilled — users were reluctant to share a QR that exposed
+    // their personal data. The /share/<moolank> page shows just
+    // the strengths-led insight card for that Moolank with a
+    // generic CTA to run a fresh analysis.
     try{
       var qrImg = document.getElementById('shareCardQR');
-      var url = 'https://www.namealigned.com/analyzer?name='
-                + encodeURIComponent(name||'')
-                + (dob ? '&dob='+encodeURIComponent(dob) : '')
-                + '&ref=pdf-share';
+      var moolank = (typeof birthNum === 'number' && birthNum >= 1 && birthNum <= 9) ? birthNum : 1;
+      var url = 'https://www.namealigned.com/share/' + moolank + '?ref=pdf-qr';
       if(window.QRCode && qrImg){
         QRCode.toDataURL(url, {
           width: 216, margin: 1,
