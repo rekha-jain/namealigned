@@ -260,6 +260,12 @@
   #reportWrap{display:block!important;}
   .btn-print{display:none!important;}
 
+  /* ─ Kill all shadows in print ──────────────────────────────────
+     Many browsers render box-shadow as gray rectangles in print
+     preview, which appeared as ghost-bars behind cards. Remove
+     all shadows + soft blur effects so cards print cleanly. */
+  *{box-shadow:none!important;text-shadow:none!important;filter:none!important;}
+
   /* ─ Colour fidelity ────────────────────────────────────────── */
   *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;}
   body{background:#eaf6fa;}
@@ -407,6 +413,11 @@
   display:flex;align-items:center;gap:.7rem;
   line-height:1.4;
 }
+/* Inline 1-line explainer placed directly under each .sec-label.
+   Renders in BOTH screen and print, since hover tooltips can't
+   work on a printed page. Educational, neutral, brief. */
+.sec-hint{display:block;font-family:sans-serif;font-size:11.5px;line-height:1.55;color:var(--text3);font-style:italic;margin:-.35rem 0 .85rem;letter-spacing:0;text-transform:none;}
+@media print{ .sec-hint{font-size:10.5px!important;margin:-.2rem 0 .55rem!important;} }
 .sec-label::before{
   content:'';display:inline-block;width:28px;height:2.5px;
   background:linear-gradient(90deg,#c9a227,#9d7fff);border-radius:2px;flex-shrink:0;
@@ -578,12 +589,15 @@ hr.divider{display:none;}
 <div class="container">
 
   <!-- ─ 0. CHALDEAN NUMEROLOGY SUMMARY (Top-of-report authority) ── -->
-  <div class="rpt-section" style="background:linear-gradient(160deg,#1a0e52 0%,#3a1d80 60%,#0c3347 100%);color:#f0ece0;padding:1.75rem 1.75rem 1.5rem;border-radius:14px;border:1.5px solid rgba(201,162,39,.45);box-shadow:0 6px 30px rgba(26,14,82,.3);margin-bottom:1.5rem;">
-    <div style="font-family:'DM Sans',sans-serif;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:#c9a227;margin-bottom:.65rem;text-align:center;">🔮 Your Complete Chaldean Numerology Summary</div>
-    <div id="chaldeanSummary" style="font-family:Georgia,serif;font-size:14.5px;line-height:1.7;color:#e2d4f5;">
+  <!-- Softer parchment-cream gradient (was loud purple+teal). Higher
+       contrast text (deep navy on cream) for readability while
+       preserving the gold-accented premium aesthetic. -->
+  <div class="rpt-section" style="background:linear-gradient(170deg,#fbf7ed 0%,#f5efe0 100%);color:#1a1340;padding:1.85rem 1.85rem 1.6rem;border-radius:14px;border:1.5px solid rgba(157,127,77,.35);margin-bottom:1.5rem;">
+    <div style="font-family:'DM Sans',sans-serif;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:#8a6a1a;margin-bottom:.65rem;text-align:center;font-weight:700;">✦ Your Complete Chaldean Numerology Summary</div>
+    <div id="chaldeanSummary" style="font-family:Georgia,serif;font-size:14.5px;line-height:1.75;color:#2a2046;">
       <!-- Injected by JS -->
     </div>
-    <div style="text-align:center;margin-top:.85rem;padding-top:.85rem;border-top:1px dashed rgba(201,162,39,.3);font-family:sans-serif;font-size:11.5px;color:#9eb1c0;letter-spacing:.04em;">
+    <div style="text-align:center;margin-top:.85rem;padding-top:.85rem;border-top:1px dashed rgba(157,127,77,.35);font-family:sans-serif;font-size:11.5px;color:#7a6a4a;letter-spacing:.04em;font-style:italic;">
       Based on Chaldean numerology, the sound-vibration system used for over 2,500 years
     </div>
   </div>
@@ -591,6 +605,7 @@ hr.divider{display:none;}
   <!-- ─ 1. CORE NUMBERS ──────────────────────────────────────── -->
   <div class="rpt-section">
     <div class="sec-label">Your Core Chaldean Numbers</div>
+    <div class="sec-hint">Your three foundational numbers — Moolank (from your day of birth), Bhagyank (from your full date of birth) and Name Number (from your name's Chaldean sum). Together they describe how you operate, where destiny compounds your effort, and the vibration you carry into the world.</div>
     <div class="grid-3" id="coreNumbersGrid">
       <!-- Injected by JS -->
     </div>
@@ -601,6 +616,7 @@ hr.divider{display:none;}
   <!-- ─ 1b. COMBINATION NUMBER ──────────────────────────────── -->
   <div class="rpt-section" style="padding-top:0;">
     <div class="sec-label">Your Number Combination, <span id="comboLabel"></span></div>
+    <div class="sec-hint">The interplay between your Moolank and Bhagyank reveals a recurring life-rhythm — how you naturally take action, and how destiny tends to respond. Each combination has its own signature.</div>
     <div id="combinationSection"><!-- Injected by JS --></div>
   </div>
 
@@ -609,6 +625,7 @@ hr.divider{display:none;}
   <!-- ─ 2. ALIGNMENT BANNER + CHALDEAN ALIGNMENT BREAKDOWN + NAME SUGGESTIONS ─ -->
   <div class="rpt-section" style="padding-top:0;">
     <div class="sec-label">Chaldean Alignment Score</div>
+    <div class="sec-hint">A weighted measure of how well your name vibration interacts with your birth and destiny numbers. Higher alignment means less internal friction; lower alignment doesn't mean "bad" — just that your name carries different strengths than your birth pattern. The breakdown below shows how each dimension contributes.</div>
     <div class="align-banner" id="alignBanner">
       <!-- Injected by JS -->
     </div>
@@ -632,6 +649,7 @@ hr.divider{display:none;}
   <!-- ─ 3. LUCKY ATTRIBUTES ──────────────────────────────────── -->
   <div class="rpt-section" style="padding-top:0;">
     <div class="sec-label">Lucky Attributes, Moolank <span id="birthNumLabel"></span></div>
+    <div class="sec-hint">The colours, gemstone, day of the week, metal and element traditionally associated with your Moolank's ruling planet. Wearing or surrounding yourself with these tends to amplify your natural energetic signature.</div>
     <div class="attr-grid" id="attrsGrid">
       <!-- Injected by JS -->
     </div>
@@ -642,6 +660,7 @@ hr.divider{display:none;}
   <!-- ─ 4. 5-YEAR FORECAST ───────────────────────────────────── -->
   <div class="rpt-section long-section" style="padding-top:0;">
     <div class="sec-label">5-Year <span class="tt-anchor" data-tt="personalYear">Personal Year</span> Forecast</div>
+    <div class="sec-hint">Your Personal Year shifts each birthday and runs on a 9-year cycle — each year carrying its own theme (foundations, change, completion, etc.). Knowing the active cycle lets you time decisions to the energy of the year, rather than against it.</div>
     <p style="font-size:13px;color:var(--text2);font-family:sans-serif;margin-bottom:.75rem;">Your Personal Year cycles are derived from your <strong>Chaldean birth numbers</strong> and influence how planetary energies affect your life each year.</p>
     <div style="background:linear-gradient(135deg,rgba(220,38,38,.08),rgba(201,162,39,.06));border:1px solid rgba(201,162,39,.3);border-left:4px solid #c9a227;border-radius:var(--r);padding:.85rem 1.1rem;margin-bottom:1.25rem;font-family:sans-serif;font-size:13px;color:var(--text);line-height:1.55;">
       ⚡ <strong>Certain years act as activation points</strong> where decisions carry long-term impact. Knowing which years are yours gives you a decisive edge.
@@ -657,6 +676,7 @@ hr.divider{display:none;}
   <!-- ─ 5. CAREER & WEALTH ───────────────────────────────────── -->
   <div class="rpt-section" style="padding-top:0;">
     <div class="sec-label">Career &amp; Wealth Domains</div>
+    <div class="sec-hint">Career fields traditionally favoured by your ruling planets. Your Moolank governs the <em>how</em> of work (your daily style), and your Bhagyank governs the <em>where</em> of destiny (sectors that tend to compound your effort over time).</div>
     <p style="font-size:13px;color:var(--text2);font-family:sans-serif;margin-bottom:.5rem;">Your Moolank shapes your natural work style and raw talent; your Bhagyank shows where destiny compounds your effort into wealth.</p>
     <p style="font-size:11.5px;color:var(--text3);font-family:sans-serif;font-style:italic;margin-bottom:1.25rem;">Based on Chaldean numerology principles, planetary ruler alignment, not generic career advice.</p>
     <div class="grid-2" id="careerGrid">
@@ -669,6 +689,7 @@ hr.divider{display:none;}
   <!-- ─ 6. CHALDEAN COMPATIBILITY INSIGHT ─────────────────────── -->
   <div class="rpt-section" style="padding-top:0;">
     <div class="sec-label">🔗 Chaldean Compatibility Insight</div>
+    <div class="sec-hint">Compatibility in Chaldean numerology comes from how the ruling planets of two numbers interact — friendly, neutral or with friction. It describes natural emotional rhythm; relationships at any combination thrive when both people understand the dynamic.</div>
     <p style="font-size:13px;color:var(--text2);font-family:sans-serif;margin-bottom:.5rem;">In Chaldean numerology, compatibility is determined by <strong>planetary interactions</strong> between numbers, not just shared traits or birth months. Your Moolank <strong id="birthNumRel"></strong> is ruled by <strong id="birthPlanetRel"></strong>.</p>
     <p style="font-size:11.5px;color:var(--text3);font-family:sans-serif;font-style:italic;margin-bottom:1.25rem;">Focuses on vibration, not just numbers, based on Chaldean numerology principles.</p>
     <div id="compatContainer">
@@ -681,6 +702,7 @@ hr.divider{display:none;}
   <!-- ─ 7. REMEDIES ─────────────────────────────────────────── -->
   <div class="rpt-section" style="padding-top:0;">
     <div class="sec-label">Remedies &amp; Planetary Activation</div>
+    <div class="sec-hint">Small daily practices that activate the planetary energies of your Moolank. None are mandatory — pick the ones that fit your life. Consistency, not intensity, is what makes them work.</div>
     <p style="font-size:13px;color:var(--text2);font-family:sans-serif;margin-bottom:.5rem;">Practical habits calibrated to your planetary ruler. Tick each remedy as you adopt it, consistency activates the vibration.</p>
     <p style="font-size:11.5px;color:var(--text3);font-family:sans-serif;font-style:italic;margin-bottom:1.25rem;">Used for sound-based name alignment · Focuses on vibration, not just numbers.</p>
     <div id="remediesGrid" style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
@@ -695,6 +717,7 @@ hr.divider{display:none;}
   <!-- ─ 8b. MOBILE NUMBER ANALYSIS ─────────────────────────── -->
   <div class="rpt-section" style="padding-top:0;">
     <div class="sec-label"><span class="tt-anchor" data-tt="mobileRoot">Mobile Number</span> Analysis</div>
+    <div class="sec-hint">The digits of your phone number reduce to a Mobile Root Number that subtly shapes the kind of conversations and opportunities your phone tends to attract. A small vibration, but one you carry every day.</div>
     <div id="mobileAnalysisSection"><!-- Injected by JS --></div>
   </div>
 
@@ -703,6 +726,7 @@ hr.divider{display:none;}
   <!-- ─ 8c. SHARE YOUR CARD (in PDF + screen) ────────────────── -->
   <div class="rpt-section" id="shareCardSection" style="padding-top:0;">
     <div class="sec-label">Share Your Insight Card</div>
+    <div class="sec-hint">A keepsake image summarising your reading. Scan the QR code below to open the free analyser pre-loaded with your details — handy for sharing with someone you'd like to check next.</div>
     <div class="sc-stack">
       <div class="sc-intro">
         <div class="sc-eyebrow">A keepsake worth sharing</div>
@@ -711,7 +735,7 @@ hr.divider{display:none;}
       </div>
       <canvas id="shareCardCanvas" width="1200" height="630" class="sc-card-img"></canvas>
       <div class="sc-bottom">
-        <canvas id="shareCardQR"></canvas>
+        <img id="shareCardQR" alt="Scan QR" />
         <div class="sc-qr-text">
           <strong>Scan to share this card</strong>
           Opens namealigned.com on your phone with your insight pre-loaded, one tap to share on WhatsApp, Instagram or save.
@@ -818,6 +842,14 @@ hr.divider{display:none;}
           <a href="analyzer" class="btn btn-outline btn-sm" style="text-align:center;">Open Free Analyser →</a>
         </div>
       </div>
+    </div>
+  </div>
+
+  <!-- ─ 12. LEGAL DISCLAIMER (always print) ────────────────────── -->
+  <div class="rpt-section disclaimer-section" style="padding-top:.5rem;padding-bottom:.5rem;">
+    <div style="font-family:sans-serif;font-size:9.5px;line-height:1.6;color:var(--text3);text-align:justify;padding:.85rem 1rem;background:rgba(0,0,0,.02);border:1px solid rgba(0,0,0,.06);border-radius:6px;">
+      <strong style="display:block;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--text2);margin-bottom:.4rem;">Disclaimer</strong>
+      This report is provided for entertainment, self-reflection and educational purposes only. Chaldean numerology is a traditional symbolic system, not a science, and the interpretations herein should not be treated as predictions of fact. Nothing in this report constitutes medical, financial, legal, psychological, relationship or career advice. Decisions affecting your health, finances, family, business or future should be made in consultation with appropriately qualified professionals. NameAligned.com, its founders and contributors make no warranty, guarantee or representation regarding accuracy, completeness or any specific outcome arising from the use of this report. By reading this report you agree that NameAligned.com is not liable for any direct or indirect loss, damage or consequence arising from any decision taken on the basis of its contents. This report is the personal property of the recipient; redistribution, resale or commercial use without written consent is prohibited. © 2026 NameAligned.com · All rights reserved.
     </div>
   </div>
 
@@ -1338,17 +1370,27 @@ hr.divider{display:none;}
     ctx.fillText(ctaText, ctaX+18, ctaY+23);
 
     // ── QR code ──
+    // Use <img> + toDataURL instead of <canvas>. Canvases drawn
+    // after page load sometimes refuse to render in print preview;
+    // an <img> with a data: URL prints reliably across browsers.
     try{
-      var qrCanvas = document.getElementById('shareCardQR');
+      var qrImg = document.getElementById('shareCardQR');
       var url = 'https://www.namealigned.com/analyzer?name='
                 + encodeURIComponent(name||'')
                 + (dob ? '&dob='+encodeURIComponent(dob) : '')
                 + '&ref=pdf-share';
-      if(window.QRCode && qrCanvas){
-        QRCode.toCanvas(qrCanvas, url, {
+      if(window.QRCode && qrImg){
+        QRCode.toDataURL(url, {
           width: 216, margin: 1,
           color: { dark:'#0c3347', light:'#ffffff' }
-        }, function(err){ if(err) console.warn('QR err',err); });
+        }, function(err, dataUrl){
+          if (err){ console.warn('QR err', err); return; }
+          qrImg.src = dataUrl;
+        });
+      } else if (qrImg) {
+        // CDN fallback if the QRCode library failed to load —
+        // still gives the user a scannable code in the printout.
+        qrImg.src = 'https://api.qrserver.com/v1/create-qr-code/?size=216x216&data=' + encodeURIComponent(url);
       }
     }catch(e){ console.warn('QR generation failed', e); }
   }
@@ -1443,18 +1485,37 @@ hr.divider{display:none;}
     };
     var outcome = OUTCOMES_LONG[birthNum] || OUTCOMES_LONG[1];
 
+    // Closing conclusion synthesises the report into one
+    // actionable line — the user explicitly asked for a stronger
+    // wrap-up paragraph that gives the reader a clear "so what"
+    // takeaway rather than a soft fade-out.
+    var ALIGN_VERDICT = pct >= 75
+      ? 'your name already supports your birth pattern, and the gentle enhancements in the Name Optimization section can fine-tune what is already working.'
+      : pct >= 55
+      ? 'there is real headroom to enhance how your name interacts with your birth numbers — the Name Optimization section offers three natural-sounding options that improve compound quality without changing how your name sounds.'
+      : 'your name carries its own strengths, but the interaction with your birth numbers leaves meaningful room to enhance — the Name Optimization section offers three natural-sounding options worth considering.';
+
     var html =
-      '<p style="margin:0 0 .85rem;"><strong style="color:#f5d060;">'+firstName+',</strong> your Chaldean profile is based on the interaction between your <strong style="color:#f5d060;">name vibration</strong> and your <strong style="color:#f5d060;">birth numbers</strong>.</p>'+
+      '<p style="margin:0 0 .85rem;"><strong style="color:#8a6a1a;">'+firstName+',</strong> your Chaldean profile is shaped by the interaction between your <strong style="color:#8a6a1a;">name vibration</strong> and your <strong style="color:#8a6a1a;">birth numbers</strong>.</p>'+
 
       '<p style="margin:0 0 .85rem;">Your name number <strong>'+nameNum+'</strong> (ruled by <strong>'+namePlanet+'</strong>) interacts with your Moolank <strong>'+birthNum+'</strong> ('+birthPlanet+') and Bhagyank <strong>'+destNum+'</strong> ('+destPlanet+'), creating a pattern of <em>'+traits+'</em> layered on a foundation of <em>'+bhTraits+'</em>.</p>'+
 
       '<p style="margin:0 0 .85rem;">You tend to <strong>'+b.behaviour+'</strong>, which can sometimes lead to '+b.challenge+', but also gives you real strength in <strong>'+b.strength+'</strong>.</p>'+
 
-      '<p style="margin:0 0 .85rem;">A recurring pattern in your life is the rhythm of '+b.behaviour+' followed by '+b.challenge+'. When alignment improves, this rhythm steadies, outcomes become more predictable and your natural strengths amplify into <strong style="color:#f5d060;">'+outcome+'</strong>.</p>'+
+      '<p style="margin:0 0 .85rem;">A recurring pattern in your life is the rhythm of '+b.behaviour+' followed by '+b.challenge+'. When alignment improves, this rhythm steadies, outcomes become more predictable and your natural strengths amplify into <strong style="color:#8a6a1a;">'+outcome+'</strong>.</p>'+
 
-      '<p style="margin:0 0 .65rem;">Your current overall alignment is <strong style="color:#f5d060;">'+pct+'%</strong>, '+pctTier+'.</p>'+
+      '<p style="margin:0 0 1rem;">Your current overall alignment is <strong style="color:#8a6a1a;">'+pct+'%</strong>, '+pctTier+'.</p>'+
 
-      '<p style="margin:0;color:#cbb8e8;font-style:italic;">Your name already carries strengths. The Name Optimization section below shows gentle phonetic enhancements that can support stronger Chaldean alignment, without changing how your name sounds in everyday use.</p>';
+      // ── Conclusion / synthesis ────────────────────────────────
+      '<div style="margin-top:1rem;padding:.95rem 1.1rem;background:rgba(138,106,26,.07);border-left:3px solid #c9a227;border-radius:6px;">'+
+        '<div style="font-family:sans-serif;font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:#8a6a1a;font-weight:700;margin-bottom:.4rem;">In Conclusion</div>'+
+        '<p style="margin:0 0 .55rem;font-size:13.5px;line-height:1.65;">'+
+          firstName+', your numerology blueprint points toward <strong>'+outcome+'</strong>. Your Moolank <strong>'+birthNum+'</strong> sets the <em>how</em> of your daily energy, your Bhagyank <strong>'+destNum+'</strong> sets the <em>where</em> destiny tends to compound your effort, and your Name Number <strong>'+nameNum+'</strong> determines the <em>vibration</em> through which both express in the world.'+
+        '</p>'+
+        '<p style="margin:0;font-size:13.5px;line-height:1.65;">'+
+          'On the alignment score, '+ALIGN_VERDICT+
+        '</p>'+
+      '</div>';
     el.innerHTML = html;
   }
 
