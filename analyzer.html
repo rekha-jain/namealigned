@@ -1319,6 +1319,259 @@ function getPlanetForShare(num){
 }
 
 function buildShareCard(){
+  // Bulletproof rewrite: simpler structure, every value defensively
+  // looked up, every drawing call wrapped so a single failure can't
+  // leave the canvas blank. Same visual identity (deep purple/gold
+  // cosmic theme), but each section now renders independently in a
+  // try/catch so partial drawing always succeeds.
+  try {
+    const canvas = document.getElementById('shareCanvas');
+    if(!canvas) { console.warn('[shareCard] canvas missing'); return; }
+    const ctx = canvas.getContext('2d');
+    if(!ctx)    { console.warn('[shareCard] no 2d context');  return; }
+    const W = canvas.width || 1200, H = canvas.height || 630;
+
+    // ── SAFE DATA LOOKUPS ─────────────────────────────────────
+    const state    = (typeof S === 'object' && S) ? S : {};
+    const rawName  = (state.name || 'You').toString().trim();
+    const firstName= rawName.split(/\s+/)[0] || 'You';
+    const displayName = firstName.charAt(0).toUpperCase() + firstName.slice(1).toLowerCase();
+    const moolank  = (typeof state.birthNum === 'number' && state.birthNum >= 1 && state.birthNum <= 9) ? state.birthNum : 1;
+
+    const PROFILES = (typeof MOOLANK_PROFILES !== 'undefined' && MOOLANK_PROFILES) ? MOOLANK_PROFILES : {};
+    const TRUTHS   = (typeof EMOTIONAL_TRUTHS  !== 'undefined' && EMOTIONAL_TRUTHS) ? EMOTIONAL_TRUTHS : {};
+    const LABELS   = (typeof STRENGTH_LABELS   !== 'undefined' && STRENGTH_LABELS) ? STRENGTH_LABELS : {};
+    const ARCH     = (typeof ARCHETYPES        !== 'undefined' && ARCHETYPES)      ? ARCHETYPES : {};
+
+    const profile   = PROFILES[moolank] || PROFILES[1] || { planet:'Sun', planetIcon:'☀', qualities:'Leadership · Vitality' };
+    const truth     = TRUTHS[moolank]   || TRUTHS[1]   || 'Your name carries strengths uniquely yours.';
+    const strengths = (LABELS[moolank]  || LABELS[1]   || []).slice(0,3);
+    const archetype = ARCH[moolank]     || ARCH[1]     || 'The Original';
+
+    // Always reset the bitmap to a clean state — guarantees we
+    // start from blank even if the canvas was partially drawn.
+    ctx.clearRect(0, 0, W, H);
+
+    // ── BACKGROUND (single fillRect — can never fail silently) ─
+    try {
+      const bg = ctx.createLinearGradient(0, 0, 0, H);
+      bg.addColorStop(0, '#1a0e52'); bg.addColorStop(0.6, '#2a1180'); bg.addColorStop(1, '#0d0521');
+      ctx.fillStyle = bg; ctx.fillRect(0, 0, W, H);
+    } catch(e) { ctx.fillStyle = '#1a0e52'; ctx.fillRect(0, 0, W, H); }
+
+    // Decorative star dots — wrapped because Math.random failures
+    // (rare) shouldn't kill the rest of the card.
+    try {
+      ctx.fillStyle = 'rgba(255,255,255,0.55)';
+      for (let i = 0; i < 60; i++) {
+        const x = Math.random()*W, y = Math.random()*H, r = Math.random()*1.4 + 0.3;
+        ctx.globalAlpha = Math.random()*0.6 + 0.2;
+        ctx.beginPath(); ctx.arc(x, y, r, 0, Math.PI*2); ctx.fill();
+      }
+      ctx.globalAlpha = 1;
+    } catch(e) {}
+
+    // Center divider
+    try {
+      ctx.strokeStyle = 'rgba(201,162,39,0.18)'; ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.moveTo(W/2, 110); ctx.lineTo(W/2, H-50); ctx.stroke();
+    } catch(e) {}
+
+    // ── HEADER ────────────────────────────────────────────────
+    try {
+      ctx.textAlign = 'left';
+      ctx.fillStyle = '#f5d060';
+      ctx.font = '700 28px "Helvetica Neue", Arial, sans-serif';
+      ctx.fillText('✦  NameAligned', 50, 60);
+      ctx.fillStyle = 'rgba(255,255,255,0.55)';
+      ctx.font = '500 13px "Helvetica Neue", Arial, sans-serif';
+      ctx.fillText('Alignment. Insight. Empowerment.', 50, 82);
+
+      // Top-right pill
+      ctx.font = '600 15px "Helvetica Neue", Arial, sans-serif';
+      const pillT = 'Chaldean Numerology';
+      const pillTW = ctx.measureText(pillT).width;
+      const pillW = pillTW + 60, pillH = 34, pillX = W - 50 - pillW, pillY = 46;
+      _scRoundRect(ctx, pillX, pillY, pillW, pillH, 17);
+      ctx.fillStyle = 'rgba(255,255,255,0.06)'; ctx.fill();
+      ctx.strokeStyle = 'rgba(201,162,39,0.45)'; ctx.lineWidth = 1.4; ctx.stroke();
+      ctx.fillStyle = '#f5d060';
+      ctx.fillText(pillT, pillX + 18, pillY + 22);
+    } catch(e) { console.warn('[shareCard] header failed:', e); }
+
+    // ── LEFT COLUMN: Name + Number + Planet ──────────────────
+    const lcx = 320;
+    try {
+      ctx.textAlign = 'center';
+      ctx.fillStyle = 'rgba(245,208,96,0.85)';
+      ctx.font = '600 16px "Helvetica Neue", Arial, sans-serif';
+      ctx.fillText('HEY  ✦', lcx, 145);
+
+      // Name (auto-shrink for long names)
+      ctx.fillStyle = '#ffffff';
+      let nameSize = 70;
+      ctx.font = 'italic 700 ' + nameSize + 'px Georgia, serif';
+      while (nameSize > 32 && ctx.measureText(displayName).width > 480) {
+        nameSize -= 4;
+        ctx.font = 'italic 700 ' + nameSize + 'px Georgia, serif';
+      }
+      ctx.fillText(displayName, lcx, 215);
+
+      // Underline + driver-number eyebrow
+      ctx.strokeStyle = 'rgba(201,162,39,0.85)'; ctx.lineWidth = 1.5;
+      ctx.beginPath(); ctx.moveTo(lcx-70, 238); ctx.lineTo(lcx+70, 238); ctx.stroke();
+      ctx.fillStyle = 'rgba(255,255,255,0.7)';
+      ctx.font = 'italic 17px Georgia, serif';
+      ctx.fillText('Your Driver Number', lcx, 268);
+
+      // Cosmic ring + big number
+      const ringX = lcx, ringY = 395, ringR = 88;
+      ctx.strokeStyle = 'rgba(201,162,39,0.55)'; ctx.lineWidth = 1.5;
+      ctx.beginPath(); ctx.arc(ringX, ringY, ringR, 0, Math.PI*2); ctx.stroke();
+      ctx.strokeStyle = 'rgba(201,162,39,0.22)'; ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.arc(ringX, ringY, ringR + 18, 0, Math.PI*2); ctx.stroke();
+
+      ctx.fillStyle = '#f5d060';
+      ctx.font = '700 120px Georgia, serif';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(String(moolank), ringX, ringY + 4);
+      ctx.textBaseline = 'alphabetic';
+
+      // Ruling planet pill
+      const rpY = 520;
+      ctx.font = '700 11px "Helvetica Neue", Arial, sans-serif';
+      const rpT = 'RULING PLANET';
+      const rpTW = ctx.measureText(rpT).width;
+      const rpW = rpTW + 56, rpH = 24, rpX = lcx - rpW/2;
+      _scRoundRect(ctx, rpX, rpY-16, rpW, rpH, 12);
+      ctx.fillStyle = 'rgba(255,255,255,0.04)'; ctx.fill();
+      ctx.strokeStyle = 'rgba(201,162,39,0.55)'; ctx.lineWidth = 1; ctx.stroke();
+      ctx.fillStyle = '#f5d060';
+      ctx.fillText(rpT, lcx, rpY);
+
+      ctx.fillStyle = '#ffffff';
+      ctx.font = '700 24px Georgia, serif';
+      ctx.fillText((profile.planetIcon || '✦') + '  ' + (profile.planet || 'Sun'), lcx, rpY + 36);
+      ctx.fillStyle = 'rgba(245,208,96,0.85)';
+      ctx.font = '500 12.5px "Helvetica Neue", Arial, sans-serif';
+      ctx.fillText(profile.qualities || '', lcx, rpY + 60);
+    } catch(e) { console.warn('[shareCard] left column failed:', e); }
+
+    // ── RIGHT COLUMN: Truth + Strengths + CTA ──────────────────
+    const rcx = 640;
+    try {
+      ctx.textAlign = 'left';
+
+      // EMOTIONAL TRUTH
+      ctx.fillStyle = '#c9a227';
+      ctx.font = '700 13px "Helvetica Neue", Arial, sans-serif';
+      ctx.fillText('THE TRUTH MOST PEOPLE MISS', rcx, 138);
+
+      ctx.fillStyle = 'rgba(245,208,96,0.7)';
+      ctx.font = '700 52px Georgia, serif';
+      ctx.fillText('"', rcx - 4, 188);
+
+      ctx.fillStyle = '#ffffff';
+      ctx.font = 'italic 20px Georgia, serif';
+      _scWrap(ctx, truth, rcx + 32, 178, W - 90 - rcx, 28, 4);
+
+      ctx.fillStyle = 'rgba(245,208,96,0.7)';
+      ctx.font = '700 52px Georgia, serif';
+      ctx.textAlign = 'right';
+      ctx.fillText('"', W - 50, 296);
+      ctx.textAlign = 'left';
+
+      // Divider
+      ctx.strokeStyle = 'rgba(201,162,39,0.25)'; ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.moveTo(rcx, 320); ctx.lineTo(W - 50, 320); ctx.stroke();
+
+      // STRENGTHS (always render even if missing — show fallback)
+      ctx.fillStyle = '#c9a227';
+      ctx.font = '700 13px "Helvetica Neue", Arial, sans-serif';
+      ctx.fillText('WHERE YOUR POWER LIVES', rcx, 350);
+
+      const items = strengths.length ? strengths : [
+        { i:'✦', l:'Strength 1' }, { i:'◇', l:'Strength 2' }, { i:'◉', l:'Strength 3' }
+      ];
+      const sY0 = 372, rowH = 50;
+      items.forEach((s, i) => {
+        const y = sY0 + i * rowH;
+        const cx = rcx + 20, cy = y + 14;
+        ctx.fillStyle = 'rgba(245,208,96,0.13)';
+        ctx.beginPath(); ctx.arc(cx, cy, 18, 0, Math.PI*2); ctx.fill();
+        ctx.strokeStyle = 'rgba(201,162,39,0.5)'; ctx.lineWidth = 1.2;
+        ctx.beginPath(); ctx.arc(cx, cy, 18, 0, Math.PI*2); ctx.stroke();
+
+        ctx.fillStyle = '#f5d060';
+        ctx.font = '600 18px Georgia, serif';
+        ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+        ctx.fillText(s.i || '✦', cx, cy + 1);
+        ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic';
+
+        ctx.fillStyle = '#ffffff';
+        ctx.font = '700 17px "Helvetica Neue", Arial, sans-serif';
+        ctx.fillText(s.l || s.title || '', rcx + 52, y + 19);
+      });
+
+      // CTA
+      ctx.fillStyle = 'rgba(255,255,255,0.65)';
+      ctx.font = '500 12px "Helvetica Neue", Arial, sans-serif';
+      ctx.fillText('Discover your full numerology report at', rcx, 568);
+
+      const ctaText = 'namealigned.com/analyzer  →';
+      ctx.font = '700 15px "Helvetica Neue", Arial, sans-serif';
+      const ctaTW = ctx.measureText(ctaText).width;
+      const ctaW = ctaTW + 32, ctaH = 34, ctaX = rcx, ctaY = 580;
+      const ctaGrad = ctx.createLinearGradient(ctaX, ctaY, ctaX + ctaW, ctaY);
+      ctaGrad.addColorStop(0, '#f5d060'); ctaGrad.addColorStop(1, '#c9a227');
+      ctx.fillStyle = ctaGrad;
+      _scRoundRect(ctx, ctaX, ctaY, ctaW, ctaH, 17); ctx.fill();
+      ctx.fillStyle = '#0c1a2e';
+      ctx.fillText(ctaText, ctaX + 16, ctaY + 22);
+    } catch(e) { console.warn('[shareCard] right column failed:', e); }
+
+    return; // success
+  } catch (fatal) {
+    console.error('[shareCard] fatal:', fatal);
+  }
+}
+
+// Local helpers used only by buildShareCard — prefixed so they
+// can't collide with anything else if the file grows.
+function _scRoundRect(ctx, x, y, w, h, r){
+  ctx.beginPath();
+  ctx.moveTo(x+r, y);  ctx.lineTo(x+w-r, y);
+  ctx.quadraticCurveTo(x+w, y, x+w, y+r);  ctx.lineTo(x+w, y+h-r);
+  ctx.quadraticCurveTo(x+w, y+h, x+w-r, y+h);  ctx.lineTo(x+r, y+h);
+  ctx.quadraticCurveTo(x, y+h, x, y+h-r);  ctx.lineTo(x, y+r);
+  ctx.quadraticCurveTo(x, y, x+r, y);  ctx.closePath();
+}
+function _scWrap(ctx, text, x, y, maxW, lineH, maxLines){
+  const words = String(text||'').split(' ');
+  const lines = []; let line = '';
+  for (let i = 0; i < words.length; i++) {
+    const test = line ? line + ' ' + words[i] : words[i];
+    if (ctx.measureText(test).width > maxW && line) {
+      lines.push(line); line = words[i];
+    } else line = test;
+    if (lines.length === maxLines - 1 && i < words.length - 1) {
+      // Pack remainder with ellipsis if it overflows
+      let rest = line;
+      for (let j = i+1; j < words.length; j++) {
+        const t = rest + ' ' + words[j];
+        if (ctx.measureText(t + '…').width > maxW) { rest += '…'; break; }
+        rest = t;
+      }
+      lines.push(rest); line = ''; break;
+    }
+  }
+  if (line) lines.push(line);
+  lines.forEach((l, i) => ctx.fillText(l, x, y + i*lineH));
+}
+
+// Original implementation below — replaced by the bulletproof
+// version above. Kept commented to make the diff reviewable.
+function _legacy_buildShareCard_unused(){
   const canvas = document.getElementById('shareCanvas');
   if(!canvas) return;
   const ctx = canvas.getContext('2d');
