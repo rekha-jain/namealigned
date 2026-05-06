@@ -17,28 +17,57 @@ const FRIENDLY={1:[1,2,3,4,9],2:[1,2,4,7,8],3:[1,3,6,9],4:[1,2,4,6,8],5:[1,3,5,6
 const PREFERRED=[1,3,5,6,9];
 const CAUTION_NAME_NUMS=[4,8];
 
+// ── COMPOUND NUMBER INTELLIGENCE ──────────────────────────────
+// q ratings (used by the alignment scorer):
+//   'g' = highly supportive       ─ traditional Chaldean fortune compounds
+//   'n' = balanced / neutral
+//   'b' = challenging             ─ growth-oriented, requires conscious handling
+// Labels are deliberately framed as patterns to work with, not omens.
+// We never use words like "doomed", "ruin", "danger". Every label
+// names a pattern + the inner strength that pattern develops.
 const CD={
-  10:{q:'g',l:'Wheel of Fortune · Rise & Fall'},11:{q:'b',l:'Hidden Dangers · Treachery'},
-  12:{q:'b',l:'The Victim · Sacrifice'},13:{q:'b',l:'Change & Revolution'},
-  14:{q:'g',l:'Magnetic Movement · Travel'},15:{q:'g',l:'The Occultist · Magic Power'},
-  16:{q:'b',l:'Tower Struck by Lightning ⚡'},17:{q:'g',l:'Star of the Magi · Peace & Love ★'},
-  18:{q:'b',l:'Materialism Battles Spirit'},19:{q:'g',l:'The Sun · Most Fortunate Number ★'},
-  20:{q:'n',l:'The Awakening · Judgment'},21:{q:'g',l:'Crown of the Magi · Brilliant Success ★'},
-  22:{q:'b',l:'Submission · Fool\'s Gold'},23:{q:'g',l:'Royal Star of the Lion · Great Fortune ★'},
-  24:{q:'g',l:'Love · Money · Creative Power'},25:{q:'n',l:'Strength Gained Through Strife'},
-  26:{q:'b',l:'Partnerships Bring Loss · Ruin'},27:{q:'g',l:'The Sceptre · Authority & Command'},
-  28:{q:'b',l:'Promising Start · Hidden Dangers'},29:{q:'b',l:'Vacillation · Uncertainty · Doubt'},
-  30:{q:'n',l:'Thoughtful Reflection · Decisions'},31:{q:'b',l:'Solitude · Isolation from Others'},
-  32:{q:'g',l:'Magic Power · Unexpected Help ★'},33:{q:'g',l:'Spiritual Wisdom & Guidance'},
-  34:{q:'g',l:'Spiritual Power · Inner Strength'},35:{q:'b',l:'Idealism vs Materialism · Loss'},
-  36:{q:'g',l:'Noble Character · True Leadership'},37:{q:'g',l:'Love Life & Friendship · Success'},
-  38:{q:'b',l:'Partnerships Cause Problems'},39:{q:'n',l:'Artistic Vision & Inspiration'},
-  40:{q:'n',l:'Spiritual Completion · Order'},41:{q:'g',l:'Industrious Success · Ambition'},
-  42:{q:'g',l:'Creative Partnerships · Growth'},43:{q:'b',l:'Revolution · Conflict · Upheaval'},
-  44:{q:'b',l:'Excess & Downfall · Overreach'},45:{q:'g',l:'Idealism & Noble Service'},
-  46:{q:'g',l:'Leadership & Authority Success'},47:{q:'g',l:'Spiritual Protection · Blessings'},
-  48:{q:'b',l:'Strong Opposition · Conflict'},49:{q:'n',l:'Humanitarian Vision · Wisdom'},
-  50:{q:'g',l:'New Cycle · Fresh Beginnings'},51:{q:'g',l:'Power to Lead · The Sword'},
+  10:{q:'g',l:'Wheel of Fortune · Cycles & Reinvention'},
+  11:{q:'b',l:'Hidden Patterns · Discernment Required'},
+  12:{q:'b',l:'Sacrifice Patterns · Boundary Building'},
+  13:{q:'b',l:'Transformational Change · Renewal'},
+  14:{q:'g',l:'Magnetic Movement · Travel & Connection'},
+  15:{q:'g',l:'The Occultist · Magnetic Influence'},
+  16:{q:'b',l:'Sudden Shifts · Resilience Building'},
+  17:{q:'g',l:'Star of the Magi · Peace & Love ★'},
+  18:{q:'b',l:'Material vs Spiritual Tension'},
+  19:{q:'g',l:'The Sun · Most Fortunate Number ★'},
+  20:{q:'n',l:'The Awakening · Reflective Judgement'},
+  21:{q:'g',l:'Crown of the Magi · Brilliant Success ★'},
+  22:{q:'b',l:'Surface vs Depth · Discernment'},
+  23:{q:'g',l:'Royal Star of the Lion · Great Fortune ★'},
+  24:{q:'g',l:'Love · Money · Creative Power'},
+  25:{q:'n',l:'Strength Gained Through Lessons'},
+  26:{q:'b',l:'Partnership Recalibration · Self-Trust'},
+  27:{q:'g',l:'The Sceptre · Authority & Command'},
+  28:{q:'b',l:'Promising Start · Steady Persistence Needed'},
+  29:{q:'b',l:'Decision Patterns · Trust Building'},
+  30:{q:'n',l:'Thoughtful Reflection · Decisions'},
+  31:{q:'b',l:'Solitude Cycles · Inner Strength'},
+  32:{q:'g',l:'Magic Power · Unexpected Help ★'},
+  33:{q:'g',l:'Spiritual Wisdom & Guidance'},
+  34:{q:'g',l:'Spiritual Power · Inner Strength'},
+  35:{q:'b',l:'Idealism vs Pragmatism Balance'},
+  36:{q:'g',l:'Noble Character · True Leadership'},
+  37:{q:'g',l:'Love Life & Friendship · Success'},
+  38:{q:'b',l:'Partnership Recalibration · Self-Definition'},
+  39:{q:'n',l:'Artistic Vision & Inspiration'},
+  40:{q:'n',l:'Spiritual Completion · Order'},
+  41:{q:'g',l:'Industrious Success · Ambition'},
+  42:{q:'g',l:'Creative Partnerships · Growth'},
+  43:{q:'b',l:'Transformational Change Patterns'},
+  44:{q:'b',l:'Boundaries Around Excess · Restraint'},
+  45:{q:'g',l:'Idealism & Noble Service'},
+  46:{q:'g',l:'Leadership & Authority Success'},
+  47:{q:'g',l:'Spiritual Protection · Blessings'},
+  48:{q:'b',l:'Resistance Patterns · Resilience'},
+  49:{q:'n',l:'Humanitarian Vision · Wisdom'},
+  50:{q:'g',l:'New Cycle · Fresh Beginnings'},
+  51:{q:'g',l:'Power to Lead · The Sword'},
   52:{q:'g',l:'Communication Gifts · Eloquence'}
 };
 
@@ -108,20 +137,125 @@ const MISSING_MEANINGS={
   7:'Spirituality, introspection',8:'Ambition, material success',9:'Compassion, completion'
 };
 
-function compatPct(nameNum,nameRaw,birthNum,destNum){
-  const bf=FRIENDLY[birthNum]||[],df=FRIENDLY[destNum]||[];
-  const bothFriendly=bf.includes(nameNum)&&df.includes(nameNum);
-  const oneFriendly=bf.includes(nameNum)||df.includes(nameNum);
-  const compound=CD[nameRaw];
-  let score=15;
-  if(bothFriendly)score+=35;else if(oneFriendly)score+=15;
-  if(PREFERRED.includes(nameNum))score+=22;
-  if(compound?.q==='g')score+=25;else if(compound?.q==='b')score-=12;
-  return Math.max(5,Math.min(98,score));
+// ── ALIGNMENT SCORING (weighted, transparent, explainable) ──
+// Replaces the previous binary "100% if friendly else 40%" logic
+// that produced theoretically inconsistent rollups (e.g. two 100%
+// dimensions averaging to a 38% overall). The new model scores
+// six dimensions independently, weights them, and returns a single
+// integer percentage. All sub-scores are exposed via
+// compatPctBreakdown() so the renderer can show *why* the number
+// is what it is — a key trust requirement.
+//
+// Weights (sum to 100):
+//   Compound Quality     30   — symbolic weight of the unreduced
+//                                name compound (e.g. 26, 41)
+//   Name × Moolank       20   — root-number friendship with birth
+//   Name × Bhagyank      20   — root-number friendship with destiny
+//   Planetary Harmony    12   — three-way triangle of name/birth/
+//                                destiny rulers
+//   Phonetic Stability    8   — heaviness of the compound (very
+//                                high compounds carry more karmic
+//                                load and are harder to "wear")
+//   Amplification        10   — resonance/repetition between the
+//                                three numbers (e.g. 2-2-2 trio)
+//
+// Per product direction: floor at 35 (avoid dramatic catastrophic
+// scores; numerology is meant to be informative, not fear-based)
+// and ceiling at 99 (perfect 100 reserved for nameNum===moolank).
+
+function _scoreCompoundQuality(compound){
+  const e = CD[compound];
+  if (!e) return 75;                 // unmapped compound (>52 etc.) — treat neutrally
+  if (e.q === 'g') return 92;
+  if (e.q === 'n') return 75;
+  return 58;                         // 'b' — challenging but never < ~half
+}
+function _scoreRootHarmony(a, b){
+  if (a === b) return 100;
+  if ((FRIENDLY[b]||[]).includes(a)) return 85;
+  return 62;                         // not friendly — but no dramatic drop
+}
+function _scorePlanetaryHarmony(nameNum, moolank, destNum){
+  const pairs = [[nameNum,moolank],[nameNum,destNum],[moolank,destNum]];
+  let score = 0;
+  pairs.forEach(([x,y]) => {
+    if (x === y) score += 1;
+    else if ((FRIENDLY[y]||[]).includes(x)) score += 1;
+  });
+  return [55, 68, 82, 95][score];    // 0/1/2/3 friendly pairs
+}
+function _scorePhoneticStability(compound){
+  if (compound <= 22) return 90;
+  if (compound <= 33) return 80;
+  if (compound <= 44) return 72;
+  return 64;                          // very heavy compound — harder to carry
+}
+function _scoreAmplification(nameNum, moolank, destNum){
+  const distinct = new Set([nameNum, moolank, destNum]).size;
+  if (distinct === 1) return 95;     // perfect resonance (rare, very strong)
+  if (distinct === 2) return 82;     // two-way amplification
+  return _scorePlanetaryHarmony(nameNum, moolank, destNum);
+}
+
+const _WEIGHTS = { cq:30, nm:20, nb:20, ph:12, ps:8, amp:10 };
+
+function compatPctBreakdown(nameNum, nameRaw, birthNum, destNum){
+  const cq  = _scoreCompoundQuality(nameRaw);
+  const nm  = _scoreRootHarmony(nameNum, birthNum);
+  const nb  = _scoreRootHarmony(nameNum, destNum);
+  const ph  = _scorePlanetaryHarmony(nameNum, birthNum, destNum);
+  const ps  = _scorePhoneticStability(nameRaw);
+  const amp = _scoreAmplification(nameNum, birthNum, destNum);
+  const w = _WEIGHTS;
+  const overall = Math.round(Math.max(35, Math.min(99,
+    (cq*w.cq + nm*w.nm + nb*w.nb + ph*w.ph + ps*w.ps + amp*w.amp) / 100
+  )));
+  const compoundEntry = CD[nameRaw];
+  return {
+    overall,
+    components: [
+      { key:'cq',  label:'Compound Quality',
+        sub: compoundEntry ? `${nameRaw} · ${compoundEntry.l}` : `${nameRaw} · Neutral resonance`,
+        score:cq,  weight:w.cq },
+      { key:'nm',  label:`Name (${nameNum}) × Moolank (${birthNum})`,
+        sub: _harmonyLabel(nameNum, birthNum),
+        score:nm,  weight:w.nm },
+      { key:'nb',  label:`Name (${nameNum}) × Bhagyank (${destNum})`,
+        sub: _harmonyLabel(nameNum, destNum),
+        score:nb,  weight:w.nb },
+      { key:'ph',  label:'Planetary Harmony',
+        sub: 'Three-way balance across name, birth & destiny rulers',
+        score:ph,  weight:w.ph },
+      { key:'ps',  label:'Phonetic Stability',
+        sub: nameRaw <= 22 ? 'Light, easy-to-carry compound'
+           : nameRaw <= 33 ? 'Moderate compound, settled'
+           : nameRaw <= 44 ? 'Heavier compound, asks for steadiness'
+           : 'Very heavy compound, asks for conscious handling',
+        score:ps,  weight:w.ps },
+      { key:'amp', label:'Amplification',
+        sub: (new Set([nameNum,birthNum,destNum]).size === 1)
+           ? 'All three numbers resonate — strong amplification'
+           : (new Set([nameNum,birthNum,destNum]).size === 2)
+           ? 'Two numbers resonate — partial amplification'
+           : 'Three distinct vibrations — depends on harmony',
+        score:amp, weight:w.amp },
+    ],
+  };
+}
+
+// Back-compat: callers that only need the overall number still work.
+function compatPct(nameNum, nameRaw, birthNum, destNum){
+  return compatPctBreakdown(nameNum, nameRaw, birthNum, destNum).overall;
+}
+
+function _harmonyLabel(a, b){
+  if (a === b) return 'Identical resonance — strongest possible match';
+  if ((FRIENDLY[b]||[]).includes(a)) return 'Friendly planetary interaction';
+  return 'Neutral interaction — no strong friction or support';
 }
 
 function getAlignmentStatus(pct){
-  return pct>=75?'aligned':pct>=50?'neutral':'misaligned';
+  return pct>=75?'aligned':pct>=55?'neutral':'misaligned';
 }
 
 // Nav toggle (shared)
@@ -171,7 +305,17 @@ function generateAlignedCorrectedNames(fullName, moolank, destNum){
   var target=null;
   for(var t=total;t<=total+60;t++){ if(reduce(t)===moolank){target=t;break;} }
   if(target===null) target=total;
-  if(reduce(total)===moolank) return {corrections:[],delta:0,target:total,currentSum:total,alreadyAligned:true};
+
+  // If the user's current name already scores very high on the
+  // weighted alignment model, skip the optimisation section
+  // entirely — there's nothing meaningful to improve. We use the
+  // new compatPctBreakdown so the threshold is internally
+  // consistent with the breakdown the user sees on the page.
+  var currentNameNum = reduce(total);
+  var currentScore = compatPctBreakdown(currentNameNum, total, moolank, destNum).overall;
+  if (currentScore >= 95) {
+    return {corrections:[],delta:0,target:total,currentSum:total,alreadyAligned:true};
+  }
 
   // Phonetic operation pool, ordered by naturalness for Indian
   // names. Each op takes a lowercase string and returns a candidate
