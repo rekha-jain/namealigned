@@ -173,6 +173,8 @@
 
 </div>
 
+<!-- Puter.js — free AI (Claude/GPT/Llama), no API key, user-funded -->
+<script src="https://js.puter.com/v2/"></script>
 <script src="/assets/numerology.js"></script>
 <script src="/assets/aura.js"></script>
 <script>
@@ -261,13 +263,25 @@
     stages.forEach((status, idx) => {
       setTimeout(() => setTypingStatus(status), idx * stageGap);
     });
-    setTimeout(()=>{
+    // Kick off the AI call in parallel with the thinking animation
+    // so we don't double-wait. Show reply when BOTH the min-delay
+    // is past AND the response has arrived.
+    const t0 = Date.now();
+    const replyPromise = Aura.respondAsync(text, buildProfile());
+    replyPromise.then((reply)=>{
+      const elapsed = Date.now() - t0;
+      const remaining = Math.max(0, totalDelay - elapsed);
+      setTimeout(()=>{
+        removeTyping();
+        addAuraMsg(reply);
+        sendBtn.disabled = false;
+        if (typeof gtag === 'function') gtag('event','aura_message_sent',{intent_text_length:text.length});
+      }, remaining);
+    }).catch(()=>{
       removeTyping();
-      const reply = Aura.respond(text, buildProfile());
-      addAuraMsg(reply);
+      addAuraMsg(Aura.respond(text, buildProfile()));
       sendBtn.disabled = false;
-      if (typeof gtag === 'function') gtag('event','aura_message_sent',{intent_text_length:text.length});
-    }, totalDelay);
+    });
   }
 
   // Three-stage status sequence per turn — randomly picked from a
