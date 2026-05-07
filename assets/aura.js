@@ -202,6 +202,74 @@
     general: ["What's been weighing on you most lately?", "Does this question feel more emotional or practical?", "Tell me the part you didn't say first."],
   };
 
+  // ── Elaboration responses (when user asks "what do you mean") ──
+  // Keyed off the LAST topic Aura was speaking about. These don't
+  // re-ask a hook — they explain what was meant in plainer language
+  // and offer a follow-up reflection or example.
+  const ELABORATION = {
+    career: [
+      "I mean the gap between what you can see is possible and how slowly the world catches up. You've often outgrown a role or a label months before it shows up in your title or pay — that's the lag I'm pointing at.",
+      "Translated plainly: your career energy reads like you've quietly raised your own bar, but the external markers (recognition, money, scope) haven't caught up yet. That's not failure, that's a normal lag.",
+    ],
+    love: [
+      "I mean the part of love that's working underneath conscious thought — the way you read your partner's mood before they say a word, or the small editing you do in conversations to avoid friction. That's what's actually shaping the relationship right now, more than any one event.",
+      "Plainly: there's a pattern in how you love that's quietly running. Not bad, not loud, but it shapes the relationship more than the dramatic moments do.",
+    ],
+    family: [
+      "I mean the role you got assigned in your family system years ago — the responsible one, the easy one, the rebel — that role isn't who you are anymore, but the family is still relating to you as if it is. The friction you feel is that mismatch.",
+      "Translated: family operates on patterns set when you were younger. You've changed; the pattern hasn't fully updated. The discomfort is that update happening, not something going wrong.",
+    ],
+    friend: [
+      "I mean some friendships were companionable for a particular life-stage, and you're past that stage now. That's not a betrayal of the friendship — it's seasons. Some will translate to the next stage, some won't, and both are okay.",
+    ],
+    health: [
+      "I mean your nervous system has been outputting more than it's been allowed to recover from. Tiredness with roots beyond sleep — emotional output, decision fatigue, holding-it-together energy.",
+      "Translated: you can't out-sleep emotional exhaustion. The body is asking for predictable rhythm and recovery, not just more rest.",
+    ],
+    self: [
+      "I mean you're between identities — the older version of yourself doesn't fully fit anymore, but the newer version hasn't fully arrived. The 'lost' feeling isn't lostness, it's the gap. Most people skip noticing this and rush to be definitive again; the noticing itself is growth.",
+      "Translated: you're not stuck, you're shedding. The discomfort is the in-between, and in-betweens are temporary by definition.",
+    ],
+    future: [
+      "I mean the timeline you're asking about isn't fixed — there are several real possibilities ahead, depending on small decisions you'll make in the next few weeks. The future is closer than 'someday' but more responsive than 'destined'.",
+    ],
+    spiritual: [
+      "I mean the spiritual life rarely arrives with a sign or thunderbolt. It arrives in how you greet the next ordinary moment with more presence than the last. That's not metaphor — that's the actual mechanism.",
+    ],
+    general: [
+      "Let me put that more plainly: the pattern I'm sensing isn't a single dramatic event, it's a recurring small one. Small repeated things shape lives more than rare big ones do.",
+      "I'll translate: there's a question circling that you haven't fully named yet, and the energy around it is the unnamed-ness, more than the question itself.",
+    ],
+  };
+
+  // Specific hook → reflective elaboration map. Used when the user
+  // quotes back a hook Aura asked. Plain-English unpack of the
+  // question + an invitation to actually answer it.
+  const HOOK_UNPACKS = [
+    { match: /if you couldn.?t fail/i,
+      reply: "That question isn't a strategy puzzle — it's a permission test. Most people answer it as if there's a 'right' answer hiding somewhere. There isn't. The exercise is to notice what comes up first before you edit it. Whatever surfaces in the first 5 seconds usually says more about you than the polished answer that follows. So — when you ask yourself it for real, what's the first thing that came up, even if it didn't make sense?" },
+    { match: /conversation you.?ve been avoiding/i,
+      reply: "I mean the one specific conversation that's been sitting in your gut for weeks — the one you've half-rehearsed, half-rationalised, never started. You usually know exactly which one I mean. The asking itself is what loosens it." },
+    { match: /weighing on you most/i,
+      reply: "Plain version: which thing — when you wake up and your mind is too quiet to perform — surfaces first? Not the most urgent or important. The most undealt-with. That one." },
+    { match: /more emotional or practical/i,
+      reply: "I'm asking which kind of answer would actually help. Practical answers fix circumstances; emotional answers fix how you're holding the circumstances. They feel similar but they're different work. Which one would let you sleep tonight?" },
+    { match: /role, or the recognition/i,
+      reply: "I'm asking whether the discomfort is about the work itself (role) or about being seen for it (recognition). Both are valid; the fix for each is different. One asks for a different job, the other asks for visibility within this one." },
+    { match: /trusted what you already feel/i,
+      reply: "I mean the small voice that already knows — the one you've been outvoting with logic, advice from others, fear of being wrong. If you stopped editing what you already feel, what would the next move be?" },
+    { match: /what part of who you are now wasn.?t true a year ago/i,
+      reply: "Pick a small specific thing. A preference, a tolerance, a 'no' you didn't have last year. Naming it makes the becoming visible to yourself, which is most of the work." },
+  ];
+
+  // Detect referent / clarification intents that should NOT start a
+  // new topic but instead elaborate on the last response.
+  function isReferent(text){
+    const t = (text||'').toLowerCase().trim();
+    return /\b(what (do|does) (you|that|this) mean|what (do|does) you mean by (this|that)|explain( that)?|elaborate|tell me more|say more|go deeper|what.s that|i don.?t (get|understand)|huh|come again|in plain (english|words))\b/.test(t)
+      || (t.length < 25 && /(this|that|it)\??/.test(t) && !/\?$/.test(t)===false);
+  }
+
   // ── Numerology personalisation overlays ──────────────────────
   // When profile.birthNum / nameNum exist, Aura weaves a planet-
   // anchored line into the response.
@@ -260,7 +328,7 @@
   }
 
   // ── Main response composer ───────────────────────────────────
-  function compose(intent, tone, profile){
+  function compose(intent, tone, profile, state){
     const topic = intent.topic || 'general';
     const v = pick(VALIDATION[topic] || VALIDATION.general);
     const i = pick(INTERPRETATION[topic] || INTERPRETATION.general);
@@ -286,7 +354,47 @@
     parts.push(f);
     if (useMetaphor) parts.push(m);
     parts.push(h);
+
+    // Remember the hook + topic so the next turn can elaborate on it
+    if (state) {
+      state.lastHook  = h;
+      state.lastTopic = topic;
+    }
     return parts.filter(Boolean).join(' ');
+  }
+
+  // Build an elaboration response for the LAST topic (when user asks
+  // 'what do you mean'). Tries to match a specific hook the user is
+  // quoting first; falls back to the topic-level elaboration.
+  function elaborate(text, state, profile){
+    const lastTopic = state.lastTopic || 'general';
+    const lastHook  = state.lastHook  || '';
+    const t = (text||'').toLowerCase();
+
+    // Did the user echo / quote the previous hook? If so, unpack it.
+    if (lastHook) {
+      for (const u of HOOK_UNPACKS) {
+        // Match if the user echoed the hook OR the hook itself matches
+        if (u.match.test(t) || u.match.test(lastHook)) {
+          return u.reply;
+        }
+      }
+    }
+    // Topic-level elaboration as fallback.
+    const lines = ELABORATION[lastTopic] || ELABORATION.general;
+    let body = pick(lines);
+
+    // Add a soft personal touch when name is known
+    if (profile && profile.firstName && Math.random() < 0.5) {
+      body = `${profile.firstName}, ${body[0].toLowerCase()}${body.slice(1)}`;
+    }
+    // Open invitation to keep going
+    const invites = [
+      "Does that land closer to what you were sensing?",
+      "Want to go further on any one piece of that?",
+      "Which part of that resonates the most right now?",
+    ];
+    return body + ' ' + pick(invites);
   }
 
   // ── Memory layer (localStorage) ──────────────────────────────
@@ -322,9 +430,24 @@
      */
     respond(text, profile){
       profile = profile || {};
-      const intent = detectIntent(text);
       const tone   = detectTone(text);
       const state  = loadState();
+
+      // CONTEXT FIRST: if the user is clearly asking 'what do you
+      // mean' / 'explain that' / quoting back a hook, elaborate on
+      // the previous turn instead of starting a new topic. This is
+      // the fix for: 'what do you mean by this?' getting treated
+      // as a fresh greeting + generic answer.
+      if (state.lastTopic && isReferent(text)) {
+        const reply = elaborate(text, state, profile);
+        recordTurn(state, { id: 'referent', topic: state.lastTopic }, tone);
+        // lastTopic / lastHook stay sticky so a 3rd 'tell me more'
+        // also works
+        saveState(state);
+        return reply;
+      }
+
+      const intent = detectIntent(text);
 
       // Hard-blocked safety topics: return canned response, do NOT compose.
       if (intent.block) {
@@ -332,23 +455,39 @@
         return blockedResponse(intent);
       }
       // Special intents that don't need the full composer.
+      // Note: skip the 'greeting' intent if we're already mid-conversation
+      // and the user is just continuing — prevents the 'Welcome back. I'm
+      // Aura — a quiet companion...' re-greeting that breaks immersion.
+      const recentlyTalking = state.lastTurnAt && (Date.now() - state.lastTurnAt) < 30 * 60 * 1000;
+
       if (intent.id === 'rude')        { recordTurn(state, intent, tone); saveState(state); return rudeResponse(); }
-      if (intent.id === 'greeting')    { recordTurn(state, intent, tone); saveState(state); return greetingResponse(profile); }
+      if (intent.id === 'greeting' && !recentlyTalking) {
+        recordTurn(state, intent, tone); saveState(state); return greetingResponse(profile);
+      }
       if (intent.id === 'thanks')      { recordTurn(state, intent, tone); saveState(state); return thanksResponse(); }
       if (intent.id === 'who_are_you') { recordTurn(state, intent, tone); saveState(state); return whoAreYouResponse(); }
+
+      // If we're in the middle of a topic and the user gives a very
+      // short follow-up that has no clear new topic keywords, treat
+      // it as continuation of the last topic.
+      let workingIntent = intent;
+      if (state.lastTopic && intent.id === 'general' && (text||'').trim().length < 60) {
+        workingIntent = { id: state.lastTopic, topic: state.lastTopic };
+      }
 
       // Standard composed response with optional recurring-topic preface.
       let preface = '';
       const topic = recurringTopic(state);
-      if (topic && topic === intent.id && state.visits > 1 && Math.random() < 0.5) {
+      if (topic && topic === workingIntent.id && state.visits > 1 && Math.random() < 0.4 && !recentlyTalking) {
         const friendly = topic.replace('_',' ');
         preface = `You've been circling ${friendly} energy a lot lately — I notice. `;
       }
 
-      recordTurn(state, intent, tone);
-      saveState(state);
+      recordTurn(state, workingIntent, tone);
+      const composed = compose(workingIntent, tone, profile, state);
+      saveState(state);  // saves lastHook/lastTopic written by compose
 
-      return preface + compose(intent, tone, profile);
+      return preface + composed;
     },
 
     /** Persist profile (called from the chat page when user provides DOB/name). */
