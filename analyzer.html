@@ -1028,21 +1028,45 @@ function renderAnalysis(){
   document.getElementById('lbEq').innerHTML=`<div class="lb-eq-row"><span>${eqNums} =</span><span class="lb-raw">${nameRaw}</span><span style="color:var(--text3)">→</span><span class="lb-reduced">${nameNum}</span><span class="lb-cpill ${pill}">${nameRaw}/${nameNum} · ${pillLabel}</span></div>`;
 
   // 2c. TL;DR SUMMARY (the at-a-glance line that opens the result)
+  // Uses the same 7-tier interpretation system as the paid report
+  // (numerology.js → getAlignmentTier) so users see consistent and
+  // honest tier labels everywhere — '78%' is never called 'Strong'
+  // when there's still meaningful headroom to improve.
   try {
-    const tier = pct >= 70 ? {label:'Strong alignment', bg:'rgba(76,175,132,.16)', fg:'#2e7d4f', border:'rgba(76,175,132,.4)'}
-                : pct >= 45 ? {label:'Workable alignment', bg:'rgba(245,196,81,.16)', fg:'#9b6f00', border:'rgba(245,196,81,.45)'}
-                            : {label:'Needs awareness', bg:'rgba(220,38,38,.12)', fg:'#b04545', border:'rgba(220,38,38,.35)'};
+    // Colour palettes per tone — supportive (green-tinted), balanced
+    // (gold), observant (warm orange-red, never harsh red).
+    const TIER_PALETTE = {
+      'tier-rare':           { bg:'rgba(76,175,132,.18)', fg:'#1f6e4a', border:'rgba(76,175,132,.45)' },
+      'tier-strong':         { bg:'rgba(76,175,132,.14)', fg:'#2e7d4f', border:'rgba(76,175,132,.40)' },
+      'tier-supportive':     { bg:'rgba(245,196,81,.18)', fg:'#9b6f00', border:'rgba(245,196,81,.55)' },
+      'tier-mixed':          { bg:'rgba(245,196,81,.16)', fg:'#9b6f00', border:'rgba(245,196,81,.50)' },
+      'tier-friction':       { bg:'rgba(232,150,80,.16)', fg:'#a14d22', border:'rgba(232,150,80,.45)' },
+      'tier-recalibration':  { bg:'rgba(220,100,70,.14)', fg:'#a04032', border:'rgba(220,100,70,.40)' },
+      'tier-transformational':{bg:'rgba(157,127,255,.14)', fg:'#5a3aa8', border:'rgba(157,127,255,.45)' },
+    };
+    // Per-tier sentence to land on the user's profile honestly —
+    // matches the phrasing in the paid report so messaging is
+    // consistent across free + paid.
+    const TIER_TLDR = {
+      'tier-rare':            "Your name and birth vibrations work together with rare ease, the fit is natural and reinforcing.",
+      'tier-strong':          "That's a strong fit, your name actively supports the energy you arrived with.",
+      'tier-supportive':      "The base is strong, with a few areas of recurring tension that conscious tweaks can ease further.",
+      'tier-mixed':           "The fit is workable, some areas feel natural, others feel inconsistent and would benefit from awareness.",
+      'tier-friction':        "There's noticeable internal friction, your name and birth pattern push against each other in measurable ways.",
+      'tier-recalibration':   "The fit asks for recalibration, growth comes from boundaries and emotional discernment more than from comfort.",
+      'tier-transformational':"The vibration is reinvention-led — uncommon by design, growth comes through deeper self-understanding.",
+    };
+    const tier = (typeof getAlignmentTier === 'function') ? getAlignmentTier(pct) : { key:'tier-mixed', title:'Mixed but Workable Energies' };
+    const pal  = TIER_PALETTE[tier.key] || TIER_PALETTE['tier-mixed'];
+    const sent = TIER_TLDR[tier.key] || "Your alignment shows room to enhance, the optimisation section below has options.";
+
     const pillEl = document.getElementById('tldrPill');
-    pillEl.textContent = `${pct}% · ${tier.label}`;
-    pillEl.style.background = tier.bg;
-    pillEl.style.color = tier.fg;
-    pillEl.style.border = `1px solid ${tier.border}`;
+    pillEl.textContent = `${pct}% · ${tier.title}`;
+    pillEl.style.background = pal.bg;
+    pillEl.style.color = pal.fg;
+    pillEl.style.border = `1px solid ${pal.border}`;
     document.getElementById('tldrLine').innerHTML =
-      `You're a <strong>Birth Number ${birthNum}</strong> (${getPlanet(birthNum)}) with <strong>Life Path Number ${destNum}</strong> (${getPlanet(destNum)}). Your name vibrates at <strong>${nameNum}</strong> (${getPlanet(nameNum)}). ${
-        pct >= 70 ? `That's a clean fit, your name is supporting the energy you arrived with.`
-        : pct >= 45 ? `The fit is workable, some friction in specific areas, smooth in others.`
-        : `The fit is off, your name is pulling against your birth chart in measurable ways.`
-      }`;
+      `You're a <strong>Birth Number ${birthNum}</strong> (${getPlanet(birthNum)}) with <strong>Life Path Number ${destNum}</strong> (${getPlanet(destNum)}). Your name vibrates at <strong>${nameNum}</strong> (${getPlanet(nameNum)}). ${sent}`;
   } catch(e){}
 
   // 2d. RELATIONSHIP COMPASS + LO SHU + DAILY REMEDIES (free)
