@@ -182,4 +182,15 @@
     <priority>0.5</priority>
   </url>
 
+  <!-- Programmatic SEO: name-number-N-meaning (1-9) -->
+  <url><loc>https://www.namealigned.com/name-number-1-meaning</loc><changefreq>monthly</changefreq><priority>0.85</priority></url>
+  <url><loc>https://www.namealigned.com/name-number-2-meaning</loc><changefreq>monthly</changefreq><priority>0.85</priority></url>
+  <url><loc>https://www.namealigned.com/name-number-3-meaning</loc><changefreq>monthly</changefreq><priority>0.85</priority></url>
+  <url><loc>https://www.namealigned.com/name-number-4-meaning</loc><changefreq>monthly</changefreq><priority>0.85</priority></url>
+  <url><loc>https://www.namealigned.com/name-number-5-meaning</loc><changefreq>monthly</changefreq><priority>0.85</priority></url>
+  <url><loc>https://www.namealigned.com/name-number-6-meaning</loc><changefreq>monthly</changefreq><priority>0.85</priority></url>
+  <url><loc>https://www.namealigned.com/name-number-7-meaning</loc><changefreq>monthly</changefreq><priority>0.85</priority></url>
+  <url><loc>https://www.namealigned.com/name-number-8-meaning</loc><changefreq>monthly</changefreq><priority>0.85</priority></url>
+  <url><loc>https://www.namealigned.com/name-number-9-meaning</loc><changefreq>monthly</changefreq><priority>0.85</priority></url>
+
 </urlset>
