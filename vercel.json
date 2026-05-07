@@ -42,6 +42,10 @@
     {
       "source": "/api/paypal-capture",
       "destination": "/api/paypal-capture.js"
+    },
+    {
+      "source": "/api/aura",
+      "destination": "/api/aura.js"
     }
   ],
 

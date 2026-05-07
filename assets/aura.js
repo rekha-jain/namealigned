@@ -491,51 +491,12 @@
     return topN >= 3 ? top : null;
   }
 
-  // ── AI mode (Puter.js) ───────────────────────────────────────
-  // Uses puter.ai.chat() — free, no API key, user-funded. Safety
-  // intents (suicide/medical/legal/money) are intercepted upstream
-  // and NEVER sent to the AI. On any failure we fall back to the
-  // rule-based composer so the chat never breaks.
+  // ── AI mode (Gemini via /api/aura) ───────────────────────────
+  // The browser POSTs to our Vercel serverless function which holds
+  // the Gemini API key server-side. Safety intents are blocked
+  // upstream and NEVER sent to the AI. On any failure we fall back
+  // to the rule-based composer so the chat never breaks.
 
-  function buildSystemPrompt(profile, state){
-    const planet = (profile && profile.birthNum) ? PLANET_BY_NUM[profile.birthNum] : '';
-    const trait  = (profile && profile.birthNum) ? NUM_TRAITS[profile.birthNum]   : '';
-    const namePart = profile && profile.firstName ? `The seeker's name is ${profile.firstName}.` : '';
-    const numPart  = (profile && profile.birthNum)
-      ? `Their Chaldean Birth Number is ${profile.birthNum} (ruling planet: ${planet}). Trait: ${trait}`
-      : '';
-    return [
-      "You are Aura — a warm, empathetic, mystical confidante on a Chaldean numerology website.",
-      "",
-      "VOICE:",
-      "- Deeply warm, accepting, gentle. Never clinical, never preachy.",
-      "- Speak like a wise older friend who has time for them, not a fortune teller.",
-      "- Plain, beautiful English. No jargon. No bullet points or markdown.",
-      "- 3 to 5 sentences. Concise. Each sentence earns its place.",
-      "",
-      "WHAT TO DO:",
-      "- Answer the actual question asked. If they ask 'will I travel the world?', address travel — don't pivot to generic 'timeline' talk.",
-      "- Acknowledge the feeling underneath the question first, briefly.",
-      "- Then offer a gentle, specific reading or perspective.",
-      "- If their birth number is known, weave it in naturally about 1 in 3 replies (not every time, and only when it actually fits).",
-      "- End with warmth or a quiet observation. Do NOT end every reply with a probing question — that feels prying. Maybe one in five replies can have a gentle invitation, the rest end warmly.",
-      "",
-      "WHAT NOT TO DO:",
-      "- Never say 'tell me the part you didn't say first' or other prying lines.",
-      "- Never demand they reveal more. Accept whatever they share.",
-      "- Never give medical, legal, or specific financial advice. (You won't see those questions — they're filtered out before reaching you.)",
-      "- Don't repeat stock phrases. If you said 'cycles like this one tend to break open' last reply, find different words this time.",
-      "- Don't open with 'Ah' or 'Beloved' or theatrical mystical openers.",
-      "",
-      "SEEKER CONTEXT:",
-      namePart,
-      numPart,
-      "",
-      "Respond now to their next message with warmth and specificity."
-    ].filter(Boolean).join('\n');
-  }
-
-  // Build a short conversation history to give the AI context
   function buildHistory(state){
     const hist = (state && state.history) || [];
     return hist.slice(-6); // last 3 exchanges
@@ -545,37 +506,32 @@
     state.history = (state.history || []).concat([{role, content}]).slice(-12);
   }
 
-  // Detect Puter availability (the script may not have loaded, or
-  // user may be offline / on a browser that blocks it).
-  function puterReady(){
-    return typeof window !== 'undefined'
-        && typeof window.puter !== 'undefined'
-        && window.puter.ai
-        && typeof window.puter.ai.chat === 'function';
-  }
-
-  async function respondViaPuter(text, profile, state){
-    const system   = buildSystemPrompt(profile, state);
-    const history  = buildHistory(state);
-    const messages = [
-      { role: 'system', content: system },
-      ...history,
-      { role: 'user',   content: text },
-    ];
-    // 12s timeout — fall back to rules if Puter is slow or stuck.
-    const timeout = new Promise((_, rej) => setTimeout(() => rej(new Error('timeout')), 12000));
-    const call    = window.puter.ai.chat(messages, { model: 'claude-sonnet-4' });
-    const result  = await Promise.race([call, timeout]);
-    // Puter returns either a string or an object with .message.content
-    let out = '';
-    if (typeof result === 'string') out = result;
-    else if (result && result.message && result.message.content) {
-      out = Array.isArray(result.message.content)
-        ? result.message.content.map(c => c.text || '').join('')
-        : String(result.message.content);
-    } else if (result && result.text) out = result.text;
-    else out = String(result || '').trim();
-    return (out || '').trim();
+  async function respondViaApi(text, profile, state){
+    const ctrl = new AbortController();
+    const tmo = setTimeout(() => ctrl.abort(), 14000);
+    try {
+      const r = await fetch('/api/aura', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          message: text,
+          profile: {
+            firstName: profile && profile.firstName || '',
+            birthNum:  profile && profile.birthNum  || null,
+          },
+          history: buildHistory(state),
+        }),
+        signal: ctrl.signal,
+      });
+      clearTimeout(tmo);
+      if (!r.ok) throw new Error('api ' + r.status);
+      const data = await r.json();
+      const out = (data && data.reply || '').trim();
+      if (!out) throw new Error('empty');
+      return out;
+    } finally {
+      clearTimeout(tmo);
+    }
   }
 
   // ── Public API (the swappable contract) ──────────────────────
@@ -674,14 +630,9 @@
         return intent.reply;
       }
 
-      // No Puter? Use rule-based engine (still warm, still fine).
-      if (!puterReady()) {
-        return this.respond(text, profile);
-      }
-
-      // AI path
+      // AI path — Gemini via our serverless function
       try {
-        const reply = await respondViaPuter(text, profile, state);
+        const reply = await respondViaApi(text, profile, state);
         if (!reply) throw new Error('empty');
         recordTurn(state, intent, tone);
         recordHistory(state, 'user', text);
