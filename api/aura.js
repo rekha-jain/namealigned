@@ -112,8 +112,10 @@ export default async function handler(req, res) {
   const systemPrompt = buildSystemPrompt(profile);
   const contents     = toGeminiContents(history, message);
 
-  // Gemini 2.0 Flash — generous free tier, fast, good quality.
-  const url = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=' + encodeURIComponent(apiKey);
+  // Gemini Flash — env-overridable model name. Default to 1.5-flash
+  // because it has a more established free-tier quota than 2.0-flash.
+  const model = process.env.GEMINI_MODEL || 'gemini-1.5-flash';
+  const url = 'https://generativelanguage.googleapis.com/v1beta/models/' + encodeURIComponent(model) + ':generateContent?key=' + encodeURIComponent(apiKey);
   const payload = {
     systemInstruction: { parts: [{ text: systemPrompt }] },
     contents: contents,
@@ -143,8 +145,8 @@ export default async function handler(req, res) {
 
     if (!r.ok) {
       const errText = await r.text().catch(() => '');
-      console.error('[aura] Gemini error', r.status, errText.slice(0, 300));
-      return res.status(502).json({ error: 'upstream', detail: r.status });
+      console.error('[aura] Gemini error', r.status, errText.slice(0, 500));
+      return res.status(502).json({ error: 'upstream', status: r.status, detail: errText.slice(0, 400) });
     }
 
     const data = await r.json();
