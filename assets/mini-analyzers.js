@@ -654,25 +654,135 @@ function buildPartnerResultHTML(yn,yd,pn,pd, opts){
   const yArche = ARCHETYPES[yMoo], pArche = ARCHETYPES[pMoo];
   trackEvent('mini_analyzer_result', {kind:'partner', score});
 
+  // Multi-paragraph narrative — was a single paragraph before, which
+  // felt thin compared to the depth users expect. Each tier gets a
+  // distinct opener, then three follow-up paragraphs synthesise
+  // what works, what asks for awareness, and the long-term arc.
   let narrative;
+  const yFirst = firstWord(yn), pFirst = firstWord(pn);
   if(t.cls==='high'){
-    narrative = `<strong>${yPlanet} meets ${pPlanet}</strong>, your Chaldean numbers reinforce each other. The ${yArche.toLowerCase()} in you finds genuine ease with the ${pArche.toLowerCase()} in them. Most disagreements resolve themselves once spoken aloud.`;
+    narrative =
+      `<p><strong>${yPlanet} meets ${pPlanet}</strong>, your Chaldean numbers reinforce each other. The ${yArche.toLowerCase()} in you finds genuine ease with the ${pArche.toLowerCase()} in them. Most disagreements resolve themselves once spoken aloud.</p>` +
+      `<p><strong>What works between you:</strong> the natural rhythm. ${yFirst}'s ${yPlanet} energy and ${pFirst}'s ${pPlanet} energy run on harmonious frequencies — small daily decisions feel collaborative, not negotiated. You both tend to read each other's moods correctly without verbal effort.</p>` +
+      `<p><strong>What still asks for awareness:</strong> even high-compatibility pairings carry friction in one specific area. For ${yPlanet} × ${pPlanet}, that area is usually <em>pace</em> — one of you moves on a decision before the other has fully processed it. The fix is naming the pace difference explicitly, not assuming alignment because the chemistry feels easy.</p>` +
+      `<p><strong>The long-term arc:</strong> this is the kind of pairing that grows steadier across decades. The years compound — what looks ordinary in year five becomes remarkable by year fifteen. Conscious communication early prevents the small misalignments that accumulate silently in any relationship.</p>`;
   } else if(t.cls==='mid'){
-    narrative = `<strong>${yPlanet} meets ${pPlanet}</strong>, workable, with conscious effort. Your rhythms differ, which is why you irritate each other in small ways and complement each other in big ones. Patience and explicit communication amplify the harmony.`;
+    narrative =
+      `<p><strong>${yPlanet} meets ${pPlanet}</strong>, workable with conscious effort. Your rhythms differ, which is why you irritate each other in small ways and complement each other in big ones. Patience and explicit communication amplify the harmony already present.</p>` +
+      `<p><strong>What works between you:</strong> the differences themselves. ${yFirst}'s ${yArche.toLowerCase()} energy fills gaps in ${pFirst}'s ${pArche.toLowerCase()} approach (and vice versa). On the days you both choose to listen, the relationship is more interesting than a same-energy pairing would ever be.</p>` +
+      `<p><strong>What asks for awareness:</strong> ${yPlanet} and ${pPlanet} carry different default modes — emotional pace, decision speed, recovery time after conflict. Assumptions are where the friction lives. The pairing thrives when both partners explicitly name what they need rather than expecting it to be intuited.</p>` +
+      `<p><strong>The long-term arc:</strong> mid-tier pairings strengthen or weaken based on intentional effort, not chemistry alone. Couples that put structured communication in place (weekly check-ins, naming the small irritations early) outperform their compatibility score; couples that coast tend to drift.</p>`;
   } else {
-    narrative = `<strong>${yPlanet} meets ${pPlanet}</strong>, different rhythms, which doesn't mean wrong. The bond can work, but it asks for honest naming of needs. Assumptions are where most friction lives in this pairing.`;
+    narrative =
+      `<p><strong>${yPlanet} meets ${pPlanet}</strong>, different rhythms — which doesn't mean wrong. The bond can absolutely work, but it asks for honest, ongoing naming of needs. Assumptions are where most friction lives in this pairing.</p>` +
+      `<p><strong>What works between you:</strong> the contrast is the gift, when used consciously. ${yFirst}'s ${yPlanet} energy sees what ${pFirst}'s ${pPlanet} energy can't, and vice versa. Many of the most resilient long marriages sit in this tier — they look like work because they are work, and the work itself becomes the bond.</p>` +
+      `<p><strong>What asks for awareness:</strong> the temptation to read the other's behaviour through your own framework. ${yPlanet} ≠ ${pPlanet}; what feels like distance to one of you may feel like respect to the other. The growth lives in slowing down enough to ask what something means before reacting to what it looked like.</p>` +
+      `<p><strong>The long-term arc:</strong> low-tier scores aren't predictions; they're descriptions of the friction terrain. Couples who acknowledge the differences and build communication rituals (therapy, dedicated check-ins, shared journaling) often build more conscious relationships than higher-scoring couples who never had to try.</p>`;
   }
   return miniResultHTML({
     eyebrow:'💞 Partner Compatibility',
-    title:`${firstWord(yn)} ✦ ${firstWord(pn)}`,
+    title:`${yFirst} ✦ ${pFirst}`,
     score, tier:t,
     pair:`${yArche} <span style="opacity:.55">×</span> ${pArche}`,
     narrative,
+    extraHtml: buildPartnerToolkit(yMoo, yBhag, pMoo, pBhag, yFirst, pFirst),
     upsellLead:'Go deeper:',
     upsell:UPSELL_PARTNER,
     kind:'partner',
     inline: !!(opts&&opts.inline)
   });
+}
+
+// ── Partner Toolkit (matches Business + Child toolkits in depth) ────
+// Surfaces 4 actionable insights below the narrative: planetary
+// dynamic, communication style, friction patterns, growth practice.
+function buildPartnerToolkit(yMoo, yBhag, pMoo, pBhag, yFirst, pFirst){
+  const yPlanet = getPlanet(yMoo), pPlanet = getPlanet(pMoo);
+  const fY = FRIENDLY[yMoo]||[], fP = FRIENDLY[pMoo]||[];
+  const both = fY.includes(pMoo) && fP.includes(yMoo);
+  const oneWay = !both && (fY.includes(pMoo) || fP.includes(yMoo));
+
+  // Planetary-pair specific dynamic note (32 of the 81 pairs covered;
+  // the rest fall back to a tier-aware general observation).
+  const PAIR_KEY = (a,b) => a < b ? a+'-'+b : b+'-'+a;
+  const PAIR_NOTES = {
+    '1-2':'Sun-Moon: classical pairing — leadership softened by sensitivity. Each partner covers what the other lacks.',
+    '1-4':'Sun-Rahu: ambitious + unconventional. Works when both respect the other\'s scale of vision.',
+    '1-9':'Sun-Mars: high-energy, high-visibility pairing. Both partners push forward; the work is choosing distinct domains.',
+    '2-7':'Moon-Ketu: depth-led pairing. Both partners value inner life over performance.',
+    '2-8':'Moon-Saturn: warmth meets structure. Moon\'s emotional fluency softens Saturn\'s heaviness.',
+    '3-6':'Jupiter-Venus: abundance meets harmony. One of the most studied happy-marriage signatures in classical Chaldean numerology.',
+    '3-9':'Jupiter-Mars: optimism meets courage. Vibrant, often loud, deeply loyal.',
+    '4-8':'Rahu-Saturn: outsider meets endurance. Both partners value patience over flash; long-game commitment.',
+    '5-1':'Mercury-Sun: speed meets authority. High-leverage marriage when both partners move at compatible pace.',
+    '5-9':'Mercury-Mars: mental speed meets physical decisiveness. Energetic, unsentimental, action-led.',
+    '6-9':'Venus-Mars: classical passion-and-protection signature. Strong in physical chemistry, emotional warmth.',
+    '7-2':'Ketu-Moon: depth-led pairing — both partners value inner life over performance.',
+    '8-2':'Saturn-Moon: structure meets warmth. Saturn\'s authority softened by Moon\'s emotional fluency.',
+    '8-4':'Saturn-Rahu: endurance meets unconventional. Both value patience over flash.',
+    '9-1':'Mars-Sun: high-energy pairing — both partners push forward; the work is choosing distinct domains.',
+    '9-6':'Mars-Venus: passion meets devotion. Strong physical chemistry, emotional intensity.',
+  };
+  const pairNote = PAIR_NOTES[PAIR_KEY(yMoo,pMoo)] ||
+    (yMoo === pMoo
+      ? `${yPlanet}-${pPlanet}: same planet on both sides. Strong amplification — the gifts and the lessons of ${yPlanet} both intensify in this pairing.`
+      : both
+      ? `${yPlanet}-${pPlanet}: mutually friendly planets. The natural rhythm flows easily; conscious communication keeps it strong.`
+      : oneWay
+      ? `${yPlanet}-${pPlanet}: one-way friendly. Effort flows more easily in one direction than the other; awareness of which keeps the pairing balanced.`
+      : `${yPlanet}-${pPlanet}: contrasting planets. The differences are the gift when handled consciously; the source of friction when ignored.`);
+
+  // Communication style mismatches — how each Moolank tends to
+  // process emotion + verbal style.
+  const COMM_STYLES = {
+    1:'decides quickly, then explains', 2:'feels first, articulates after time',
+    3:'thinks through speaking out loud', 4:'processes patterns silently',
+    5:'talks through every angle fast', 6:'leads with relational warmth',
+    7:'researches alone, then speaks', 8:'understates feelings; speaks once committed',
+    9:'reacts in the moment; recovers fast'
+  };
+  const yComm = COMM_STYLES[yMoo] || 'processes their own way';
+  const pComm = COMM_STYLES[pMoo] || 'processes their own way';
+
+  // Friction-pattern observations
+  const FRICTION_BY_PAIR = (oneWay || (!both && yMoo !== pMoo))
+    ? 'Pace differences — one of you usually wants to resolve faster than the other can process. The fix is naming the pace gap explicitly rather than assuming bad faith.'
+    : both
+    ? 'Boredom in stability — the natural ease of this pairing means small misalignments can go unspoken for years. Quarterly check-ins prevent quiet drift.'
+    : 'Assumptions about meaning — what one of you reads as warmth, the other reads as effort. Slowing the interpretation step prevents most arguments.';
+
+  // Growth practice — concrete weekly habit
+  const GROWTH = both
+    ? 'Once a week, name one small thing you appreciated and one tiny irritation. The high-compat couples who do this stay high-compat; the ones who skip it slowly drift.'
+    : oneWay
+    ? 'Twice a month, swap whose preferences lead the weekend. Asymmetric-friendship pairings drift toward one partner\'s defaults unless deliberately balanced.'
+    : 'Weekly 30-minute uninterrupted check-in — no phones, no agenda. Low-compat pairings that institute this consistently outperform their score; the ones that coast tend to harden.';
+
+  return `
+    <div style="background:linear-gradient(160deg,rgba(124,58,237,.04),rgba(245,196,81,.04));border:1px solid rgba(245,196,81,.3);border-radius:12px;padding:1rem 1rem .85rem;margin-bottom:1rem">
+      <div style="font-family:'Playfair Display',Georgia,serif;font-size:15.5px;font-weight:700;color:var(--text);margin-bottom:.6rem;letter-spacing:.01em">🎯 Couple's Toolkit</div>
+
+      <div style="margin-bottom:.85rem">
+        <div style="font-family:sans-serif;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#6d4ed1;font-weight:700;margin-bottom:.35rem">✦ The planetary dynamic</div>
+        <p style="font-family:sans-serif;font-size:12.5px;color:var(--text);line-height:1.55;margin:0">${pairNote}</p>
+      </div>
+
+      <div style="margin-bottom:.85rem">
+        <div style="font-family:sans-serif;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#6d4ed1;font-weight:700;margin-bottom:.35rem">✦ Communication-style differences</div>
+        <p style="font-family:sans-serif;font-size:12.5px;color:var(--text);line-height:1.55;margin:0"><strong>${yFirst}</strong> ${yComm}. <strong>${pFirst}</strong> ${pComm}. The gap between these styles is where misreadings live; awareness of it usually resolves them.</p>
+      </div>
+
+      <div style="margin-bottom:.85rem">
+        <div style="font-family:sans-serif;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#6d4ed1;font-weight:700;margin-bottom:.35rem">✦ Most likely friction pattern</div>
+        <p style="font-family:sans-serif;font-size:12.5px;color:var(--text);line-height:1.55;margin:0">${FRICTION_BY_PAIR}</p>
+      </div>
+
+      <div>
+        <div style="font-family:sans-serif;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#6d4ed1;font-weight:700;margin-bottom:.35rem">✦ Weekly growth practice</div>
+        <p style="font-family:sans-serif;font-size:12.5px;color:var(--text);line-height:1.55;margin:0">${GROWTH}</p>
+      </div>
+    </div>
+  `;
 }
 
 function buildChildResultHTML(cn,cd, opts){
