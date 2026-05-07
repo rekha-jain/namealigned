@@ -373,39 +373,56 @@ function suggestBrandVariants(name, moo, bhag){
     }
   }
 
-  const STRONG_FLOOR = 70;
-  const candidates = [...allVariants.values()]
-    .filter(v => v.score >= STRONG_FLOOR)
-    .map(v => ({
-      ...v,
-      delta: v.score - inputScore,
-      reason: v.move.label,
-      moveRank: _MOVE_RANK[v.move.kind] || 9
-    }))
-    // Sort: highest score first, then most natural move, then closest length to input.
-    .sort((a,b)=>
-      b.score - a.score
-      || a.moveRank - b.moveRank
-      || a.lenPenalty - b.lenPenalty
-      || a.name.length - b.name.length
-    );
+  // Tier-aware floor: ideally show variants that hit Strong (≥70).
+  // But if the strict floor produces fewer than 3 picks, fall back
+  // to variants that strictly beat the input by ≥5 — better to show
+  // honest improvements than to leave the user with one option.
+  const STRONG_FLOOR    = 70;
+  const RELAXED_FLOOR   = Math.min(STRONG_FLOOR, Math.max(inputScore + 5, 55));
+  const MIN_PICKS       = 3;
+  const MAX_PICKS       = 4;
 
-  const MAX_PICKS = 4;
-  // Prefer diversity in reduced-number across the picks (one per brand-target).
-  const out = [], seenReduced = new Set();
-  for(const v of candidates){
-    if(seenReduced.has(v.reduced)) continue;
-    seenReduced.add(v.reduced);
-    out.push(v);
-    if(out.length===MAX_PICKS) break;
-  }
-  if(out.length<MAX_PICKS){
-    for(const v of candidates){
-      if(out.includes(v)) continue;
-      out.push(v);
-      if(out.length===MAX_PICKS) break;
+  const enrich = (list) => list.map(v => ({
+    ...v,
+    delta: v.score - inputScore,
+    reason: v.move.label,
+    moveRank: _MOVE_RANK[v.move.kind] || 9
+  })).sort((a,b)=>
+    b.score - a.score
+    || a.moveRank - b.moveRank
+    || a.lenPenalty - b.lenPenalty
+    || a.name.length - b.name.length
+  );
+
+  const all       = [...allVariants.values()];
+  const strong    = enrich(all.filter(v => v.score >= STRONG_FLOOR));
+  const relaxed   = enrich(all.filter(v => v.score >= RELAXED_FLOOR && v.score < STRONG_FLOOR));
+
+  // Diversity-aware picker: prefer one per reduced-number first, then
+  // fill remaining slots regardless of reduced-number.
+  const pickFrom = (sourceList, target, currentOut, seenReduced) => {
+    for(const v of sourceList){
+      if(currentOut.length >= target) break;
+      if(seenReduced.has(v.reduced)) continue;
+      seenReduced.add(v.reduced);
+      currentOut.push(v);
     }
+    for(const v of sourceList){
+      if(currentOut.length >= target) break;
+      if(currentOut.includes(v)) continue;
+      currentOut.push(v);
+    }
+  };
+
+  const out = [], seenReduced = new Set();
+  pickFrom(strong, MAX_PICKS, out, seenReduced);
+  // If strong-tier didn't fill MIN_PICKS, top up from the relaxed pool
+  // so the user always sees at least 3 actionable options when any
+  // exist that strictly beat their input.
+  if(out.length < MIN_PICKS){
+    pickFrom(relaxed, MIN_PICKS, out, seenReduced);
   }
+
   out._inputScore = inputScore;
   return out;
 }
