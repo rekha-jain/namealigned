@@ -114,7 +114,7 @@ export default async function handler(req, res) {
 
   // Gemini Flash — env-overridable model name. Default to 1.5-flash
   // because it has a more established free-tier quota than 2.0-flash.
-  const model = process.env.GEMINI_MODEL || 'gemini-1.5-flash';
+  const model = process.env.GEMINI_MODEL || 'gemini-2.5-flash';
   const url = 'https://generativelanguage.googleapis.com/v1beta/models/' + encodeURIComponent(model) + ':generateContent?key=' + encodeURIComponent(apiKey);
   const payload = {
     systemInstruction: { parts: [{ text: systemPrompt }] },
