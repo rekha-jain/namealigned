@@ -263,9 +263,31 @@
     const el = document.createElement('div');
     el.className = 'msg aura';
     el.innerHTML = '<div class="av" aria-hidden="true"></div><div class="body"></div>';
-    el.querySelector('.body').textContent = text;
     messagesEl.appendChild(el);
+    typeOutText(el.querySelector('.body'), text);
     scrollBottom();
+  }
+
+  // Typewriter effect — reveal the reply word by word so it feels
+  // like Aura is speaking, not dumping a wall of text. ~55-90ms per
+  // word with a tiny pause after sentence-ending punctuation.
+  function typeOutText(target, text){
+    target.textContent = '';
+    const words = String(text || '').split(/(\s+)/); // keep separators
+    let i = 0;
+    function tick(){
+      if (i >= words.length) return;
+      const w = words[i++];
+      target.textContent += w;
+      scrollBottom();
+      // Pause longer at sentence endings, shorter otherwise.
+      const last = target.textContent.slice(-1);
+      const delay = /[.!?]/.test(last) ? 180 + Math.random()*120
+                  : /[,;:]/.test(last) ? 110 + Math.random()*60
+                  : 55  + Math.random()*40;
+      setTimeout(tick, delay);
+    }
+    tick();
   }
   function addTyping(){
     const el = document.createElement('div');
