@@ -161,7 +161,7 @@ const MISSING_MEANINGS={
 //
 // Per product direction: floor at 35 (avoid dramatic catastrophic
 // scores; numerology is meant to be informative, not fear-based)
-// and ceiling at 99 (perfect 100 reserved for nameNum===birth number).
+// and ceiling at 99 (perfect 100 reserved for nameNum===moolank).
 
 function _scoreCompoundQuality(compound){
   const e = CD[compound];
@@ -175,8 +175,8 @@ function _scoreRootHarmony(a, b){
   if ((FRIENDLY[b]||[]).includes(a)) return 85;
   return 62;                         // not friendly — but no dramatic drop
 }
-function _scorePlanetaryHarmony(nameNum, birth number, destNum){
-  const pairs = [[nameNum,birth number],[nameNum,destNum],[birth number,destNum]];
+function _scorePlanetaryHarmony(nameNum, moolank, destNum){
+  const pairs = [[nameNum,moolank],[nameNum,destNum],[moolank,destNum]];
   let score = 0;
   pairs.forEach(([x,y]) => {
     if (x === y) score += 1;
@@ -190,11 +190,11 @@ function _scorePhoneticStability(compound){
   if (compound <= 44) return 72;
   return 64;                          // very heavy compound — harder to carry
 }
-function _scoreAmplification(nameNum, birth number, destNum){
-  const distinct = new Set([nameNum, birth number, destNum]).size;
+function _scoreAmplification(nameNum, moolank, destNum){
+  const distinct = new Set([nameNum, moolank, destNum]).size;
   if (distinct === 1) return 95;     // perfect resonance (rare, very strong)
   if (distinct === 2) return 82;     // two-way amplification
-  return _scorePlanetaryHarmony(nameNum, birth number, destNum);
+  return _scorePlanetaryHarmony(nameNum, moolank, destNum);
 }
 
 const _WEIGHTS = { cq:30, nm:20, nb:20, ph:12, ps:8, amp:10 };
@@ -210,7 +210,7 @@ function compatPctBreakdown(nameNum, nameRaw, birthNum, destNum){
   // Phase 4a recalibration: floor raised to 45 (so "below 45%" is
   // genuinely rare and reserved for transformational profiles, per
   // product direction). Ceiling stays at 99 — the candidate
-  // generator overrides to 100 only when nameNum===birth number, which
+  // generator overrides to 100 only when nameNum===moolank, which
   // is the report's "fully resonant" convention.
   const overall = Math.round(Math.max(45, Math.min(99,
     (cq*w.cq + nm*w.nm + nb*w.nb + ph*w.ph + ps*w.ps + amp*w.amp) / 100
@@ -402,24 +402,24 @@ function naturalnessScore(name){
 // shorter (more natural) name wins.
 //
 // Note: compatPct caps at 98%, so we override to 100% when the
-// candidate's reduced name-number equals birth number (perfect resonance
+// candidate's reduced name-number equals moolank (perfect resonance
 // — that's the report's existing convention for "fully aligned").
 //
 // Returns: {corrections:[...], delta, target, currentSum, alreadyAligned?}
 // where each correction has alignmentPct ∈ [70, 100].
-function generateAlignedCorrectedNames(fullName, birth number, destNum){
+function generateAlignedCorrectedNames(fullName, moolank, destNum){
   var parts=fullName.trim().split(/\s+/);
   var firstName=parts[0], restStr=parts.slice(1).join(' ');
   var firstSum=chalSum(firstName), restSum=chalSum(restStr);
   var total=firstSum+restSum;
-  if(destNum==null) destNum=birth number;
+  if(destNum==null) destNum=moolank;
 
-  // Smallest targetSum >= total where reduce → birth number (used only
+  // Smallest targetSum >= total where reduce → moolank (used only
   // for the legacy delta/target fields that the rendering layer
   // reads to phrase the "phonetic correction requires adding N"
   // fallback).
   var target=null;
-  for(var t=total;t<=total+60;t++){ if(reduce(t)===birth number){target=t;break;} }
+  for(var t=total;t<=total+60;t++){ if(reduce(t)===moolank){target=t;break;} }
   if(target===null) target=total;
 
   // If the user's current name already scores very high on the
@@ -428,7 +428,7 @@ function generateAlignedCorrectedNames(fullName, birth number, destNum){
   // new compatPctBreakdown so the threshold is internally
   // consistent with the breakdown the user sees on the page.
   var currentNameNum = reduce(total);
-  var currentScore = compatPctBreakdown(currentNameNum, total, birth number, destNum).overall;
+  var currentScore = compatPctBreakdown(currentNameNum, total, moolank, destNum).overall;
   if (currentScore >= 95) {
     return {corrections:[],delta:0,target:total,currentSum:total,alreadyAligned:true};
   }
@@ -485,10 +485,10 @@ function generateAlignedCorrectedNames(fullName, birth number, destNum){
     var nf=chalSum(capped);
     var nt=nf+restSum;
     var reduced=reduce(nt);
-    // Convention: name-number === birth number means full resonance (100%).
+    // Convention: name-number === moolank means full resonance (100%).
     // Otherwise use the same compatPct scorer used for the user's
     // current name so the numbers are directly comparable.
-    var pct = (reduced===birth number) ? 100 : compatPct(reduced, nt, birth number, destNum);
+    var pct = (reduced===moolank) ? 100 : compatPct(reduced, nt, moolank, destNum);
     if(pct < 70) return;
     // Naturalness gate (phase 2). Reject candidates that look or
     // sound awkward (Aaravhl, Mohanhk, Jiyaaaa-class). Still keep
@@ -552,7 +552,7 @@ function generateAlignedCorrectedNames(fullName, birth number, destNum){
       var nf2 = chalSum(cap2);
       var nt2 = nf2 + restSum;
       var rd2 = reduce(nt2);
-      var pc2 = (rd2 === birth number) ? 100 : compatPct(rd2, nt2, birth number, destNum);
+      var pc2 = (rd2 === moolank) ? 100 : compatPct(rd2, nt2, moolank, destNum);
       if (pc2 < 70) continue;
       seen.add(lc2);
       relaxed.push({

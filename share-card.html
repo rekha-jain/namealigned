@@ -161,12 +161,12 @@ function wrapTextSC(ctx, text, x, y, maxWidth, lineHeight, maxLines, align){
   }
 }
 
-function renderCard(displayName, birth number){
+function renderCard(displayName, moolank){
   var canvas = document.getElementById('shareCardCanvas');
   if(!canvas) return;
   var ctx = canvas.getContext('2d');
   var W = 1200, H = 630;
-  var profile = MOOLANK_PROFILES[birth number] || MOOLANK_PROFILES[1];
+  var profile = MOOLANK_PROFILES[moolank] || MOOLANK_PROFILES[1];
 
   // Background
   var bg = ctx.createLinearGradient(0,0,0,H);
@@ -247,7 +247,7 @@ function renderCard(displayName, birth number){
   ctx.fillStyle = '#f5d060';
   ctx.font = '700 130px Georgia, serif';
   ctx.textBaseline = 'middle';
-  ctx.fillText(String(birth number), ringX, ringY+4);
+  ctx.fillText(String(moolank), ringX, ringY+4);
   ctx.shadowBlur = 0;
   ctx.textBaseline = 'alphabetic';
 
@@ -330,8 +330,8 @@ function renderCard(displayName, birth number){
 (function init(){
   var params = new URLSearchParams(location.search);
   var rawName = (params.get('n') || 'You').trim();
-  var birth number = parseInt(params.get('m'), 10);
-  if (!birth number || birth number < 1 || birth number > 9) birth number = 1;
+  var moolank = parseInt(params.get('m'), 10);
+  if (!moolank || moolank < 1 || moolank > 9) moolank = 1;
 
   // Sanitise: only first word, capitalise, max 24 chars
   var firstName = rawName.split(/\s+/)[0].slice(0, 24);
@@ -339,7 +339,7 @@ function renderCard(displayName, birth number){
 
   document.getElementById('cardTitle').textContent = displayName + '’s Insight Card';
 
-  renderCard(displayName, birth number);
+  renderCard(displayName, moolank);
 
   // Wire up Save image
   var canvas = document.getElementById('shareCardCanvas');
@@ -358,7 +358,7 @@ function renderCard(displayName, birth number){
   // WhatsApp share — text + URL (most chat apps render OG preview from the URL)
   var wa = document.getElementById('waBtn');
   var shareUrl = location.href;
-  var msg = displayName + '’s Chaldean numerology insight — Driver Number ' + birth number + '. ' + shareUrl;
+  var msg = displayName + '’s Chaldean numerology insight — Driver Number ' + moolank + '. ' + shareUrl;
   wa.href = 'https://wa.me/?text=' + encodeURIComponent(msg);
 
   // Instagram — there is no public web→IG share endpoint, so the

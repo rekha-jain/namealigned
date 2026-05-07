@@ -1129,11 +1129,11 @@ function renderAnalysis(){
 
   // Track result viewed (legacy snake_case + Mixpanel canonical name)
   trackEvent('result_viewed', {
-    birth number: birthNum, life path number: destNum, nameNum: nameNum,
+    moolank: birthNum, bhagyank: destNum, nameNum: nameNum,
     pct: pct, status: status
   });
   if (window.naTrack) window.naTrack('Result Viewed', {
-    birth number: birthNum, life path number: destNum, name_number: nameNum,
+    moolank: birthNum, bhagyank: destNum, name_number: nameNum,
     alignment: pct, status: status,
   });
 }
@@ -1173,7 +1173,7 @@ async function captureEmail(){
   // Mixpanel: identify the user against this email and fire Email Captured
   if (window.naIdentify) window.naIdentify(email, { name: S.name });
   if (window.naTrack)    window.naTrack('Email Captured', {
-    birth number: S.birthNum, life path number: S.destNum, name_number: S.nameNum,
+    moolank: S.birthNum, bhagyank: S.destNum, name_number: S.nameNum,
     location: 'analyzer',
   });
   document.getElementById('emailRow').style.display='none';
@@ -1338,17 +1338,17 @@ function buildShareCard(){
     const rawName  = (state.name || 'You').toString().trim();
     const firstName= rawName.split(/\s+/)[0] || 'You';
     const displayName = firstName.charAt(0).toUpperCase() + firstName.slice(1).toLowerCase();
-    const birth number  = (typeof state.birthNum === 'number' && state.birthNum >= 1 && state.birthNum <= 9) ? state.birthNum : 1;
+    const moolank  = (typeof state.birthNum === 'number' && state.birthNum >= 1 && state.birthNum <= 9) ? state.birthNum : 1;
 
     const PROFILES = (typeof MOOLANK_PROFILES !== 'undefined' && MOOLANK_PROFILES) ? MOOLANK_PROFILES : {};
     const TRUTHS   = (typeof EMOTIONAL_TRUTHS  !== 'undefined' && EMOTIONAL_TRUTHS) ? EMOTIONAL_TRUTHS : {};
     const LABELS   = (typeof STRENGTH_LABELS   !== 'undefined' && STRENGTH_LABELS) ? STRENGTH_LABELS : {};
     const ARCH     = (typeof ARCHETYPES        !== 'undefined' && ARCHETYPES)      ? ARCHETYPES : {};
 
-    const profile   = PROFILES[birth number] || PROFILES[1] || { planet:'Sun', planetIcon:'☀', qualities:'Leadership · Vitality' };
-    const truth     = TRUTHS[birth number]   || TRUTHS[1]   || 'Your name carries strengths uniquely yours.';
-    const strengths = (LABELS[birth number]  || LABELS[1]   || []).slice(0,3);
-    const archetype = ARCH[birth number]     || ARCH[1]     || 'The Original';
+    const profile   = PROFILES[moolank] || PROFILES[1] || { planet:'Sun', planetIcon:'☀', qualities:'Leadership · Vitality' };
+    const truth     = TRUTHS[moolank]   || TRUTHS[1]   || 'Your name carries strengths uniquely yours.';
+    const strengths = (LABELS[moolank]  || LABELS[1]   || []).slice(0,3);
+    const archetype = ARCH[moolank]     || ARCH[1]     || 'The Original';
 
     // Always reset the bitmap to a clean state — guarantees we
     // start from blank even if the canvas was partially drawn.
@@ -1436,7 +1436,7 @@ function buildShareCard(){
       ctx.fillStyle = '#f5d060';
       ctx.font = '700 120px Georgia, serif';
       ctx.textBaseline = 'middle';
-      ctx.fillText(String(birth number), ringX, ringY + 4);
+      ctx.fillText(String(moolank), ringX, ringY + 4);
       ctx.textBaseline = 'alphabetic';
 
       // Ruling planet pill
@@ -1581,9 +1581,9 @@ function _legacy_buildShareCard_unused(){
 
   const firstName = (S.name||'You').trim().split(/\s+/)[0];
   const displayName = firstName.charAt(0).toUpperCase() + firstName.slice(1).toLowerCase();
-  const birth number    = S.birthNum || 1;
-  const destinyNum = S.destNum  || birth number;
-  const profile    = MOOLANK_PROFILES[birth number] || MOOLANK_PROFILES[1];
+  const moolank    = S.birthNum || 1;
+  const destinyNum = S.destNum  || moolank;
+  const profile    = MOOLANK_PROFILES[moolank] || MOOLANK_PROFILES[1];
 
   // ── Background: deep purple/navy gradient ──
   const bg = ctx.createLinearGradient(0, 0, 0, H);
@@ -1675,7 +1675,7 @@ function _legacy_buildShareCard_unused(){
   ctx.beginPath(); ctx.moveTo(lcx-70, 232); ctx.lineTo(lcx+70, 232); ctx.stroke();
 
   // ARCHETYPE, single identity anchor (the new strategy)
-  const archetypeShare = ARCHETYPES[birth number] || ARCHETYPES[1];
+  const archetypeShare = ARCHETYPES[moolank] || ARCHETYPES[1];
   ctx.fillStyle = '#f5d060';
   ctx.font = '700 26px Georgia, serif';
   ctx.fillText(archetypeShare, lcx, 268);
@@ -1708,7 +1708,7 @@ function _legacy_buildShareCard_unused(){
   ctx.fillStyle = '#f5d060';
   ctx.font = '700 130px Georgia, serif';
   ctx.textBaseline = 'middle';
-  ctx.fillText(String(birth number), ringX, ringY + 4);
+  ctx.fillText(String(moolank), ringX, ringY + 4);
   ctx.shadowBlur = 0;
   ctx.textBaseline = 'alphabetic';
 
@@ -1755,7 +1755,7 @@ function _legacy_buildShareCard_unused(){
   ctx.fillText('"', rcx - 4, 188);
 
   // Truth body, emotionally specific, archetype-anchored
-  const truthShare = EMOTIONAL_TRUTHS[birth number] || EMOTIONAL_TRUTHS[1];
+  const truthShare = EMOTIONAL_TRUTHS[moolank] || EMOTIONAL_TRUTHS[1];
   ctx.fillStyle = '#ffffff';
   ctx.font = 'italic 21px Georgia, serif';
   wrapTextLeft(ctx, truthShare, rcx + 32, 178, W - 90 - rcx, 30, 4);
@@ -1778,7 +1778,7 @@ function _legacy_buildShareCard_unused(){
   ctx.fillText('WHERE YOUR POWER LIVES', rcx, 350);
 
   // 3 strengths, clean labels (no description, more breathing room)
-  const sLabels = STRENGTH_LABELS[birth number] || STRENGTH_LABELS[1];
+  const sLabels = STRENGTH_LABELS[moolank] || STRENGTH_LABELS[1];
   const sStartY = 372, sRowH = 50;
   sLabels.forEach((s, i) => {
     const y = sStartY + i * sRowH;

@@ -972,8 +972,8 @@ hr.divider{display:none;}
   // useful) whether it's fixed or changeable. Tone is informative,
   // never mystical-jargony.
   var TOOLTIPS = {
-    birth number: 'Your <strong>Birth Number</strong> (Driver/Birth Number) is the single digit your day of birth reduces to. It is your most powerful and unchangeable number — the core lens through which you experience the world.',
-    life path number: 'Your <strong>Life Path Number</strong> (Destiny/Life-Path Number) is the sum of every digit in your full date of birth. It describes the long-arc themes, opportunities and lessons your life tends to gravitate toward.',
+    moolank: 'Your <strong>Birth Number</strong> (Driver/Birth Number) is the single digit your day of birth reduces to. It is your most powerful and unchangeable number — the core lens through which you experience the world.',
+    bhagyank: 'Your <strong>Life Path Number</strong> (Destiny/Life-Path Number) is the sum of every digit in your full date of birth. It describes the long-arc themes, opportunities and lessons your life tends to gravitate toward.',
     nameNumber: 'Your <strong>Name Number</strong> is the Chaldean sum of your name reduced to a single digit. Unlike Birth Number, this one is changeable — adjusting spelling shifts the vibration without changing how the name sounds.',
     compoundNumber: 'A <strong>compound number</strong> is the full double-digit total of your name <em>before</em> reduction (like 26 or 41). In Chaldean numerology, compounds carry deeper symbolic meaning than the final single digit and often shape life patterns more strongly.',
     chaldeanAlignment: '<strong>Chaldean Alignment</strong> measures how well your name vibration interacts with your birth and destiny numbers. Higher alignment means less internal friction; lower alignment doesn\'t mean "bad" — just that the name carries different strengths than the birth pattern.',
@@ -1238,8 +1238,8 @@ hr.divider{display:none;}
 
     var firstName = ((name||'You').trim().split(/\s+/)[0] || 'You');
     var displayName = firstName.charAt(0).toUpperCase() + firstName.slice(1).toLowerCase();
-    var birth number = birthNum || 1;
-    var profile = MOOLANK_PROFILES_PDF[birth number] || MOOLANK_PROFILES_PDF[1];
+    var moolank = birthNum || 1;
+    var profile = MOOLANK_PROFILES_PDF[moolank] || MOOLANK_PROFILES_PDF[1];
 
     // Background
     var bg = ctx.createLinearGradient(0,0,0,H);
@@ -1338,7 +1338,7 @@ hr.divider{display:none;}
     ctx.fillStyle = '#f5d060';
     ctx.font = '700 130px Georgia, serif';
     ctx.textBaseline = 'middle';
-    ctx.fillText(String(birth number), ringX, ringY+4);
+    ctx.fillText(String(moolank), ringX, ringY+4);
     ctx.shadowBlur = 0;
     ctx.textBaseline = 'alphabetic';
 
@@ -1430,7 +1430,7 @@ hr.divider{display:none;}
     //
     // Link target: the dedicated /share-card page that renders
     // ONLY this keepsake insight image (no full analysis, no DOB
-    // exposed). Carries first-name + birth number as URL params; the
+    // exposed). Carries first-name + moolank as URL params; the
     // page sanitises both. Recipients see a clean shareable card
     // and a CTA to run their own.
     try{
@@ -1720,8 +1720,8 @@ hr.divider{display:none;}
   function buildCoreNumbers(){
     var grid = qs('coreNumbersGrid');
     var nums = [
-      {num:birthNum,  label:tt('Birth Number',    'birth number'),    planet:birthPlanet, meaning:CORE_MEANINGS[birthNum]||'',  extra:buildDobBreakdownHTML('Day of birth', dob, birthNum)},
-      {num:destNum,   label:tt('Life Path Number', 'life path number'),   planet:destPlanet,  meaning:CORE_MEANINGS[destNum]||'',   extra:buildDestinyBreakdownHTML(dob, destNum)},
+      {num:birthNum,  label:tt('Birth Number',    'moolank'),    planet:birthPlanet, meaning:CORE_MEANINGS[birthNum]||'',  extra:buildDobBreakdownHTML('Day of birth', dob, birthNum)},
+      {num:destNum,   label:tt('Life Path Number', 'bhagyank'),   planet:destPlanet,  meaning:CORE_MEANINGS[destNum]||'',   extra:buildDestinyBreakdownHTML(dob, destNum)},
       {num:nameNum,   label:tt('Name Number (Chaldean)',    'nameNumber'), planet:namePlanet,  meaning:CORE_MEANINGS[nameNum]||'',   extra:buildNameBreakdownHTML(name)},
     ];
     nums.forEach(function(n){
@@ -2512,10 +2512,10 @@ hr.divider{display:none;}
     return digits;
   }
 
-  function getMobileHarmonyStatus(mRoot, birth number, life path number){
-    var bc=COMPAT_PARTNERS[birth number]||{best:[],good:[],avoid:[]};
-    var dc=COMPAT_PARTNERS[life path number]||{best:[],good:[],avoid:[]};
-    var inBest=bc.best.indexOf(mRoot)>=0||dc.best.indexOf(mRoot)>=0||mRoot===birth number||mRoot===life path number;
+  function getMobileHarmonyStatus(mRoot, moolank, bhagyank){
+    var bc=COMPAT_PARTNERS[moolank]||{best:[],good:[],avoid:[]};
+    var dc=COMPAT_PARTNERS[bhagyank]||{best:[],good:[],avoid:[]};
+    var inBest=bc.best.indexOf(mRoot)>=0||dc.best.indexOf(mRoot)>=0||mRoot===moolank||mRoot===bhagyank;
     var inGood=bc.good.indexOf(mRoot)>=0||dc.good.indexOf(mRoot)>=0;
     var inAvoid=bc.avoid.indexOf(mRoot)>=0&&dc.avoid.indexOf(mRoot)>=0;
     if(inBest) return 'aligned';
@@ -2523,13 +2523,13 @@ hr.divider{display:none;}
     return 'neutral';
   }
 
-  function getLuckyMobileEndings(birth number, life path number){
-    var bc=COMPAT_PARTNERS[birth number]||{best:[],good:[]};
-    var dc=COMPAT_PARTNERS[life path number]||{best:[],good:[]};
+  function getLuckyMobileEndings(moolank, bhagyank){
+    var bc=COMPAT_PARTNERS[moolank]||{best:[],good:[]};
+    var dc=COMPAT_PARTNERS[bhagyank]||{best:[],good:[]};
     var best=bc.best.filter(function(n){return dc.best.indexOf(n)>=0||dc.good.indexOf(n)>=0;});
     if(!best.length) best=bc.best.concat(dc.best).filter(function(n,i,a){return a.indexOf(n)===i;});
     best.sort();
-    return best.length ? best : [birth number, life path number].filter(function(n,i,a){return a.indexOf(n)===i;});
+    return best.length ? best : [moolank, bhagyank].filter(function(n,i,a){return a.indexOf(n)===i;});
   }
 
   function renderMobileResult(digits){
@@ -2640,7 +2640,7 @@ hr.divider{display:none;}
   function buildShareButtons(){
     var pyNum = getPersonalYear(dob, CURRENT_YEAR);
     var firstName = ((name||'You').trim().split(/\s+/)[0] || 'You');
-    // Public share-card URL (carries first-name + birth number only, no
+    // Public share-card URL (carries first-name + moolank only, no
     // DOB / no full analysis exposed)
     var cardUrl = 'https://www.namealigned.com/share-card?n=' +
       encodeURIComponent(firstName.slice(0,24)) + '&m=' + birthNum;
