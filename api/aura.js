@@ -51,11 +51,17 @@ function buildSystemPrompt(profile) {
     '- Plain English. NO markdown — never use **bold**, *italics*, bullets, headers, or asterisks of any kind.',
     "- Never start with 'Ah,' 'Oh,' 'Beloved,' 'Dear one,' or theatrical mystical openers. Begin naturally.",
     '',
-    'WHEN THEY ASK ABOUT TIMING / "WHEN" / "HOW LONG" — ABSOLUTELY MUST INCLUDE A WINDOW:',
-    '- If the question contains "when", "how long", "how soon", "by when", or asks about timing in any form, your reply MUST contain a specific tentative time window. This is non-negotiable.',
-    '- Examples of acceptable windows: "within the next 6 to 8 weeks", "between now and the end of this season", "around the next 3 months", "by the time the next moon cycle completes", "before this year closes".',
-    "- Frame it as a gentle reading (\"the patterns suggest...\", \"the timing feels like...\"), not a guarantee. But always GIVE the window.",
-    "- Never reply with vague non-answers like \"in time\" or \"when the moment is right\" alone — those are useless. Always pair them with a specific window if you must use them at all.",
+    'WHEN THEY ASK ABOUT TIMING / "WHEN" / "HOW LONG" — ALWAYS GIVE A SPECIFIC WINDOW:',
+    '- Reply MUST contain a tentative window. Non-negotiable.',
+    '- Match the SCALE of the window to the kind of question, and VARY it from reply to reply. Do NOT default to "4 to 6 months" every time.',
+    '- Scales to draw from based on context:',
+    '   • Small, immediate things (a conversation, a meeting, a sign): "within the next 2 to 3 weeks", "in the coming 10 to 14 days", "before the next new moon".',
+    '   • Mid-term shifts (jobs, relationships clarifying): "in the next 6 to 9 weeks", "around 2 to 3 months from now", "before the season turns".',
+    '   • Larger cycles (business success, deep transformations, big moves): "across the next 6 to 12 months", "by the time we reach early next year", "in the coming 9 to 14 months", "within the next personal-year cycle".',
+    '   • Long-arc spiritual/identity shifts: "over the next 2 to 3 years", "across this current Saturn cycle".',
+    "- You can also use mystical markers: 'by the next full moon', 'before your next birthday', 'as the year-end approaches'.",
+    "- Frame it gently (\"the patterns suggest…\", \"the timing feels like…\") — never a guarantee, always a tentative read.",
+    "- Vary your windows turn-to-turn. Repeating the same range across questions feels lazy and formulaic.",
     '',
     'KEEPING IT INTERESTING:',
     "- It's okay (about 1 in 3 turns) to end with a SOFT mystical or playful question — something that invites them deeper but never pries. Examples: \"Have you noticed any small signs lately?\" / \"Does the number 7 feel familiar to you right now?\" / \"What part of this surprises you?\"",
@@ -113,6 +119,70 @@ function isTimingQuestion(text) {
   if (!text) return false;
   const t = text.toLowerCase();
   return /\b(when|how long|how soon|by when|in what time|time frame|timeframe|how many (days|weeks|months|years)|days|weeks|months|years|soon|deadline|by which time|in how much time)\b/.test(t);
+}
+
+// Pick a fallback timeframe sentence sized to the topic of the question.
+// Used only as a last-resort safety net when the model dodges entirely.
+function fallbackWindow(text, history) {
+  const all = [text || '', ...((history || []).map(h => h && h.content || ''))].join(' ').toLowerCase();
+  const pickFrom = (arr) => arr[Math.floor(Math.random() * arr.length)];
+
+  // Career / business / money — longer cycles
+  if (/\b(business|venture|career|promotion|job|salary|raise|startup|founder|client|company|launch|investor|deal|profit|revenue|wealth|rich)\b/.test(all)) {
+    return pickFrom([
+      'The patterns suggest meaningful traction across the next 6 to 9 months, with the clearer turn around the second half.',
+      'A tentative read: the real momentum builds in the coming 8 to 12 months, gathering pace as the year matures.',
+      'My sense is that the visible breakthrough lands somewhere between 4 and 7 months from now.',
+      'The arc here is closer to a year — expect the meaningful shift in the next 9 to 14 months.',
+    ]);
+  }
+
+  // Love / relationship — weeks to a few months
+  if (/\b(love|relationship|partner|marriage|marry|wife|husband|boyfriend|girlfriend|crush|soulmate|dating|breakup|ex|romance|heart)\b/.test(all)) {
+    return pickFrom([
+      'The pattern softens within the next 6 to 10 weeks — clarity arrives sooner than the asking suggests.',
+      'My read: the meaningful turn lands in the coming 2 to 3 months.',
+      'A gentle window — between now and the next new moon, something will move.',
+      'Expect the picture to clarify across the next 8 to 12 weeks.',
+    ]);
+  }
+
+  // Travel — seasonal
+  if (/\b(travel|trip|abroad|move|relocat|country|visa|migrat)\b/.test(all)) {
+    return pickFrom([
+      'The pattern points to movement across the next 4 to 8 months, often through an unexpected channel.',
+      'A soft window — somewhere between this season and the one after, doors open.',
+      'My sense: 5 to 9 months ahead, the road begins to lay itself out.',
+    ]);
+  }
+
+  // Health / energy — shorter
+  if (/\b(health|tired|exhaust|burnout|anxi|sleep|illness|recover|heal)\b/.test(all)) {
+    return pickFrom([
+      'The body asks for 3 to 5 weeks of gentler rhythm before the shift becomes visible.',
+      'Expect noticeable improvement across the next 4 to 8 weeks if you honour the rest.',
+      'A soft window — by the time the next month closes, something steadies.',
+    ]);
+  }
+
+  // Self / identity / purpose — long arc
+  if (/\b(purpose|meaning|self|identity|lost|stuck|direction|who am i|why am i)\b/.test(all)) {
+    return pickFrom([
+      'The recalibration sits across the next 6 to 10 weeks; the clarity arrives in pieces.',
+      'A longer read here — the new self lands across the next 2 to 4 months, gradually.',
+      'Expect the meaning to settle in the coming season or two, not all at once.',
+    ]);
+  }
+
+  // Generic — varied
+  return pickFrom([
+    'The pattern points to a meaningful shift in the coming 6 to 10 weeks.',
+    'A tentative window — between now and the close of the next season.',
+    'My read: the turn lands somewhere in the next 3 to 5 months.',
+    'A soft window: across the next 2 to 4 months, the picture sharpens.',
+    'The patterns suggest movement before this year quietly closes.',
+    'Expect the shift to crystallise within the next 90 to 120 days.',
+  ]);
 }
 
 // Does the reply contain a tentative time window?
@@ -228,16 +298,11 @@ export default async function handler(req, res) {
       }
 
       // If the user asked about timing but the model dodged it,
-      // append a soft tentative window so we never leave the user
-      // without the answer they asked for.
+      // append a topic-aware tentative window so they never get a
+      // non-answer. Window varies by question topic + a random pick
+      // so it doesn't feel formulaic across turns.
       if (askingTime && !hasTimeWindow(text)) {
-        const windows = [
-          'The patterns suggest the meaningful turn lands within the next 4 to 6 months.',
-          'A tentative window: between now and the close of the next two seasons.',
-          'My read: expect the shift to crystallise in the coming 3 to 5 months.',
-          'A soft window — the next 90 to 120 days carry the turning point.',
-        ];
-        text = (text + ' ' + windows[Math.floor(Math.random() * windows.length)]).trim();
+        text = (text + ' ' + fallbackWindow(message, history)).trim();
         text = sanitizeReply(text);
       }
 
