@@ -1,7 +1,3 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-
-  <!-- Core pages -->
   <url>
     <loc>https://www.namealigned.com/</loc>
     <changefreq>weekly</changefreq>
@@ -12,8 +8,6 @@
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
-
-  <!-- Free tool landing pages (SEO) -->
   <url>
     <loc>https://www.namealigned.com/name-numerology-calculator</loc>
     <changefreq>monthly</changefreq>
@@ -30,11 +24,6 @@
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://www.namealigned.com/baby-name-numerology</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
     <loc>https://www.namealigned.com/love-compatibility-numerology</loc>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
@@ -44,7 +33,6 @@
     <changefreq>monthly</changefreq>
     <priority>0.95</priority>
   </url>
-
   <url>
     <loc>https://www.namealigned.com/report</loc>
     <changefreq>monthly</changefreq>
@@ -70,15 +58,11 @@
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
   </url>
-
-  <!-- Blog index -->
   <url>
     <loc>https://www.namealigned.com/blog</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
-
-  <!-- Blog articles -->
   <url>
     <loc>https://www.namealigned.com/blog/what-is-name-numerology</loc>
     <changefreq>monthly</changefreq>
@@ -174,41 +158,16 @@
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
-
-  <!-- Human-readable site map (extra crawl path + UX) -->
   <url>
     <loc>https://www.namealigned.com/sitemap-pages</loc>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
-
-  <!-- Aura · mystical conversational companion (MVP) -->
   <url>
     <loc>https://www.namealigned.com/ask-aura</loc>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
-
-  <!-- Programmatic SEO: name-number-N-meaning (1-9) -->
-  <url><loc>https://www.namealigned.com/name-number-1-meaning</loc><changefreq>monthly</changefreq><priority>0.85</priority></url>
-  <url><loc>https://www.namealigned.com/name-number-2-meaning</loc><changefreq>monthly</changefreq><priority>0.85</priority></url>
-  <url><loc>https://www.namealigned.com/name-number-3-meaning</loc><changefreq>monthly</changefreq><priority>0.85</priority></url>
-  <url><loc>https://www.namealigned.com/name-number-4-meaning</loc><changefreq>monthly</changefreq><priority>0.85</priority></url>
-  <url><loc>https://www.namealigned.com/name-number-5-meaning</loc><changefreq>monthly</changefreq><priority>0.85</priority></url>
-  <url><loc>https://www.namealigned.com/name-number-6-meaning</loc><changefreq>monthly</changefreq><priority>0.85</priority></url>
-  <url><loc>https://www.namealigned.com/name-number-7-meaning</loc><changefreq>monthly</changefreq><priority>0.85</priority></url>
-  <url><loc>https://www.namealigned.com/name-number-8-meaning</loc><changefreq>monthly</changefreq><priority>0.85</priority></url>
-  <url><loc>https://www.namealigned.com/name-number-9-meaning</loc><changefreq>monthly</changefreq><priority>0.85</priority></url>
-
-  <!-- Programmatic SEO: life-path-number-N-meaning (1-9) -->
-  <url><loc>https://www.namealigned.com/life-path-number-1-meaning</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
-  <url><loc>https://www.namealigned.com/life-path-number-2-meaning</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
-  <url><loc>https://www.namealigned.com/life-path-number-3-meaning</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
-  <url><loc>https://www.namealigned.com/life-path-number-4-meaning</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
-  <url><loc>https://www.namealigned.com/life-path-number-5-meaning</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
-  <url><loc>https://www.namealigned.com/life-path-number-6-meaning</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
-  <url><loc>https://www.namealigned.com/life-path-number-7-meaning</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
-  <url><loc>https://www.namealigned.com/life-path-number-8-meaning</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
   <url><loc>https://www.namealigned.com/life-path-number-9-meaning</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
 
 </urlset>

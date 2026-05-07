@@ -11,7 +11,8 @@
     { "source": "/share", "has": [{"type":"query","key":"m","value":"6"}], "destination": "/share/6", "permanent": false },
     { "source": "/share", "has": [{"type":"query","key":"m","value":"7"}], "destination": "/share/7", "permanent": false },
     { "source": "/share", "has": [{"type":"query","key":"m","value":"8"}], "destination": "/share/8", "permanent": false },
-    { "source": "/share", "has": [{"type":"query","key":"m","value":"9"}], "destination": "/share/9", "permanent": false }
+    { "source": "/share", "has": [{"type":"query","key":"m","value":"9"}], "destination": "/share/9", "permanent": false },
+    { "source": "/baby-name-numerology", "destination": "/name-numerology-calculator", "permanent": true }
   ],
 
   "rewrites": [
