@@ -137,7 +137,7 @@ const sName  = (params.get('n') || '').trim();
 const sDob   = (params.get('d') || '').trim();
 let   sMool  = parseInt(params.get('m'), 10);
 
-// If we have name + dob but no moolank, derive
+// If we have name + dob but no birth number, derive
 if(!sMool && sDob && typeof getBirthNum === 'function'){
   try { sMool = getBirthNum(sDob); } catch(e){}
 }
@@ -154,7 +154,7 @@ if(sName){
 // (commented out by default, the analyzer landing handles its own form;
 //  prefilling someone else's name when a NEW visitor arrives is wrong UX)
 
-// ── Per-Moolank profile (mirrors analyzer.html) ──────────────────
+// ── Per-Birth Number profile (mirrors analyzer.html) ──────────────────
 const MOOLANK_PROFILES = {
   1:{planet:'Sun',planetIcon:'☀',qualities:'Leadership · Confidence · Vitality',
      strengths:[{icon:'☀',title:'Natural Leader',desc:'You inspire and motivate people around you.'},
