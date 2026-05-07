@@ -41,25 +41,28 @@ function buildSystemPrompt(profile) {
   return [
     'You are Aura — a warm, empathetic, mystical confidante on a Chaldean numerology website.',
     '',
+    'CRITICAL LENGTH RULE — read this twice:',
+    '- Reply in 2 SHORT sentences. Maximum 35 words total. No exceptions.',
+    '- This is a chat bubble, not an essay. Brevity is warmth here.',
+    '- If you can say it in 1 sentence, do.',
+    '',
     'VOICE:',
-    '- Deeply warm, accepting, gentle. Never clinical, never preachy.',
-    '- Speak like a wise older friend who has time for them, not a fortune teller.',
-    '- Plain, beautiful English. No jargon. No bullet points or markdown.',
-    '- 3 to 5 sentences. Concise. Each sentence earns its place.',
+    '- Warm, gentle, accepting. Like a kind friend, not a fortune teller.',
+    '- Plain English. No markdown, no asterisks, no bold, no bullets, no headers.',
+    "- Never start with 'Ah,' 'Oh,' 'Beloved,' 'Dear one,' or any theatrical mystical opener. Just begin naturally.",
     '',
     'WHAT TO DO:',
-    "- Answer the actual question asked. If they ask 'will I travel the world?', address travel — don't pivot to generic 'timeline' talk.",
-    '- Acknowledge the feeling underneath the question briefly, then offer a gentle, specific reading or perspective.',
-    "- If their birth number is known, weave it in naturally about 1 in 3 replies (only when it actually fits — don't force it).",
-    '- End with warmth or a quiet observation. Do NOT end every reply with a probing question — that feels prying. Maybe one in five replies can have a gentle invitation, the rest end warmly.',
+    "- Answer the actual question. If they ask about travel, talk about travel — not generic timeline platitudes.",
+    "- Speak gently to the feeling underneath if it fits, then give a specific warm read.",
+    "- Use birth-number context only when it genuinely adds something — never as filler.",
+    '- End warmly. No prying follow-up questions.',
     '',
     'WHAT NOT TO DO:',
-    "- Never say 'tell me the part you didn't say first' or other prying lines.",
-    '- Never demand they reveal more. Accept whatever they share.',
-    '- Never give medical, legal, or specific financial advice. (Those are filtered out before reaching you.)',
-    "- Don't repeat stock phrases. Find fresh words each turn.",
-    "- Don't open with 'Ah' or 'Beloved' or theatrical mystical openers.",
-    '- Never claim to predict the future with certainty. Speak in possibilities, patterns, gentle invitations — not predictions.',
+    "- Never use markdown formatting (no **bold**, no *italics*, no bullets, no numbered lists, no headers).",
+    "- Never demand they reveal more. Accept whatever they share.",
+    '- Never give medical, legal, or specific financial advice.',
+    "- Never claim to predict the future with certainty. Speak in possibilities and patterns.",
+    "- Never exceed 2 sentences or 35 words.",
     '',
     'SEEKER CONTEXT:',
     namePart,
@@ -71,6 +74,32 @@ function buildSystemPrompt(profile) {
 
 // Convert OpenAI-style chat history to Gemini's `contents` format.
 // Gemini uses role: 'user' | 'model' and parts: [{text}].
+// Strip markdown formatting and cap to 2 sentences for the chat-bubble UI.
+function sanitizeReply(text) {
+  if (!text) return '';
+  let out = String(text);
+  // Strip bold/italic/code markdown
+  out = out.replace(/\*\*([^*]+)\*\*/g, '$1');
+  out = out.replace(/\*([^*]+)\*/g, '$1');
+  out = out.replace(/__([^_]+)__/g, '$1');
+  out = out.replace(/_([^_]+)_/g, '$1');
+  out = out.replace(/`([^`]+)`/g, '$1');
+  // Strip bullet/list markers and headers
+  out = out.replace(/^\s*#{1,6}\s+/gm, '');
+  out = out.replace(/^\s*[-*•]\s+/gm, '');
+  out = out.replace(/^\s*\d+\.\s+/gm, '');
+  // Strip theatrical openers
+  out = out.replace(/^(Ah|Oh|Beloved|Dear one|My dear)[,!.]\s+/i, '');
+  // Collapse whitespace
+  out = out.replace(/\s+/g, ' ').trim();
+  // Cap at 2 sentences
+  const sentences = out.match(/[^.!?]+[.!?]+/g) || [out];
+  if (sentences.length > 2) {
+    out = sentences.slice(0, 2).join('').trim();
+  }
+  return out;
+}
+
 function toGeminiContents(history, userMessage) {
   const out = [];
   for (const m of history || []) {
@@ -120,9 +149,9 @@ export default async function handler(req, res) {
     systemInstruction: { parts: [{ text: systemPrompt }] },
     contents: contents,
     generationConfig: {
-      temperature: 0.85,
+      temperature: 0.8,
       topP: 0.95,
-      maxOutputTokens: 400,
+      maxOutputTokens: 120,
     },
     safetySettings: [
       { category: 'HARM_CATEGORY_HARASSMENT',        threshold: 'BLOCK_ONLY_HIGH' },
@@ -158,7 +187,8 @@ export default async function handler(req, res) {
 
       const data = await r.json();
       const parts = (((data.candidates || [])[0] || {}).content || {}).parts || [];
-      const text = parts.map(p => p && p.text ? p.text : '').join('').trim();
+      const raw = parts.map(p => p && p.text ? p.text : '').join('').trim();
+      const text = sanitizeReply(raw);
 
       if (!text) {
         lastStatus = 502;
