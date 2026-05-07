@@ -49,18 +49,80 @@
 
   /* ── 2-column layout ──────────────────────────────────────── */
   .aura-shell{flex:1;display:grid;grid-template-columns:minmax(280px,40%) 1fr;min-height:0;}
-  @media (max-width:880px){.aura-shell{grid-template-columns:1fr;grid-template-rows:280px 1fr;}}
+  @media (max-width:880px){.aura-shell{grid-template-columns:1fr;grid-template-rows:auto 1fr;}}
 
-  /* Portrait panel (LEFT on desktop, top on mobile)
-     Loads /assets/aura-portrait.jpg?v=3 if present, falls back to the
-     stylised SVG so the page is never empty. Drop a jpg/png in
-     assets/ and it'll auto-pick up. */
-  .aura-portrait{position:relative;background-color:#0a0820;background-image:url('/assets/aura-portrait.jpg?v=3'),url('/assets/aura-portrait.svg');background-position:center;background-size:cover;background-repeat:no-repeat;overflow:hidden;}
-  .aura-portrait::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(10,8,32,.0) 50%,rgba(10,8,32,.85) 100%);pointer-events:none;}
-  .aura-name{position:absolute;left:0;right:0;bottom:32px;text-align:center;z-index:2;}
-  .aura-name .eb{font-size:11px;letter-spacing:.32em;text-transform:uppercase;color:#c9a227;font-weight:700;margin-bottom:4px;}
-  .aura-name h1{font-family:'Playfair Display',Georgia,serif;font-size:38px;color:#fff;margin:0 0 4px;font-weight:600;letter-spacing:.04em;}
-  .aura-name p{font-family:Georgia,serif;font-size:13.5px;color:#cdc4dc;margin:0;font-style:italic;letter-spacing:.04em;}
+  /* Portrait panel (LEFT on desktop, top on mobile) — mystic backdrop
+     with the angel as a centered, framed portrait rather than a full
+     bleed (which felt overwhelming). Layered: deep purple gradient +
+     starfield + angel oval. */
+  .aura-portrait{
+    position:relative;
+    overflow:hidden;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    padding:32px 24px 110px;
+    background:
+      radial-gradient(ellipse at 50% 30%, rgba(157,127,255,.28) 0%, rgba(124,58,237,.08) 35%, transparent 70%),
+      radial-gradient(ellipse at 30% 80%, rgba(245,208,96,.08) 0%, transparent 50%),
+      linear-gradient(160deg, #2a1457 0%, #1a0e52 35%, #100833 70%, #0a0820 100%);
+  }
+  /* Soft starfield overlay using radial gradients */
+  .aura-portrait::before{
+    content:'';
+    position:absolute;inset:0;
+    background-image:
+      radial-gradient(1px 1px at 20% 15%, rgba(255,255,255,.7), transparent 60%),
+      radial-gradient(1px 1px at 75% 25%, rgba(255,255,255,.55), transparent 60%),
+      radial-gradient(1.5px 1.5px at 35% 60%, rgba(245,208,96,.7), transparent 60%),
+      radial-gradient(1px 1px at 85% 70%, rgba(255,255,255,.5), transparent 60%),
+      radial-gradient(1px 1px at 15% 85%, rgba(255,255,255,.6), transparent 60%),
+      radial-gradient(1px 1px at 60% 12%, rgba(245,208,96,.6), transparent 60%),
+      radial-gradient(1.5px 1.5px at 92% 45%, rgba(255,255,255,.8), transparent 60%),
+      radial-gradient(1px 1px at 8% 50%, rgba(255,255,255,.5), transparent 60%);
+    pointer-events:none;
+    opacity:.85;
+    animation:auraStarShimmer 6s ease-in-out infinite;
+  }
+  @keyframes auraStarShimmer{0%,100%{opacity:.55}50%{opacity:.95}}
+
+  .aura-portrait-frame{
+    position:relative;
+    width:min(78%, 360px);
+    aspect-ratio:1/1;
+    border-radius:50%;
+    background-image:url('/assets/aura-portrait.jpg?v=3'),url('/assets/aura-portrait.svg');
+    background-position:center 30%;
+    background-size:cover;
+    background-repeat:no-repeat;
+    box-shadow:
+      0 0 0 1px rgba(245,208,96,.35),
+      0 0 24px rgba(245,208,96,.30),
+      0 0 60px rgba(157,127,255,.25),
+      0 18px 50px rgba(0,0,0,.45);
+    z-index:1;
+  }
+  .aura-portrait-frame::after{
+    content:'';position:absolute;inset:-6px;border-radius:50%;
+    background:conic-gradient(from 0deg, rgba(245,208,96,.0), rgba(245,208,96,.55), rgba(157,127,255,.45), rgba(245,208,96,.0));
+    z-index:-1;
+    filter:blur(6px);
+    animation:auraHaloRotate 14s linear infinite;
+  }
+  @keyframes auraHaloRotate{to{transform:rotate(360deg)}}
+
+  .aura-name{margin-top:22px;text-align:center;z-index:2;}
+  .aura-name .eb{font-size:11px;letter-spacing:.32em;text-transform:uppercase;color:#f5d060;font-weight:700;margin-bottom:6px;}
+  .aura-name h1{font-family:'Playfair Display',Georgia,serif;font-size:30px;color:#fff;margin:0 0 5px;font-weight:600;letter-spacing:.04em;line-height:1.15;}
+  .aura-name p{font-family:Georgia,serif;font-size:13px;color:#cdc4dc;margin:0;font-style:italic;letter-spacing:.04em;}
+  @media (max-width:880px){
+    .aura-portrait{padding:18px 18px 22px;}
+    .aura-portrait-frame{width:min(40%, 130px);}
+    .aura-name{margin-top:12px;}
+    .aura-name h1{font-size:22px;}
+    .aura-name p{font-size:12px;}
+  }
 
   /* Chat panel (RIGHT) */
   .aura-chat{display:flex;flex-direction:column;background:radial-gradient(ellipse at top right,#1a0e52 0%,#0a0820 70%);min-height:0;}
@@ -129,6 +191,7 @@
 
   <!-- Portrait panel -->
   <aside class="aura-portrait" aria-hidden="true">
+    <div class="aura-portrait-frame" role="img" aria-label="Aura portrait"></div>
     <div class="aura-name">
       <div class="eb">✦ Aura</div>
       <h1>Your cosmic confidante</h1>
