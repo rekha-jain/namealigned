@@ -21,12 +21,9 @@
   const root = document.createElement('div');
   root.id = 'aura-fab';
   root.innerHTML = `
-    <a href="/ask-aura" class="aura-fab-pill" aria-label="Open Aura — your cosmic confidante">
+    <a href="/ask-aura" class="aura-fab-pill" aria-label="Open Aura">
       <span class="aura-fab-orb" aria-hidden="true"></span>
-      <span class="aura-fab-text">
-        <span class="aura-fab-eyebrow">Ask Aura</span>
-        <span class="aura-fab-line">Your cosmic confidante</span>
-      </span>
+      <span class="aura-fab-text">Ask Aura</span>
     </a>
     <button class="aura-fab-x" aria-label="Hide Aura for this session">×</button>
   `;
@@ -49,54 +46,46 @@
     .aura-fab-pill {
       display: inline-flex;
       align-items: center;
-      gap: 10px;
-      padding: 10px 16px 10px 12px;
-      border-radius: 32px;
+      gap: 7px;
+      padding: 5px 12px 5px 5px;
+      border-radius: 24px;
       background: linear-gradient(135deg, #1a0e52 0%, #3a1d80 60%, #2a1538 100%);
       color: #f0ece0;
       text-decoration: none;
       font-family: 'Inter', system-ui, -apple-system, sans-serif;
-      box-shadow: 0 8px 24px rgba(26, 14, 82, .35), 0 2px 6px rgba(0, 0, 0, .25);
+      box-shadow: 0 6px 18px rgba(26, 14, 82, .35), 0 2px 5px rgba(0, 0, 0, .22);
       border: 1px solid rgba(245, 208, 96, .35);
       transition: transform .15s ease, box-shadow .15s ease;
     }
     .aura-fab-pill:hover {
       transform: translateY(-2px);
-      box-shadow: 0 12px 30px rgba(26, 14, 82, .45), 0 4px 10px rgba(0, 0, 0, .3);
+      box-shadow: 0 10px 24px rgba(26, 14, 82, .45), 0 4px 10px rgba(0, 0, 0, .3);
       color: #fff;
     }
     .aura-fab-orb {
       flex-shrink: 0;
-      width: 32px;
-      height: 32px;
+      width: 24px;
+      height: 24px;
       border-radius: 50%;
-      background: url('/assets/aura-portrait.jpg?v=3') center/cover no-repeat,
-                  radial-gradient(circle at 30% 30%, #fff5d8 0%, #f5d060 55%, #c9a227 100%);
-      border: 1.5px solid rgba(245, 208, 96, .65);
-      box-shadow: 0 0 14px rgba(245, 208, 96, .55);
+      background-image: url('/assets/aura-portrait.jpg?v=3');
+      background-color: #c9a227;
+      background-position: center;
+      background-size: cover;
+      background-repeat: no-repeat;
+      border: 1px solid rgba(245, 208, 96, .65);
+      box-shadow: 0 0 10px rgba(245, 208, 96, .50);
       animation: auraOrbPulse 3.6s ease-in-out infinite;
     }
     @keyframes auraOrbPulse {
-      0%, 100% { box-shadow: 0 0 14px rgba(245, 208, 96, .50); }
-      50%      { box-shadow: 0 0 22px rgba(245, 208, 96, .85); }
+      0%, 100% { box-shadow: 0 0 10px rgba(245, 208, 96, .45); }
+      50%      { box-shadow: 0 0 16px rgba(245, 208, 96, .80); }
     }
     .aura-fab-text {
-      display: flex;
-      flex-direction: column;
-      line-height: 1.15;
-    }
-    .aura-fab-eyebrow {
-      font-size: 10px;
-      letter-spacing: .14em;
-      text-transform: uppercase;
-      color: #f5d060;
-      font-weight: 700;
-    }
-    .aura-fab-line {
       font-size: 12.5px;
+      font-weight: 600;
+      letter-spacing: .02em;
       color: #f0ece0;
-      font-style: italic;
-      font-family: Georgia, serif;
+      line-height: 1;
     }
     .aura-fab-x {
       width: 24px;
