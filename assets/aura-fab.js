@@ -113,9 +113,13 @@
       .aura-fab-pill { padding: 4px 10px 4px 4px; }
       .aura-fab-text { font-size: 12px; }
     }
-    /* Don't compete with mobile sticky CTA on pages that have one */
-    .sticky-cta ~ #aura-fab,
-    body:has(.sticky-cta) #aura-fab { bottom: 84px; }
+    /* Don't compete with mobile sticky CTA — but only on mobile,
+       where the sticky CTA bar actually shows. On desktop the sticky
+       CTA is hidden so the pill should sit in the corner. */
+    @media (max-width: 700px) {
+      .sticky-cta ~ #aura-fab,
+      body:has(.sticky-cta) #aura-fab { bottom: 76px; }
+    }
     @media print { #aura-fab { display: none !important; } }
   `;
 
