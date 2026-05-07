@@ -22,7 +22,7 @@
   root.id = 'aura-fab';
   root.innerHTML = `
     <a href="/ask-aura" class="aura-fab-pill" aria-label="Open Aura — your cosmic confidante">
-      <span class="aura-fab-orb">✦</span>
+      <span class="aura-fab-orb" aria-hidden="true"></span>
       <span class="aura-fab-text">
         <span class="aura-fab-eyebrow">Ask Aura</span>
         <span class="aura-fab-line">Your cosmic confidante</span>
@@ -70,12 +70,9 @@
       width: 32px;
       height: 32px;
       border-radius: 50%;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 16px;
-      color: #1a0e22;
-      background: radial-gradient(circle at 30% 30%, #fff5d8 0%, #f5d060 55%, #c9a227 100%);
+      background: url('/assets/aura-portrait.jpg?v=2') center/cover no-repeat,
+                  radial-gradient(circle at 30% 30%, #fff5d8 0%, #f5d060 55%, #c9a227 100%);
+      border: 1.5px solid rgba(245, 208, 96, .65);
       box-shadow: 0 0 14px rgba(245, 208, 96, .55);
       animation: auraOrbPulse 3.6s ease-in-out infinite;
     }
