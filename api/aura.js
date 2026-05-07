@@ -112,9 +112,10 @@ export default async function handler(req, res) {
   const systemPrompt = buildSystemPrompt(profile);
   const contents     = toGeminiContents(history, message);
 
-  // Gemini Flash — env-overridable model name. Default to 1.5-flash
-  // because it has a more established free-tier quota than 2.0-flash.
-  const model = process.env.GEMINI_MODEL || 'gemini-2.5-flash';
+  // Gemini 2.5 Flash — current free-tier model (1.5-flash retired).
+  // Hard-coded to prevent any stale GEMINI_MODEL env override from
+  // pointing at retired model names.
+  const model = 'gemini-2.5-flash';
   const url = 'https://generativelanguage.googleapis.com/v1beta/models/' + encodeURIComponent(model) + ':generateContent?key=' + encodeURIComponent(apiKey);
   const payload = {
     systemInstruction: { parts: [{ text: systemPrompt }] },
