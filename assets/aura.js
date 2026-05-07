@@ -190,17 +190,39 @@
     general: ["This isn't a dead end — it's a long pause before a new sentence.", "You're holding a question shaped like a key; it'll fit the door soon."],
   };
 
+  // Hooks are GENTLE invitations, never demands. They're optional —
+  // most turns won't include one. Goal: never feel like prying.
   const HOOK = {
-    career: ["What part of your work feels most unresolved right now?", "If you couldn't fail, what would you actually want next?", "Is this more about the role, or the recognition?"],
-    love: ["What's the conversation you've been avoiding?", "If you trusted what you already feel, what would change?", "Does this feel more like a beginning or a long-overdue ending?"],
-    family: ["Which family pattern keeps showing up as your own?", "Whose approval are you still waiting for?"],
-    friend: ["Which friendship feels foundational right now, and which feels seasonal?"],
-    health: ["What rhythm feels most missing in your week?", "If your body could speak in one sentence, what would it say?"],
-    self: ["What part of who you are now wasn't true a year ago?", "What's the question you haven't dared to fully ask yourself yet?", "What would change if you trusted what you already know?"],
-    future: ["What outcome would feel like the universe was paying attention?", "If you could fast-forward 90 days and ask one question, what would it be?"],
-    spiritual: ["What practice keeps reappearing in your mind?", "Which experience in the past year felt almost-spiritual?"],
-    general: ["What's been weighing on you most lately?", "Does this question feel more emotional or practical?", "Tell me the part you didn't say first."],
+    career: ["If anything wants to be named about the work, I'm here for it — no rush.", "Share as much or as little about the work as feels right."],
+    love: ["Whatever you'd like to share about this — or not — is welcome.", "I'll meet you wherever you are with this. No pressure to explain."],
+    family: ["Family stuff often takes time to put into words — take yours.", "Whatever feels safe to share is enough."],
+    friend: ["No need to spell it out — just being with the feeling is enough."],
+    health: ["Rest the question if it's heavy. I'll be here when you want to come back to it."],
+    self: ["You don't have to have words for it yet — being with it counts.", "Whatever rises is welcome. No need to perform clarity."],
+    future: ["Ask anything specific about the road ahead — I'll answer warmly."],
+    spiritual: ["Sit with it gently. The asking is already part of the answer."],
+    general: ["Ask whatever you'd like — I'll meet it with care.", "Whatever's on your heart, share it as it comes."],
   };
+
+  // Warm closers — alternative to hooks. Used when pushback is detected,
+  // or randomly chosen so most replies end with warmth rather than a question.
+  const WARM_CLOSE = [
+    "I'm here, however you'd like to use me.",
+    "Take this gently — there's no rush.",
+    "Whatever you bring next, I'll meet you in it.",
+    "Sit with this as long as you need.",
+    "I'm with you in this.",
+    "You're not alone in the asking.",
+  ];
+
+  // Plain-language read for direct/pushback questions about the
+  // road ahead. Used when user says 'just tell me' / 'what's in
+  // the stars' / 'next 12 months'. Warm, specific, no probing.
+  const DIRECT_FUTURE = [
+    "The next 12 months read in three movements. The first quarter is quiet groundwork — small, unglamorous decisions that turn out to matter. Mid-year brings a visible shift in either work or a close relationship — a clarity you've been waiting for. The final stretch feels like consolidation: you'll be standing somewhere noticeably steadier than you are now. Nothing dramatic, but the cumulative effect is real.",
+    "Looking ahead a year: expect an early-year recalibration — a few things you've been carrying will quietly fall away. A meaningful opening (a person, a role, a decision) appears around the middle, often through an unexpected channel. By late year, what feels uncertain right now will have a name and a direction. The arc is gentle but unmistakably forward.",
+    "The 12 months ahead carry a slow-then-fast rhythm. The first months ask for patience — things are moving underground. Around mid-year, a single decision or conversation reorganises the picture. The last third is where the year shows what it was building toward — usually clearer relationships, clearer work, clearer self. You'll look back and see it was all preparation.",
+  ];
 
   // ── Elaboration responses (when user asks "what do you mean") ──
   // Keyed off the LAST topic Aura was speaking about. These don't
@@ -261,6 +283,15 @@
     { match: /what part of who you are now wasn.?t true a year ago/i,
       reply: "Pick a small specific thing. A preference, a tolerance, a 'no' you didn't have last year. Naming it makes the becoming visible to yourself, which is most of the work." },
   ];
+
+  // Detect when the user is pushing back, asking for a direct answer,
+  // redirecting, or showing they don't want to be probed further. In
+  // these cases Aura should drop the hook entirely and answer warmly
+  // and plainly. This is the fix for Aura feeling pry-ish.
+  function detectPushback(text){
+    const t = (text||'').toLowerCase().trim();
+    return /\b(nothing|not really|no,|no\.|no thanks|stop asking|don.?t ask|just tell|tell me (more |)clearly|more clearly|specifically|be (more |)specific|can you (just |please |)(tell|let me know|say|explain)|i (just |)want to know|what.?s (in|ahead|going)|whats (in|ahead|going)|in the stars|next \d|coming \d|12 months|year ahead|i don.?t want to|rather not|prefer not|skip|move on|get to the point|enough questions)\b/.test(t);
+  }
 
   // Detect referent / clarification intents that should NOT start a
   // new topic but instead elaborate on the last response.
@@ -327,38 +358,77 @@
     return intent.reply;
   }
 
+  // Pick a hook that hasn't been used in the last 2 turns. Prevents
+  // the "asking the same probing question 3 times in a row" feel.
+  function pickFreshHook(topic, state){
+    const pool = HOOK[topic] || HOOK.general;
+    const recent = (state && state.recentHooks) || [];
+    const fresh = pool.filter(h => !recent.includes(h));
+    return pick(fresh.length ? fresh : pool);
+  }
+
   // ── Main response composer ───────────────────────────────────
-  function compose(intent, tone, profile, state){
+  // direct=true → user wants a warm, plain answer with no probing
+  // hooks. Triggered by detectPushback() upstream.
+  function compose(intent, tone, profile, state, direct){
     const topic = intent.topic || 'general';
     const v = pick(VALIDATION[topic] || VALIDATION.general);
     const i = pick(INTERPRETATION[topic] || INTERPRETATION.general);
     const f = pick(FUTURE[topic] || FUTURE.general);
     const m = pick(METAPHOR[topic] || METAPHOR.general);
-    const h = pick(HOOK[topic] || HOOK.general);
 
     // Numerology overlay (used at most 30% of the time when present)
     const overlay = numerologyOverlay(profile);
     const useOverlay = overlay && Math.random() < 0.45;
 
-    // Tone-aware micro-adjustment
+    // Tone-aware micro-adjustment — warm, accepting opener
     let prefix = '';
-    if (tone === 'sad')        prefix = 'I want to start by saying — that\'s a real thing you\'re carrying. ';
-    else if (tone === 'angry') prefix = 'There\'s heat in this, and that\'s OK. ';
-    else if (tone === 'anxious')prefix = 'Take a breath with me first. ';
-    else if (tone === 'exhausted')prefix = 'Even before I answer — yes, you\'re tired, and that\'s real. ';
+    if (tone === 'sad')        prefix = "I hear you, and what you're carrying is real. ";
+    else if (tone === 'angry') prefix = "I'm here for the heat — no judgement. ";
+    else if (tone === 'anxious')prefix = "Take a breath with me. You're safe in this conversation. ";
+    else if (tone === 'exhausted')prefix = "You're tired, and that's allowed to be true. ";
+    else if (tone === 'confused')prefix = "It's okay not to know yet — I'll meet you in the not-knowing. ";
 
-    // Compose ~3-5 sentences total. Skip metaphor sometimes for variety.
-    const useMetaphor = Math.random() < 0.6;
     const parts = [prefix + v, i];
     if (useOverlay) parts.push(overlay);
+
+    // For direct/pushback turns: skip metaphor + skip hook,
+    // give the future read clearly, then close warmly.
+    if (direct) {
+      // For broad future-questions, use the rich 12-month read.
+      const askingFuture = topic === 'future' || /future|year|month|ahead|next|stars/i.test(state && state.lastUserText || '');
+      if (askingFuture) {
+        parts.push(pick(DIRECT_FUTURE));
+      } else {
+        parts.push(f);
+      }
+      parts.push(pick(WARM_CLOSE));
+      if (state) { state.lastTopic = topic; state.lastHook = ''; }
+      return parts.filter(Boolean).join(' ');
+    }
+
     parts.push(f);
+
+    // Skip metaphor sometimes for variety
+    const useMetaphor = Math.random() < 0.5;
     if (useMetaphor) parts.push(m);
-    parts.push(h);
+
+    // Hook is now OPTIONAL (~40% chance). Most turns end with a warm
+    // close instead of a probing question. Avoid repeating recent hooks.
+    const useHook = Math.random() < 0.4;
+    let h = '';
+    if (useHook) {
+      h = pickFreshHook(topic, state);
+      parts.push(h);
+    } else {
+      parts.push(pick(WARM_CLOSE));
+    }
 
     // Remember the hook + topic so the next turn can elaborate on it
     if (state) {
       state.lastHook  = h;
       state.lastTopic = topic;
+      if (h) state.recentHooks = (state.recentHooks || []).concat([h]).slice(-3);
     }
     return parts.filter(Boolean).join(' ');
   }
@@ -483,8 +553,15 @@
         preface = `You've been circling ${friendly} energy a lot lately — I notice. `;
       }
 
+      // Stash user text so compose() can detect future-asking phrasing
+      state.lastUserText = text;
+
+      // If the user is pushing back / asking for a direct answer, drop
+      // the probing hook and answer warmly + plainly.
+      const direct = detectPushback(text);
+
       recordTurn(state, workingIntent, tone);
-      const composed = compose(workingIntent, tone, profile, state);
+      const composed = compose(workingIntent, tone, profile, state, direct);
       saveState(state);  // saves lastHook/lastTopic written by compose
 
       return preface + composed;
