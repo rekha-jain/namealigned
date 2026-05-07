@@ -31,8 +31,8 @@
   style.textContent = `
     #aura-fab {
       position: fixed;
-      bottom: 18px;
-      right: 18px;
+      bottom: 12px;
+      right: 12px;
       z-index: 9998;
       display: flex;
       align-items: center;
@@ -109,9 +109,9 @@
       border-color: rgba(255, 255, 255, .35);
     }
     @media (max-width: 560px) {
-      #aura-fab { bottom: 14px; right: 14px; }
-      .aura-fab-line { display: none; }
-      .aura-fab-pill { padding: 9px 14px 9px 10px; }
+      #aura-fab { bottom: 10px; right: 10px; }
+      .aura-fab-pill { padding: 4px 10px 4px 4px; }
+      .aura-fab-text { font-size: 12px; }
     }
     /* Don't compete with mobile sticky CTA on pages that have one */
     .sticky-cta ~ #aura-fab,
