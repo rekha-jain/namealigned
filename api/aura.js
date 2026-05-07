@@ -108,6 +108,19 @@ function sanitizeReply(text) {
   return out;
 }
 
+// Did the user ask a timing/when question?
+function isTimingQuestion(text) {
+  if (!text) return false;
+  const t = text.toLowerCase();
+  return /\b(when|how long|how soon|by when|in what time|time frame|timeframe|how many (days|weeks|months|years)|days|weeks|months|years|soon|deadline|by which time|in how much time)\b/.test(t);
+}
+
+// Does the reply contain a tentative time window?
+function hasTimeWindow(text) {
+  if (!text) return false;
+  return /\b(\d+\s*(?:to|–|-)\s*\d+\s*(week|month|year|day|quarter)s?|within (?:the )?next \d|next \d+\s*(week|month|year|day|quarter)|by (?:the end of |mid-)?(?:january|february|march|april|may|june|july|august|september|october|november|december|spring|summer|autumn|fall|winter|this season|next season|this year|next year|year-end)|\bthis (?:season|year|quarter|month)|\bnext (?:season|year|quarter|month)|by (?:the next )?(?:full moon|new moon|moon cycle)|before (?:this|the) (?:year|season|quarter) (?:closes|ends)|in the coming (?:weeks|months)|over the next \d|\b\d+\s*(week|month|year)s?\b)/i.test(text);
+}
+
 function toGeminiContents(history, userMessage) {
   const out = [];
   for (const m of history || []) {
@@ -147,7 +160,13 @@ export default async function handler(req, res) {
   if (!message) return res.status(400).json({ error: 'message required' });
 
   const systemPrompt = buildSystemPrompt(profile);
-  const contents     = toGeminiContents(history, message);
+  const askingTime   = isTimingQuestion(message);
+  // If they asked about timing, prefix the user message with a hard
+  // reminder so the model can't slip past the rule.
+  const effectiveMessage = askingTime
+    ? message + '\n\n[INTERNAL REMINDER — DO NOT REPEAT TO USER: This is a timing question. Your reply MUST contain a specific tentative window like "within the next 4 to 6 months" or "before this year closes" or "in 2 to 3 quarters". A reply without such a window is a failed reply.]'
+    : message;
+  const contents     = toGeminiContents(history, effectiveMessage);
 
   // Model cascade — gemini-2.5-flash is the flagship but its free tier
   // gets 503-overloaded; lite has more headroom. Try in order until
@@ -199,13 +218,27 @@ export default async function handler(req, res) {
       const data = await r.json();
       const parts = (((data.candidates || [])[0] || {}).content || {}).parts || [];
       const raw = parts.map(p => p && p.text ? p.text : '').join('').trim();
-      const text = sanitizeReply(raw);
+      let text = sanitizeReply(raw);
 
       if (!text) {
         lastStatus = 502;
         lastDetail = 'empty';
         console.error('[aura] empty reply model=' + model, JSON.stringify(data).slice(0, 300));
         continue;
+      }
+
+      // If the user asked about timing but the model dodged it,
+      // append a soft tentative window so we never leave the user
+      // without the answer they asked for.
+      if (askingTime && !hasTimeWindow(text)) {
+        const windows = [
+          'The patterns suggest the meaningful turn lands within the next 4 to 6 months.',
+          'A tentative window: between now and the close of the next two seasons.',
+          'My read: expect the shift to crystallise in the coming 3 to 5 months.',
+          'A soft window — the next 90 to 120 days carry the turning point.',
+        ];
+        text = (text + ' ' + windows[Math.floor(Math.random() * windows.length)]).trim();
+        text = sanitizeReply(text);
       }
 
       return res.status(200).json({ reply: text, model });
