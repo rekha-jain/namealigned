@@ -482,18 +482,23 @@
 
         <!-- Relationship Compass -->
         <div>
-          <div style="font-family:'Playfair Display',Georgia,serif;font-size:15.5px;font-weight:700;color:var(--text);margin-bottom:.5rem">💞 Relationship Compass</div>
-          <div style="font-size:10.5px;color:var(--text3);font-family:sans-serif;letter-spacing:.06em;text-transform:uppercase;font-weight:700;margin-bottom:.3rem">Most compatible Moolanks</div>
-          <div id="rcFriendly" style="display:flex;flex-wrap:wrap;gap:5px;margin-bottom:.6rem"></div>
-          <div style="font-size:10.5px;color:var(--text3);font-family:sans-serif;letter-spacing:.06em;text-transform:uppercase;font-weight:700;margin-bottom:.3rem">Needs more awareness</div>
+          <div style="font-family:'Playfair Display',Georgia,serif;font-size:15.5px;font-weight:700;color:var(--text);margin-bottom:.25rem">💞 Relationship Compass</div>
+          <div style="font-size:11px;color:var(--text3);font-family:sans-serif;line-height:1.5;margin-bottom:.7rem;font-style:italic">Birth Numbers whose ruling planets harmonise with yours, and the ones that need conscious effort.</div>
+          <div style="font-size:10.5px;color:var(--text3);font-family:sans-serif;letter-spacing:.06em;text-transform:uppercase;font-weight:700;margin-bottom:.2rem">Most compatible Birth Numbers</div>
+          <div style="font-size:10.5px;color:var(--text2);font-family:sans-serif;line-height:1.5;margin-bottom:.4rem">Friendships, partnerships and marriages with these numbers tend to feel naturally easy. Look for these in close circles.</div>
+          <div id="rcFriendly" style="display:flex;flex-wrap:wrap;gap:5px;margin-bottom:.7rem"></div>
+          <div style="font-size:10.5px;color:var(--text3);font-family:sans-serif;letter-spacing:.06em;text-transform:uppercase;font-weight:700;margin-bottom:.2rem">Needs more awareness</div>
+          <div style="font-size:10.5px;color:var(--text2);font-family:sans-serif;line-height:1.5;margin-bottom:.4rem">Not "bad" matches — they ask for clearer communication, named expectations and patience to thrive.</div>
           <div id="rcCaution" style="display:flex;flex-wrap:wrap;gap:5px"></div>
         </div>
 
         <!-- Lo Shu Grid -->
         <div>
-          <div style="font-family:'Playfair Display',Georgia,serif;font-size:15.5px;font-weight:700;color:var(--text);margin-bottom:.5rem">🔵 Lo Shu Grid</div>
+          <div style="font-family:'Playfair Display',Georgia,serif;font-size:15.5px;font-weight:700;color:var(--text);margin-bottom:.25rem">🔵 Lo Shu Grid</div>
+          <div style="font-size:11px;color:var(--text3);font-family:sans-serif;line-height:1.5;margin-bottom:.7rem;font-style:italic">A 3×3 grid of the digits in your date of birth. The numbers you have, and the ones missing, point to natural strengths and areas to consciously develop.</div>
           <div id="loshuGrid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:4px;max-width:160px;margin-bottom:.55rem"></div>
           <div style="font-size:11px;color:var(--text2);font-family:sans-serif;line-height:1.5"><span style="color:var(--text3);font-size:10.5px;letter-spacing:.05em;text-transform:uppercase">Missing</span> <span id="loshuMissing" style="font-weight:600;color:#6d4ed1">·</span></div>
+          <div id="loshuMissingMeaning" style="font-size:10.5px;color:var(--text2);font-family:sans-serif;line-height:1.55;margin-top:.4rem;font-style:italic"></div>
         </div>
 
       </div>
@@ -1096,6 +1101,31 @@ function renderAnalysis(){
     document.getElementById('loshuGrid').innerHTML = cells;
     const missingTxt = (Array.isArray(missing) && missing.length) ? missing.join(', ') : 'None, you carry all 9 energies.';
     document.getElementById('loshuMissing').textContent = missingTxt;
+
+    // Plain-English explanations for what each missing number indicates
+    // and one practical practice to develop that quality consciously.
+    // Strengths-led — missing isn't bad, just a quality to grow into.
+    const MISSING_MEANING = {
+      1:{trait:'Self-confidence and decisiveness', do:'Practice making one small daily decision without second-guessing it.'},
+      2:{trait:'Sensitivity and emotional perception', do:'Journal one observed emotion (yours or others\') each evening for 60 days.'},
+      3:{trait:'Self-expression and creativity', do:'Speak or write one new idea publicly each week — short posts count.'},
+      4:{trait:'Discipline, structure and follow-through', do:'Pick one daily 15-minute ritual and keep it for 30 days unbroken.'},
+      5:{trait:'Adaptability and freedom of movement', do:'Take one new route or try one new place every week — break a habit deliberately.'},
+      6:{trait:'Aesthetic sense and harmonising relationships', do:'Beautify one corner of your home each month — small, intentional touches.'},
+      7:{trait:'Inner reflection and quiet thinking', do:'Take 20 minutes of phone-free solitude every day — walk, sit, or write.'},
+      8:{trait:'Long-game discipline and material patience', do:'Commit to a 12-month savings or learning goal with a single visible tracker.'},
+      9:{trait:'Courage, action and decisive completion', do:'Finish one small project a week, even if imperfect — closure matters more than polish.'}
+    };
+    const missingEl = document.getElementById('loshuMissingMeaning');
+    if (Array.isArray(missing) && missing.length) {
+      const items = missing.map(n => {
+        const m = MISSING_MEANING[n];
+        return m ? `<div style="margin-top:.35rem;"><strong style="color:#6d4ed1;font-style:normal;">${n}</strong> — ${m.trait}. <em style="color:var(--text3);">Try:</em> ${m.do}</div>` : '';
+      }).join('');
+      missingEl.innerHTML = items;
+    } else {
+      missingEl.textContent = 'You carry all nine energies — a balanced grid is rare and naturally well-rounded.';
+    }
 
     // Daily Remedies, planet-anchored, per-Birth Number
     const REMEDIES = {
