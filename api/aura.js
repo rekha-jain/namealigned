@@ -112,11 +112,10 @@ export default async function handler(req, res) {
   const systemPrompt = buildSystemPrompt(profile);
   const contents     = toGeminiContents(history, message);
 
-  // Gemini 2.5 Flash — current free-tier model (1.5-flash retired).
-  // Hard-coded to prevent any stale GEMINI_MODEL env override from
-  // pointing at retired model names.
-  const model = 'gemini-2.5-flash';
-  const url = 'https://generativelanguage.googleapis.com/v1beta/models/' + encodeURIComponent(model) + ':generateContent?key=' + encodeURIComponent(apiKey);
+  // Model cascade — gemini-2.5-flash is the flagship but its free tier
+  // gets 503-overloaded; lite has more headroom. Try in order until
+  // one succeeds.
+  const MODELS = ['gemini-2.5-flash-lite', 'gemini-2.5-flash', 'gemini-flash-latest'];
   const payload = {
     systemInstruction: { parts: [{ text: systemPrompt }] },
     contents: contents,
@@ -133,35 +132,49 @@ export default async function handler(req, res) {
     ],
   };
 
-  try {
-    const ctrl = new AbortController();
-    const t = setTimeout(() => ctrl.abort(), 15000);
-    const r = await fetch(url, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload),
-      signal: ctrl.signal,
-    });
-    clearTimeout(t);
+  let lastStatus = 0, lastDetail = '';
+  for (const model of MODELS) {
+    const url = 'https://generativelanguage.googleapis.com/v1beta/models/' + encodeURIComponent(model) + ':generateContent?key=' + encodeURIComponent(apiKey);
+    try {
+      const ctrl = new AbortController();
+      const t = setTimeout(() => ctrl.abort(), 15000);
+      const r = await fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+        signal: ctrl.signal,
+      });
+      clearTimeout(t);
 
-    if (!r.ok) {
-      const errText = await r.text().catch(() => '');
-      console.error('[aura] Gemini error', r.status, errText.slice(0, 500));
-      return res.status(502).json({ error: 'upstream', status: r.status, detail: errText.slice(0, 400) });
+      if (!r.ok) {
+        const errText = await r.text().catch(() => '');
+        lastStatus = r.status;
+        lastDetail = errText.slice(0, 400);
+        console.error('[aura] Gemini error model=' + model, r.status, errText.slice(0, 300));
+        // 503 / 429 / 500 → try next model. Other errors (404, 401, 403) → bail.
+        if (r.status === 503 || r.status === 429 || r.status === 500) continue;
+        return res.status(502).json({ error: 'upstream', status: r.status, detail: lastDetail, model });
+      }
+
+      const data = await r.json();
+      const parts = (((data.candidates || [])[0] || {}).content || {}).parts || [];
+      const text = parts.map(p => p && p.text ? p.text : '').join('').trim();
+
+      if (!text) {
+        lastStatus = 502;
+        lastDetail = 'empty';
+        console.error('[aura] empty reply model=' + model, JSON.stringify(data).slice(0, 300));
+        continue;
+      }
+
+      return res.status(200).json({ reply: text, model });
+    } catch (err) {
+      lastStatus = 502;
+      lastDetail = String(err && err.message || err);
+      console.error('[aura] fetch failed model=' + model, err && err.message);
+      continue;
     }
-
-    const data = await r.json();
-    const reply = (((data.candidates || [])[0] || {}).content || {}).parts || [];
-    const text = reply.map(p => p && p.text ? p.text : '').join('').trim();
-
-    if (!text) {
-      console.error('[aura] empty Gemini reply', JSON.stringify(data).slice(0, 300));
-      return res.status(502).json({ error: 'empty' });
-    }
-
-    return res.status(200).json({ reply: text });
-  } catch (err) {
-    console.error('[aura] fetch failed', err && err.message);
-    return res.status(502).json({ error: 'fetch_failed', detail: String(err && err.message || err) });
   }
+
+  return res.status(502).json({ error: 'all_models_failed', status: lastStatus, detail: lastDetail });
 }
