@@ -18,7 +18,7 @@ if(typeof globalThis.trackEvent !== 'function'){
   globalThis.trackEvent = function(){ /* no-op */ };
 }
 
-// ── Archetype labels (Moolank → identity descriptor) ───────────────
+// ── Archetype labels (Birth Number → identity descriptor) ───────────────
 const ARCHETYPES = {
   1:'The Trailblazer', 2:'The Empath',     3:'The Storyteller',
   4:'The Maverick',    5:'The Explorer',   6:'The Harmonizer',
@@ -504,17 +504,17 @@ function buildBusinessToolkit(moo, bhag, brandName){
   } else if (inputScore >= 70) {
     noVariantsMsg = `
       <div style="margin-bottom:.9rem;background:rgba(76,175,132,.08);border:1px solid rgba(76,175,132,.25);border-radius:8px;padding:.85rem 1rem;font-family:sans-serif;font-size:13px;color:var(--text);line-height:1.6">
-        <strong style="color:#2e7d4f">✓ Strong alignment (${inputScore}%).</strong> No phonetic respelling of "<strong style="color:#6d4ed1">${brandName}</strong>" lifts the score higher, your name has hit its ceiling for a Moolank ${moo} founder. To push beyond this, you'd need a different brand entirely targeting Brand <strong style="color:#6d4ed1">${targets.join(' or ')}</strong>.
+        <strong style="color:#2e7d4f">✓ Strong alignment (${inputScore}%).</strong> No phonetic respelling of "<strong style="color:#6d4ed1">${brandName}</strong>" lifts the score higher, your name has hit its ceiling for a Birth Number ${moo} founder. To push beyond this, you'd need a different brand entirely targeting Brand <strong style="color:#6d4ed1">${targets.join(' or ')}</strong>.
       </div>`;
   } else if (inputScore >= 50) {
     noVariantsMsg = `
       <div style="margin-bottom:.9rem;background:rgba(245,196,81,.10);border:1px solid rgba(245,196,81,.4);border-radius:8px;padding:.85rem 1rem;font-family:sans-serif;font-size:13px;color:var(--text);line-height:1.6">
-        ◇ Moderate alignment (${inputScore}%). No phonetic tweak of "<strong style="color:#6d4ed1">${brandName}</strong>" lifts it further. To reach Strong tier (70%+), you'd need a different brand name targeting Brand <strong style="color:#6d4ed1">${targets.join(' or ')}</strong> for your Moolank ${moo} (${founderPlanet}) energy.
+        ◇ Moderate alignment (${inputScore}%). No phonetic tweak of "<strong style="color:#6d4ed1">${brandName}</strong>" lifts it further. To reach Strong tier (70%+), you'd need a different brand name targeting Brand <strong style="color:#6d4ed1">${targets.join(' or ')}</strong> for your Birth Number ${moo} (${founderPlanet}) energy.
       </div>`;
   } else {
     noVariantsMsg = `
       <div style="margin-bottom:.9rem;background:rgba(220,38,38,.08);border:1px dashed rgba(220,38,38,.35);border-radius:8px;padding:.85rem 1rem;font-family:sans-serif;font-size:13px;color:var(--text);line-height:1.6">
-        ✦ Low alignment (${inputScore}%). No phonetic tweak of "<strong style="color:#6d4ed1">${brandName}</strong>" reaches Strong tier for a Moolank ${moo} (${founderPlanet}) founder. A different brand name will serve better, try one that reduces to <strong style="color:#6d4ed1">${targets.join(', ')}</strong>.
+        ✦ Low alignment (${inputScore}%). No phonetic tweak of "<strong style="color:#6d4ed1">${brandName}</strong>" reaches Strong tier for a Birth Number ${moo} (${founderPlanet}) founder. A different brand name will serve better, try one that reduces to <strong style="color:#6d4ed1">${targets.join(', ')}</strong>.
       </div>`;
   }
 
@@ -557,7 +557,7 @@ function buildBusinessToolkit(moo, bhag, brandName){
 
       <div style="margin-bottom:.85rem">
         <div style="font-family:sans-serif;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#6d4ed1;font-weight:700;margin-bottom:.35rem">✦ Founder-friendly brand numbers</div>
-        <p style="font-family:sans-serif;font-size:12.5px;color:var(--text);line-height:1.55;margin:0">For a Moolank ${moo} (${founderPlanet}) founder, target a brand that reduces to <strong>${targets.join(', ')}</strong>. Avoid 4 and 8, they slow business cash flow.</p>
+        <p style="font-family:sans-serif;font-size:12.5px;color:var(--text);line-height:1.55;margin:0">For a Birth Number ${moo} (${founderPlanet}) founder, target a brand that reduces to <strong>${targets.join(', ')}</strong>. Avoid 4 and 8, they slow business cash flow.</p>
       </div>
 
       <div style="margin-bottom:.85rem">
@@ -585,7 +585,7 @@ function buildChildToolkit(moo, bhag, childName){
 
       <div style="margin-bottom:.85rem">
         <div style="font-family:sans-serif;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#6d4ed1;font-weight:700;margin-bottom:.35rem">✦ Core-friendly name numbers</div>
-        <p style="font-family:sans-serif;font-size:12.5px;color:var(--text);line-height:1.55;margin:0">For a Moolank ${moo} (${corePlanet}) child, the ideal name reduces to <strong>${targets.join(', ')}</strong>. Avoid 4 and 8, they add karmic friction in early life.</p>
+        <p style="font-family:sans-serif;font-size:12.5px;color:var(--text);line-height:1.55;margin:0">For a Birth Number ${moo} (${corePlanet}) child, the ideal name reduces to <strong>${targets.join(', ')}</strong>. Avoid 4 and 8, they add karmic friction in early life.</p>
       </div>
 
       <div style="margin-bottom:.85rem">
@@ -641,8 +641,8 @@ function miniResultHTML({eyebrow,title,score,tier,pair,narrative,extraHtml,upsel
 
 // Tightened upsell-pivot copy: connects free brand-tool result to the
 // founder's own ₹199 personal report explicitly.
-const UPSELL_BUSINESS = 'This free check is about <strong>your brand</strong>. The ₹199 Chaldean Destiny Report is about <strong>you, the founder</strong>, your Moolank, planetary alignment and 5-year personal-year cycle, so you know which year favours launching, scaling or rebranding. Brands can change. The founder is constant.';
-const UPSELL_CHILD    = 'This free check tells you about <strong>the name</strong> you\'re considering. The ₹199 Chaldean Destiny Report is about <strong>you, the parent</strong>, your Moolank, planetary alignment and 5-year personal-year cycle, so you understand the energy you carry into naming and raising your child.';
+const UPSELL_BUSINESS = 'This free check is about <strong>your brand</strong>. The ₹199 Chaldean Destiny Report is about <strong>you, the founder</strong>, your Birth Number, planetary alignment and 5-year personal-year cycle, so you know which year favours launching, scaling or rebranding. Brands can change. The founder is constant.';
+const UPSELL_CHILD    = 'This free check tells you about <strong>the name</strong> you\'re considering. The ₹199 Chaldean Destiny Report is about <strong>you, the parent</strong>, your Birth Number, planetary alignment and 5-year personal-year cycle, so you understand the energy you carry into naming and raising your child.';
 const UPSELL_PARTNER  = 'This free check shows the pairing. The ₹199 Chaldean Destiny Report includes a dedicated <strong>Compatibility Insight chapter</strong>, planetary interaction map, friction-points and harmony-builders, based on your own complete Chaldean reading.';
 
 function buildPartnerResultHTML(yn,yd,pn,pd, opts){
@@ -732,7 +732,7 @@ function buildPartnerToolkit(yMoo, yBhag, pMoo, pBhag, yFirst, pFirst){
       ? `${yPlanet}-${pPlanet}: one-way friendly. Effort flows more easily in one direction than the other; awareness of which keeps the pairing balanced.`
       : `${yPlanet}-${pPlanet}: contrasting planets. The differences are the gift when handled consciously; the source of friction when ignored.`);
 
-  // Communication style mismatches — how each Moolank tends to
+  // Communication style mismatches — how each Birth Number tends to
   // process emotion + verbal style.
   const COMM_STYLES = {
     1:'decides quickly, then explains', 2:'feels first, articulates after time',
@@ -796,17 +796,17 @@ function buildChildResultHTML(cn,cd, opts){
 
   let narrative;
   if(t.cls==='high'){
-    narrative = `<strong>${firstWord(cn)}</strong> vibrates as ${reduced} (${namePlanet}), and that energy genuinely supports a Moolank ${moo} (${corePlanet}) child. The name strengthens "${arche.toLowerCase()}" qualities rather than fighting them.`;
+    narrative = `<strong>${firstWord(cn)}</strong> vibrates as ${reduced} (${namePlanet}), and that energy genuinely supports a Birth Number ${moo} (${corePlanet}) child. The name strengthens "${arche.toLowerCase()}" qualities rather than fighting them.`;
   } else if(t.cls==='mid'){
-    narrative = `<strong>${firstWord(cn)}</strong> vibrates as ${reduced} (${namePlanet}). It's workable for a Moolank ${moo} (${corePlanet}) child, neither amplifying nor suppressing their core.`;
+    narrative = `<strong>${firstWord(cn)}</strong> vibrates as ${reduced} (${namePlanet}). It's workable for a Birth Number ${moo} (${corePlanet}) child, neither amplifying nor suppressing their core.`;
   } else {
-    narrative = `<strong>${firstWord(cn)}</strong> vibrates as ${reduced} (${namePlanet}), which sits in tension with a Moolank ${moo} (${corePlanet}) core. The child's natural ${arche.toLowerCase()} energy will work harder than it needs to.`;
+    narrative = `<strong>${firstWord(cn)}</strong> vibrates as ${reduced} (${namePlanet}), which sits in tension with a Birth Number ${moo} (${corePlanet}) core. The child's natural ${arche.toLowerCase()} energy will work harder than it needs to.`;
   }
   return miniResultHTML({
     eyebrow:'👶 Child Name Alignment',
     title:firstWord(cn),
     score, tier:t,
-    pair:`Name ${reduced} (${namePlanet}) <span style="opacity:.55">×</span> Moolank ${moo} (${corePlanet})`,
+    pair:`Name ${reduced} (${namePlanet}) <span style="opacity:.55">×</span> Birth Number ${moo} (${corePlanet})`,
     narrative,
     extraHtml: buildChildToolkit(moo, bhag, cn),
     upsellLead:'Build your foundation:',
@@ -841,7 +841,7 @@ function buildBusinessResultHTML(bn,bd, opts){
     eyebrow:'🏢 Business Name Vibration',
     title:bn,
     score, tier:t,
-    pair:`Brand ${reduced} (${brandPlanet}) <span style="opacity:.55">×</span> Founder Moolank ${moo} (${founderPlanet})`,
+    pair:`Brand ${reduced} (${brandPlanet}) <span style="opacity:.55">×</span> Founder Birth Number ${moo} (${founderPlanet})`,
     narrative,
     extraHtml: buildBusinessToolkit(moo, bhag, bn),
     upsellLead:'Build your foundation:',
