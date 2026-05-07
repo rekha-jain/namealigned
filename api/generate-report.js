@@ -199,7 +199,7 @@ async function sendReportEmail({ paymentId, name, email, dob, mobile, birthNum, 
                       <tr>
                         <td style="padding:4px 0;font-size:14px;color:#374151;
                                    font-family:Arial,sans-serif;width:160px;">
-                          Moolank (Birth Number)
+                          Birth Number
                         </td>
                         <td style="padding:4px 0;font-size:18px;font-weight:bold;
                                    color:#1a0533;font-family:Arial,sans-serif;">
@@ -209,7 +209,7 @@ async function sendReportEmail({ paymentId, name, email, dob, mobile, birthNum, 
                       <tr>
                         <td style="padding:4px 0;font-size:14px;color:#374151;
                                    font-family:Arial,sans-serif;">
-                          Bhagyank (Destiny Number)
+                          Life Path Number
                         </td>
                         <td style="padding:4px 0;font-size:18px;font-weight:bold;
                                    color:#1a0533;font-family:Arial,sans-serif;">
@@ -219,7 +219,7 @@ async function sendReportEmail({ paymentId, name, email, dob, mobile, birthNum, 
                       <tr>
                         <td style="padding:4px 0;font-size:14px;color:#374151;
                                    font-family:Arial,sans-serif;">
-                          Name Number (Namank)
+                          Name Number
                         </td>
                         <td style="padding:4px 0;font-size:18px;font-weight:bold;
                                    color:#1a0533;font-family:Arial,sans-serif;">

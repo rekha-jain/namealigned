@@ -105,24 +105,24 @@ async function sendBrevoEmail({ name, dob, email, birthNum, destNum, nameNum }) 
             <td style="padding:0 48px 32px;">
               <table width="100%" cellpadding="0" cellspacing="0">
                 <tr>
-                  <!-- Moolank -->
+                  <!-- Birth Number -->
                   <td width="32%" style="text-align:center;padding:24px 16px;
                       background:#faf5ff;border-radius:10px;">
                     <p style="margin:0 0 6px;font-size:11px;letter-spacing:2px;
-                               text-transform:uppercase;color:#7c3aed;">Moolank</p>
+                               text-transform:uppercase;color:#7c3aed;">Birth Number</p>
                     <p style="margin:0 0 4px;font-size:48px;font-weight:bold;
                                color:#1a0533;line-height:1;">${escapeHtml(String(birthNum ?? ''))}</p>
-                    <p style="margin:0;font-size:11px;color:#9ca3af;">Birth Number</p>
+                    <p style="margin:0;font-size:11px;color:#9ca3af;">Day-of-birth digit</p>
                   </td>
                   <td width="2%"></td>
-                  <!-- Bhagyank -->
+                  <!-- Life Path Number -->
                   <td width="32%" style="text-align:center;padding:24px 16px;
                       background:#faf5ff;border-radius:10px;">
                     <p style="margin:0 0 6px;font-size:11px;letter-spacing:2px;
-                               text-transform:uppercase;color:#7c3aed;">Bhagyank</p>
+                               text-transform:uppercase;color:#7c3aed;">Life Path Number</p>
                     <p style="margin:0 0 4px;font-size:48px;font-weight:bold;
                                color:#1a0533;line-height:1;">${escapeHtml(String(destNum ?? ''))}</p>
-                    <p style="margin:0;font-size:11px;color:#9ca3af;">Destiny Number</p>
+                    <p style="margin:0;font-size:11px;color:#9ca3af;">Full date-of-birth sum</p>
                   </td>
                   <td width="2%"></td>
                   <!-- Name Number -->
@@ -132,7 +132,7 @@ async function sendBrevoEmail({ name, dob, email, birthNum, destNum, nameNum }) 
                                text-transform:uppercase;color:#7c3aed;">Name Number</p>
                     <p style="margin:0 0 4px;font-size:48px;font-weight:bold;
                                color:#1a0533;line-height:1;">${escapeHtml(String(nameNum ?? ''))}</p>
-                    <p style="margin:0;font-size:11px;color:#9ca3af;">Namank</p>
+                    <p style="margin:0;font-size:11px;color:#9ca3af;">Chaldean name sum</p>
                   </td>
                 </tr>
               </table>

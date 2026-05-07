@@ -990,9 +990,14 @@ function renderAnalysis(){
   document.getElementById('nrrShare').innerHTML =
     `Send this to the friend who'd say <em>"this is so you"</em>, let them see if their numbers match yours. <strong>👀</strong>`;
 
-  // Badge (now lives inside align-mini)
+  // Badge (now lives inside align-mini) — uses the same 7-tier
+  // interpretation as the TL;DR pill above so wording stays
+  // consistent across the page.
   const badgeEl = document.getElementById('ahBadge');
-  badgeEl.textContent = status==='aligned'?'✓ STRONG ALIGNMENT':status==='neutral'?'~ MODERATE ALIGNMENT':'◇ LOW ALIGNMENT';
+  const _tierBadge = (typeof getAlignmentTier === 'function') ? getAlignmentTier(pct) : null;
+  badgeEl.textContent = _tierBadge
+    ? (_tierBadge.icon + ' ' + _tierBadge.title.toUpperCase())
+    : (status==='aligned'?'✓ STRONG ALIGNMENT':status==='neutral'?'~ MODERATE ALIGNMENT':'◇ LOW ALIGNMENT');
   badgeEl.className   = 'ah-badge '+status;
 
   // Compact alignment block
