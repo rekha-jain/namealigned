@@ -42,9 +42,10 @@ function buildSystemPrompt(profile) {
     'You are Aura — a warm, mystical, slightly playful confidante on a Chaldean numerology website.',
     'Imagine a wise older friend who is also a little bit witch, a little bit storyteller. Mystical without being heavy.',
     '',
-    'LENGTH:',
-    '- 2 to 3 sentences. Max ~50 words. This is a chat bubble, not an essay.',
-    '- If a 1-sentence answer is enough, give that.',
+    'LENGTH — STRICT, NON-NEGOTIABLE:',
+    '- Maximum 2 short sentences. Max 30 words total.',
+    '- A 1-sentence reply is often best. Never write 3 or more sentences.',
+    '- This is a chat bubble. Brevity is the warmth here.',
     '',
     'VOICE:',
     '- Warm, accepting, gently mystical. Hints of mystery, a touch of fun, never preachy.',
@@ -64,10 +65,10 @@ function buildSystemPrompt(profile) {
     "- Frame it gently (\"the patterns suggest…\", \"the timing feels like…\") — never a guarantee, always a tentative read.",
     "- Vary your windows turn-to-turn. Repeating the same range across questions feels lazy and formulaic.",
     '',
-    'KEEPING IT INTERESTING:',
-    "- It's okay (about 1 in 3 turns) to end with a SOFT mystical or playful question — something that invites them deeper but never pries. Examples: \"Have you noticed any small signs lately?\" / \"Does the number 7 feel familiar to you right now?\" / \"What part of this surprises you?\"",
-    "- Never ask invasive questions like 'tell me the part you didn't say' or 'what conversation are you avoiding'. Soft, curious, fun — not therapist-style.",
-    '- The other 2 in 3 turns, end warmly without a question.',
+    'KEEPING IT INTERESTING (within the 2-sentence limit):',
+    "- About 1 in 4 turns, ONE of your 2 sentences can be a SOFT mystical or playful question. The question REPLACES, not adds to, your 2 sentences. Examples: \"Have you noticed any small signs lately?\" / \"Does this feel sudden to you, or expected?\"",
+    "- Never invasive questions. No 'tell me the part you didn't say' or 'what conversation are you avoiding'. Soft, curious, fun — not therapist-style.",
+    '- Most of the time, end warmly without a question.',
     '',
     'WHAT TO DO:',
     "- Answer the actual question. Travel question → talk about travel. Love question → talk about love.",
@@ -90,7 +91,9 @@ function buildSystemPrompt(profile) {
 // Convert OpenAI-style chat history to Gemini's `contents` format.
 // Gemini uses role: 'user' | 'model' and parts: [{text}].
 // Strip markdown formatting and cap to 2 sentences for the chat-bubble UI.
-function sanitizeReply(text) {
+function sanitizeReply(text, opts) {
+  opts = opts || {};
+  const maxSentences = opts.maxSentences || 2;
   if (!text) return '';
   let out = String(text);
   // Strip bold/italic/code markdown
@@ -107,10 +110,10 @@ function sanitizeReply(text) {
   out = out.replace(/^(Ah|Oh|Beloved|Dear one|My dear)[,!.]\s+/i, '');
   // Collapse whitespace
   out = out.replace(/\s+/g, ' ').trim();
-  // Cap at 3 sentences
+  // Cap at maxSentences
   const sentences = out.match(/[^.!?]+[.!?]+/g) || [out];
-  if (sentences.length > 3) {
-    out = sentences.slice(0, 3).join('').trim();
+  if (sentences.length > maxSentences) {
+    out = sentences.slice(0, maxSentences).join('').trim();
   }
   return out;
 }
@@ -289,7 +292,9 @@ export default async function handler(req, res) {
       const data = await r.json();
       const parts = (((data.candidates || [])[0] || {}).content || {}).parts || [];
       const raw = parts.map(p => p && p.text ? p.text : '').join('').trim();
-      let text = sanitizeReply(raw);
+      // Timing-question replies are allowed an extra sentence so the
+      // tentative window doesn't crowd out the actual answer.
+      let text = sanitizeReply(raw, { maxSentences: askingTime ? 3 : 2 });
 
       if (!text) {
         lastStatus = 502;
@@ -304,7 +309,7 @@ export default async function handler(req, res) {
       // so it doesn't feel formulaic across turns.
       if (askingTime && !hasTimeWindow(text)) {
         text = (text + ' ' + fallbackWindow(message, history)).trim();
-        text = sanitizeReply(text);
+        text = sanitizeReply(text, { maxSentences: 3 });
       }
 
       return res.status(200).json({ reply: text, model });
