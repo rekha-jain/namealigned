@@ -314,7 +314,9 @@
     // Small minimum (700ms) so super-fast replies don't feel jarring.
     addTyping();
     const t0 = Date.now();
-    const minWait = 700;
+    // Aura "thinks" — minimum 15-20 seconds before showing the reply
+    // so the response feels considered, not instant.
+    const minWait = 15000 + Math.floor(Math.random() * 5000);
     Aura.respondAsync(text, buildProfile()).then((reply)=>{
       const remaining = Math.max(0, minWait - (Date.now() - t0));
       setTimeout(()=>{
