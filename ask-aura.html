@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-C1JMQTNHDE"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-C1JMQTNHDE');
+</script>
+
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<link rel="icon" type="image/svg+xml" href="/assets/namealigned-favicon.svg"/>
+<title>Ask Aura · Your Cosmic Confidante | NameAligned.com</title>
+<meta name="description" content="Aura is a mystical conversational guide — ask anything about love, career, life direction or your inner state. Free emotional companion built on Chaldean numerology and intuition."/>
+<meta name="robots" content="index, follow"/>
+<link rel="canonical" href="https://www.namealigned.com/ask-aura"/>
+<meta property="og:title" content="Ask Aura · Your Cosmic Confidante"/>
+<meta property="og:description" content="A mystical conversational guide. Ask anything — love, career, direction, the questions you don't know how to ask."/>
+<meta property="og:type" content="website"/>
+<meta property="og:url" content="https://www.namealigned.com/ask-aura"/>
+<meta property="og:image" content="https://www.namealigned.com/assets/og/moolank-6.png"/>
+
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"Aura · Mystical Conversational Companion","url":"https://www.namealigned.com/ask-aura","description":"A mystical conversational guide that responds with emotional intelligence and Chaldean numerology insight.","applicationCategory":"LifestyleApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"INR"},"publisher":{"@type":"Organization","name":"NameAligned.com","url":"https://www.namealigned.com/"}}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[
+{"@type":"ListItem","position":1,"name":"Home","item":"https://www.namealigned.com/"},
+{"@type":"ListItem","position":2,"name":"Ask Aura","item":"https://www.namealigned.com/ask-aura"}
+]}
+</script>
+
+<style>
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;background:#0a0820;color:#f0ece0;font-family:Inter,system-ui,-apple-system,'Helvetica Neue',Arial,sans-serif;min-height:100%;height:100%;}
+  body{display:flex;flex-direction:column;}
+
+  /* ── Top bar (compact, dark, non-default nav) ───────────────── */
+  .aura-top{display:flex;align-items:center;justify-content:space-between;padding:12px 22px;background:rgba(10,8,32,.92);border-bottom:1px solid rgba(157,127,255,.18);position:sticky;top:0;z-index:50;backdrop-filter:blur(12px);}
+  .aura-top a.brand{font-family:'Playfair Display',Georgia,serif;font-size:18px;color:#fff;text-decoration:none;letter-spacing:.02em;display:inline-flex;align-items:baseline;gap:4px;}
+  .aura-top a.brand .accent{color:#9d7fff;}
+  .aura-top .menu{display:flex;gap:18px;font-size:13px;align-items:center;}
+  .aura-top .menu a{color:#cbb8e8;text-decoration:none;}
+  .aura-top .menu a:hover{color:#fff;}
+  .aura-top .menu .cta{background:#f0b429;color:#0a0820;padding:6px 14px;border-radius:18px;font-weight:700;font-size:12.5px;}
+
+  /* ── 2-column layout ──────────────────────────────────────── */
+  .aura-shell{flex:1;display:grid;grid-template-columns:minmax(280px,40%) 1fr;min-height:0;}
+  @media (max-width:880px){.aura-shell{grid-template-columns:1fr;grid-template-rows:280px 1fr;}}
+
+  /* Portrait panel (LEFT on desktop, top on mobile) */
+  .aura-portrait{position:relative;background:#0a0820 url('/assets/aura-portrait.svg') center/cover no-repeat;overflow:hidden;}
+  .aura-portrait::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(10,8,32,.0) 50%,rgba(10,8,32,.85) 100%);pointer-events:none;}
+  .aura-name{position:absolute;left:0;right:0;bottom:32px;text-align:center;z-index:2;}
+  .aura-name .eb{font-size:11px;letter-spacing:.32em;text-transform:uppercase;color:#c9a227;font-weight:700;margin-bottom:4px;}
+  .aura-name h1{font-family:'Playfair Display',Georgia,serif;font-size:38px;color:#fff;margin:0 0 4px;font-weight:600;letter-spacing:.04em;}
+  .aura-name p{font-family:Georgia,serif;font-size:13.5px;color:#cdc4dc;margin:0;font-style:italic;letter-spacing:.04em;}
+
+  /* Chat panel (RIGHT) */
+  .aura-chat{display:flex;flex-direction:column;background:radial-gradient(ellipse at top right,#1a0e52 0%,#0a0820 70%);min-height:0;}
+
+  .aura-banner{display:flex;align-items:center;justify-content:center;gap:8px;padding:10px 18px;background:rgba(124,58,237,.08);border-bottom:1px solid rgba(157,127,255,.2);font-size:12.5px;color:#cbb8e8;text-align:center;}
+  .aura-banner a{color:#f5d060;text-decoration:none;font-weight:600;border-bottom:1px dotted rgba(245,208,96,.45);}
+  .aura-banner a:hover{color:#f0b429;}
+
+  .aura-messages{flex:1;overflow-y:auto;padding:18px 22px 18px;display:flex;flex-direction:column;gap:14px;}
+  .aura-messages::-webkit-scrollbar{width:8px}
+  .aura-messages::-webkit-scrollbar-track{background:transparent}
+  .aura-messages::-webkit-scrollbar-thumb{background:rgba(157,127,255,.2);border-radius:4px}
+
+  .msg{max-width:80%;padding:12px 16px;border-radius:14px;line-height:1.55;font-size:14px;animation:msgIn .25s ease;}
+  @keyframes msgIn{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
+  .msg.user{align-self:flex-end;background:linear-gradient(135deg,#cc4ad8,#9d4edd);color:#fff;border-bottom-right-radius:4px;}
+  .msg.aura{align-self:flex-start;background:rgba(255,255,255,.07);color:#f0ece0;border:1px solid rgba(157,127,255,.18);border-bottom-left-radius:4px;display:flex;gap:10px;align-items:flex-start;}
+  .msg.aura .av{flex-shrink:0;width:30px;height:30px;border-radius:50%;background:url('/assets/aura-portrait.svg') center/cover no-repeat;border:1.5px solid rgba(245,208,96,.45);margin-top:1px;}
+  .msg.aura .body{flex:1;}
+
+  .typing{display:inline-flex;gap:4px;padding:4px 0;}
+  .typing span{width:6px;height:6px;border-radius:50%;background:#9d7fff;opacity:.6;animation:dot 1.2s infinite;}
+  .typing span:nth-child(2){animation-delay:.15s;}
+  .typing span:nth-child(3){animation-delay:.3s;}
+  @keyframes dot{0%,60%,100%{transform:translateY(0);opacity:.4;}30%{transform:translateY(-3px);opacity:1;}}
+
+  .aura-suggested{padding:0 22px 12px;display:flex;flex-wrap:wrap;gap:8px;}
+  .aura-suggested .chip{font-size:12.5px;color:#cbb8e8;background:rgba(157,127,255,.08);border:1px solid rgba(157,127,255,.25);border-radius:18px;padding:7px 13px;cursor:pointer;transition:all .15s ease;}
+  .aura-suggested .chip:hover{background:rgba(157,127,255,.18);color:#fff;}
+
+  .aura-input-wrap{padding:14px 18px 18px;background:linear-gradient(180deg,transparent,rgba(10,8,32,.55));}
+  .aura-input{display:flex;gap:10px;align-items:center;background:rgba(255,255,255,.06);border:1px solid rgba(157,127,255,.3);border-radius:24px;padding:6px 6px 6px 18px;}
+  .aura-input:focus-within{border-color:rgba(245,208,96,.55);background:rgba(255,255,255,.09);}
+  .aura-input input{flex:1;background:transparent;border:0;outline:0;color:#f0ece0;font-size:14px;font-family:inherit;padding:10px 0;}
+  .aura-input input::placeholder{color:#7a6f95;}
+  .aura-input button{background:linear-gradient(135deg,#7c3aed,#9d4edd);color:#fff;border:0;border-radius:20px;padding:10px 20px;font-size:13.5px;font-weight:700;cursor:pointer;font-family:inherit;letter-spacing:.04em;}
+  .aura-input button:hover{filter:brightness(1.1);}
+  .aura-input button:disabled{opacity:.45;cursor:not-allowed;}
+
+  .aura-disclaim{font-size:10.5px;color:#7a6f95;text-align:center;margin-top:10px;line-height:1.55;}
+
+  /* Birth-detail mini-form (slides in when user clicks the banner) */
+  .aura-birth{display:none;background:rgba(124,58,237,.08);border-bottom:1px solid rgba(157,127,255,.2);padding:14px 22px;flex-wrap:wrap;align-items:center;gap:10px;}
+  .aura-birth.open{display:flex;}
+  .aura-birth label{font-size:11.5px;color:#cbb8e8;letter-spacing:.04em;}
+  .aura-birth input{background:rgba(255,255,255,.06);border:1px solid rgba(157,127,255,.3);color:#f0ece0;font-family:inherit;font-size:13px;border-radius:8px;padding:8px 10px;outline:0;}
+  .aura-birth input:focus{border-color:rgba(245,208,96,.55);}
+  .aura-birth button{background:#f0b429;color:#0a0820;border:0;border-radius:8px;padding:8px 14px;font-weight:700;font-size:12.5px;cursor:pointer;font-family:inherit;}
+  .aura-birth .saved{color:#7ce0b0;font-size:11.5px;display:none;}
+  .aura-birth.saved-state .saved{display:inline;}
+</style>
+</head>
+<body>
+
+<!-- Top bar -->
+<div class="aura-top">
+  <a class="brand" href="/"><span>Name<span class="accent">Aligned</span></span><span style="font-size:11px;color:#7a6f95;letter-spacing:.18em;text-transform:uppercase;margin-left:6px;">·  Aura</span></a>
+  <div class="menu">
+    <a href="/analyzer">Free Analysis</a>
+    <a href="/blog">Blog</a>
+    <a class="cta" href="/report">Full Report INR 199/-</a>
+  </div>
+</div>
+
+<div class="aura-shell">
+
+  <!-- Portrait panel -->
+  <aside class="aura-portrait" aria-hidden="true">
+    <div class="aura-name">
+      <div class="eb">✦ Aura</div>
+      <h1>Your cosmic confidante</h1>
+      <p>Ask anything. I'll meet it where it is.</p>
+    </div>
+  </aside>
+
+  <!-- Chat panel -->
+  <main class="aura-chat" role="main" aria-label="Aura chat">
+
+    <div class="aura-banner" id="auraBanner">
+      <span>Add your name and date of birth for a more personal reading.</span>
+      <a href="#" id="auraBirthToggle">Add details →</a>
+    </div>
+
+    <div class="aura-birth" id="auraBirth" aria-label="Add your birth details">
+      <label>First name <input id="auraNameInput" type="text" placeholder="Jiya" maxlength="30"/></label>
+      <label>Date of birth <input id="auraDobInput" type="date"/></label>
+      <button id="auraSaveBirth">Save</button>
+      <span class="saved">✓ Saved — replies are now personalised.</span>
+    </div>
+
+    <div class="aura-messages" id="auraMessages" aria-live="polite"></div>
+
+    <div class="aura-suggested" id="auraSuggested">
+      <span class="chip">How is my career energy lately?</span>
+      <span class="chip">Why does love feel hard right now?</span>
+      <span class="chip">I feel lost.</span>
+      <span class="chip">Will I find my purpose?</span>
+      <span class="chip">What's coming next for me?</span>
+    </div>
+
+    <div class="aura-input-wrap">
+      <form class="aura-input" id="auraForm" autocomplete="off">
+        <input id="auraInput" type="text" placeholder="Ask Aura anything..." aria-label="Your message" maxlength="500"/>
+        <button id="auraSend" type="submit" aria-label="Send">SEND</button>
+      </form>
+      <div class="aura-disclaim">For reflection &amp; self-insight only — not a substitute for medical, legal or financial advice.</div>
+    </div>
+
+  </main>
+
+</div>
+
+<script src="/assets/numerology.js"></script>
+<script src="/assets/aura.js"></script>
+<script>
+(function(){
+  const messagesEl = document.getElementById('auraMessages');
+  const formEl     = document.getElementById('auraForm');
+  const inputEl    = document.getElementById('auraInput');
+  const sendBtn    = document.getElementById('auraSend');
+  const suggestedEl= document.getElementById('auraSuggested');
+  const birthToggle= document.getElementById('auraBirthToggle');
+  const birthBox   = document.getElementById('auraBirth');
+  const nameIn     = document.getElementById('auraNameInput');
+  const dobIn      = document.getElementById('auraDobInput');
+  const saveBtn    = document.getElementById('auraSaveBirth');
+
+  // ── Render helpers ────────────────────────────────────────
+  function addUserMsg(text){
+    const el = document.createElement('div');
+    el.className = 'msg user';
+    el.textContent = text;
+    messagesEl.appendChild(el);
+    scrollBottom();
+  }
+  function addAuraMsg(text){
+    const el = document.createElement('div');
+    el.className = 'msg aura';
+    el.innerHTML = '<div class="av" aria-hidden="true"></div><div class="body"></div>';
+    el.querySelector('.body').textContent = text;
+    messagesEl.appendChild(el);
+    scrollBottom();
+  }
+  function addTyping(){
+    const el = document.createElement('div');
+    el.className = 'msg aura';
+    el.id = '__typing';
+    el.innerHTML = '<div class="av" aria-hidden="true"></div><div class="body"><span class="typing"><span></span><span></span><span></span></span></div>';
+    messagesEl.appendChild(el);
+    scrollBottom();
+  }
+  function removeTyping(){
+    const el = document.getElementById('__typing');
+    if (el) el.remove();
+  }
+  function scrollBottom(){
+    setTimeout(()=>{ messagesEl.scrollTop = messagesEl.scrollHeight; }, 30);
+  }
+
+  // ── Build profile from saved details ──────────────────────
+  function buildProfile(){
+    const saved = Aura.loadProfile() || {};
+    const profile = { firstName: saved.firstName || '', dob: saved.dob || '' };
+    if (saved.dob && typeof getBirthNum === 'function') {
+      try {
+        profile.birthNum = getBirthNum(saved.dob);
+        profile.destNum  = getDestinyNum(saved.dob);
+        if (saved.firstName) {
+          const ni = getNameNum(saved.firstName);
+          profile.nameNum = ni.reduced;
+          profile.nameRaw = ni.raw;
+        }
+      } catch(e){}
+    }
+    return profile;
+  }
+
+  // ── Send flow ─────────────────────────────────────────────
+  function send(text){
+    text = (text||'').trim();
+    if (!text) return;
+    if (suggestedEl) suggestedEl.style.display = 'none';
+    addUserMsg(text);
+    inputEl.value = '';
+    sendBtn.disabled = true;
+
+    // Simulated thinking pause — feels intentional, not robotic
+    addTyping();
+    const delay = 850 + Math.random() * 900;
+    setTimeout(()=>{
+      removeTyping();
+      const reply = Aura.respond(text, buildProfile());
+      addAuraMsg(reply);
+      sendBtn.disabled = false;
+      if (typeof gtag === 'function') gtag('event','aura_message_sent',{intent_text_length:text.length});
+    }, delay);
+  }
+
+  formEl.addEventListener('submit', (e)=>{ e.preventDefault(); send(inputEl.value); });
+
+  // Suggested chips
+  document.querySelectorAll('.aura-suggested .chip').forEach(chip=>{
+    chip.addEventListener('click', ()=> send(chip.textContent));
+  });
+
+  // Birth-detail form
+  birthToggle.addEventListener('click', (e)=>{ e.preventDefault(); birthBox.classList.toggle('open'); });
+  saveBtn.addEventListener('click', (e)=>{
+    e.preventDefault();
+    const fn  = (nameIn.value||'').trim();
+    const dob = dobIn.value;
+    if (!fn || !dob) return;
+    Aura.saveProfile({ firstName: fn, dob: dob });
+    birthBox.classList.add('saved-state');
+    addAuraMsg(`Lovely — ${fn}, I have your details. From now on the readings will weave in your numerology pattern.`);
+    if (typeof gtag === 'function') gtag('event','aura_profile_saved',{});
+  });
+
+  // Pre-fill saved profile
+  const saved = Aura.loadProfile();
+  if (saved) {
+    if (saved.firstName) nameIn.value = saved.firstName;
+    if (saved.dob)       dobIn.value  = saved.dob;
+  }
+
+  // Greeting on first visit, contextual on return
+  setTimeout(()=>{
+    const profile = buildProfile();
+    const opener = (profile.firstName)
+      ? `Welcome back, ${profile.firstName}. The conversation continues.`
+      : "Hello. I'm Aura — a quiet companion for the questions that don't fit easily into a Google search. Ask me anything, or tap a starting point below.";
+    addAuraMsg(opener);
+  }, 250);
+})();
+</script>
+
+</body>
+</html>
