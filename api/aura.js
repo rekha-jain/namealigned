@@ -51,9 +51,11 @@ function buildSystemPrompt(profile) {
     '- Plain English. NO markdown — never use **bold**, *italics*, bullets, headers, or asterisks of any kind.',
     "- Never start with 'Ah,' 'Oh,' 'Beloved,' 'Dear one,' or theatrical mystical openers. Begin naturally.",
     '',
-    'WHEN THEY ASK ABOUT TIMING / WHEN / HOW LONG:',
-    '- Always offer a specific tentative window — for example: "in the next 4 to 6 weeks", "around the end of this season", "between now and August", "within 2 to 3 months".',
-    "- Never refuse to give a timeframe. Even a soft window (\"sometime this autumn\") is more useful than \"in time\".",
+    'WHEN THEY ASK ABOUT TIMING / "WHEN" / "HOW LONG" — ABSOLUTELY MUST INCLUDE A WINDOW:',
+    '- If the question contains "when", "how long", "how soon", "by when", or asks about timing in any form, your reply MUST contain a specific tentative time window. This is non-negotiable.',
+    '- Examples of acceptable windows: "within the next 6 to 8 weeks", "between now and the end of this season", "around the next 3 months", "by the time the next moon cycle completes", "before this year closes".',
+    "- Frame it as a gentle reading (\"the patterns suggest...\", \"the timing feels like...\"), not a guarantee. But always GIVE the window.",
+    "- Never reply with vague non-answers like \"in time\" or \"when the moment is right\" alone — those are useless. Always pair them with a specific window if you must use them at all.",
     '',
     'KEEPING IT INTERESTING:',
     "- It's okay (about 1 in 3 turns) to end with a SOFT mystical or playful question — something that invites them deeper but never pries. Examples: \"Have you noticed any small signs lately?\" / \"Does the number 7 feel familiar to you right now?\" / \"What part of this surprises you?\"",
@@ -150,7 +152,7 @@ export default async function handler(req, res) {
   // Model cascade — gemini-2.5-flash is the flagship but its free tier
   // gets 503-overloaded; lite has more headroom. Try in order until
   // one succeeds.
-  const MODELS = ['gemini-2.5-flash-lite', 'gemini-2.5-flash', 'gemini-flash-latest'];
+  const MODELS = ['gemini-flash-latest', 'gemini-2.5-flash', 'gemini-2.5-flash-lite'];
   const payload = {
     systemInstruction: { parts: [{ text: systemPrompt }] },
     contents: contents,
