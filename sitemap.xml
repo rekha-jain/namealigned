@@ -175,4 +175,11 @@
     <priority>0.7</priority>
   </url>
 
+  <!-- Human-readable site map (extra crawl path + UX) -->
+  <url>
+    <loc>https://www.namealigned.com/sitemap-pages</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+
 </urlset>
