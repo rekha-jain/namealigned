@@ -159,7 +159,10 @@ export default async function handler(req, res) {
     generationConfig: {
       temperature: 0.8,
       topP: 0.95,
-      maxOutputTokens: 180,
+      maxOutputTokens: 600,
+      // Gemini 2.5 burns "thinking" tokens silently against this
+      // budget — disable to keep replies fast and full.
+      thinkingConfig: { thinkingBudget: 0 },
     },
     safetySettings: [
       { category: 'HARM_CATEGORY_HARASSMENT',        threshold: 'BLOCK_ONLY_HIGH' },
