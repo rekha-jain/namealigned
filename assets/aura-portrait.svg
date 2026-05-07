@@ -1,160 +1,276 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  Aura — stylized divine female figure SVG.
-  Designed to read as a mystical oracle / cosmic confidante on the
-  /ask-aura page. All paths drawn programmatically; no external
-  dependencies. Replace by dropping a real portrait at
-  /assets/aura-portrait.png when you have one — the HTML uses an
-  <img> with this SVG as fallback.
+  Aura — warm angelic portrait (SVG fallback).
+  Designed to read as a soft, divine female figure with visible
+  features — face, eyes, hair, lips, halo, wings — in a warm
+  cosmic palette (rose / amber / gold / dusty mauve) rather than
+  a cold purple.
+
+  Better still: drop a real photograph at /assets/aura-portrait.png
+  and the page CSS will pick it up automatically. This SVG is the
+  fallback so the page is never empty.
 -->
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 900" preserveAspectRatio="xMidYMid slice">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 900" preserveAspectRatio="xMidYMid slice" role="img" aria-label="A warm portrait of Aura, a serene angelic figure with golden halo and flowing hair">
   <defs>
-    <!-- Cosmic background gradient -->
-    <radialGradient id="bgGlow" cx="50%" cy="40%" r="65%">
-      <stop offset="0%" stop-color="#3a1d80" stop-opacity="1"/>
-      <stop offset="55%" stop-color="#1a0e52" stop-opacity="1"/>
-      <stop offset="100%" stop-color="#0a0820" stop-opacity="1"/>
+
+    <!-- Warm cosmic background: deep mauve to dusty rose to amber -->
+    <radialGradient id="bgWarm" cx="50%" cy="35%" r="80%">
+      <stop offset="0%"   stop-color="#5b3b6b" stop-opacity="1"/>
+      <stop offset="40%"  stop-color="#3a2147" stop-opacity="1"/>
+      <stop offset="80%"  stop-color="#2a1538" stop-opacity="1"/>
+      <stop offset="100%" stop-color="#1a0e22" stop-opacity="1"/>
     </radialGradient>
-    <!-- Halo gold gradient -->
-    <radialGradient id="haloGlow" cx="50%" cy="50%" r="50%">
-      <stop offset="0%"  stop-color="#f5d060" stop-opacity="0.55"/>
-      <stop offset="60%" stop-color="#c9a227" stop-opacity="0.18"/>
+
+    <!-- Bottom warm glow -->
+    <linearGradient id="warmGlow" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%"   stop-color="#f0a868" stop-opacity="0"/>
+      <stop offset="60%"  stop-color="#e58a55" stop-opacity="0.10"/>
+      <stop offset="100%" stop-color="#d4733e" stop-opacity="0.18"/>
+    </linearGradient>
+
+    <!-- Halo: warm gold radial -->
+    <radialGradient id="halo" cx="50%" cy="50%" r="50%">
+      <stop offset="0%"   stop-color="#fff2c9" stop-opacity="0.85"/>
+      <stop offset="40%"  stop-color="#f5d060" stop-opacity="0.45"/>
+      <stop offset="80%"  stop-color="#c9a227" stop-opacity="0.10"/>
       <stop offset="100%" stop-color="#c9a227" stop-opacity="0"/>
     </radialGradient>
-    <!-- Figure silhouette gradient (light at top, deeper at bottom) -->
-    <linearGradient id="figureGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-      <stop offset="0%"   stop-color="#f5d060" stop-opacity="0.12"/>
-      <stop offset="40%"  stop-color="#9d7fff" stop-opacity="0.35"/>
-      <stop offset="100%" stop-color="#0a0820" stop-opacity="0.95"/>
+
+    <!-- Skin gradient: warm honey + peach -->
+    <linearGradient id="skin" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%"   stop-color="#f8d8b4"/>
+      <stop offset="55%"  stop-color="#ebbb91"/>
+      <stop offset="100%" stop-color="#c89878"/>
     </linearGradient>
+
+    <!-- Hair gradient: chestnut + auburn highlights -->
+    <linearGradient id="hair" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%"   stop-color="#3a1f12"/>
+      <stop offset="45%"  stop-color="#5a3018"/>
+      <stop offset="100%" stop-color="#2a160a"/>
+    </linearGradient>
+
+    <!-- Robe/wing soft gradient: cream + gold -->
+    <linearGradient id="robe" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%"   stop-color="#f8e8c8" stop-opacity="0.92"/>
+      <stop offset="55%"  stop-color="#e8c890" stop-opacity="0.85"/>
+      <stop offset="100%" stop-color="#a87a3c" stop-opacity="0.85"/>
+    </linearGradient>
+
+    <!-- Wing feather gradient -->
+    <linearGradient id="wing" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%"   stop-color="#fff5d8" stop-opacity="0.65"/>
+      <stop offset="60%"  stop-color="#f5d2a0" stop-opacity="0.45"/>
+      <stop offset="100%" stop-color="#c9a050" stop-opacity="0.25"/>
+    </linearGradient>
+
     <!-- Soft glow filter -->
-    <filter id="softGlow" x="-50%" y="-50%" width="200%" height="200%">
-      <feGaussianBlur stdDeviation="6" result="blur"/>
-      <feMerge>
-        <feMergeNode in="blur"/>
-        <feMergeNode in="SourceGraphic"/>
-      </feMerge>
+    <filter id="soft" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="3" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
     </filter>
+    <filter id="hairBlur" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="1.4"/>
+    </filter>
+
   </defs>
 
-  <!-- Background -->
-  <rect width="600" height="900" fill="url(#bgGlow)"/>
+  <!-- BACKGROUND -->
+  <rect width="600" height="900" fill="url(#bgWarm)"/>
+  <rect width="600" height="900" fill="url(#warmGlow)"/>
 
-  <!-- Star field (programmatic-ish, hand-placed for composition) -->
-  <g fill="#ffffff" opacity="0.65">
-    <circle cx="40"  cy="80"  r="0.9"/>
-    <circle cx="92"  cy="35"  r="1.2"/>
-    <circle cx="160" cy="110" r="0.7"/>
-    <circle cx="220" cy="55"  r="1.5" opacity="0.85"/>
-    <circle cx="280" cy="140" r="0.6"/>
-    <circle cx="345" cy="48"  r="1.1"/>
-    <circle cx="420" cy="92"  r="0.9"/>
-    <circle cx="485" cy="38"  r="1.3" opacity="0.9"/>
-    <circle cx="560" cy="125" r="0.8"/>
-    <circle cx="60"  cy="220" r="1.0"/>
-    <circle cx="125" cy="290" r="0.7"/>
-    <circle cx="500" cy="240" r="1.4" opacity="0.85"/>
-    <circle cx="555" cy="320" r="0.9"/>
-    <circle cx="32"  cy="420" r="1.2"/>
-    <circle cx="565" cy="475" r="0.8"/>
-    <circle cx="48"  cy="600" r="1.0"/>
-    <circle cx="540" cy="640" r="1.1"/>
-    <circle cx="78"  cy="780" r="0.9"/>
-    <circle cx="525" cy="800" r="1.3" opacity="0.9"/>
-    <circle cx="400" cy="720" r="0.6"/>
-    <circle cx="180" cy="710" r="0.7"/>
-    <circle cx="305" cy="850" r="1.0"/>
+  <!-- Star field, warm tones -->
+  <g fill="#fff2c9" opacity="0.7">
+    <circle cx="60"  cy="80"  r="0.9"/>
+    <circle cx="140" cy="40"  r="1.3"/>
+    <circle cx="240" cy="105" r="0.7"/>
+    <circle cx="340" cy="55"  r="1.1"/>
+    <circle cx="430" cy="120" r="1.4" opacity="0.85"/>
+    <circle cx="520" cy="60"  r="0.9"/>
+    <circle cx="80"  cy="220" r="1.2" opacity="0.8"/>
+    <circle cx="500" cy="240" r="1.0"/>
+    <circle cx="555" cy="320" r="0.7"/>
+    <circle cx="40"  cy="430" r="1.1"/>
+    <circle cx="565" cy="490" r="0.9"/>
+    <circle cx="70"  cy="640" r="1.3"/>
+    <circle cx="540" cy="660" r="0.9"/>
+    <circle cx="180" cy="820" r="1.1"/>
+    <circle cx="430" cy="800" r="0.8"/>
   </g>
 
-  <!-- Crescent moon (top-right) -->
-  <g transform="translate(490 130)">
-    <circle r="36" fill="#f5d060" opacity="0.18"/>
-    <path d="M 0,-26 A 26,26 0 1,0 0,26 A 18,18 0 1,1 0,-26 Z"
-          fill="#f5d060" opacity="0.85" filter="url(#softGlow)"/>
+  <!-- HALO behind head -->
+  <circle cx="300" cy="290" r="155" fill="url(#halo)"/>
+
+  <!-- WINGS (left + right) — drawn behind shoulders -->
+  <g opacity="0.72" filter="url(#soft)">
+    <!-- Left wing -->
+    <path d="M 250,470
+             C 160,440 100,490 80,560
+             C 70,610 90,660 130,690
+             C 175,710 220,690 245,660
+             C 240,610 245,540 250,470 Z"
+          fill="url(#wing)"/>
+    <!-- Wing feather lines, left -->
+    <path d="M 240,490 Q 180,500 130,540" stroke="#fff5d8" stroke-width="0.8" fill="none" opacity="0.5"/>
+    <path d="M 240,540 Q 180,560 120,600" stroke="#fff5d8" stroke-width="0.8" fill="none" opacity="0.5"/>
+    <path d="M 240,590 Q 180,615 130,650" stroke="#fff5d8" stroke-width="0.8" fill="none" opacity="0.5"/>
+
+    <!-- Right wing (mirror) -->
+    <path d="M 350,470
+             C 440,440 500,490 520,560
+             C 530,610 510,660 470,690
+             C 425,710 380,690 355,660
+             C 360,610 355,540 350,470 Z"
+          fill="url(#wing)"/>
+    <path d="M 360,490 Q 420,500 470,540" stroke="#fff5d8" stroke-width="0.8" fill="none" opacity="0.5"/>
+    <path d="M 360,540 Q 420,560 480,600" stroke="#fff5d8" stroke-width="0.8" fill="none" opacity="0.5"/>
+    <path d="M 360,590 Q 420,615 470,650" stroke="#fff5d8" stroke-width="0.8" fill="none" opacity="0.5"/>
   </g>
 
-  <!-- Sacred geometry (concentric rings + 8-point star) behind figure -->
-  <g transform="translate(300 470)" opacity="0.45">
-    <circle r="220" fill="none" stroke="#c9a227" stroke-width="0.6" opacity="0.4"/>
-    <circle r="180" fill="none" stroke="#c9a227" stroke-width="0.6" opacity="0.5"/>
-    <circle r="140" fill="none" stroke="#c9a227" stroke-width="0.8" opacity="0.6"/>
-    <!-- 8-point compass dots -->
-    <g fill="#f5d060">
-      <circle cx="0"   cy="-220" r="2.2"/>
-      <circle cx="156" cy="-156" r="1.8"/>
-      <circle cx="220" cy="0"    r="2.2"/>
-      <circle cx="156" cy="156"  r="1.8"/>
-      <circle cx="0"   cy="220"  r="2.2"/>
-      <circle cx="-156" cy="156" r="1.8"/>
-      <circle cx="-220" cy="0"   r="2.2"/>
-      <circle cx="-156" cy="-156" r="1.8"/>
-    </g>
+  <!-- HAIR (back layer behind face) -->
+  <g filter="url(#hairBlur)">
+    <path d="M 220,260
+             C 200,200 230,140 300,135
+             C 370,140 400,200 380,260
+             C 405,300 420,400 410,500
+             C 405,560 380,610 350,640
+             L 350,640
+             C 380,520 380,420 360,360
+             C 360,360 360,360 360,360
+             C 360,360 360,360 360,360
+             L 360,360
+             Z"
+          fill="url(#hair)"/>
+    <!-- Right side flowing strands -->
+    <path d="M 380,260 C 410,310 425,400 412,500 C 405,560 385,610 360,640
+             C 380,540 370,440 360,360 Z" fill="url(#hair)" opacity="0.92"/>
+    <!-- Left side flowing strands -->
+    <path d="M 220,260 C 190,310 175,400 188,500 C 195,560 215,610 240,640
+             C 220,540 230,440 240,360 Z" fill="url(#hair)" opacity="0.92"/>
   </g>
 
-  <!-- Halo behind head -->
-  <circle cx="300" cy="280" r="120" fill="url(#haloGlow)"/>
+  <!-- NECK -->
+  <path d="M 278,400 L 322,400 L 332,470 L 268,470 Z" fill="url(#skin)" opacity="0.92"/>
+  <!-- Neck shadow -->
+  <ellipse cx="300" cy="415" rx="30" ry="6" fill="#a07050" opacity="0.25"/>
 
-  <!-- Stylized goddess figure: head + draped robe + cupped hands -->
-  <!-- Head and hair -->
-  <g filter="url(#softGlow)">
-    <!-- Hair flowing back -->
-    <path d="M 240,250
-             C 220,200 240,150 300,140
-             C 360,150 380,200 360,250
-             C 380,260 380,320 360,360
-             C 380,420 360,500 320,540
-             L 280,540
-             C 240,500 220,420 240,360
-             C 220,320 220,260 240,250 Z"
-          fill="#0a0820" opacity="0.85"/>
-    <!-- Face oval -->
-    <ellipse cx="300" cy="290" rx="48" ry="62" fill="url(#figureGrad)" opacity="0.92"/>
-    <!-- Forehead bindi / third eye -->
-    <circle cx="300" cy="270" r="2.5" fill="#f5d060" opacity="0.95"/>
-    <circle cx="300" cy="270" r="6"   fill="#f5d060" opacity="0.18"/>
-    <!-- Subtle face features (closed-eye contemplative look) -->
-    <path d="M 282,295 Q 290,298 298,295" stroke="#0a0820" stroke-width="1.3" fill="none" opacity="0.55"/>
-    <path d="M 302,295 Q 310,298 318,295" stroke="#0a0820" stroke-width="1.3" fill="none" opacity="0.55"/>
-    <path d="M 290,322 Q 300,326 310,322" stroke="#0a0820" stroke-width="1.5" fill="none" opacity="0.45"/>
+  <!-- FACE OVAL -->
+  <ellipse cx="300" cy="295" rx="78" ry="98" fill="url(#skin)"/>
+
+  <!-- HAIR (front layer — bangs/sides framing the face) -->
+  <g filter="url(#hairBlur)">
+    <!-- Left front strand -->
+    <path d="M 222,235
+             C 232,210 260,195 295,200
+             C 280,222 250,240 226,265 Z"
+          fill="url(#hair)"/>
+    <!-- Right front strand -->
+    <path d="M 378,235
+             C 368,210 340,195 305,200
+             C 320,222 350,240 374,265 Z"
+          fill="url(#hair)"/>
+    <!-- Top center parting wisp -->
+    <path d="M 295,205 Q 300,215 305,205 L 308,225 L 292,225 Z" fill="url(#hair)" opacity="0.9"/>
+    <!-- Side hair down to shoulders, framing -->
+    <path d="M 222,260 Q 215,340 230,420 L 245,420 Q 232,340 240,260 Z" fill="url(#hair)" opacity="0.92"/>
+    <path d="M 378,260 Q 385,340 370,420 L 355,420 Q 368,340 360,260 Z" fill="url(#hair)" opacity="0.92"/>
   </g>
 
-  <!-- Shoulders + draped robe -->
+  <!-- FACE FEATURES -->
   <g>
-    <path d="M 180,540
-             C 200,520 240,510 280,510
-             L 320,510
-             C 360,510 400,520 420,540
+    <!-- Eyebrows -->
+    <path d="M 256,260 Q 270,253 285,259" stroke="#3a1f12" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+    <path d="M 315,259 Q 330,253 344,260" stroke="#3a1f12" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+
+    <!-- Eyes (almond-shaped, calm gaze) -->
+    <!-- Left eye -->
+    <ellipse cx="270" cy="285" rx="10" ry="5.5" fill="#fff" opacity="0.95"/>
+    <ellipse cx="271" cy="285" rx="5.5" ry="5.5" fill="#5a3a22"/>
+    <ellipse cx="271" cy="285" rx="2.5" ry="2.5" fill="#1a0a05"/>
+    <!-- Eye highlight -->
+    <circle cx="273" cy="283" r="1.2" fill="#fff" opacity="0.85"/>
+    <!-- Lashes upper -->
+    <path d="M 260,283 Q 270,278 280,283" stroke="#1a0a05" stroke-width="1.4" fill="none" stroke-linecap="round"/>
+    <!-- Lashes lower (subtle) -->
+    <path d="M 263,289 Q 270,291 277,289" stroke="#1a0a05" stroke-width="0.7" fill="none" stroke-linecap="round" opacity="0.6"/>
+
+    <!-- Right eye -->
+    <ellipse cx="330" cy="285" rx="10" ry="5.5" fill="#fff" opacity="0.95"/>
+    <ellipse cx="329" cy="285" rx="5.5" ry="5.5" fill="#5a3a22"/>
+    <ellipse cx="329" cy="285" rx="2.5" ry="2.5" fill="#1a0a05"/>
+    <circle cx="327" cy="283" r="1.2" fill="#fff" opacity="0.85"/>
+    <path d="M 320,283 Q 330,278 340,283" stroke="#1a0a05" stroke-width="1.4" fill="none" stroke-linecap="round"/>
+    <path d="M 323,289 Q 330,291 337,289" stroke="#1a0a05" stroke-width="0.7" fill="none" stroke-linecap="round" opacity="0.6"/>
+
+    <!-- Bindi / third eye between brows -->
+    <circle cx="300" cy="265" r="3"   fill="#c9352b" opacity="0.92"/>
+    <circle cx="300" cy="265" r="6"   fill="#f5d060" opacity="0.25"/>
+
+    <!-- Nose: subtle bridge + tip -->
+    <path d="M 296,275 Q 295,308 296,315 Q 300,322 304,315 Q 305,308 304,275"
+          stroke="#a07050" stroke-width="0.8" fill="none" opacity="0.5"/>
+    <ellipse cx="300" cy="320" rx="5" ry="2.5" fill="#c89878" opacity="0.5"/>
+
+    <!-- Cheeks blush -->
+    <ellipse cx="252" cy="320" rx="14" ry="9" fill="#e88a78" opacity="0.30"/>
+    <ellipse cx="348" cy="320" rx="14" ry="9" fill="#e88a78" opacity="0.30"/>
+
+    <!-- Lips: soft smile -->
+    <path d="M 278,355 Q 290,360 300,358 Q 310,360 322,355 Q 322,365 300,368 Q 278,365 278,355 Z"
+          fill="#c95a5a" opacity="0.85"/>
+    <!-- Lip highlight -->
+    <path d="M 290,358 Q 300,360 310,358" stroke="#fff5d8" stroke-width="0.8" fill="none" opacity="0.45"/>
+    <!-- Subtle smile lift -->
+    <path d="M 274,358 Q 278,355 282,358" stroke="#a04a4a" stroke-width="0.8" fill="none" opacity="0.6"/>
+    <path d="M 318,358 Q 322,355 326,358" stroke="#a04a4a" stroke-width="0.8" fill="none" opacity="0.6"/>
+
+    <!-- Chin shadow -->
+    <ellipse cx="300" cy="382" rx="10" ry="3" fill="#a07050" opacity="0.20"/>
+  </g>
+
+  <!-- ROBE / SHOULDERS -->
+  <g>
+    <path d="M 180,500
+             C 200,480 240,470 280,465
+             L 320,465
+             C 360,470 400,480 420,500
              L 460,720
-             C 460,780 420,820 380,840
-             L 220,840
-             C 180,820 140,780 140,720 Z"
-          fill="#1a0e52" opacity="0.92"/>
+             C 460,790 420,840 380,860
+             L 220,860
+             C 180,840 140,790 140,720 Z"
+          fill="url(#robe)" opacity="0.96"/>
     <!-- Robe folds -->
-    <path d="M 220,560 Q 200,680 220,820" stroke="#9d7fff" stroke-width="1" fill="none" opacity="0.35"/>
-    <path d="M 280,540 Q 270,680 280,840" stroke="#9d7fff" stroke-width="1" fill="none" opacity="0.35"/>
-    <path d="M 320,540 Q 330,680 320,840" stroke="#9d7fff" stroke-width="1" fill="none" opacity="0.35"/>
-    <path d="M 380,560 Q 400,680 380,820" stroke="#9d7fff" stroke-width="1" fill="none" opacity="0.35"/>
-    <!-- Gold neck ornament -->
-    <ellipse cx="300" cy="540" rx="38" ry="6" fill="#f5d060" opacity="0.55"/>
-    <ellipse cx="300" cy="546" rx="32" ry="4" fill="#c9a227" opacity="0.55"/>
+    <path d="M 220,520 Q 200,680 220,840" stroke="#a87a3c" stroke-width="0.9" fill="none" opacity="0.5"/>
+    <path d="M 280,500 Q 270,680 280,860" stroke="#a87a3c" stroke-width="0.9" fill="none" opacity="0.5"/>
+    <path d="M 320,500 Q 330,680 320,860" stroke="#a87a3c" stroke-width="0.9" fill="none" opacity="0.5"/>
+    <path d="M 380,520 Q 400,680 380,840" stroke="#a87a3c" stroke-width="0.9" fill="none" opacity="0.5"/>
+    <!-- Gold neckline -->
+    <ellipse cx="300" cy="490" rx="40" ry="5" fill="#f5d060" opacity="0.85"/>
+    <ellipse cx="300" cy="495" rx="34" ry="3" fill="#c9a227" opacity="0.85"/>
+    <!-- Pendant -->
+    <circle cx="300" cy="525" r="8" fill="#f5d060" opacity="0.9"/>
+    <circle cx="300" cy="525" r="3" fill="#fff" opacity="0.6"/>
   </g>
 
-  <!-- Cupped hands at heart center -->
-  <g opacity="0.7">
-    <ellipse cx="300" cy="700" rx="40" ry="14" fill="#f5d060" opacity="0.18"/>
-    <path d="M 270,700 Q 300,680 330,700 Q 320,720 300,720 Q 280,720 270,700 Z" fill="url(#figureGrad)" opacity="0.6"/>
-    <!-- Tiny lotus / star in hands -->
-    <g transform="translate(300 700)">
-      <path d="M 0,-8 L 2,0 L 0,8 L -2,0 Z" fill="#f5d060" opacity="0.95"/>
-      <path d="M -8,0 L 0,2 L 8,0 L 0,-2 Z" fill="#f5d060" opacity="0.95"/>
-      <circle r="3" fill="#fff" opacity="0.85"/>
-    </g>
-  </g>
+  <!-- Earrings -->
+  <circle cx="226" cy="320" r="3" fill="#f5d060" opacity="0.9"/>
+  <circle cx="374" cy="320" r="3" fill="#f5d060" opacity="0.9"/>
 
-  <!-- Bottom fade for legibility of overlaid text -->
-  <linearGradient id="bottomFade" x1="0%" y1="0%" x2="0%" y2="100%">
-    <stop offset="60%" stop-color="#0a0820" stop-opacity="0"/>
-    <stop offset="100%" stop-color="#0a0820" stop-opacity="0.85"/>
+  <!-- Bottom fade for legibility of any overlaid text -->
+  <linearGradient id="botFade" x1="0%" y1="0%" x2="0%" y2="100%">
+    <stop offset="65%" stop-color="#1a0e22" stop-opacity="0"/>
+    <stop offset="100%" stop-color="#0a0820" stop-opacity="0.92"/>
   </linearGradient>
-  <rect x="0" y="600" width="600" height="300" fill="url(#bottomFade)"/>
+  <rect x="0" y="600" width="600" height="300" fill="url(#botFade)"/>
+
+  <!-- A few floating sparkles in front -->
+  <g fill="#fff5d8" opacity="0.8">
+    <circle cx="200" cy="180" r="2"/>
+    <circle cx="395" cy="160" r="1.6"/>
+    <circle cx="120" cy="380" r="1.8"/>
+    <circle cx="475" cy="395" r="1.6"/>
+    <circle cx="160" cy="710" r="2.2"/>
+    <circle cx="450" cy="730" r="1.8"/>
+  </g>
+
 </svg>

@@ -205,9 +205,13 @@
     const el = document.createElement('div');
     el.className = 'msg aura';
     el.id = '__typing';
-    el.innerHTML = '<div class="av" aria-hidden="true"></div><div class="body"><span class="typing"><span></span><span></span><span></span></span></div>';
+    el.innerHTML = '<div class="av" aria-hidden="true"></div><div class="body"><span class="typing-status" id="__typingStatus" style="font-style:italic;color:#9d8db2;font-size:13px;">Reading your energy</span> <span class="typing"><span></span><span></span><span></span></span></div>';
     messagesEl.appendChild(el);
     scrollBottom();
+  }
+  function setTypingStatus(text){
+    const el = document.getElementById('__typingStatus');
+    if (el) el.textContent = text;
   }
   function removeTyping(){
     const el = document.getElementById('__typing');
@@ -244,16 +248,36 @@
     inputEl.value = '';
     sendBtn.disabled = true;
 
-    // Simulated thinking pause — feels intentional, not robotic
+    // Simulated thinking pause — multi-stage status messages so it
+    // feels like Aura is actually pausing to read the question, not
+    // firing back instantly. Total ~3-5 seconds.
     addTyping();
-    const delay = 850 + Math.random() * 900;
+    const stages = pickThinkingStages();
+    const totalDelay = 2800 + Math.random() * 1700; // 2.8s – 4.5s
+    const stageGap   = totalDelay / stages.length;
+    stages.forEach((status, idx) => {
+      setTimeout(() => setTypingStatus(status), idx * stageGap);
+    });
     setTimeout(()=>{
       removeTyping();
       const reply = Aura.respond(text, buildProfile());
       addAuraMsg(reply);
       sendBtn.disabled = false;
       if (typeof gtag === 'function') gtag('event','aura_message_sent',{intent_text_length:text.length});
-    }, delay);
+    }, totalDelay);
+  }
+
+  // Three-stage status sequence per turn — randomly picked from a
+  // rotating pool so it doesn't feel scripted on the second message.
+  function pickThinkingStages(){
+    const pools = [
+      ["Reading your energy", "Looking at the patterns", "Letting the answer settle"],
+      ["Sitting with what you said", "Tuning into the field", "Almost there"],
+      ["Listening between the words", "Mapping the signals", "Putting it into words"],
+      ["Feeling for the rhythm", "Letting it form", "Shaping the response"],
+      ["Quietly observing", "Following the thread", "Bringing it through"],
+    ];
+    return pools[Math.floor(Math.random() * pools.length)];
   }
 
   formEl.addEventListener('submit', (e)=>{ e.preventDefault(); send(inputEl.value); });
