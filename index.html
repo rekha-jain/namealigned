@@ -154,7 +154,11 @@ ul{list-style:none;margin:0;padding:0}
   background:rgba(157,127,255,.08);
   border:1.5px solid rgba(157,127,255,.35);
   color:#ffffff;
+  width:100%;max-width:100%;min-width:0;box-sizing:border-box;
+  -webkit-appearance:none;appearance:none;
+  display:block;
 }
+.hero-form-card input[type="date"]::-webkit-date-and-time-value{text-align:left}
 .hero-form-card input::placeholder{color:rgba(255,255,255,.3)}
 .hero-form-card input:focus,.hero-form-card select:focus{
   border-color:var(--gold);
