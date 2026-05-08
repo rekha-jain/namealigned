@@ -426,6 +426,13 @@
     if (!fn || !dob) return;
     Aura.saveProfile({ firstName: fn, dob: dob });
     birthBox.classList.add('saved-state');
+    // Briefly show the "✓ Saved" confirmation, then collapse the form
+    // and hide the prompt banner since the user has supplied details.
+    setTimeout(()=>{
+      birthBox.classList.remove('open');
+      const banner = document.getElementById('auraBanner');
+      if (banner) banner.style.display = 'none';
+    }, 900);
     addAuraMsg(`Lovely — ${fn}, I have your details. From now on the readings will weave in your numerology pattern.`);
     if (typeof gtag === 'function') gtag('event','aura_profile_saved',{});
   });
@@ -435,6 +442,9 @@
   if (saved) {
     if (saved.firstName) nameIn.value = saved.firstName;
     if (saved.dob)       dobIn.value  = saved.dob;
+    // Already saved — keep the prompt banner hidden so the chat starts clean.
+    const banner = document.getElementById('auraBanner');
+    if (banner) banner.style.display = 'none';
   }
 
   // Greeting on first visit, contextual on return.
