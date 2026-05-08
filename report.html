@@ -54,28 +54,68 @@
 <style>
 .report-hero{background:linear-gradient(160deg,#1a1340 0%,#2a1a5c 100%);color:#f0ece0;padding:4rem 1.5rem 3rem;text-align:center;position:relative;overflow:hidden}
 .report-hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 0%,rgba(240,180,41,.2) 0%,transparent 65%)}
-.sample-page{background:var(--card);border:2px solid var(--gold-b);border-radius:var(--rl);overflow:hidden;margin-bottom:1rem}
-.sample-hdr{background:linear-gradient(160deg,#1a1340,#2a1a5c);padding:1rem 1.25rem;display:flex;align-items:center;justify-content:space-between}
-.sample-year{font-size:18px;color:#f0ece0}
-.sample-badge{background:rgba(240,180,41,.25);color:#f0ece0;font-size:11px;font-family:sans-serif;padding:3px 11px;border-radius:20px}
-.sample-body{padding:1.25rem}
-.sample-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:.75rem}
-.sample-block{background:var(--gold-l);border-radius:var(--r);padding:.75rem}
-.sb-label{font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--gold);font-family:sans-serif;margin-bottom:4px}
-.sb-text{font-size:12px;font-family:sans-serif;color:var(--text2);line-height:1.6}
-.order-card{background:var(--card);border:2px solid var(--gold-b);border-radius:var(--rl);padding:2rem;position:sticky;top:calc(var(--nav-h) + 16px)}
-.order-price{font-size:48px;line-height:1;margin-bottom:4px}
-.order-price sup{font-size:20px;vertical-align:top;margin-top:8px;display:inline-block}
-.order-features{list-style:none;font-family:sans-serif;font-size:13px;color:var(--text2);line-height:2.2;margin:1rem 0}
-.order-features li::before{content:'✓  ';color:var(--green);font-weight:700}
-.trust-row{display:flex;align-items:center;justify-content:center;gap:8px;font-size:11px;font-family:sans-serif;color:var(--text3);margin-top:.75rem;flex-wrap:wrap}
-.input-section{background:var(--gold-l);border:1px solid var(--gold-b);border-radius:var(--r);padding:1.25rem;margin-bottom:1rem}
-.input-section .card-title{margin-bottom:.75rem}
-.preview-banner{background:linear-gradient(135deg,#1a1340,#0a0820);border-radius:var(--rl);padding:2rem;margin-bottom:1.5rem;text-align:center;color:#f0ece0}
+.report-grid{display:grid;grid-template-columns:1fr 380px;gap:2.5rem;align-items:start}
+@media(max-width:900px){.report-grid{grid-template-columns:1fr;gap:1.5rem}.order-card{position:static!important}}
+
+/* Compact value checklist (replaces big icon cards) */
+.r-includes{background:var(--card);border:1px solid var(--border);border-radius:var(--rl);padding:1.25rem 1.4rem;margin-bottom:1.25rem}
+.r-includes h2{font-size:18px;margin:0 0 .65rem;color:var(--text);font-family:'Playfair Display',Georgia,serif}
+.r-includes ul{list-style:none;margin:0;padding:0;font-family:sans-serif}
+.r-includes li{position:relative;padding:6px 0 6px 26px;font-size:14px;color:var(--text2);line-height:1.5;border-top:1px solid var(--border)}
+.r-includes li:first-child{border-top:0}
+.r-includes li::before{content:'✓';position:absolute;left:0;top:6px;width:18px;height:18px;background:var(--gold-l);color:var(--gold);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700}
+.r-includes li strong{color:var(--text)}
+
+/* Compact inline testimonials (replaces big cards) */
+.r-testi-block{background:linear-gradient(135deg,rgba(240,180,41,.06),rgba(157,127,255,.06));border:1px solid var(--gold-b);border-radius:var(--rl);padding:1.1rem 1.25rem;margin-bottom:1.25rem}
+.r-testi-block h3{font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);font-family:sans-serif;font-weight:700;margin:0 0 .5rem}
+.r-mini{padding:.7rem 0;border-top:1px solid var(--gold-b)}
+.r-mini:first-of-type{border-top:0;padding-top:.2rem}
+.r-mini .stars{color:var(--gold);font-size:11px;letter-spacing:1px;margin-bottom:2px}
+.r-mini blockquote{margin:0;font-size:13.5px;color:var(--text);font-family:sans-serif;line-height:1.55;font-style:italic}
+.r-mini cite{display:block;margin-top:3px;font-size:11.5px;font-family:sans-serif;color:var(--text3);font-style:normal}
+
+/* Collapsed sample */
+.r-sample{background:var(--card);border:1px solid var(--border);border-radius:var(--rl);margin-bottom:1.25rem;overflow:hidden}
+.r-sample summary{cursor:pointer;list-style:none;padding:.85rem 1.25rem;display:flex;align-items:center;justify-content:space-between;font-family:sans-serif;font-size:14px;color:var(--text);font-weight:600;background:linear-gradient(135deg,rgba(240,180,41,.04),rgba(157,127,255,.04))}
+.r-sample summary::-webkit-details-marker{display:none}
+.r-sample summary::after{content:'+';font-size:20px;color:var(--gold);font-weight:400;transition:transform .2s}
+.r-sample[open] summary::after{content:'−'}
+.r-sample-body{padding:1rem 1.25rem 1.25rem;border-top:1px solid var(--border)}
+.sample-page{background:#fafaf8;border:1px solid var(--gold-b);border-radius:var(--r);overflow:hidden}
+.sample-hdr{background:linear-gradient(160deg,#1a1340,#2a1a5c);padding:.75rem 1rem;display:flex;align-items:center;justify-content:space-between}
+.sample-year{font-size:15px;color:#f0ece0;font-family:'Playfair Display',Georgia,serif}
+.sample-badge{background:rgba(240,180,41,.25);color:#f0ece0;font-size:10.5px;font-family:sans-serif;padding:2px 9px;border-radius:20px}
+.sample-body{padding:1rem}
+.sample-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:.5rem}
+.sample-block{background:var(--gold-l);border-radius:var(--r);padding:.6rem .7rem}
+.sb-label{font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:var(--gold);font-family:sans-serif;margin-bottom:3px}
+.sb-text{font-size:11.5px;font-family:sans-serif;color:var(--text2);line-height:1.55}
+
+/* Compact FAQ */
+.r-faq{background:var(--card);border:1px solid var(--border);border-radius:var(--rl);overflow:hidden;margin-bottom:1rem}
+.r-faq h3{font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:var(--text3);font-family:sans-serif;font-weight:700;margin:0;padding:1rem 1.25rem .5rem}
+.r-faq details{border-top:1px solid var(--border)}
+.r-faq summary{cursor:pointer;list-style:none;padding:.75rem 1.25rem;font-family:sans-serif;font-size:13.5px;color:var(--text);font-weight:600;display:flex;justify-content:space-between;align-items:center}
+.r-faq summary::-webkit-details-marker{display:none}
+.r-faq summary::after{content:'+';color:var(--gold);font-size:18px}
+.r-faq details[open] summary::after{content:'−'}
+.r-faq-a{padding:0 1.25rem 1rem;font-family:sans-serif;font-size:13px;color:var(--text2);line-height:1.65}
+
+/* Order card */
+.order-card{background:var(--card);border:1px solid var(--gold-b);border-radius:var(--rl);padding:1.5rem;position:sticky;top:calc(var(--nav-h) + 16px);box-shadow:0 6px 28px rgba(26,19,64,.08)}
+.order-price{font-size:42px;line-height:1;margin-bottom:2px;font-family:'Playfair Display',Georgia,serif;color:var(--text);font-weight:700}
+.order-features{list-style:none;font-family:sans-serif;font-size:13px;color:var(--text2);line-height:1.85;margin:.85rem 0}
+.order-features li{position:relative;padding-left:20px}
+.order-features li::before{content:'✓';position:absolute;left:0;color:var(--green);font-weight:700}
+.input-section{background:var(--gold-l);border:1px solid var(--gold-b);border-radius:var(--r);padding:1rem 1.1rem;margin-bottom:.85rem}
+.input-section .card-title{margin-bottom:.6rem;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--gold)}
+.order-trust-row{display:flex;justify-content:space-between;gap:6px;margin-top:.85rem;padding-top:.85rem;border-top:1px solid var(--border);font-family:sans-serif;font-size:10.5px;color:var(--text3);text-align:center}
+.order-trust-row span{flex:1;letter-spacing:.04em}
+
 @media(max-width:768px){
-  .report-hero{padding:2.5rem 1rem 2rem;}
-  div[style*="grid-template-columns:1fr 360px"]{grid-template-columns:1fr!important;display:block!important;}
-  .order-card{position:static!important;margin-top:2rem;}
+  .report-hero{padding:2rem 1rem 1.5rem}
+  .order-card{padding:1.25rem}
 }
 </style>
 <script src="/assets/mixpanel.js"></script>
@@ -118,107 +158,121 @@
   <div style="font-size:12.5px;color:#cbb8e8;font-family:sans-serif;position:relative;letter-spacing:.04em;">⚡ Instant delivery · 🔒 Secure payment · 📄 PDF + email</div>
 </div>
 
-<div class="container" style="padding-top:3rem;padding-bottom:5rem">
-  <div style="display:grid;grid-template-columns:1fr 360px;gap:3rem;align-items:flex-start">
-    <!-- Left: content -->
+<div class="container" style="padding-top:2rem;padding-bottom:4rem">
+  <div class="report-grid">
+    <!-- Left: trust + value + testimonials + sample + faq -->
     <div>
 
-      <!-- Quick value — 4 short bullets, no walls of text -->
-      <h2 class="section-h2" style="margin-bottom:1.25rem;">What you'll know after reading your report</h2>
-      <div class="grid-2" style="gap:1rem;margin-bottom:2rem;">
-        <div class="feat-card card-sm"><div class="feat-icon">📅</div><h4 class="feat-title" style="font-size:15px;">Year-by-year forecast</h4><p class="feat-desc">The next 5 years mapped — what to launch, when to slow down, the windows that matter for career, love, money and health.</p></div>
-        <div class="feat-card card-sm"><div class="feat-icon">✦</div><h4 class="feat-title" style="font-size:15px;">Name vibration check</h4><p class="feat-desc">Whether your current name supports or quietly resists your destiny — with gentle phonetic tweaks if needed.</p></div>
-        <div class="feat-card card-sm"><div class="feat-icon">💎</div><h4 class="feat-title" style="font-size:15px;">Lucky elements</h4><p class="feat-desc">Your colours, days, numbers, stones and metals — woven together so you can use them every week.</p></div>
-        <div class="feat-card card-sm"><div class="feat-icon">📲</div><h4 class="feat-title" style="font-size:15px;">Mobile number analysis</h4><p class="feat-desc">Whether your phone number's vibration aligns with you, plus what to look for when choosing a new one.</p></div>
+      <!-- What's included — compact checklist -->
+      <div class="r-includes">
+        <h2>What's in your report</h2>
+        <ul>
+          <li><strong>5-year year-by-year forecast</strong> — career, love, wealth, health, month-windows that matter.</li>
+          <li><strong>Name vibration check</strong> — whether your current name supports your destiny, with phonetic tweaks if not.</li>
+          <li><strong>Lucky elements</strong> — colours, days, numbers, stones and metals woven into a weekly rhythm.</li>
+          <li><strong>Mobile number analysis</strong> — alignment of your phone number, plus what to look for in a new one.</li>
+          <li><strong>Daily remedies &amp; activations</strong> — one master practice per year, plus do/don't lists.</li>
+          <li><strong>Beautiful PDF</strong> — yours forever, emailed instantly. No subscription.</li>
+        </ul>
       </div>
 
-      <!-- Sample preview -->
-      <h3 style="font-size:18px;margin-bottom:.5rem;">A glimpse — what one year looks like inside</h3>
-      <p style="font-family:sans-serif;font-size:13px;color:var(--text3);line-height:1.6;margin-bottom:1rem;font-style:italic;">Below is a real sample year. Your full report covers 5 of these.</p>
-
-      <div class="sample-page">
-        <div class="sample-hdr">
-          <div class="sample-year">Year 1, 2026</div>
-          <div class="sample-badge">Personal Year 3 · Jupiter</div>
+      <!-- Compact testimonials — sits next to the form -->
+      <div class="r-testi-block">
+        <h3>★ ★ ★ ★ ★ &nbsp; What readers say</h3>
+        <div class="r-mini">
+          <div class="stars">★★★★★</div>
+          <blockquote>"The 2024 forecast was eerily accurate — exactly the power shift I lived through."</blockquote>
+          <cite>Kavita Rao · India</cite>
         </div>
-        <div class="sample-body">
-          <div style="font-size:12px;color:var(--text3);font-family:sans-serif;font-style:italic;margin-bottom:.75rem;padding-bottom:.75rem;border-bottom:1px solid var(--gold-b)">Creativity · Expansion · Communication · Joy</div>
-          <div class="sample-grid">
-            <div class="sample-block"><div class="sb-label">Career & Business</div><div class="sb-text">Your Birth Number 5 aligns powerfully with Jupiter's Year 3 expansion energy. New professional platforms, speaking opportunities and media visibility are strongly favoured in Q2. Trust your instinct to lead.</div></div>
-            <div class="sample-block"><div class="sb-label">Love & Relationships</div><div class="sb-text">Jupiter energy opens emotional doors that have been closed. Singles may encounter a significant connection mid-year. Existing partnerships deepen when communication is prioritised.</div></div>
-            <div class="sample-block"><div class="sb-label">Wealth & Finance</div><div class="sb-text">Multiple income streams can be activated simultaneously. This is your breakthrough wealth window, launch, invest and diversify. Life Path Number 6 draws high-value partnerships this year.</div></div>
-            <div class="sample-block"><div class="sb-label">Health & Energy</div><div class="sb-text">High creative output can deplete adrenal reserves. Schedule one recovery week per quarter. Gut health and nervous system need extra support mid-year, prioritise sleep above all.</div></div>
-          </div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:.75rem">
-            <div style="background:var(--green-bg);border-radius:var(--r);padding:.75rem 1rem">
-              <div style="font-size:9.5px;font-family:sans-serif;font-weight:700;color:var(--green);margin-bottom:6px;text-transform:uppercase;letter-spacing:.06em">✓ Do this year</div>
-              <ul style="padding-left:14px;font-size:12px;font-family:sans-serif;line-height:1.9;color:var(--text)">
-                <li>Launch public-facing ventures before July</li>
-                <li>Strengthen partnerships aligned with Life Path Number 6</li>
-                <li>Activate name number through daily affirmation</li>
-              </ul>
-            </div>
-            <div style="background:var(--red-bg);border-radius:var(--r);padding:.75rem 1rem">
-              <div style="font-size:9.5px;font-family:sans-serif;font-weight:700;color:var(--red);margin-bottom:6px;text-transform:uppercase;letter-spacing:.06em">✗ Avoid this year</div>
-              <ul style="padding-left:14px;font-size:12px;font-family:sans-serif;line-height:1.9;color:var(--text)">
-                <li>Overcommitting to low-ROI obligations</li>
-                <li>Financial decisions made from fear</li>
-                <li>Suppressing emotions, Mercury needs expression</li>
-              </ul>
-            </div>
-          </div>
-          <div style="background:var(--gold-l);border:1px solid var(--gold-b);border-radius:var(--r);padding:.75rem 1rem">
-            <div style="font-size:9.5px;font-family:sans-serif;font-weight:700;color:var(--gold);text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px">Remedy & activation · 2026</div>
-            <div style="font-size:12px;font-family:sans-serif;color:var(--text2)">Wear yellow on Thursdays to amplify Jupiter's Year 3 energy. Keep a citrine on your desk and share knowledge generously, Jupiter's blessings flow through generosity.</div>
-          </div>
-          <div class="chips" style="margin-top:.75rem">
-            <span class="chip">Lucky colour: Yellow</span>
-            <span class="chip">Power day: Thursday</span>
-            <span class="chip">Lucky number: 3</span>
-            <span class="chip">Stone: Yellow Sapphire</span>
-          </div>
-          <div style="text-align:center;margin-top:1rem;font-family:sans-serif;font-size:12px;color:var(--text3);font-style:italic">⬇ 4 more years of forecasts in your full report</div>
+        <div class="r-mini">
+          <div class="stars">★★★★★</div>
+          <blockquote>"Paid INR 4,200 elsewhere for less. This is more detailed and beautifully written."</blockquote>
+          <cite>Suresh Khanna · India</cite>
+        </div>
+        <div class="r-mini">
+          <div class="stars">★★★★★</div>
+          <blockquote>"Skeptical at first, but the year-by-year guidance lined up uncannily with what actually unfolded."</blockquote>
+          <cite>Sarah Mitchell · UK</cite>
+        </div>
+        <div class="r-mini">
+          <div class="stars">★★★★★</div>
+          <blockquote>"The name vibration read was a revelation. Tweaked the spelling I use and energy around work shifted."</blockquote>
+          <cite>Anjali Krishnan · USA</cite>
+        </div>
+        <div class="r-mini">
+          <div class="stars">★★★★★</div>
+          <blockquote>"The wealth window was real — closed two big deals in the exact months it predicted."</blockquote>
+          <cite>Vikram Reddy · India</cite>
         </div>
       </div>
 
-      <!-- Value comparison — INR 199 vs traditional -->
-      <div style="background:linear-gradient(135deg,rgba(240,180,41,.08),rgba(157,127,255,.08));border:1px solid var(--gold-b);border-radius:var(--rl);padding:1.5rem;margin:2rem 0 1.5rem;">
-        <div style="text-align:center;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);font-family:sans-serif;margin-bottom:.75rem;">Why INR 199, not INR 4,000</div>
-        <p style="font-family:sans-serif;font-size:14px;line-height:1.7;color:var(--text2);text-align:center;margin:0;max-width:600px;margin-left:auto;margin-right:auto;">A traditional numerologist consultation in India runs INR 2,000–8,000 and takes a week. Our report applies the same Chaldean principles, generated instantly from your name and birth date, beautifully formatted as a PDF you keep forever.</p>
-      </div>
+      <!-- Value line (replaces big callout box) -->
+      <p style="font-family:sans-serif;font-size:13px;color:var(--text3);line-height:1.6;font-style:italic;margin:0 0 1.25rem;padding:0 .25rem;">A traditional numerologist consultation in India runs INR 2,000–8,000 and takes a week. This report applies the same Chaldean principles, generated instantly, beautifully formatted, yours forever.</p>
 
-      <!-- Testimonials — 6 short, scannable -->
-      <div class="section-eyebrow mt-4">What readers say</div>
-      <h2 class="section-h2" style="margin-bottom:1.25rem;">Real readings, real shifts</h2>
-      <div class="grid-2" style="gap:1rem;margin-bottom:1rem;">
-        <div class="testi-card"><div class="testi-stars">★★★★★</div><p class="testi-quote">"The 2024 forecast was eerily accurate — exactly the power shift I lived through. Already ordering my next one."</p><div class="testi-name">Kavita Rao</div><div class="testi-loc">India</div></div>
-        <div class="testi-card"><div class="testi-stars">★★★★★</div><p class="testi-quote">"Paid INR 4,200 elsewhere for less. This INR 199 PDF is genuinely more detailed and beautifully written."</p><div class="testi-name">Suresh Khanna</div><div class="testi-loc">India</div></div>
-        <div class="testi-card"><div class="testi-stars">★★★★★</div><p class="testi-quote">"Skeptical at first, but the year-by-year guidance lined up uncannily with what actually unfolded. Already gifted one to my sister."</p><div class="testi-name">Sarah Mitchell</div><div class="testi-loc">UK</div></div>
-        <div class="testi-card"><div class="testi-stars">★★★★★</div><p class="testi-quote">"The name vibration read was a revelation. Tweaked the spelling I use professionally and the energy around work shifted within weeks."</p><div class="testi-name">Anjali Krishnan</div><div class="testi-loc">USA</div></div>
-        <div class="testi-card"><div class="testi-stars">★★★★★</div><p class="testi-quote">"Felt like someone read my life and gave me a map. The PDF is gorgeous — I've read it three times already."</p><div class="testi-name">Anika Iyer</div><div class="testi-loc">India</div></div>
-        <div class="testi-card"><div class="testi-stars">★★★★★</div><p class="testi-quote">"The wealth window was real — closed two big deals in the exact months it predicted. Sharing this with my team."</p><div class="testi-name">Vikram Reddy</div><div class="testi-loc">India</div></div>
-      </div>
+      <!-- Sample year — collapsed by default -->
+      <details class="r-sample">
+        <summary>See a sample year from inside the report</summary>
+        <div class="r-sample-body">
+          <div class="sample-page">
+            <div class="sample-hdr">
+              <div class="sample-year">Year 1, 2026</div>
+              <div class="sample-badge">Personal Year 3 · Jupiter</div>
+            </div>
+            <div class="sample-body">
+              <div style="font-size:11.5px;color:var(--text3);font-family:sans-serif;font-style:italic;margin-bottom:.6rem;padding-bottom:.6rem;border-bottom:1px solid var(--gold-b)">Creativity · Expansion · Communication · Joy</div>
+              <div class="sample-grid">
+                <div class="sample-block"><div class="sb-label">Career &amp; Business</div><div class="sb-text">Birth Number 5 aligns powerfully with Jupiter's Year 3 expansion. New platforms, speaking and media visibility favoured in Q2.</div></div>
+                <div class="sample-block"><div class="sb-label">Love &amp; Relationships</div><div class="sb-text">Jupiter opens emotional doors. Singles may encounter a significant connection mid-year. Existing partnerships deepen.</div></div>
+                <div class="sample-block"><div class="sb-label">Wealth &amp; Finance</div><div class="sb-text">Multiple income streams can be activated. Breakthrough wealth window — launch, invest, diversify.</div></div>
+                <div class="sample-block"><div class="sb-label">Health &amp; Energy</div><div class="sb-text">Schedule one recovery week per quarter. Gut and nervous system need extra support mid-year — prioritise sleep.</div></div>
+              </div>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:.5rem">
+                <div style="background:var(--green-bg);border-radius:var(--r);padding:.6rem .75rem">
+                  <div style="font-size:9px;font-family:sans-serif;font-weight:700;color:var(--green);margin-bottom:4px;text-transform:uppercase;letter-spacing:.06em">✓ Do this year</div>
+                  <ul style="padding-left:14px;font-size:11.5px;font-family:sans-serif;line-height:1.7;color:var(--text);margin:0">
+                    <li>Launch public-facing ventures before July</li>
+                    <li>Strengthen Life Path 6 partnerships</li>
+                    <li>Activate name number through daily practice</li>
+                  </ul>
+                </div>
+                <div style="background:var(--red-bg);border-radius:var(--r);padding:.6rem .75rem">
+                  <div style="font-size:9px;font-family:sans-serif;font-weight:700;color:var(--red);margin-bottom:4px;text-transform:uppercase;letter-spacing:.06em">✗ Avoid this year</div>
+                  <ul style="padding-left:14px;font-size:11.5px;font-family:sans-serif;line-height:1.7;color:var(--text);margin:0">
+                    <li>Overcommitting to low-ROI obligations</li>
+                    <li>Decisions made from fear</li>
+                    <li>Suppressing emotions — Mercury needs voice</li>
+                  </ul>
+                </div>
+              </div>
+              <div style="background:var(--gold-l);border:1px solid var(--gold-b);border-radius:var(--r);padding:.6rem .75rem">
+                <div style="font-size:9px;font-family:sans-serif;font-weight:700;color:var(--gold);text-transform:uppercase;letter-spacing:.06em;margin-bottom:3px">Remedy &amp; activation · 2026</div>
+                <div style="font-size:11.5px;font-family:sans-serif;color:var(--text2);line-height:1.55">Wear yellow on Thursdays to amplify Jupiter's Year 3 energy. Keep citrine on your desk; share knowledge generously.</div>
+              </div>
+              <div style="text-align:center;margin-top:.75rem;font-family:sans-serif;font-size:11px;color:var(--text3);font-style:italic">⬇ 4 more years of forecasts in your full report</div>
+            </div>
+          </div>
+        </div>
+      </details>
 
-      <!-- Trust + risk reversal -->
-      <div style="background:var(--card);border:1px solid var(--gold-b);border-radius:var(--rl);padding:1.5rem;margin:2rem 0;display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem;text-align:center;">
-        <div><div style="font-size:24px;margin-bottom:6px;">⚡</div><div style="font-family:sans-serif;font-size:13px;font-weight:600;color:var(--text);">Delivered in 60 seconds</div><div style="font-family:sans-serif;font-size:11.5px;color:var(--text3);margin-top:3px;">PDF on screen + emailed</div></div>
-        <div><div style="font-size:24px;margin-bottom:6px;">🔒</div><div style="font-family:sans-serif;font-size:13px;font-weight:600;color:var(--text);">Secure payment</div><div style="font-family:sans-serif;font-size:11.5px;color:var(--text3);margin-top:3px;">Razorpay · UPI · Cards</div></div>
-        <div><div style="font-size:24px;margin-bottom:6px;">📚</div><div style="font-family:sans-serif;font-size:13px;font-weight:600;color:var(--text);">Cheiro-based</div><div style="font-family:sans-serif;font-size:11.5px;color:var(--text3);margin-top:3px;">Authentic Chaldean system</div></div>
-      </div>
-
-      <!-- Final mid-page CTA -->
-      <div style="text-align:center;margin:2.5rem 0;">
-        <a href="#order" onclick="document.querySelector('.order-card').scrollIntoView({behavior:'smooth',block:'start'});return false;" style="background:#f0b429;color:#0a0820;padding:14px 32px;border-radius:30px;font-weight:700;text-decoration:none;font-size:16px;display:inline-block;box-shadow:0 6px 20px rgba(240,180,41,.35);">Get my report — INR 199 →</a>
-        <div style="font-size:12.5px;color:var(--text3);font-family:sans-serif;margin-top:10px;">One-time payment · Instant PDF · No subscription</div>
-      </div>
-
-      <!-- FAQ -->
-      <div class="section-eyebrow">Questions</div>
-      <div>
-        <div class="faq-item"><div class="faq-q">How quickly will I receive the report?</div><div class="faq-a">Instantly, the AI generates your report in 30–60 seconds after payment. You'll see it on screen and receive the PDF download link immediately. It's also emailed to you.</div></div>
-        <div class="faq-item"><div class="faq-q">Is this a generic report or personalised?</div><div class="faq-a">Fully personalised. Every sentence references your specific Birth Number, Life Path Number, Name Number and year-by-year personal year cycles. No two reports are the same.</div></div>
-        <div class="faq-item"><div class="faq-q">What if I'm not satisfied?</div><div class="faq-a">We put significant effort into every personalised report. As this is a digital product delivered instantly, we do not offer refunds. If you face a technical issue with delivery, email support@namealigned.com and we'll resolve it promptly.</div></div>
-        <div class="faq-item"><div class="faq-q">Is payment secure?</div><div class="faq-a">Yes. Indian payments are processed via Razorpay (UPI, cards, net banking, wallets) and international payments via PayPal. Both are globally trusted gateways. We never store your card details.</div></div>
+      <!-- FAQ — compact accordion -->
+      <div class="r-faq">
+        <h3>Common questions</h3>
+        <details>
+          <summary>How quickly will I receive the report?</summary>
+          <div class="r-faq-a">Instantly. The report generates in 30–60 seconds after payment. You'll see it on screen, get a PDF download link, and receive it by email.</div>
+        </details>
+        <details>
+          <summary>Is this a generic report or personalised?</summary>
+          <div class="r-faq-a">Fully personalised. Every sentence references your specific Birth Number, Life Path Number, Name Number and year-by-year personal year cycles. No two reports are the same.</div>
+        </details>
+        <details>
+          <summary>What if I'm not satisfied?</summary>
+          <div class="r-faq-a">As this is a digital product delivered instantly, we do not offer refunds. If you face a technical issue with delivery, email support@namealigned.com and we'll resolve it promptly.</div>
+        </details>
+        <details>
+          <summary>Is payment secure?</summary>
+          <div class="r-faq-a">Yes. Indian payments via Razorpay (UPI, cards, net banking, wallets); international via PayPal. Both globally trusted gateways. We never store card details.</div>
+        </details>
       </div>
 
     </div>
@@ -226,20 +280,12 @@
     <!-- Right: order card -->
     <div>
       <div class="order-card" id="order">
-        <div style="font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);font-family:sans-serif;margin-bottom:.5rem">Full Destiny Report</div>
-        <div style="display:flex;align-items:baseline;gap:10px;margin-bottom:2px;flex-wrap:wrap;">
-          <div class="order-price" style="margin-bottom:0;">INR 199</div>
-          <div style="font-size:18px;color:var(--text3);text-decoration:line-through;font-family:sans-serif;">INR 699</div>
+        <div style="font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);font-family:sans-serif;margin-bottom:.4rem">Full Destiny Report</div>
+        <div style="display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin-bottom:2px;">
+          <div class="order-price">INR 199</div>
+          <div style="font-size:16px;color:var(--text3);text-decoration:line-through;font-family:sans-serif;">INR 699</div>
         </div>
-        <div style="font-size:13.5px;color:var(--text2);font-family:sans-serif;margin-bottom:.35rem"><strong style="color:#7c3aed;">$2.99 USD</strong> for international buyers (PayPal)</div>
-        <div style="font-size:12px;color:var(--text3);font-family:sans-serif;margin-bottom:1rem">One-time · Instant PDF · Yours forever</div>
-        <ul class="order-features">
-          <li>5-year year-by-year forecast — career, love, wealth, health</li>
-          <li>Name vibration check &amp; phonetic suggestions</li>
-          <li>Lucky colours, days, numbers, stones &amp; daily remedy</li>
-          <li>Mobile number alignment analysis</li>
-          <li>Beautiful PDF — yours forever, emailed instantly</li>
-        </ul>
+        <div style="font-size:12.5px;color:var(--text2);font-family:sans-serif;margin-bottom:.85rem">or <strong style="color:#7c3aed;">$2.99 USD</strong> via PayPal · One-time · Instant PDF</div>
 
         <div class="input-section">
           <div class="card-title">Your details</div>
@@ -317,10 +363,13 @@
           <p style="font-size:11px;color:var(--text3);font-family:sans-serif;text-align:center;margin:.5rem 0 0;">Pay securely via PayPal (PayPal account required)</p>
         </div>
 
-        <div style="margin-top:1.25rem;border-top:1px solid var(--gold-b);padding-top:1rem;text-align:center">
-          <a href="analyzer" style="font-size:12.5px;font-family:sans-serif;color:var(--text3)">
-            Try the free analysis first →
-          </a>
+        <div class="order-trust-row">
+          <span>⚡ 60-sec delivery</span>
+          <span>🔒 Secure payment</span>
+          <span>📄 PDF + email</span>
+        </div>
+        <div style="margin-top:.85rem;text-align:center">
+          <a href="analyzer" style="font-size:12px;font-family:sans-serif;color:var(--text3)">Try the free analysis first →</a>
         </div>
       </div>
     </div>
