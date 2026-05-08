@@ -46,7 +46,7 @@
      can push the page sideways. */
   html{scrollbar-width:none;-ms-overflow-style:none}
   html::-webkit-scrollbar{width:0;height:0;display:none}
-  body{overflow-x:hidden;max-width:100vw;scrollbar-width:none;-ms-overflow-style:none;}
+  body{overflow-x:hidden;max-width:100vw;scrollbar-width:none;-ms-overflow-style:none;padding-top:var(--aura-top-h,52px);}
   body::-webkit-scrollbar{width:0;height:0;display:none}
   .aura-shell,.aura-chat,.aura-portrait,.aura-banner,.aura-messages,.aura-suggested,.aura-input-wrap,.aura-input,.aura-disclaim,.aura-birth{max-width:100%;min-width:0;}
   .aura-messages,.msg{word-wrap:break-word;overflow-wrap:break-word;word-break:break-word;}
@@ -57,7 +57,7 @@
   .aura-input input{flex:1 1 0;min-width:0;width:0;max-width:100%;}
 
   /* ── Top bar (compact, dark, non-default nav) ───────────────── */
-  .aura-top{display:flex;align-items:center;justify-content:space-between;padding:12px 22px;background:rgba(10,8,32,.92);border-bottom:1px solid rgba(157,127,255,.18);position:sticky;top:0;z-index:50;backdrop-filter:blur(12px);gap:10px;}
+  .aura-top{display:flex;align-items:center;justify-content:space-between;padding:12px 22px;background:rgba(10,8,32,.92);border-bottom:1px solid rgba(157,127,255,.18);position:fixed;top:0;left:0;right:0;z-index:50;backdrop-filter:blur(12px);gap:10px;}
   .aura-top a.brand{font-family:'Playfair Display',Georgia,serif;font-size:18px;color:#fff;text-decoration:none;letter-spacing:.02em;display:inline-flex;align-items:baseline;gap:4px;flex-shrink:0;}
   .aura-top a.brand .accent{color:#9d7fff;}
   .aura-top .menu{display:flex;gap:18px;font-size:13px;align-items:center;flex-wrap:nowrap;}
