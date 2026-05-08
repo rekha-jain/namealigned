@@ -35,8 +35,9 @@
 
 <style>
   *{box-sizing:border-box}
-  html,body{margin:0;padding:0;background:#0a0820;color:#f0ece0;font-family:Inter,system-ui,-apple-system,'Helvetica Neue',Arial,sans-serif;min-height:100%;height:100%;}
-  body{display:flex;flex-direction:column;}
+  html,body{margin:0;padding:0;background:#0a0820;color:#f0ece0;font-family:Inter,system-ui,-apple-system,'Helvetica Neue',Arial,sans-serif;}
+  html{height:100%;}
+  body{min-height:100vh;min-height:100dvh;display:flex;flex-direction:column;}
 
   /* ── Top bar (compact, dark, non-default nav) ───────────────── */
   .aura-top{display:flex;align-items:center;justify-content:space-between;padding:12px 22px;background:rgba(10,8,32,.92);border-bottom:1px solid rgba(157,127,255,.18);position:sticky;top:0;z-index:50;backdrop-filter:blur(12px);gap:10px;}
@@ -47,8 +48,13 @@
     .aura-top{padding:10px 14px;}
     .aura-top a.brand{font-size:15px;}
     .aura-top a.brand>span:last-child{display:none;}
-    .aura-top .menu{gap:12px;font-size:12px;}
+    .aura-top .menu{gap:10px;font-size:12px;}
     .aura-top .menu a{white-space:nowrap;}
+    .aura-top .menu .cta{display:none;}
+  }
+  @media(max-width:380px){
+    .aura-top a.brand{font-size:13px;}
+    .aura-top .menu{gap:8px;font-size:11.5px;}
   }
   .aura-top .menu a{color:#cbb8e8;text-decoration:none;}
   .aura-top .menu a:hover{color:#fff;}
@@ -57,7 +63,7 @@
 
   /* ── 2-column layout ──────────────────────────────────────── */
   .aura-shell{flex:1;display:grid;grid-template-columns:minmax(280px,40%) 1fr;min-height:0;}
-  @media (max-width:880px){.aura-shell{grid-template-columns:1fr;grid-template-rows:auto 1fr;}}
+  @media (max-width:880px){.aura-shell{grid-template-columns:1fr;grid-template-rows:auto 1fr;flex:1;min-height:0;}}
 
   /* Portrait panel (LEFT on desktop, top on mobile) — mystic backdrop
      with the angel as a centered, framed portrait rather than a full
@@ -125,11 +131,20 @@
   .aura-name h1{font-family:'Playfair Display',Georgia,serif;font-size:30px;color:#fff;margin:0 0 5px;font-weight:600;letter-spacing:.04em;line-height:1.15;}
   .aura-name p{font-family:Georgia,serif;font-size:13px;color:#cdc4dc;margin:0;font-style:italic;letter-spacing:.04em;}
   @media (max-width:880px){
-    .aura-portrait{padding:18px 18px 22px;}
-    .aura-portrait-frame{width:min(40%, 130px);}
-    .aura-name{margin-top:12px;}
-    .aura-name h1{font-size:22px;}
-    .aura-name p{font-size:12px;}
+    .aura-portrait{
+      padding:14px 16px;
+      flex-direction:row;
+      align-items:center;
+      justify-content:flex-start;
+      gap:14px;
+      text-align:left;
+    }
+    .aura-portrait-frame{width:54px;height:54px;aspect-ratio:1/1;flex-shrink:0;}
+    .aura-portrait-frame::after{display:none;}
+    .aura-name{margin-top:0;text-align:left;flex:1;min-width:0;}
+    .aura-name .eb{font-size:9.5px;letter-spacing:.22em;margin-bottom:2px;}
+    .aura-name h1{font-size:16px;line-height:1.2;margin:0 0 2px;}
+    .aura-name p{font-size:11.5px;line-height:1.3;}
   }
 
   /* Chat panel (RIGHT) */
@@ -161,12 +176,12 @@
   .aura-suggested .chip{font-size:12.5px;color:#cbb8e8;background:rgba(157,127,255,.08);border:1px solid rgba(157,127,255,.25);border-radius:18px;padding:7px 13px;cursor:pointer;transition:all .15s ease;}
   .aura-suggested .chip:hover{background:rgba(157,127,255,.18);color:#fff;}
 
-  .aura-input-wrap{padding:14px 18px 18px;background:linear-gradient(180deg,transparent,rgba(10,8,32,.55));}
-  .aura-input{display:flex;gap:10px;align-items:center;background:rgba(255,255,255,.06);border:1px solid rgba(157,127,255,.3);border-radius:24px;padding:6px 6px 6px 18px;}
+  .aura-input-wrap{padding:14px 18px calc(18px + env(safe-area-inset-bottom));background:linear-gradient(180deg,transparent,rgba(10,8,32,.55));}
+  .aura-input{display:flex;gap:8px;align-items:center;background:rgba(255,255,255,.06);border:1px solid rgba(157,127,255,.3);border-radius:24px;padding:6px 6px 6px 16px;min-width:0;}
   .aura-input:focus-within{border-color:rgba(245,208,96,.55);background:rgba(255,255,255,.09);}
-  .aura-input input{flex:1;background:transparent;border:0;outline:0;color:#f0ece0;font-size:14px;font-family:inherit;padding:10px 0;}
+  .aura-input input{flex:1;min-width:0;background:transparent;border:0;outline:0;color:#f0ece0;font-size:14px;font-family:inherit;padding:10px 0;}
   .aura-input input::placeholder{color:#7a6f95;}
-  .aura-input button{background:linear-gradient(135deg,#7c3aed,#9d4edd);color:#fff;border:0;border-radius:20px;padding:10px 20px;font-size:13.5px;font-weight:700;cursor:pointer;font-family:inherit;letter-spacing:.04em;}
+  .aura-input button{flex-shrink:0;background:linear-gradient(135deg,#7c3aed,#9d4edd);color:#fff;border:0;border-radius:20px;padding:10px 18px;font-size:13.5px;font-weight:700;cursor:pointer;font-family:inherit;letter-spacing:.04em;}
   .aura-input button:hover{filter:brightness(1.1);}
   .aura-input button:disabled{opacity:.45;cursor:not-allowed;}
 
