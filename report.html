@@ -841,55 +841,58 @@ else window.addEventListener('load', initPayPalButton);
   const el = document.getElementById('liveProof');
   if(!el) return;
   const buyers = [
-    // India
-    {n:'Priya S.',  c:'Mumbai',       f:'🇮🇳'},
-    {n:'Arjun M.',  c:'Bengaluru',    f:'🇮🇳'},
-    {n:'Kavya R.',  c:'Hyderabad',    f:'🇮🇳'},
-    {n:'Rohan T.',  c:'Delhi',        f:'🇮🇳'},
-    {n:'Meera N.',  c:'Pune',         f:'🇮🇳'},
-    {n:'Anika V.',  c:'Chennai',      f:'🇮🇳'},
-    {n:'Siddharth K.',c:'Kolkata',    f:'🇮🇳'},
-    // UK
-    {n:'Emma W.',   c:'London',       f:'🇬🇧'},
-    {n:'Oliver H.', c:'Manchester',   f:'🇬🇧'},
-    {n:'Sophie L.', c:'Birmingham',   f:'🇬🇧'},
-    // USA
-    {n:'Jessica B.',c:'New York',     f:'🇺🇸'},
-    {n:'Michael C.',c:'Los Angeles',  f:'🇺🇸'},
-    {n:'Ashley P.', c:'Chicago',      f:'🇺🇸'},
-    {n:'David R.',  c:'Houston',      f:'🇺🇸'},
-    // South Africa
-    {n:'Lerato M.', c:'Johannesburg', f:'🇿🇦'},
-    {n:'Thabo D.',  c:'Cape Town',    f:'🇿🇦'},
-    {n:'Zanele K.', c:'Durban',       f:'🇿🇦'},
-    // Canada
-    {n:'Ethan N.',  c:'Toronto',      f:'🇨🇦'},
-    {n:'Olivia G.', c:'Vancouver',    f:'🇨🇦'},
-    // Australia
-    {n:'Liam J.',   c:'Sydney',       f:'🇦🇺'},
-    {n:'Chloe F.',  c:'Melbourne',    f:'🇦🇺'},
-    // UAE
-    {n:'Aaliyah H.',c:'Dubai',        f:'🇦🇪'},
-    {n:'Rohit P.',  c:'Abu Dhabi',    f:'🇦🇪'},
-    // Singapore
-    {n:'Wei L.',    c:'Singapore',    f:'🇸🇬'}
+    {n:'Priya S.',    f:'🇮🇳', c:'India'},
+    {n:'Arjun M.',    f:'🇮🇳', c:'India'},
+    {n:'Kavya R.',    f:'🇮🇳', c:'India'},
+    {n:'Rohan T.',    f:'🇮🇳', c:'India'},
+    {n:'Meera N.',    f:'🇮🇳', c:'India'},
+    {n:'Siddharth K.',f:'🇮🇳', c:'India'},
+    {n:'Emma W.',     f:'🇬🇧', c:'the UK'},
+    {n:'Oliver H.',   f:'🇬🇧', c:'the UK'},
+    {n:'Sophie L.',   f:'🇬🇧', c:'the UK'},
+    {n:'Jessica B.',  f:'🇺🇸', c:'the USA'},
+    {n:'Michael C.',  f:'🇺🇸', c:'the USA'},
+    {n:'Ashley P.',   f:'🇺🇸', c:'the USA'},
+    {n:'David R.',    f:'🇺🇸', c:'the USA'},
+    {n:'Lerato M.',   f:'🇿🇦', c:'South Africa'},
+    {n:'Thabo D.',    f:'🇿🇦', c:'South Africa'},
+    {n:'Zanele K.',   f:'🇿🇦', c:'South Africa'},
+    {n:'Ethan N.',    f:'🇨🇦', c:'Canada'},
+    {n:'Olivia G.',   f:'🇨🇦', c:'Canada'},
+    {n:'Liam J.',     f:'🇦🇺', c:'Australia'},
+    {n:'Chloe F.',    f:'🇦🇺', c:'Australia'},
+    {n:'Aaliyah H.',  f:'🇦🇪', c:'the UAE'},
+    {n:'Rohit P.',    f:'🇦🇪', c:'the UAE'},
+    {n:'Wei L.',      f:'🇸🇬', c:'Singapore'}
   ];
   const times = ['just now','1 min ago','2 mins ago','4 mins ago','7 mins ago','12 mins ago','18 mins ago'];
+
+  // Show 1-3 toasts per visit, spaced sporadically so it feels organic
+  // rather than a marketing loop.
+  const MAX_SHOWS = 1 + Math.floor(Math.random() * 3); // 1, 2, or 3
+  let shownCount = 0;
   let idx = Math.floor(Math.random() * buyers.length);
 
   function show(){
+    if(shownCount >= MAX_SHOWS) return;
     const b = buyers[idx % buyers.length];
     const t = times[Math.floor(Math.random() * times.length)];
     el.innerHTML = `<span class="lp-name">${b.n}</span> from ${b.f} ${b.c} just got their report<span class="lp-meta">✦ ${t} · Full Destiny Report</span>`;
     el.classList.add('show');
     setTimeout(()=> el.classList.remove('show'), 5200);
     idx = (idx + 1 + Math.floor(Math.random() * 3)) % buyers.length;
+    shownCount++;
+    if(shownCount < MAX_SHOWS){
+      // Random gap between 25s and 75s for the next one
+      const nextGap = 25000 + Math.floor(Math.random() * 50000);
+      setTimeout(show, nextGap);
+    }
   }
 
-  // First toast after a short delay so it doesn't fight with first paint
-  setTimeout(show, 4500);
-  // Then rotate every ~9s (5.2s visible + ~3.8s gap)
-  setInterval(show, 9000);
+  // First toast appears after a random 6-18s delay so it never pops up
+  // immediately on load
+  const firstDelay = 6000 + Math.floor(Math.random() * 12000);
+  setTimeout(show, firstDelay);
 })();
 </script>
 <script src="/assets/aura-fab.js" defer></script>
