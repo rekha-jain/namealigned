@@ -11,7 +11,7 @@
 </script>
 
 <meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0,interactive-widget=resizes-content"/>
 <link rel="icon" type="image/svg+xml" href="/assets/namealigned-favicon.svg"/>
 <title>Ask Aura · Your Cosmic Confidante | NameAligned.com</title>
 <meta name="description" content="Aura is a mystical conversational guide — ask anything about love, career, life direction or your inner state. Free emotional companion built on Chaldean numerology and intuition."/>
@@ -37,9 +37,11 @@
   *{box-sizing:border-box}
   html,body{margin:0;padding:0;background:#0a0820;color:#f0ece0;font-family:Inter,system-ui,-apple-system,'Helvetica Neue',Arial,sans-serif;}
   /* Lock the page to the dynamic viewport and disable body scroll, so
-     iOS Safari's keyboard never moves the top header or the input row.
-     Only .aura-messages scrolls internally. */
-  html,body{height:100vh;height:100dvh;overflow:hidden;max-width:100vw;scrollbar-width:none;-ms-overflow-style:none;}
+     mobile keyboards never move the top header or the input row.
+     Only .aura-messages scrolls internally.
+     --vvh is set by JS from visualViewport.height; it overrides 100dvh
+     on iOS Safari, where dvh doesn't shrink with the keyboard. */
+  html,body{height:100vh;height:100dvh;height:var(--vvh,100dvh);overflow:hidden;max-width:100vw;scrollbar-width:none;-ms-overflow-style:none;}
   html::-webkit-scrollbar,body::-webkit-scrollbar{width:0;height:0;display:none}
   body{display:flex;flex-direction:column;}
   img,video,iframe{max-width:100%;height:auto;}
@@ -271,6 +273,25 @@
 
 </div>
 
+<script>
+// Match body height to the actual visible viewport (handles mobile
+// keyboards on iOS Safari where 100dvh does NOT shrink when the
+// keyboard opens). Updates a CSS var --vvh in pixels; the html/body
+// rule above uses height:var(--vvh).
+(function(){
+  const setVVH = () => {
+    const h = (window.visualViewport && window.visualViewport.height) || window.innerHeight;
+    document.documentElement.style.setProperty('--vvh', h + 'px');
+  };
+  setVVH();
+  if (window.visualViewport) {
+    window.visualViewport.addEventListener('resize', setVVH);
+    window.visualViewport.addEventListener('scroll', setVVH);
+  }
+  window.addEventListener('resize', setVVH);
+  window.addEventListener('orientationchange', setVVH);
+})();
+</script>
 <script src="/assets/numerology.js"></script>
 <script src="/assets/aura.js"></script>
 <script>
