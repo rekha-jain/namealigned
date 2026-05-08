@@ -35,9 +35,12 @@
 
 <style>
   *{box-sizing:border-box}
-  html,body{margin:0;padding:0;background:#0a0820;color:#f0ece0;font-family:Inter,system-ui,-apple-system,'Helvetica Neue',Arial,sans-serif;}
+  html,body{margin:0;padding:0;background:#0a0820;color:#f0ece0;font-family:Inter,system-ui,-apple-system,'Helvetica Neue',Arial,sans-serif;overflow-x:hidden;max-width:100%;width:100%;}
   html{height:100%;}
   body{min-height:100vh;min-height:100dvh;display:flex;flex-direction:column;}
+  img,video,iframe{max-width:100%;height:auto;}
+  .aura-shell,.aura-chat,.aura-portrait,.aura-banner,.aura-messages,.aura-suggested,.aura-input-wrap,.aura-input,.aura-disclaim,.aura-birth{max-width:100%;min-width:0;}
+  .aura-messages,.msg,.aura-input input{word-wrap:break-word;overflow-wrap:break-word;}
 
   /* ── Top bar (compact, dark, non-default nav) ───────────────── */
   .aura-top{display:flex;align-items:center;justify-content:space-between;padding:12px 22px;background:rgba(10,8,32,.92);border-bottom:1px solid rgba(157,127,255,.18);position:sticky;top:0;z-index:50;backdrop-filter:blur(12px);gap:10px;}

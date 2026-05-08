@@ -415,7 +415,7 @@ textarea{resize:vertical;min-height:68px}
 /* Prevent horizontal overflow on mobile, articles, blog pages and any
    inline grids that hard-code a 2-col layout with a fixed sidebar.
    Stack to a single column under 900px so the page never scrolls sideways. */
-html,body{overflow-x:hidden;max-width:100%}
+html,body{overflow-x:hidden;max-width:100%;width:100%;}
 img,video,iframe{max-width:100%;height:auto}
 table{max-width:100%;display:block;overflow-x:auto;-webkit-overflow-scrolling:touch}
 pre,code{max-width:100%;overflow-x:auto;word-wrap:break-word}
