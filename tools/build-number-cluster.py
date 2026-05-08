@@ -379,6 +379,7 @@ def render(n):
 {career_html}
   </ul>
   <p>This isn't a checklist; many Number {n} people thrive outside these fields. The list captures the natural slope. Working against the slope isn't a problem — it just asks for more conscious calibration.</p>
+  <p style="font-family:sans-serif;font-size:13.5px;"><a href="/number/{n}-career" style="color:var(--gold-d);font-weight:600;">→ Read the full career guide for Number {n}</a> — top 10 ranked roles, industries to avoid, self-employment shapes and launch timing.</p>
 
   <h2>Love & relationship patterns of Number {n}</h2>
   <p>{extra["love"]}</p>
