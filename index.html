@@ -126,8 +126,10 @@ ul{list-style:none;margin:0;padding:0}
 .hero-h1 em{color:var(--gold);font-style:italic}
 .hero-sub{font-size:clamp(14px,2vw,17px);color:rgba(232,244,255,.72);max-width:580px;margin:0 auto 2rem;position:relative;font-family:var(--font-sans);font-weight:300;line-height:1.75}
 /* Form bits used in hero */
-.fg{display:flex;flex-direction:column;gap:6px}
+.fg{display:flex;flex-direction:column;gap:6px;min-width:0}
+.fg input,.fg select{min-width:0;max-width:100%;box-sizing:border-box}
 .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:600px){.form-grid{grid-template-columns:1fr!important;gap:12px}}
 
 /* ── PAGE-SPECIFIC ────────────────────────────────────────────── */
 .hero-stats{display:flex;justify-content:center;gap:3rem;flex-wrap:wrap;margin-top:2.5rem;position:relative}

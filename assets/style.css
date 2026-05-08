@@ -328,9 +328,10 @@ input,select,textarea{
   color:var(--text);
   background: #ffffff;
   outline:none;
+  text-align:left;
   transition:border-color .2s,box-shadow .2s,background .2s;
 }
-input::placeholder,textarea::placeholder{color:var(--text3)}
+input::placeholder,textarea::placeholder{color:var(--text3);text-align:left}
 select option{background:#ffffff;color:var(--text)}
 input:focus,select:focus,textarea:focus{
   border-color: var(--teal);
