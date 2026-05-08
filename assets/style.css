@@ -412,6 +412,27 @@ textarea{resize:vertical;min-height:68px}
 @media(max-width:700px){.grid-3{grid-template-columns:1fr 1fr}.grid-2{grid-template-columns:1fr}}
 @media(max-width:500px){.grid-3,.grid-4{grid-template-columns:1fr}}
 
+/* Prevent horizontal overflow on mobile, articles, blog pages and any
+   inline grids that hard-code a 2-col layout with a fixed sidebar.
+   Stack to a single column under 900px so the page never scrolls sideways. */
+html,body{overflow-x:hidden;max-width:100%}
+img,video,iframe{max-width:100%;height:auto}
+table{max-width:100%;display:block;overflow-x:auto;-webkit-overflow-scrolling:touch}
+pre,code{max-width:100%;overflow-x:auto;word-wrap:break-word}
+.article-body{word-wrap:break-word;overflow-wrap:break-word}
+@media(max-width:900px){
+  div[style*="grid-template-columns:1fr 280px"],
+  div[style*="grid-template-columns: 1fr 280px"],
+  div[style*="grid-template-columns:1fr 300px"],
+  div[style*="grid-template-columns:1fr 320px"],
+  div[style*="grid-template-columns:1fr 360px"]{
+    grid-template-columns:1fr!important;
+    display:block!important;
+    gap:1.5rem!important;
+  }
+  .article-sidebar{position:static!important;margin-top:2rem!important}
+}
+
 /* ── STAT BOXES ─────────────────────────────────────────────── */
 .stat-box{text-align:center;padding:1.5rem}
 .stat-num{
