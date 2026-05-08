@@ -274,22 +274,34 @@
 </div>
 
 <script>
-// Match body height to the actual visible viewport (handles mobile
-// keyboards on iOS Safari where 100dvh does NOT shrink when the
-// keyboard opens). Updates a CSS var --vvh in pixels; the html/body
-// rule above uses height:var(--vvh).
+// Anchor the chat shell to the actual visible viewport on mobile.
+// On iOS Safari when an input is focused, visualViewport.height shrinks
+// AND visualViewport.offsetTop becomes positive (the document is
+// scrolled to bring the input into view). We mirror BOTH values into
+// CSS variables so the page layout follows the visible region rather
+// than letting iOS scroll the whole document.
 (function(){
-  const setVVH = () => {
-    const h = (window.visualViewport && window.visualViewport.height) || window.innerHeight;
-    document.documentElement.style.setProperty('--vvh', h + 'px');
+  const root = document.documentElement;
+  const sync = () => {
+    const vv = window.visualViewport;
+    const h = vv ? vv.height : window.innerHeight;
+    const top = vv ? vv.offsetTop : 0;
+    root.style.setProperty('--vvh', h + 'px');
+    root.style.setProperty('--vvtop', top + 'px');
+    // Force-undo any iOS auto-scroll on the document.
+    if (top > 0) window.scrollTo(0, 0);
   };
-  setVVH();
+  sync();
   if (window.visualViewport) {
-    window.visualViewport.addEventListener('resize', setVVH);
-    window.visualViewport.addEventListener('scroll', setVVH);
+    window.visualViewport.addEventListener('resize', sync);
+    window.visualViewport.addEventListener('scroll', sync);
   }
-  window.addEventListener('resize', setVVH);
-  window.addEventListener('orientationchange', setVVH);
+  window.addEventListener('resize', sync);
+  window.addEventListener('orientationchange', sync);
+  // Also re-sync when an input is focused/blurred (catches the moment
+  // iOS first scrolls the document for the keyboard).
+  document.addEventListener('focusin', () => setTimeout(sync, 50));
+  document.addEventListener('focusout', () => setTimeout(sync, 50));
 })();
 </script>
 <script src="/assets/numerology.js"></script>
