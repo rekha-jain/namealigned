@@ -415,14 +415,19 @@ textarea{resize:vertical;min-height:68px}
 /* GLOBAL HORIZONTAL-SCROLL GUARD — applies to every page, every viewport.
    No element on any page should ever push the document past 100vw.
    We also hide the visual vertical scrollbar so its track doesn't paint
-   a white gutter alongside coloured sections; scrolling itself still works. */
-html,body{
+   a white gutter alongside coloured sections; scrolling itself still works.
+
+   IMPORTANT: overflow-x is set on body ONLY, NOT html. Setting overflow on
+   html breaks position:sticky on the navbar in Chromium (sticky's nearest
+   scrolling ancestor becomes html, which doesn't scroll). */
+html{scrollbar-width:none;-ms-overflow-style:none}
+html::-webkit-scrollbar{width:0;height:0;display:none}
+body{
   overflow-x:hidden;
   max-width:100vw;
   scrollbar-width:none;
   -ms-overflow-style:none;
 }
-html::-webkit-scrollbar,
 body::-webkit-scrollbar{width:0;height:0;display:none}
 img,video,iframe{max-width:100%;height:auto}
 table{max-width:100%;display:block;overflow-x:auto;-webkit-overflow-scrolling:touch}
@@ -686,6 +691,11 @@ pre,code{max-width:100%;overflow-x:auto;word-wrap:break-word}
   display:flex;align-items:center;gap:7px;white-space:nowrap;
 }
 .trust-icon{font-size:15px}
+@media(max-width:700px){
+  .trust-items{gap:.55rem .9rem;justify-content:center}
+  .trust-item{font-size:11.5px;gap:5px;white-space:normal}
+  .trust-icon{font-size:13px}
+}
 
 /* ── EMAIL CAPTURE BANNER ────────────────────────────────────── */
 .email-banner{

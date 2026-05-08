@@ -125,6 +125,9 @@
 @media(max-width:768px){
   .report-hero{padding:2rem 1rem 1.5rem}
   .order-card{padding:1.25rem}
+  /* Hide the bottom sticky CTA on the checkout page itself — the form
+     is already the page, the CTA was covering the PayPal button area. */
+  .sticky-cta{display:none!important}
 }
 </style>
 <script src="/assets/mixpanel.js"></script>
@@ -369,16 +372,12 @@
           <div id="usdPriceLine" style="text-align:center;margin-bottom:6px;font-family:sans-serif;font-size:22px;font-weight:700;color:#7c3aed;">$2.99 USD</div>
           <div id="paypal-button-container"></div>
           <div id="paypalErr" class="err-box" style="display:none;margin-top:.5rem"></div>
-          <p style="font-size:11px;color:var(--text3);font-family:sans-serif;text-align:center;margin:.5rem 0 0;">Pay securely via PayPal (PayPal account required)</p>
         </div>
 
         <div class="order-trust-row">
           <span>⚡ 60-sec delivery</span>
           <span>🔒 Secure payment</span>
           <span>📄 PDF + email</span>
-        </div>
-        <div style="margin-top:.85rem;text-align:center">
-          <a href="analyzer" style="font-size:12px;font-family:sans-serif;color:var(--text3)">Try the free analysis first →</a>
         </div>
       </div>
     </div>
