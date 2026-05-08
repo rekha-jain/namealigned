@@ -102,16 +102,25 @@
 .r-faq details[open] summary::after{content:'−'}
 .r-faq-a{padding:0 1.25rem 1rem;font-family:sans-serif;font-size:13px;color:var(--text2);line-height:1.65}
 
-/* Order card */
-.order-card{background:var(--card);border:1px solid var(--gold-b);border-radius:var(--rl);padding:1.5rem;position:sticky;top:calc(var(--nav-h) + 16px);box-shadow:0 6px 28px rgba(26,19,64,.08)}
-.order-price{font-size:42px;line-height:1;margin-bottom:2px;font-family:'Playfair Display',Georgia,serif;color:var(--text);font-weight:700}
+/* Order card — sleek purple+gold */
+.order-card{background:linear-gradient(165deg,#ffffff 0%,#fbf7ff 60%,#fff8e6 100%);border:1px solid rgba(157,127,255,.3);border-radius:var(--rl);padding:1.5rem;position:sticky;top:calc(var(--nav-h) + 16px);box-shadow:0 8px 32px rgba(109,78,209,.12),0 2px 8px rgba(240,180,41,.08);position:sticky}
+.order-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#9d7fff 0%,#f0b429 50%,#9d7fff 100%);border-radius:var(--rl) var(--rl) 0 0;opacity:.85}
+.order-price{font-size:30px;line-height:1;margin-bottom:2px;font-family:'Playfair Display',Georgia,serif;color:var(--text);font-weight:700;letter-spacing:-.01em}
 .order-features{list-style:none;font-family:sans-serif;font-size:13px;color:var(--text2);line-height:1.85;margin:.85rem 0}
 .order-features li{position:relative;padding-left:20px}
 .order-features li::before{content:'✓';position:absolute;left:0;color:var(--green);font-weight:700}
-.input-section{background:var(--gold-l);border:1px solid var(--gold-b);border-radius:var(--r);padding:1rem 1.1rem;margin-bottom:.85rem}
-.input-section .card-title{margin-bottom:.6rem;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--gold)}
-.order-trust-row{display:flex;justify-content:space-between;gap:6px;margin-top:.85rem;padding-top:.85rem;border-top:1px solid var(--border);font-family:sans-serif;font-size:10.5px;color:var(--text3);text-align:center}
+.input-section{background:linear-gradient(135deg,rgba(157,127,255,.06),rgba(240,180,41,.06));border:1px solid rgba(157,127,255,.22);border-radius:var(--r);padding:1rem 1.1rem;margin-bottom:.85rem}
+.input-section .card-title{margin-bottom:.6rem;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:#7c3aed;font-weight:700}
+.order-trust-row{display:flex;justify-content:space-between;gap:6px;margin-top:.85rem;padding-top:.85rem;border-top:1px solid rgba(157,127,255,.18);font-family:sans-serif;font-size:10.5px;color:var(--text3);text-align:center}
 .order-trust-row span{flex:1;letter-spacing:.04em}
+
+/* Live social-proof toast */
+.live-proof{position:fixed;left:18px;bottom:18px;background:#ffffff;border:1px solid rgba(157,127,255,.28);border-radius:14px;box-shadow:0 12px 36px rgba(26,19,64,.18),0 0 0 1px rgba(240,180,41,.12);padding:.7rem .9rem .7rem 2.6rem;font-family:sans-serif;font-size:12.5px;color:var(--text);max-width:300px;z-index:60;opacity:0;transform:translateY(20px);transition:opacity .35s ease,transform .35s ease;pointer-events:none}
+.live-proof.show{opacity:1;transform:translateY(0)}
+.live-proof::before{content:'✦';position:absolute;left:14px;top:50%;transform:translateY(-50%);width:24px;height:24px;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#9d7fff,#f0b429);color:#fff;border-radius:50%;font-size:13px;font-weight:700;box-shadow:0 0 0 3px rgba(240,180,41,.18)}
+.live-proof .lp-name{font-weight:700;color:#1a1340}
+.live-proof .lp-meta{display:block;font-size:11px;color:var(--text3);margin-top:1px;letter-spacing:.02em}
+@media(max-width:540px){.live-proof{left:10px;right:10px;bottom:74px;max-width:none}}
 
 @media(max-width:768px){
   .report-hero{padding:2rem 1rem 1.5rem}
@@ -375,6 +384,9 @@
     </div>
   </div>
 </div>
+
+<!-- Live social-proof toast (fixed bottom-left) -->
+<div class="live-proof" id="liveProof" role="status" aria-live="polite"></div>
 
 <!-- Mobile sticky -->
 <div class="sticky-cta">
@@ -822,6 +834,63 @@ function initPayPalButton(){
 // SDK loads async; wait for it.
 if (document.readyState === 'complete') initPayPalButton();
 else window.addEventListener('load', initPayPalButton);
+</script>
+<script>
+// ── Live social-proof rotating toast (bottom-left) ─────────────
+(function liveProof(){
+  const el = document.getElementById('liveProof');
+  if(!el) return;
+  const buyers = [
+    // India
+    {n:'Priya S.',  c:'Mumbai',       f:'🇮🇳'},
+    {n:'Arjun M.',  c:'Bengaluru',    f:'🇮🇳'},
+    {n:'Kavya R.',  c:'Hyderabad',    f:'🇮🇳'},
+    {n:'Rohan T.',  c:'Delhi',        f:'🇮🇳'},
+    {n:'Meera N.',  c:'Pune',         f:'🇮🇳'},
+    {n:'Anika V.',  c:'Chennai',      f:'🇮🇳'},
+    {n:'Siddharth K.',c:'Kolkata',    f:'🇮🇳'},
+    // UK
+    {n:'Emma W.',   c:'London',       f:'🇬🇧'},
+    {n:'Oliver H.', c:'Manchester',   f:'🇬🇧'},
+    {n:'Sophie L.', c:'Birmingham',   f:'🇬🇧'},
+    // USA
+    {n:'Jessica B.',c:'New York',     f:'🇺🇸'},
+    {n:'Michael C.',c:'Los Angeles',  f:'🇺🇸'},
+    {n:'Ashley P.', c:'Chicago',      f:'🇺🇸'},
+    {n:'David R.',  c:'Houston',      f:'🇺🇸'},
+    // South Africa
+    {n:'Lerato M.', c:'Johannesburg', f:'🇿🇦'},
+    {n:'Thabo D.',  c:'Cape Town',    f:'🇿🇦'},
+    {n:'Zanele K.', c:'Durban',       f:'🇿🇦'},
+    // Canada
+    {n:'Ethan N.',  c:'Toronto',      f:'🇨🇦'},
+    {n:'Olivia G.', c:'Vancouver',    f:'🇨🇦'},
+    // Australia
+    {n:'Liam J.',   c:'Sydney',       f:'🇦🇺'},
+    {n:'Chloe F.',  c:'Melbourne',    f:'🇦🇺'},
+    // UAE
+    {n:'Aaliyah H.',c:'Dubai',        f:'🇦🇪'},
+    {n:'Rohit P.',  c:'Abu Dhabi',    f:'🇦🇪'},
+    // Singapore
+    {n:'Wei L.',    c:'Singapore',    f:'🇸🇬'}
+  ];
+  const times = ['just now','1 min ago','2 mins ago','4 mins ago','7 mins ago','12 mins ago','18 mins ago'];
+  let idx = Math.floor(Math.random() * buyers.length);
+
+  function show(){
+    const b = buyers[idx % buyers.length];
+    const t = times[Math.floor(Math.random() * times.length)];
+    el.innerHTML = `<span class="lp-name">${b.n}</span> from ${b.f} ${b.c} just got their report<span class="lp-meta">✦ ${t} · Full Destiny Report</span>`;
+    el.classList.add('show');
+    setTimeout(()=> el.classList.remove('show'), 5200);
+    idx = (idx + 1 + Math.floor(Math.random() * 3)) % buyers.length;
+  }
+
+  // First toast after a short delay so it doesn't fight with first paint
+  setTimeout(show, 4500);
+  // Then rotate every ~9s (5.2s visible + ~3.8s gap)
+  setInterval(show, 9000);
+})();
 </script>
 <script src="/assets/aura-fab.js" defer></script>
 </body>
