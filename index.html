@@ -231,7 +231,11 @@ ul{list-style:none;margin:0;padding:0}
           </div>
           <div class="fg">
             <label style="font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:rgba(157,127,255,.7);font-weight:600">Date of birth</label>
-            <input type="date" id="qDob" required
+            <input type="text" id="qDob" required inputmode="numeric"
+              placeholder="e.g. 15/08/1990"
+              pattern="\d{2}/\d{2}/\d{4}"
+              maxlength="10"
+              oninput="this.value=this.value.replace(/[^\d/]/g,'').replace(/^(\d{2})(\d)/,'$1/$2').replace(/^(\d{2}\/\d{2})(\d)/,'$1/$2').slice(0,10)"
               style="background:rgba(157,127,255,.08);border:1.5px solid rgba(157,127,255,.35);color:#ffffff;
                      border-radius:10px;padding:10px 14px;font-size:14.5px;
                      transition:all .25s;"/>
@@ -826,8 +830,11 @@ function copyHomepageLink(){
 function quickSubmit(e){
   e.preventDefault();
   const name = document.getElementById('qName').value.trim();
-  const dob  = document.getElementById('qDob').value;
-  if(!name||!dob) return;
+  const raw  = document.getElementById('qDob').value.trim();
+  // Accept DD/MM/YYYY and convert to YYYY-MM-DD for analyzer
+  const m = raw.match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
+  if(!name||!m) return;
+  const dob = `${m[3]}-${m[2]}-${m[1]}`;
   window.location.href = `analyzer?name=${encodeURIComponent(name)}&dob=${encodeURIComponent(dob)}`;
 }
 </script>
