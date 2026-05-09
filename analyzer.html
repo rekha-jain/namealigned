@@ -63,8 +63,11 @@
 .ah-eyebrow{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--text3);font-family:sans-serif;margin-bottom:8px}
 .ah-name{font-size:26px;letter-spacing:.05em;color:var(--text);margin-bottom:14px;font-weight:normal}
 .ah-badge{display:inline-flex;align-items:center;gap:7px;padding:7px 22px;border-radius:30px;font-size:12px;font-family:sans-serif;font-weight:700;letter-spacing:.1em;text-transform:uppercase;border:2px solid currentColor;margin-bottom:10px}
-.ah-badge.aligned{color:#2a7a2a;border-color:#2a7a2a;background:rgba(42,122,42,.07)}
-.ah-badge.neutral{color:var(--amber);border-color:var(--amber);background:rgba(133,79,11,.07)}
+/* aligned-peak only fires at 90+, the rare-fit tier. 70-89 is "aligned"
+   but in gold not green so it doesn't visually tell the user "you're done". */
+.ah-badge.aligned-peak{color:#1f6e4a;border-color:#1f6e4a;background:rgba(31,110,74,.07)}
+.ah-badge.aligned{color:#9b6f00;border-color:#c9a227;background:rgba(245,196,81,.10)}
+.ah-badge.neutral{color:#b25320;border-color:#e89650;background:rgba(232,150,80,.10)}
 .ah-badge.misaligned{color:var(--red);border-color:var(--red);background:rgba(163,45,45,.07)}
 .pct-ring{display:inline-flex;flex-direction:column;align-items:center;justify-content:center;width:76px;height:76px;border-radius:50%;border:3px solid currentColor;flex-shrink:0}
 .pct-ring.high{color:#2a7a2a;background:rgba(42,122,42,.08)}
@@ -149,15 +152,17 @@
 .hook-foot strong{color:#f5d060}
 
 /* ── IDENTITY CARD (new narrative-led hook) ── */
-.identity-card{background:linear-gradient(160deg,#1a0e52 0%,#3a1d80 60%,#1a0e52 100%);color:#f0eaff;border-radius:var(--rl);padding:2rem 1.5rem 1.75rem;text-align:center;margin-bottom:1.25rem;border:1px solid rgba(245,196,81,.4);box-shadow:0 8px 32px rgba(26,14,82,.3);position:relative;overflow:hidden}
+/* Identity card: tightened padding + smaller archetype size per
+   feedback that the previous card was visually dominating the page. */
+.identity-card{background:linear-gradient(160deg,#1a0e52 0%,#3a1d80 60%,#1a0e52 100%);color:#f0eaff;border-radius:var(--rl);padding:1.4rem 1.4rem 1.25rem;text-align:center;margin-bottom:1rem;border:1px solid rgba(245,196,81,.4);box-shadow:0 6px 24px rgba(26,14,82,.25);position:relative;overflow:hidden}
 .identity-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,rgba(245,196,81,.7),transparent)}
 .identity-card::after{content:'';position:absolute;inset:0;background:radial-gradient(circle at 50% 0%,rgba(245,196,81,.10) 0%,transparent 60%);pointer-events:none}
-.id-greet{font-family:'Playfair Display',Georgia,serif;font-size:18px;color:#e2d4f5;margin-bottom:.4rem;letter-spacing:.01em;font-weight:500;position:relative}
-.id-archetype{font-family:'Playfair Display',Georgia,serif;font-size:38px;line-height:1.05;font-weight:700;color:#fff;margin:0 0 .35rem;letter-spacing:-.005em;position:relative}
-@media(max-width:520px){.id-archetype{font-size:30px}}
-.id-num-row{font-family:sans-serif;font-size:11.5px;color:#f5c451;letter-spacing:.16em;text-transform:uppercase;margin-bottom:1rem;font-weight:600;position:relative}
-.id-line{font-family:Georgia,serif;font-size:17px;line-height:1.5;color:#f0eaff;margin:0;font-style:italic;max-width:540px;margin-left:auto;margin-right:auto;position:relative}
-@media(max-width:520px){.id-line{font-size:15px}}
+.id-greet{font-family:'Playfair Display',Georgia,serif;font-size:15px;color:#e2d4f5;margin-bottom:.3rem;letter-spacing:.01em;font-weight:500;position:relative}
+.id-archetype{font-family:'Playfair Display',Georgia,serif;font-size:28px;line-height:1.1;font-weight:700;color:#fff;margin:0 0 .3rem;letter-spacing:-.005em;position:relative}
+@media(max-width:520px){.id-archetype{font-size:24px}}
+.id-num-row{font-family:sans-serif;font-size:10.5px;color:#f5c451;letter-spacing:.16em;text-transform:uppercase;margin-bottom:.7rem;font-weight:600;position:relative}
+.id-line{font-family:Georgia,serif;font-size:14.5px;line-height:1.5;color:#f0eaff;margin:0;font-style:italic;max-width:520px;margin-left:auto;margin-right:auto;position:relative}
+@media(max-width:520px){.id-line{font-size:13.5px}}
 
 /* ── NARRATIVE CARD (single story thread) ── */
 .narrative-card{background:#fff;border:1.5px solid var(--border);border-radius:var(--rl);padding:1.5rem 1.4rem;margin-bottom:1rem;box-shadow:0 4px 20px rgba(26,14,82,.06)}
@@ -174,15 +179,28 @@
 .nrr-truth-body{font-family:Georgia,serif;font-size:16px;line-height:1.55;color:var(--text);font-style:italic;padding:.5rem 0;text-align:center;max-width:520px;margin:0 auto}
 .nrr-truth-body::before{content:'"';font-size:38px;color:#f5c451;line-height:0;vertical-align:-.25em;margin-right:4px;font-family:Georgia,serif}
 .nrr-truth-body::after{content:'"';font-size:38px;color:#f5c451;line-height:0;vertical-align:-.45em;margin-left:2px;font-family:Georgia,serif}
-.nrr-strengths{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:.25rem}
+/* Strengths grid: each card now has its own pastel-coloured fill so
+   the row reads as alive instead of monochrome. Colours rotate
+   purple, gold and rose so any 3-strength row stays visually balanced. */
+.nrr-strengths{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:.25rem}
 @media(max-width:520px){.nrr-strengths{grid-template-columns:1fr}}
-.nrr-str{background:linear-gradient(135deg,rgba(124,58,237,.06),rgba(245,196,81,.04));border:1px solid rgba(124,58,237,.18);border-radius:10px;padding:.7rem .65rem;text-align:center;font-family:sans-serif}
-.nrr-str-icon{font-size:18px;margin-bottom:4px}
-.nrr-str-lbl{font-size:13px;font-weight:700;color:var(--text);line-height:1.25}
-.nrr-rec{list-style:none;padding:0;margin:0}
-.nrr-rec li{font-family:sans-serif;font-size:13.5px;line-height:1.55;color:var(--text);padding:.55rem 0 .55rem 26px;position:relative;border-bottom:1px dashed var(--border)}
-.nrr-rec li:last-child{border-bottom:none}
-.nrr-rec li::before{content:'🪞';position:absolute;left:0;top:.55rem;font-size:13px}
+.nrr-str{position:relative;border-radius:14px;padding:1rem .75rem;text-align:center;font-family:sans-serif;overflow:hidden;transition:transform .15s ease,box-shadow .15s ease}
+.nrr-str:hover{transform:translateY(-2px);box-shadow:0 8px 22px rgba(26,14,82,.10)}
+.nrr-str:nth-child(3n+1){background:linear-gradient(160deg,#ede4ff 0%,#f5edff 60%,#fff 100%);border:1px solid rgba(124,58,237,.28);}
+.nrr-str:nth-child(3n+2){background:linear-gradient(160deg,#fff4d6 0%,#fffae5 60%,#fff 100%);border:1px solid rgba(245,196,81,.45);}
+.nrr-str:nth-child(3n+3){background:linear-gradient(160deg,#ffe4ec 0%,#fff0f4 60%,#fff 100%);border:1px solid rgba(232,82,107,.30);}
+.nrr-str:nth-child(3n+1) .nrr-str-icon{color:#7c3aed}
+.nrr-str:nth-child(3n+2) .nrr-str-icon{color:#c9a227}
+.nrr-str:nth-child(3n+3) .nrr-str-icon{color:#e8526b}
+.nrr-str-icon{font-size:24px;margin-bottom:6px;line-height:1;display:block}
+.nrr-str-lbl{font-size:13.5px;font-weight:700;color:var(--text);line-height:1.3}
+
+/* Recognition list: was easy-to-skip dashed list. Now each item is a
+   distinct soft card with a gold accent stripe so they read like
+   discrete observations the user wants to nod at. */
+.nrr-rec{list-style:none;padding:0;margin:.25rem 0 0;display:flex;flex-direction:column;gap:.65rem}
+.nrr-rec li{font-family:sans-serif;font-size:14px;line-height:1.6;color:var(--text);padding:.85rem 1rem .85rem 2.6rem;position:relative;background:linear-gradient(135deg,rgba(245,196,81,.07),rgba(124,58,237,.04));border:1px solid rgba(245,196,81,.28);border-left:3px solid #f0b429;border-radius:10px}
+.nrr-rec li::before{content:'🪞';position:absolute;left:.85rem;top:.85rem;font-size:15px;width:22px;height:22px;display:flex;align-items:center;justify-content:center;background:rgba(245,196,81,.18);border-radius:50%}
 .nrr-bha-body{font-family:Georgia,serif;font-size:14.5px;line-height:1.6;color:var(--text);padding:.85rem 1rem;background:linear-gradient(135deg,#1a0e52 0%,#3a1d80 100%);color:#f0eaff;border-radius:10px;font-style:italic;border:1px solid rgba(245,196,81,.35)}
 .nrr-bha-body strong{color:#f5c451;font-style:normal}
 .nrr-share-prompt{margin-top:1rem;padding:.85rem 1rem;background:rgba(245,196,81,.08);border:1px dashed rgba(245,196,81,.5);border-radius:10px;text-align:center;font-family:sans-serif;font-size:13.5px;color:var(--text);line-height:1.5}
@@ -217,8 +235,14 @@
 .locked-section-label{font-family:'Playfair Display',Georgia,serif;font-size:18px;color:var(--text);margin:1.5rem 0 .75rem;text-align:center;font-weight:700}
 .locked-section-sub{font-family:sans-serif;font-size:13px;color:var(--text2);text-align:center;margin-bottom:1rem}
 .bridge-block{margin:2rem 0 1.25rem;padding:1.4rem 1.5rem;background:linear-gradient(135deg,rgba(124,58,237,.06),rgba(245,196,81,.04));border-left:3px solid rgba(245,196,81,.55);border-radius:8px}
-.bridge-line{font-family:'Playfair Display',Georgia,serif;font-style:italic;font-size:18px;color:var(--text);margin:0 0 .55rem;line-height:1.35;font-weight:600}
-.bridge-body{font-family:sans-serif;font-size:14px;color:var(--text2);line-height:1.7;margin:0}
+/* Bridge paragraph: was sans-serif body that read like a footnote, now
+   a serif lead with a generous line-height and warmer colour so the
+   user actually wants to slow down and read it. */
+.bridge-block{margin:2.25rem 0 1.5rem;padding:1.6rem 1.75rem;background:linear-gradient(135deg,rgba(124,58,237,.07),rgba(245,196,81,.05));border:1px solid rgba(245,196,81,.32);border-left:4px solid #f0b429;border-radius:12px}
+.bridge-line{font-family:'Playfair Display',Georgia,serif;font-style:italic;font-size:22px;color:var(--text);margin:0 0 .85rem;line-height:1.3;font-weight:700;letter-spacing:.005em}
+@media(max-width:520px){.bridge-line{font-size:19px}}
+.bridge-body{font-family:Georgia,'Playfair Display',serif;font-size:15.5px;color:var(--text);line-height:1.85;margin:0;letter-spacing:.005em}
+@media(max-width:520px){.bridge-body{font-size:14.5px;line-height:1.75}}
 .locked-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:1rem}
 @media(max-width:520px){.locked-grid{grid-template-columns:1fr}}
 .locked-card{position:relative;background:linear-gradient(160deg,#1a1340 0%,#241651 60%,#1a1340 100%);border:1px solid rgba(157,127,255,.25);border-radius:14px;padding:1.4rem 1.1rem 1.1rem;overflow:hidden;cursor:pointer;transition:transform .2s,border-color .25s,box-shadow .25s;color:#f0eaff}
@@ -257,7 +281,17 @@
 .align-mini{display:flex;align-items:center;justify-content:space-between;gap:14px;background:var(--card2);border:1px solid var(--border);border-radius:var(--r);padding:.85rem 1rem;margin-top:1rem;flex-wrap:wrap}
 .align-mini-lbl{font-family:sans-serif;font-size:12px;color:var(--text2);letter-spacing:.04em;text-transform:uppercase}
 .align-mini-val{font-family:'Playfair Display',Georgia,serif;font-size:24px;font-weight:700}
-.align-mini-val.high{color:var(--green)}.align-mini-val.mid{color:var(--amber)}.align-mini-val.low{color:var(--red)}
+/* Alignment colour tiers, deliberately split so 70-89% reads as
+   "supportive but improvable" (gold) rather than "all green, you're done".
+   Only 90+ gets the green of "rare alignment". */
+.align-mini-val.peak{color:#1f6e4a}
+.align-mini-val.high{color:#9b6f00}
+.align-mini-val.mid{color:#b25320}
+.align-mini-val.low{color:var(--red)}
+.align-mini-fill.peak{background:linear-gradient(90deg,#4caf84,#1f6e4a)}
+.align-mini-fill.high{background:linear-gradient(90deg,#f5c451,#c9a227)}
+.align-mini-fill.mid{background:linear-gradient(90deg,#e89650,#b25320)}
+.align-mini-fill.low{background:var(--red)}
 .align-mini-bar{flex:1;height:8px;background:var(--card);border-radius:4px;overflow:hidden;border:1px solid var(--border);min-width:120px}
 .align-mini-fill{height:100%;border-radius:4px;transition:width .8s ease}
 .align-mini-fill.high{background:linear-gradient(90deg,#2a7a2a,#4caf84)}
@@ -389,7 +423,7 @@
       <div class="num-grid" id="coreNums"></div>
 
       <!-- Compact alignment block -->
-      <div class="align-mini" id="alignMini">
+      <div class="align-mini" id="alignMini" title="Name Alignment Score: a 0-100 measure of how naturally your Name Number's planet harmonises with your Birth Number and Life Path planets. 90-100 = rare ease, 70-89 = supportive but improvable, 45-69 = mixed, below 45 = significant friction worth addressing.">
         <div>
           <div class="align-mini-lbl">Name Alignment</div>
           <div class="align-mini-val" id="alignMiniVal">,</div>
@@ -532,19 +566,6 @@
       }
     </style>
 
-    <!-- 3. TRUST BUILDER (Chaldean-anchored) -->
-    <p class="trust-line-top">Based on Chaldean numerology principles · Focused on sound vibration, not just numbers · Used to understand patterns, not predict fate</p>
-    <div class="trust-block">
-      <div class="trust-stat">
-        <div class="trust-num">2,500+ yr</div>
-        <div class="trust-lbl">ancient Chaldean tradition</div>
-      </div>
-      <div class="trust-stat">
-        <div class="trust-num">100%</div>
-        <div class="trust-lbl">free to start, no signup</div>
-      </div>
-    </div>
-
     <!-- BRIDGE: emotional handoff from free reading → locked premium -->
     <div class="bridge-block">
       <p class="bridge-line">There's a layer we left out on purpose.</p>
@@ -654,6 +675,20 @@
         <button class="btn btn-gold btn-sm" onclick="captureEmail()">Send it to me →</button>
       </div>
       <div id="emailDone" style="display:none;color:#b0a898;font-family:sans-serif;font-size:13px">✓ Sent. Check your inbox.</div>
+    </div>
+
+    <!-- 3. TRUST BUILDER, moved to the bottom of the analyser output as
+         a quiet provenance footer rather than mid-page filler. -->
+    <p class="trust-line-top" style="margin-top:1.5rem">Based on Chaldean numerology principles · Focused on sound vibration, not just numbers · Used to understand patterns, not predict fate</p>
+    <div class="trust-block">
+      <div class="trust-stat">
+        <div class="trust-num">2,500+ yr</div>
+        <div class="trust-lbl">ancient Chaldean tradition</div>
+      </div>
+      <div class="trust-stat">
+        <div class="trust-num">100%</div>
+        <div class="trust-lbl">free to start, no signup</div>
+      </div>
     </div>
 
     <div style="display:flex;gap:10px;margin-top:1.5rem;flex-wrap:wrap">
@@ -897,16 +932,32 @@ const RECOGNITION_MOMENTS = {
   ]
 };
 
+// Short 2-3 sentence personality snapshot per Birth Number, appended
+// to the TLDR so the at-a-glance reading carries actual substance about
+// the person, not just their planet/numbers. Written in plain English,
+// not mystical, no destiny claims.
+const TLDR_TRAITS = {
+  1:"You're naturally drawn to leading, deciding and starting things. You like clear direction and ownership; you quietly resent being managed too closely. People sense the authority in you before you say a word.",
+  2:"You're naturally drawn to people, harmony and reading rooms accurately. You like depth in friendships; you dislike noisy competitive environments. Your strength is making others feel heard, often at your own expense.",
+  3:"You're naturally drawn to ideas, conversation and being seen. You like creative work and meaningful audiences; you dislike repetitive, voiceless tasks. Your warmth tends to draw opportunity without you actively chasing it.",
+  4:"You're naturally drawn to questioning systems, building differently and going against the grain. You like complexity and original thinking; you dislike rules that exist only because they always have. People find you intense, sometimes inspiring, occasionally exhausting.",
+  5:"You're naturally drawn to movement, variety and information. You like new contexts and quick pivots; you dislike slow, repetitive, single-track work. Boredom is one of your strongest signals, when it shows up, the path needs to change.",
+  6:"You're naturally drawn to people, beauty, family and creating environments others want to be in. You like depth and care; you dislike conflict and adversarial settings. Your strength is holding the room steady, often without anyone noticing you're the one holding it.",
+  7:"You're naturally drawn to depth, solitude and figuring out what's underneath. You like ideas, research and quiet; you dislike small talk and surface work. People often sense the depth in you without knowing what to call it.",
+  8:"You're naturally drawn to structure, long projects and earned authority. You like discipline and patience; you dislike shortcuts and unearned status. Your strength is in slow compounding, you finish what others start, and end up trusted because of it.",
+  9:"You're naturally drawn to causes, action and protecting others. You like decisive moments and meaningful fights; you dislike slow consensus-building. Your courage tends to set the temperature of any room you walk into."
+};
+
 const BHAGYANK_BRIDGE = {
-  1:"Your destiny pushes you toward standing alone in your own light, even on days your nature would rather lean on someone.",
-  2:"Your destiny is partnership-shaped, your life keeps placing you in moments where what you build, you build with someone.",
-  3:"Your destiny is voice-shaped, your life keeps pulling you toward expression, audiences, and being heard out loud.",
-  4:"Your destiny is rebellion-shaped, you'll keep being placed in systems you're meant to question, not obey.",
-  5:"Your destiny is movement-shaped, your life rewards travel, change, and the kind of freedom that scares slower people.",
-  6:"Your destiny is love-and-beauty-shaped, your life keeps returning you to people, harmony, and what you choose to nurture.",
-  7:"Your destiny is depth-shaped, your life keeps stripping the surface away until only the truth is left.",
-  8:"Your destiny is structure-shaped, your life rewards what you build slowly, and tests what you try to rush.",
-  9:"Your destiny is courage-shaped, your life keeps placing you in moments where the only way out is through."
+  1:"Your life path keeps pushing you toward leadership and going first, starting things, owning decisions, being the one others look at when something needs to move. Even when your nature wants company, the path you're on rewards independence.",
+  2:"Your life path keeps placing you in partnerships, the meaningful work, the lasting wins, the moments that count, all tend to involve someone alongside you. Solo paths feel like they fight the energy.",
+  3:"Your life path keeps pulling you into rooms where you have to speak, teach, write or show up publicly. The wins compound when your voice is part of the work; quiet roles tend to feel underused.",
+  4:"Your life path keeps placing you inside systems that need rebuilding, family rules, work structures, social norms. You're meant to question and redesign them, not fit quietly into them.",
+  5:"Your life path keeps rewarding movement, new places, new fields, new collaborations. Long stretches of routine tend to drain you; change is what regenerates the energy.",
+  6:"Your life path keeps returning you to people, home, family, partnership, creative beauty. Career success that ignores those tends to feel hollow, even when it looks impressive on paper.",
+  7:"Your life path keeps stripping surface things away, jobs that don't matter to you, friendships that don't go deep, work that doesn't reward thinking. Only the meaningful and the true tend to last.",
+  8:"Your life path rewards patience and structure, real estate, finance, long projects, anything that compounds over years. Quick wins tend to slip; slow-built things tend to anchor.",
+  9:"Your life path keeps placing you in situations that require courage, hard conversations, difficult decisions, standing up for someone or something. The path widens when you do; it narrows when you don't."
 };
 
 // ── State ──────────────────────────────────────────────────────────────
@@ -1005,7 +1056,7 @@ function renderAnalysis(){
   // Narrative, Life Path Number Bridge (destiny tension)
   const bha = BHAGYANK_BRIDGE[destNum] || BHAGYANK_BRIDGE[1];
   document.getElementById('nrrBha').innerHTML =
-    `${bha} <strong>That tension, between who you are and where life keeps pointing, is your quiet engine.</strong>`;
+    `${bha} <strong>The gap between your natural temperament (Birth Number ${birthNum}) and what your life path keeps asking of you (Life Path Number ${destNum}) is where most of your real growth happens.</strong>`;
 
   // Narrative, Share prompt
   document.getElementById('nrrShare').innerHTML =
@@ -1019,10 +1070,15 @@ function renderAnalysis(){
   badgeEl.textContent = _tierBadge
     ? (_tierBadge.icon + ' ' + _tierBadge.title.toUpperCase())
     : (status==='aligned'?'✓ STRONG ALIGNMENT':status==='neutral'?'~ MODERATE ALIGNMENT':'◇ LOW ALIGNMENT');
-  badgeEl.className   = 'ah-badge '+status;
+  // Use the new aligned-peak class only at 90+ so 70-89 reads as gold,
+  // not green (which previously signalled "you're done, no need to buy").
+  var badgeClass = (status === 'aligned' && pct >= 90) ? 'aligned-peak' : status;
+  badgeEl.className   = 'ah-badge '+badgeClass;
 
-  // Compact alignment block
-  const tier = pct>=70?'high':pct>=45?'mid':'low';
+  // Compact alignment block. Four tiers (peak/high/mid/low) instead of
+  // three so 70-89% reads as "supportive but improvable" gold, not as
+  // green "you're done" — gold keeps the door open to the paid report.
+  const tier = pct>=90?'peak':pct>=70?'high':pct>=45?'mid':'low';
   const valEl = document.getElementById('alignMiniVal');
   valEl.textContent = pct + '%';
   valEl.className = 'align-mini-val ' + tier;
@@ -1030,11 +1086,16 @@ function renderAnalysis(){
   fillEl.className = 'align-mini-fill ' + tier;
   setTimeout(()=>{ fillEl.style.width = pct + '%'; }, 100);
 
-  // 2. CORE NUMBERS
+  // 2. CORE NUMBERS, with native browser tooltips (title attr) explaining
+  // what each number is and where it comes from. Hover on desktop;
+  // long-press shows on iOS Safari, tap-and-hold on Android.
+  var birthTip = 'Birth Number (Moolank): the day of the month you were born, reduced to a single digit (e.g. 23 → 2+3 = 5). The energy you operate from internally.';
+  var destTip  = 'Life Path Number (Bhagyank): your full date of birth summed and reduced to a single digit. The long-arc lesson your life is shaped around.';
+  var nameTip  = 'Name Number: each letter of your full name carries a Chaldean value (1-8). Sum them, reduce to a single digit. The vibration the world meets when they encounter your name.';
   document.getElementById('coreNums').innerHTML = `
-    <div class="nc"><div class="nl">Birth Number · Driver</div><div class="nv">${birthNum}</div><div class="ns">${getPlanet(birthNum)}</div><div style="font-size:9px;color:var(--text3);font-family:sans-serif;margin-top:3px">Unalterable</div></div>
-    <div class="nc"><div class="nl">Life Path Number · Destiny</div><div class="nv">${destNum}</div><div class="ns">${getPlanet(destNum)}</div><div style="font-size:9px;color:var(--text3);font-family:sans-serif;margin-top:3px">Life path</div></div>
-    <div class="nc"><div class="nl">Name Number</div><div class="nv">${nameNum}</div><div class="ns">${nameRaw}/${nameNum}</div><div style="font-size:9px;color:var(--text3);font-family:sans-serif;margin-top:3px">Changeable</div></div>`;
+    <div class="nc" title="${birthTip}"><div class="nl">Birth Number · Driver</div><div class="nv">${birthNum}</div><div class="ns">${getPlanet(birthNum)}</div><div style="font-size:9px;color:var(--text3);font-family:sans-serif;margin-top:3px">Unalterable</div></div>
+    <div class="nc" title="${destTip}"><div class="nl">Life Path Number · Destiny</div><div class="nv">${destNum}</div><div class="ns">${getPlanet(destNum)}</div><div style="font-size:9px;color:var(--text3);font-family:sans-serif;margin-top:3px">Life path</div></div>
+    <div class="nc" title="${nameTip}"><div class="nl">Name Number</div><div class="nv">${nameNum}</div><div class="ns">${nameRaw}/${nameNum}</div><div style="font-size:9px;color:var(--text3);font-family:sans-serif;margin-top:3px">Changeable</div></div>`;
 
   // Letter breakdown (proof of math, kept compact)
   const parts = name.trim().split(/\s+/);
@@ -1091,8 +1152,10 @@ function renderAnalysis(){
     pillEl.style.background = pal.bg;
     pillEl.style.color = pal.fg;
     pillEl.style.border = `1px solid ${pal.border}`;
+    var tldrTraits = TLDR_TRAITS[birthNum] || TLDR_TRAITS[1];
     document.getElementById('tldrLine').innerHTML =
-      `You're a <strong>Birth Number ${birthNum}</strong> (${getPlanet(birthNum)}) with <strong>Life Path Number ${destNum}</strong> (${getPlanet(destNum)}). Your name vibrates at <strong>${nameNum}</strong> (${getPlanet(nameNum)}). ${sent}`;
+      `You're a <strong>Birth Number ${birthNum}</strong> (${getPlanet(birthNum)}) with <strong>Life Path Number ${destNum}</strong> (${getPlanet(destNum)}). Your name vibrates at <strong>${nameNum}</strong> (${getPlanet(nameNum)}). ${sent}`+
+      `<span style="display:block;margin-top:.65rem;font-family:sans-serif;font-size:14.5px;line-height:1.65;color:var(--text2);font-weight:400;">${tldrTraits}</span>`;
   } catch(e){}
 
   // 2d. RELATIONSHIP COMPASS + LO SHU + DAILY REMEDIES (free)
