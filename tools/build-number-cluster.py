@@ -257,7 +257,7 @@ FOOTER = '''
         <p class="footer-tagline">Free Chaldean numerology analysis for everyone. Based on Cheiro\'s Book of Numbers, the oldest and most accurate system.</p>
         <div style="margin-top:1.5rem;display:flex;gap:10px">
           <a href="/analyzer" style="font-size:12px;font-family:sans-serif;color:var(--gold);border:1px solid rgba(240,180,41,.35);border-radius:20px;padding:5px 14px;text-decoration:none;transition:all .2s" onmouseover="this.style.background='rgba(240,180,41,.12)'" onmouseout="this.style.background='transparent'">Try free →</a>
-          <a href="/report" style="font-size:12px;font-family:sans-serif;color:rgba(157,127,255,.8);border:1px solid rgba(157,127,255,.3);border-radius:20px;padding:5px 14px;text-decoration:none;transition:all .2s" onmouseover="this.style.background='rgba(157,127,255,.10)'" onmouseout="this.style.background='transparent'">Full report · ₹199 / $2.99</a>
+          <a href="/report" style="font-size:12px;font-family:sans-serif;color:rgba(157,127,255,.8);border:1px solid rgba(157,127,255,.3);border-radius:20px;padding:5px 14px;text-decoration:none;transition:all .2s" onmouseover="this.style.background='rgba(157,127,255,.10)'" onmouseout="this.style.background='transparent'">Full report · ₹499 / $5</a>
         </div>
       </div>
       <div>
@@ -267,7 +267,7 @@ FOOTER = '''
           <li><a href="/name-correction-numerology">Name Correction Check</a></li>
           <li><a href="/business-name-numerology">Business Name Check</a></li>
           <li><a href="/love-compatibility-numerology">Love Compatibility</a></li>
-          <li><a href="/report">Full Destiny Report · ₹199 / $2.99</a></li>
+          <li><a href="/report">Full Destiny Report · ₹499 / $5</a></li>
           <li><a href="/ask-aura">✦ Ask Aura · Conversational</a></li>
         </ul>
       </div>
@@ -464,7 +464,7 @@ def render(n):
     <h3>Want the full personalised picture?</h3>
     <p>The Full Destiny Report covers Number {n} in your chart specifically — Birth, Life Path and Name — plus a 5-year forecast, lucky elements, name correction options and remedies, all in one PDF.</p>
     <div class="btn-pair">
-      <a class="primary" href="/report">Full Destiny Report · ₹199 / $2.99 USD</a>
+      <a class="primary" href="/report">Full Destiny Report · ₹499 / $5 USD</a>
       <a class="outline" href="/name-number-{n}-meaning">Name Number {n} meaning</a>
     </div>
   </div>

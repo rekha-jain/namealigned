@@ -18,7 +18,10 @@ const CORS_HEADERS = {
   'Access-Control-Allow-Headers': 'Content-Type',
 };
 
-const ALLOWED_AMOUNTS_PAISE = [19900, 9900]; // ₹199 and ₹99 (50% off)
+// New pricing: ₹499 full, ₹249 (50% off). Legacy ₹199/₹99 kept temporarily
+// so any in-flight pre-price-change orders still validate; remove once
+// confirmed no traffic on the old amounts.
+const ALLOWED_AMOUNTS_PAISE = [49900, 24900, 19900, 9900];
 
 export default async function handler(req, res) {
   Object.entries(CORS_HEADERS).forEach(([k, v]) => res.setHeader(k, v));

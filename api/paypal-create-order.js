@@ -5,7 +5,8 @@
  * which the JS SDK then uses to render the approval flow on PayPal's domain.
  *
  * Body (optional):
- *   { amount: '2.99', currency: 'USD', name: '...', email: '...', dob: '...' }
+ *   { amount: '5.00', currency: 'USD', name: '...', email: '...', dob: '...' }
+ *   amount '2.50' for 50%-off promo
  *
  * Returns: { id: 'PAYPAL_ORDER_ID' }
  */
