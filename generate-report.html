@@ -1226,7 +1226,24 @@ hr.divider{display:none;}
     buildRelationship();
     buildRemedies();
     buildMobileAnalysis();
-    buildShareCardPDF();   // ← 1200×630 keepsake card + QR (in PDF)
+    // Defensive: wrap the canvas-heavy share-card render so a silent
+    // failure (mostly seen on iOS Safari when layout isn't settled yet)
+    // doesn't blank-the-canvas + breaks the share/save buttons that
+    // pull from it via toDataURL.
+    function safeBuildShareCard() {
+      try { buildShareCardPDF(); }
+      catch (e) { console.warn('[shareCard] draw failed', e); }
+    }
+    safeBuildShareCard();
+    // Re-render once the full window has loaded (fonts, layout) and
+    // again on orientation change. Cheap to redraw, fixes mobile races
+    // where the canvas appeared blank below the dark blue background.
+    if (document.readyState === 'complete') {
+      setTimeout(safeBuildShareCard, 200);
+    } else {
+      window.addEventListener('load', function(){ setTimeout(safeBuildShareCard, 200); });
+    }
+    window.addEventListener('orientationchange', function(){ setTimeout(safeBuildShareCard, 250); });
     buildShareButtons();
     window._reportReady = true;
   }
@@ -2258,9 +2275,10 @@ hr.divider{display:none;}
     if (fr) {
       var frCard = el('div', 'friendship-card');
       frCard.innerHTML =
-        '<div class="fr-eyebrow">The number your closest friendships keep sharing</div>'+
+        '<div class="fr-eyebrow">The Birth Number your closest friendships keep sharing</div>'+
         '<div class="fr-row">'+
           '<div class="fr-num-block">'+
+            '<div style="font-size:8.5px;letter-spacing:.08em;text-transform:uppercase;opacity:.85;margin-bottom:2px;font-family:sans-serif;">Friend\'s Birth No.</div>'+
             '<div class="fr-num">'+fr.n+'</div>'+
             '<div class="fr-planet">'+getPlanet(fr.n)+'</div>'+
           '</div>'+
