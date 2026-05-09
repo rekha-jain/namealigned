@@ -800,7 +800,9 @@ hr.divider{display:none;}
         <h3 class="sc-h">Your numerology insight, in one image.</h3>
         <p class="sc-p">A 1200×630 visual designed for WhatsApp, Telegram, Twitter and Facebook, strengths-led, not judgmental. Use it to start a conversation with someone you'd like to check next.</p>
       </div>
-      <canvas id="shareCardCanvas" width="1200" height="630" class="sc-card-img"></canvas>
+      <a href="/report" class="no-print" onclick="if(window.gtag)gtag('event','share_card_click',{from:'generate-report'})" aria-label="Open the Full Destiny Report" style="display:block;cursor:pointer;border-radius:14px;overflow:hidden;">
+        <canvas id="shareCardCanvas" width="1200" height="630" class="sc-card-img"></canvas>
+      </a>
 
       <!-- Inline share actions (screen only). Same options as the
            /share-card page so users can act right here without
@@ -1452,7 +1454,7 @@ hr.divider{display:none;}
     ctx.font = '500 12px "Helvetica Neue", Arial, sans-serif';
     ctx.fillText('Discover your full numerology report at', rcx, 568);
 
-    var ctaText = 'namealigned.com/analyzer  →';
+    var ctaText = 'namealigned.com/report  →';
     ctx.font = '700 15px "Helvetica Neue", Arial, sans-serif';
     var ctaTW = ctx.measureText(ctaText).width;
     var ctaW = ctaTW+36, ctaH = 36, ctaX = rcx, ctaY = 580;

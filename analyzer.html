@@ -431,11 +431,14 @@
           <div style="font-family:sans-serif;font-size:12.5px;color:var(--text2);line-height:1.55;">Share it with friends and family ❤️, let them discover what their name says too.</div>
         </div>
 
-        <!-- Card preview (canvas at full res, displayed scaled-down) -->
+        <!-- Card preview (canvas at full res, displayed scaled-down).
+             Wrapped in <a> so clicking the painted "namealigned.com/report"
+             call-to-action actually navigates, the canvas itself is a
+             rasterized image and can't carry a real link inside it. -->
         <div style="display:flex;justify-content:center;margin-bottom:1rem;">
-          <div style="position:relative;border-radius:18px;overflow:hidden;box-shadow:0 12px 48px rgba(26,14,82,.35);max-width:560px;width:100%;">
+          <a href="/report" onclick="if(window.trackEvent)trackEvent('share_card_click',{from:'analyzer'})" aria-label="Open the Full Destiny Report" style="position:relative;border-radius:18px;overflow:hidden;box-shadow:0 12px 48px rgba(26,14,82,.35);max-width:560px;width:100%;cursor:pointer;display:block;">
             <canvas id="shareCanvas" width="1200" height="630" style="display:block;width:100%;height:auto;background:#1a0e52;"></canvas>
-          </div>
+          </a>
         </div>
 
         <!-- Action buttons -->
@@ -1592,7 +1595,7 @@ function buildShareCard(){
       ctx.font = '500 12px "Helvetica Neue", Arial, sans-serif';
       ctx.fillText('Discover your full numerology report at', rcx, 568);
 
-      const ctaText = 'namealigned.com/analyzer  →';
+      const ctaText = 'namealigned.com/report  →';
       ctx.font = '700 15px "Helvetica Neue", Arial, sans-serif';
       const ctaTW = ctx.measureText(ctaText).width;
       const ctaW = ctaTW + 32, ctaH = 34, ctaX = rcx, ctaY = 580;
@@ -1880,7 +1883,7 @@ function _legacy_buildShareCard_unused(){
   ctx.fillText('Discover your full numerology report at', rcx, 568);
 
   // CTA pill (gold gradient)
-  const ctaText = 'namealigned.com/analyzer  →';
+  const ctaText = 'namealigned.com/report  →';
   ctx.font = '700 15px "Helvetica Neue", Arial, sans-serif';
   const ctaTW = ctx.measureText(ctaText).width;
   const ctaW = ctaTW + 36, ctaH = 36;
