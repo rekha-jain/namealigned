@@ -62,10 +62,16 @@ export async function getAccessToken() {
   return _cachedToken;
 }
 
-/** Default order amount + currency, overridable via env. */
+/** Default order amount + currency.
+   Hardcoded ($5.00 USD) so it stays in sync with the rest of the codebase
+   even if a stale Vercel env var exists. The frontend (report.html) now
+   always sends amount explicitly in createOrder ($5 full, $2.50 with the
+   50%-off promo) — this default only kicks in if a future caller forgets
+   to pass amount, in which case we want the canonical price, not whatever
+   was in env from the old ₹199/$2.99 era. */
 export function getDefaultAmount() {
   return {
-    value:    process.env.PAYPAL_AMOUNT   || '5.00',
-    currency: process.env.PAYPAL_CURRENCY || 'USD',
+    value:    '5.00',
+    currency: 'USD',
   };
 }
