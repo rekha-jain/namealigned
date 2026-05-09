@@ -128,6 +128,22 @@
 .attr-label{font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);font-family:sans-serif;margin-bottom:.3rem;}
 .attr-value{font-size:13px;color:var(--text);line-height:1.45;}
 
+/* "Pivot windows in the next 36 months" callout, sits at the top of
+   the 5-year forecast section. Identifies which of years 0-2 are
+   Personal Year 1, 5 or 9, the universally-recognised pivot points. */
+.pivot-card{background:linear-gradient(135deg,rgba(124,58,237,.08),rgba(245,196,81,.06));border:1px solid rgba(245,196,81,.3);border-left:3px solid #f0b429;border-radius:var(--rl);padding:1.25rem 1.4rem;margin-bottom:1.5rem;}
+.pivot-card.pivot-quiet{background:linear-gradient(135deg,rgba(157,127,255,.06),rgba(157,127,255,.03));border-left-color:#9d7fff;}
+.pivot-card .pv-eyebrow{font-size:11px;letter-spacing:.12em;text-transform:uppercase;font-family:sans-serif;color:var(--gold-d);font-weight:700;margin-bottom:.5rem;}
+.pivot-card .pv-intro{font-family:sans-serif;font-size:13px;color:var(--text2);line-height:1.6;margin:0 0 .85rem;}
+.pivot-card .pv-empty{font-family:sans-serif;font-size:13.5px;color:var(--text);line-height:1.65;margin:0;}
+.pivot-card .pv-row{display:flex;gap:.85rem;align-items:flex-start;padding:.65rem 0;border-top:1px dashed rgba(245,196,81,.25);}
+.pivot-card .pv-row:first-of-type{border-top:0;padding-top:.25rem;}
+.pivot-card .pv-yr{flex-shrink:0;background:linear-gradient(135deg,#9d7fff,#f0b429);color:#fff;border-radius:10px;padding:.45rem .75rem;font-family:'Playfair Display',Georgia,serif;font-size:18px;font-weight:700;line-height:1;min-width:64px;text-align:center;}
+.pivot-card .pv-body{flex:1;min-width:0;}
+.pivot-card .pv-label{font-family:'Playfair Display',Georgia,serif;font-size:14.5px;color:var(--text);font-weight:700;margin-bottom:3px;}
+.pivot-card .pv-desc{font-family:sans-serif;font-size:12.5px;color:var(--text2);line-height:1.6;}
+@media(max-width:540px){.pivot-card .pv-row{gap:.6rem;}.pivot-card .pv-yr{min-width:54px;font-size:16px;padding:.4rem .6rem;}}
+
 /* ── FORECAST ────────────────────────────────────────────────── */
 .forecast-card{
   background:var(--card);border:1px solid var(--border);border-radius:var(--rl);
@@ -174,7 +190,31 @@
 .career-domain-name{font-size:14px;margin-bottom:2px;}
 .career-domain-desc{font-size:12px;font-family:sans-serif;color:var(--text2);}
 
+/* "Industries to approach with awareness" card, full-width below the
+   two domain columns. Subdued red/amber tone so it visually reads as a
+   caution, not a celebration. */
+.career-avoid-card{background:linear-gradient(135deg,rgba(193,68,56,.04),rgba(240,180,41,.04));border:1px solid rgba(193,68,56,.18);border-left:3px solid #c14438;border-radius:var(--rl);padding:1.25rem 1.5rem;margin-top:.5rem;}
+.career-avoid-card .ca-hdr{margin-bottom:.85rem;padding-bottom:.85rem;border-bottom:1px dashed rgba(193,68,56,.20);}
+.career-avoid-card .ca-eyebrow{font-size:11px;letter-spacing:.12em;text-transform:uppercase;font-family:sans-serif;color:#c14438;font-weight:700;margin-bottom:.3rem;}
+.career-avoid-card .ca-sub{font-size:13px;color:var(--text2);font-family:sans-serif;line-height:1.55;}
+.career-avoid-card .ca-row{display:flex;gap:.85rem;align-items:flex-start;padding:.6rem 0;border-bottom:1px solid rgba(193,68,56,.08);}
+.career-avoid-card .ca-row:last-child{border-bottom:none;}
+.career-avoid-card .ca-icon{font-size:18px;flex-shrink:0;margin-top:1px;width:24px;text-align:center;}
+.career-avoid-card .ca-name{font-size:14px;color:var(--text);font-weight:700;margin-bottom:3px;font-family:'Playfair Display',Georgia,serif;}
+.career-avoid-card .ca-desc{font-size:12.5px;font-family:sans-serif;color:var(--text2);line-height:1.6;}
+
 /* ── RELATIONSHIP ────────────────────────────────────────────── */
+/* "The number your closest friendships keep sharing" callout, sits above
+   the best/good/avoid groups inside the compat container. */
+.friendship-card{background:linear-gradient(135deg,rgba(124,58,237,.08),rgba(245,196,81,.06));border:1px solid rgba(245,196,81,.3);border-left:3px solid #f0b429;border-radius:var(--rl);padding:1.25rem 1.4rem;margin-bottom:1.5rem;}
+.friendship-card .fr-eyebrow{font-size:11px;letter-spacing:.12em;text-transform:uppercase;font-family:sans-serif;color:var(--gold-d);font-weight:700;margin-bottom:.85rem;}
+.friendship-card .fr-row{display:flex;gap:1.1rem;align-items:flex-start;}
+.friendship-card .fr-num-block{flex-shrink:0;text-align:center;background:linear-gradient(135deg,#9d7fff,#f0b429);color:#fff;border-radius:14px;padding:.85rem .65rem;min-width:64px;}
+.friendship-card .fr-num{font-family:'Playfair Display',Georgia,serif;font-size:32px;line-height:1;font-weight:700;}
+.friendship-card .fr-planet{font-family:sans-serif;font-size:10px;letter-spacing:.06em;margin-top:4px;opacity:.92;}
+.friendship-card .fr-body{flex:1;font-family:sans-serif;font-size:14px;color:var(--text);line-height:1.7;min-width:0;}
+@media(max-width:540px){.friendship-card .fr-row{flex-direction:column;gap:.75rem;}.friendship-card .fr-num-block{align-self:flex-start;}}
+
 .compat-group{margin-bottom:1.5rem;}
 .compat-group-label{font-size:11px;letter-spacing:.1em;text-transform:uppercase;font-family:sans-serif;font-weight:700;margin-bottom:.75rem;display:flex;align-items:center;gap:.5rem;}
 .compat-group-label.best{color:var(--green);}
@@ -1504,6 +1544,21 @@ hr.divider{display:none;}
     9:'channels Mars-energy into courage, drive and decisive action'
   };
 
+  // Why the top-aligned variant is "the version professionals tend to
+  // adopt without realising why". Anchored to how the new ruling planet
+  // sounds in a professional setting, before any meaning-level analysis.
+  var WHY_PROS_ADOPT = {
+    1:'Sun-anchored names read as "in charge" before the room has heard you speak. People default to trusting it as the decision-maker, even strangers.',
+    2:'Moon-anchored names land warm. They open conversations faster because they read as approachable rather than imposing, useful in client-facing and trust-led work.',
+    3:'Jupiter-anchored names read as expansive and memorable. People remember meeting you for longer than they remember meeting most others, useful for visibility-led careers.',
+    4:'Rahu-anchored names sound distinctive enough to stick after one introduction. Useful when you\'re building a category nobody else is in.',
+    5:'Mercury-anchored names read as quick and curious, they invite engagement instead of formality. Useful for sales, media and high-context professional rooms.',
+    6:'Venus-anchored names read as elegant and non-confrontational. They disarm without performing, which is why they\'re common in design, hospitality and family-business names.',
+    7:'Ketu-anchored names carry quiet depth, people instinctively take them more seriously than the volume of voice would otherwise warrant. Useful in research, advisory and contemplative fields.',
+    8:'Saturn-anchored names read as established and competent before any credentials are listed. Common in finance, law and long-cycle authority work.',
+    9:'Mars-anchored names read as decisive, perceived as the person who will move first. Useful in surgery, defense, sports leadership and trial law.'
+  };
+
   function buildChaldeanSummary(){
     var el = qs('chaldeanSummary'); if(!el) return;
     var firstName = (name||'You').trim().split(/\s+/)[0];
@@ -1845,8 +1900,61 @@ hr.divider{display:none;}
     9:'Exercise on Tuesdays, Mars responds to physical action. Wear red or copper. Offer red flowers weekly to honour the cycle\'s completion.',
   };
 
+  // Personal Years 1, 5 and 9 are the universally-recognised pivot
+  // points in a 9-year Chaldean cycle: 1 = start something new, 5 =
+  // change direction, 9 = close a chapter. We identify which of those
+  // fall in the next 36 months so the user knows when material moves
+  // are favoured by the cycle vs when consolidation is the better fit.
+  var PIVOT_KIND={
+    1:{label:'Beginning window',  desc:'A Personal Year 1 is the strongest "start something" window in the 9-year cycle. The first 90 days carry founding momentum that doesn\'t repeat for nine years, what gets begun here tends to compound.'},
+    5:{label:'Change window',     desc:'A Personal Year 5 favours pivots, relocations and risks the rest of the cycle penalises. The vibration rewards the bold lateral move; the same move made in PY 4 or PY 7 tends to stall.'},
+    9:{label:'Completion window', desc:'A Personal Year 9 is for closing chapters, finishing what you said you would, and clearing what no longer fits. The next cycle begins in PY 1, so what you don\'t close here gets carried forward another nine years.'}
+  };
+
+  function pivotWindowsHtml(){
+    var pivots = [];
+    for (var i = 0; i < 3; i++) {
+      var yr = CURRENT_YEAR + i;
+      var py = getPersonalYear(dob, yr);
+      if (PIVOT_KIND[py]) pivots.push({yr:yr, py:py, kind:PIVOT_KIND[py]});
+    }
+    if (pivots.length === 0) {
+      // Find the next pivot beyond the 36-month window so we still
+      // give the user a forward-looking signal instead of a blank.
+      for (var j = 3; j < 9; j++) {
+        var yrJ = CURRENT_YEAR + j;
+        var pyJ = getPersonalYear(dob, yrJ);
+        if (PIVOT_KIND[pyJ]) {
+          return '<div class="pivot-card pivot-quiet">'+
+            '<div class="pv-eyebrow">Pivot windows in the next 36 months</div>'+
+            '<p class="pv-empty">No Personal Year 1, 5 or 9 falls inside the next three years, this is a consolidation window in your cycle. Your next pivot opens in <strong>'+yrJ+'</strong> (Personal Year '+pyJ+', '+PIVOT_KIND[pyJ].label.toLowerCase()+'). Use the years between to deepen what already works.</p>'+
+          '</div>';
+        }
+      }
+      return '';
+    }
+    var rows = pivots.slice(0,2).map(function(p){
+      return '<div class="pv-row">'+
+        '<div class="pv-yr">'+p.yr+'</div>'+
+        '<div class="pv-body">'+
+          '<div class="pv-label">Personal Year '+p.py+', '+p.kind.label+'</div>'+
+          '<div class="pv-desc">'+p.kind.desc+'</div>'+
+        '</div>'+
+      '</div>';
+    }).join('');
+    var heading = pivots.length === 1
+      ? 'Pivot window in the next 36 months'
+      : 'Pivot windows in the next 36 months';
+    return '<div class="pivot-card">'+
+      '<div class="pv-eyebrow">'+heading+'</div>'+
+      '<p class="pv-intro">In any 9-year cycle, three years carry pivot energy: Personal Year 1 (start), 5 (change), and 9 (close). Knowing yours tells you which years are wired for material moves and which are wired for patience.</p>'+
+      rows +
+    '</div>';
+  }
+
   function buildForecast(){
     var container = qs('forecastContainer');
+    container.insertAdjacentHTML('beforeend', pivotWindowsHtml());
     for(var i=0;i<5;i++){
       var yr = CURRENT_YEAR + i;
       var pyNum = getPersonalYear(dob, yr);
@@ -1978,6 +2086,58 @@ hr.divider{display:none;}
     'Social Activism & NGO':'Mars energy channelled into passionate advocacy and social transformation creates powerful change-makers.',
   };
 
+  // Industries the user's Birth Number rhythm fights against. The same
+  // strengths that compound elsewhere become a tax in these fields, so
+  // they read as "twice the energy for half the result". Sourced from
+  // tools/build-number-career.py CAREER.avoid (kept tight, top 3 each).
+  var CAREER_AVOID={
+    1:[
+      ['🪑', 'Pure middle management with no decision authority',     'You\'re wired to call the shot, not relay it. Roles where your judgement is filtered tend to drain the Sun energy that makes you effective.'],
+      ['🗂', 'Anonymous back-office finance',                         'Sun rules visible authority. Your work compounds when your name is attached to outcomes, not when it\'s buried in a spreadsheet.'],
+      ['📞', 'Sales floors with capped autonomy',                     'Scripted sales gives you no room to lead the conversation. The same charisma that closes deals at the top of a firm dies inside a call-list quota.']
+    ],
+    2:[
+      ['📞', 'High-volume cold sales',                                 'The empathic permeability that makes Moon energy creative becomes a daily tax in transactional sales. Most lasts 18 months before burnout.'],
+      ['🏢', 'Commercial real estate / leasing',                       'Moon rules domestic spaces, not commercial ones. The energy of negotiating commercial leases fights what makes you good at residential work.'],
+      ['⚔', 'Litigation as primary practice',                         'High-friction adversarial environments amplify your emotional permeability rather than rewarding it. Mediation and family-law work better.']
+    ],
+    3:[
+      ['🔬', 'Solo deep research with zero external audience',         'Jupiter is amplification. Long-arc work with no public surface tends to feel like underutilisation rather than depth.'],
+      ['📈', 'High-frequency trading',                                  'Mercury\'s pace fits trading; Jupiter\'s pace doesn\'t. The judgement-and-articulation strength becomes friction inside millisecond decisions.'],
+      ['🛠', 'Anonymous backend engineering as a long-term path',     'Behind-the-scenes long-term work without your name attached gradually erodes Jupiter\'s natural amplification.']
+    ],
+    4:[
+      ['🏛', 'Government bureaucracy below senior leadership',         'Rahu sees the institution\'s flaws clearly. Lower-rank tradition-defending roles compress that vision into compliance work.'],
+      ['👨‍👩‍👧', 'Traditional family-run firms with strong succession rules', 'Restlessness inside fixed succession order tends to compound, not resolve. You\'re wired to build categories, not inherit them.'],
+      ['📋', 'Pure compliance roles where deviation is penalised',     'Lateral thinking is your edge. Roles where the goal is "match the rule exactly" actively penalise what makes you valuable elsewhere.']
+    ],
+    5:[
+      ['🐢', 'Solo, slow, decade-long research',                       'Mercury rewards quick synthesis and pivots. Single-domain mastery roles measured in years tend to feel like compression by year three.'],
+      ['🏭', 'Heavy-industry operations',                              'Slow physical operations fight the speed Mercury rewards. Your unfair advantage is information velocity, not industrial endurance.'],
+      ['📜', 'Long-arc apprenticeship trades',                          'Apprenticeship structure rewards patience-as-mastery. Your strength is improvisation; the scaffolding ends up feeling like a cage.']
+    ],
+    6:[
+      ['📞', 'Hard-charging cold sales',                                'Adversarial closing energy works against Venus\'s atmosphere-building gift. The vibration becomes the hostage.'],
+      ['⚔', 'Litigation',                                              'Where someone has to lose for you to win, Venus suffers. Mediation and design-led legal work fits much better.'],
+      ['🏗', 'Demolition, mining, heavy industry',                     'Venus is built to create environments people want to inhabit, not to remove them. Even at senior levels, the daily atmosphere fights the vibration.']
+    ],
+    7:[
+      ['🛒', 'High-volume retail sales',                               'Surface-level commercial hustle erodes Ketu\'s depth. Your edge is going deep where others go wide; high-volume work compresses that.'],
+      ['📈', 'Day-trading',                                            'Fast-cycle Mercury work reads as hollow within months for Ketu energy. Solo research-led work is the better expression.'],
+      ['📱', 'Network-effect social-media careers',                    'The vibration regenerates in solitude, not crowds. Public-attention careers tend to drain the depth that makes the work valuable.']
+    ],
+    8:[
+      ['👕', 'Fast-fashion / weekly-trend retail',                     'Saturn rewards endurance over speed. Trend cycles measured in weeks fight the patience that makes you exceptional in long-arc fields.'],
+      ['📈', 'Day-trading',                                            'The discipline that makes Saturn brilliant in finance is at the institutional level, not the millisecond level. Trading floors burn the wrong muscle.'],
+      ['📱', 'Influencer / social-media-led careers',                  'Authority-by-followers is a different planet. Saturn-built authority compounds invisibly until it becomes unmistakable.']
+    ],
+    9:[
+      ['🐢', 'Slow consensus-building academic roles',                  'Mars wants to move first. Consensus-by-committee structurally fights the decisive courage that makes you exceptional under pressure.'],
+      ['🏨', 'Hospitality at scale',                                    'Hospitality rewards Venus\'s atmosphere-holding. Mars\'s decisive heat is felt as too much by guests who came for ease.'],
+      ['🤝', 'Mediation / dispute-resolution as primary practice',     'Where the goal is to lower temperature, your default to raise it works against the role. Trial law is the better legal expression.']
+    ]
+  };
+
   function buildCareer(){
     var grid = qs('careerGrid');
     var cols=[
@@ -2007,6 +2167,30 @@ hr.divider{display:none;}
       c.innerHTML=hdr+domains;
       grid.appendChild(c);
     });
+
+    // Append "industries to approach with awareness" card spanning the
+    // full width below the two domain columns. Sourced from the user's
+    // Birth Number, since that's the planet that operates under stress.
+    var avoid = CAREER_AVOID[birthNum] || [];
+    if (avoid.length) {
+      var avoidCard = el('div', 'career-avoid-card');
+      avoidCard.style.gridColumn = '1 / -1';
+      var rows = avoid.map(function(item){
+        return '<div class="ca-row">'+
+          '<div class="ca-icon">'+item[0]+'</div>'+
+          '<div class="ca-text">'+
+            '<div class="ca-name">'+item[1]+'</div>'+
+            '<div class="ca-desc">'+item[2]+'</div>'+
+          '</div>'+
+        '</div>';
+      }).join('');
+      avoidCard.innerHTML =
+        '<div class="ca-hdr">'+
+          '<div class="ca-eyebrow">Industries to approach with awareness</div>'+
+          '<div class="ca-sub">Where Birth Number '+birthNum+' ('+birthPlanet+') rhythm tends to fight the work, not compound it. Not a prohibition, the energy budget required is just much higher.</div>'+
+        '</div>' + rows;
+      grid.appendChild(avoidCard);
+    }
   }
 
   // ── 6. RELATIONSHIP ───────────────────────────────────────────
@@ -2022,12 +2206,46 @@ hr.divider{display:none;}
     9:'Mars brings passion, courage and a shared drive for impact.',
   };
 
+  // The "one number your closest friendships keep sharing", per Birth
+  // Number. Friendship resonance often runs a different axis than
+  // romantic compatibility (less about chemistry, more about how
+  // information and trust flow). Copy explains the WHY in plain English.
+  var FRIENDSHIP_NUM={
+    1:{n:3, why:'Number 3 (Jupiter) is the platonic match Sun energy keeps gravitating to. Jupiter\'s wide social range gives you reach without competing for the spotlight, and the friendship usually outlasts most romantic ties because neither person is trying to lead the other.'},
+    2:{n:7, why:'Number 7 (Ketu) is the friend you can sit in silence with for an hour and feel deepened, not drained. Both numbers are inward-facing; trust builds through consistency rather than activity, which is why these friendships often go decades.'},
+    3:{n:6, why:'Number 6 (Venus) is the friend whose home you keep ending up in. Jupiter expands; Venus holds. The combination creates the kind of friendship that becomes a second family, less talking-about-life, more living-it-together.'},
+    4:{n:8, why:'Number 8 (Saturn) is the quiet anchor friend Rahu energy keeps choosing. Saturn\'s patience gives Rahu\'s restlessness a place to land without judgment. These bonds often look unlikely from the outside and feel inevitable from the inside.'},
+    5:{n:1, why:'Number 1 (Sun) is the friend who sets a direction your Mercury speed can move inside. The friendship works because Sun gives the long-term vision and Mercury makes it move, neither role competes with the other.'},
+    6:{n:3, why:'Number 3 (Jupiter) is the friend who pulls you out of the home you so beautifully build. Venus creates atmosphere; Jupiter brings new people into it. The combination turns your friendships into a constantly refreshing community.'},
+    7:{n:2, why:'Number 2 (Moon) is the friend who reads your silence accurately, the one who knows when to come closer and when to leave you alone. Ketu and Moon share an inward axis; these friendships are some of the deepest and quietest you\'ll ever have.'},
+    8:{n:4, why:'Number 4 (Rahu) is the friend whose unconventional energy your Saturn discipline secretly admires. Rahu sees what Saturn would never name; Saturn holds what Rahu would never sustain. Together they build categories.'},
+    9:{n:5, why:'Number 5 (Mercury) is the friend whose pace matches your fire without exhausting itself. Mars supplies the heat and the move; Mercury supplies the angle and the timing. The friendship usually involves a lot of late-night plotting.'}
+  };
+
   function buildRelationship(){
     qs('birthNumRel').textContent = birthNum;
     qs('birthPlanetRel').textContent = birthPlanet;
 
     var compat = COMPAT_PARTNERS[birthNum]||{best:[],good:[],avoid:[]};
     var container = qs('compatContainer');
+
+    // Friendship-number callout, the one number that consistently
+    // shows up in your closest platonic bonds. Sits above the
+    // best/good/avoid groups so it gets the first read.
+    var fr = FRIENDSHIP_NUM[birthNum];
+    if (fr) {
+      var frCard = el('div', 'friendship-card');
+      frCard.innerHTML =
+        '<div class="fr-eyebrow">The number your closest friendships keep sharing</div>'+
+        '<div class="fr-row">'+
+          '<div class="fr-num-block">'+
+            '<div class="fr-num">'+fr.n+'</div>'+
+            '<div class="fr-planet">'+getPlanet(fr.n)+'</div>'+
+          '</div>'+
+          '<div class="fr-body">'+fr.why+'</div>'+
+        '</div>';
+      container.appendChild(frCard);
+    }
 
     [
       {key:'best',label:'Best Match',icon:'★'},
@@ -2433,10 +2651,15 @@ hr.divider{display:none;}
         corrections.forEach(function(c, i){
           var cde = CD[c.newTotal];
           var cpdLabel = cde ? ' · '+cde.l.split(' ·')[0] : '';
+          var topBadge = (i===0)
+            ? '<div style="position:absolute;top:-1px;left:50%;transform:translateX(-50%);background:#f0b429;color:#03090f;font-size:9px;font-weight:700;letter-spacing:.1em;padding:2px 10px;border-radius:0 0 8px 8px;white-space:nowrap;">★ MOST ADOPTED</div>'
+            : '<div style="position:absolute;top:-1px;left:50%;transform:translateX(-50%);background:rgba(240,180,41,.2);color:#c9a227;font-size:9px;font-weight:700;letter-spacing:.1em;padding:2px 10px;border-radius:0 0 8px 8px;white-space:nowrap;border:1px solid rgba(240,180,41,.35);">OPTION '+(i+1)+'</div>';
+          var whyPros = (i===0 && WHY_PROS_ADOPT[c.nameNum])
+            ? '<div style="margin-top:.55rem;padding:.6rem .75rem;background:rgba(240,180,41,.10);border:1px solid rgba(240,180,41,.32);border-radius:8px;font-family:sans-serif;font-size:11.5px;color:#f0ece0;line-height:1.55;"><strong style="color:#f0b429;">Why this one tends to win, </strong>'+WHY_PROS_ADOPT[c.nameNum]+'</div>'
+            : '';
           html +=
             '<div style="background:rgba(240,180,41,.1);border:2px solid rgba(240,180,41,'+(i===0?'.7':'.35')+');border-radius:14px;padding:1.4rem 1.25rem;position:relative;">'+
-              (i===0?'<div style="position:absolute;top:-1px;left:50%;transform:translateX(-50%);background:#f0b429;color:#03090f;font-size:9px;font-weight:700;letter-spacing:.1em;padding:2px 10px;border-radius:0 0 8px 8px;white-space:nowrap;">★ OPTION '+(i+1)+'</div>':''+
-              '<div style="position:absolute;top:-1px;left:50%;transform:translateX(-50%);background:rgba(240,180,41,.2);color:#c9a227;font-size:9px;font-weight:700;letter-spacing:.1em;padding:2px 10px;border-radius:0 0 8px 8px;white-space:nowrap;border:1px solid rgba(240,180,41,.35);">OPTION '+(i+1)+'</div>')+
+              topBadge+
               '<div style="margin-top:.85rem;color:#ffffff;font-size:clamp(17px,2.5vw,22px);font-family:serif;font-weight:700;letter-spacing:.03em;margin-bottom:.6rem;">'+c.fullName+'</div>'+
               '<div style="color:rgba(255,255,255,.5);font-size:11px;font-family:sans-serif;margin-bottom:.5rem;line-height:1.7;">'+
                 '<span style="color:rgba(255,255,255,.75);">'+c.firstName+'</span> ('+c.newFirstSum+') + '+
@@ -2449,6 +2672,7 @@ hr.divider{display:none;}
                 ? '<div style="background:#f0b429;color:#03090f;border-radius:20px;padding:4px 14px;font-size:11px;font-weight:700;display:inline-block;margin-top:.5rem;">★ Fully Aligned</div>'
                 : '<div style="background:rgba(240,180,41,.2);color:#f0b429;border:1px solid rgba(240,180,41,.5);border-radius:20px;padding:4px 14px;font-size:11px;font-weight:700;display:inline-block;margin-top:.5rem;">✦ Strongly Aligned</div>')+
               '<div style="margin-top:.65rem;padding-top:.65rem;border-top:1px dashed rgba(240,180,41,.25);font-family:sans-serif;font-size:11.5px;color:rgba(255,255,255,.7);line-height:1.55;"><strong style="color:#f0b429;">'+getPlanet(c.nameNum)+'</strong> '+(PLANET_BENEFITS[c.nameNum]||'amplifies your core energies')+'</div>'+
+              whyPros+
             '</div>';
         });
         html += '</div>';
