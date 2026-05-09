@@ -286,8 +286,8 @@ def render_page(canon, title, desc, og_desc, h1, hero_glyph, hero_tag, breadcrum
     head = f'''<!DOCTYPE html>
 <html lang="en">
 <head>
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-C1JMQTNHDE"></script>
-<script>window.dataLayer=window.dataLayer||[];function gtag(){{dataLayer.push(arguments);}}gtag('js',new Date());gtag('config','G-C1JMQTNHDE');</script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-70GFTN27M6"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){{dataLayer.push(arguments);}}gtag('js',new Date());gtag('config','G-70GFTN27M6');</script>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
 <link rel="icon" type="image/svg+xml" href="/assets/namealigned-favicon.svg"/>

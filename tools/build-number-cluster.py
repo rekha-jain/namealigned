@@ -139,12 +139,12 @@ HEAD = '''<!DOCTYPE html>
 <html lang="en">
 <head>
 <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-C1JMQTNHDE"></script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-70GFTN27M6"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
   function gtag(){{dataLayer.push(arguments);}}
   gtag('js', new Date());
-  gtag('config', 'G-C1JMQTNHDE');
+  gtag('config', 'G-70GFTN27M6');
 </script>
 
 <meta charset="UTF-8"/>
