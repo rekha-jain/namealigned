@@ -403,8 +403,10 @@
   .disclaimer-section > div{padding:.55rem .75rem!important;font-size:8.5px!important;line-height:1.5!important;}
 
   /* Name alignment section: stay together but flow naturally (fill prior gaps) */
-  #nameAnalysisSection{break-inside:avoid;}
-  .name-align-card{padding:1rem!important;break-inside:avoid;}
+  /* Allow the name analysis section to split since its tall card grid
+     usually exceeds one PDF page; otherwise we get a half-empty page. */
+  #nameAnalysisSection{break-inside:auto;page-break-inside:auto;}
+  .name-align-card{padding:1rem!important;break-inside:auto;page-break-inside:auto;}
   .name-align-card>div:first-child{margin-bottom:.75rem!important;}
   .name-options-grid{display:grid!important;grid-template-columns:repeat(3,1fr)!important;gap:.6rem!important;}
   .name-options-grid>div{padding:.75rem .8rem!important;}
@@ -422,6 +424,24 @@
 
   .career-col,.career-domain,.compat-card{break-inside:avoid;}
   #remediesGrid>div{break-inside:avoid;}
+  /* New session-1 cards (industries-to-avoid, friendship number, pivot
+     windows) must not split mid-card. Tighter print padding so each
+     card fits on one PDF page rather than spilling. */
+  .career-avoid-card{break-inside:avoid;page-break-inside:avoid;padding:.85rem 1rem!important;margin-top:.4rem!important;}
+  .career-avoid-card .ca-row{break-inside:avoid;page-break-inside:avoid;padding:.4rem 0!important;}
+  .career-avoid-card .ca-name{font-size:13px!important;}
+  .career-avoid-card .ca-desc{font-size:12px!important;line-height:1.5!important;}
+  .career-avoid-card .ca-hdr{margin-bottom:.5rem!important;padding-bottom:.5rem!important;}
+  .friendship-card{break-inside:avoid;page-break-inside:avoid;padding:.9rem 1rem!important;margin-bottom:1rem!important;}
+  .friendship-card .fr-num-block{padding:.55rem .5rem!important;min-width:54px!important;}
+  .friendship-card .fr-num{font-size:24px!important;}
+  .friendship-card .fr-body{font-size:12.5px!important;line-height:1.55!important;}
+  .pivot-card{break-inside:avoid;page-break-inside:avoid;padding:.9rem 1rem!important;margin-bottom:1rem!important;}
+  .pivot-card .pv-row{break-inside:avoid;page-break-inside:avoid;padding:.45rem 0!important;}
+  .pivot-card .pv-yr{padding:.35rem .5rem!important;font-size:15px!important;min-width:54px!important;}
+  .pivot-card .pv-label{font-size:13px!important;}
+  .pivot-card .pv-desc{font-size:11.5px!important;line-height:1.5!important;}
+  .pivot-card .pv-intro{font-size:12px!important;line-height:1.5!important;margin-bottom:.5rem!important;}
   /* Each attribute card stays whole; whole grid stays together */
   .attr-card{break-inside:avoid;}
   .attr-grid{break-inside:avoid;}
