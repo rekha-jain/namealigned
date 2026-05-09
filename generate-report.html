@@ -287,13 +287,13 @@
      All boxes get uniform tight padding + reduced font sizes
      ════════════════════════════════════════════════════════════ */
 
-  /* Sections — tightened to save page count */
+  /* Sections, tightened to save page count */
   .rpt-section{padding:.7rem .95rem!important;margin-bottom:.4rem!important;}
   .sec-label{margin-bottom:.5rem!important;font-size:9.5px!important;}
   .sec-hint{font-size:10px!important;margin:-.15rem 0 .45rem!important;line-height:1.4!important;}
   hr.divider{margin:.35rem 0!important;}
 
-  /* Core number cards — slimmer */
+  /* Core number cards, slimmer */
   .core-num-card{padding:.65rem .65rem!important;}
   .core-num-label{margin-bottom:.25rem!important;font-size:10px!important;}
   .core-num-big{font-size:32px!important;margin-bottom:0!important;line-height:1!important;}
@@ -307,7 +307,7 @@
   .align-desc{font-size:11px!important;line-height:1.5!important;}
   .align-pct-badge{font-size:19px!important;padding:.3rem .8rem!important;}
 
-  /* Top summary panel — keep elegant but compact */
+  /* Top summary panel, keep elegant but compact */
   #chaldeanSummary p{font-size:12.5px!important;line-height:1.55!important;margin-bottom:.55rem!important;}
   #chaldeanSummary > div:last-child p{font-size:12.5px!important;line-height:1.5!important;}
 
@@ -317,7 +317,7 @@
   .attr-label{font-size:8.5px!important;margin-bottom:.2rem!important;}
   .attr-value{font-size:11.5px!important;}
 
-  /* Forecast cards — tightened (5 cards × small saving = 1 page) */
+  /* Forecast cards, tightened (5 cards × small saving = 1 page) */
   .forecast-card{overflow:visible;margin-bottom:.4rem!important;}
   .forecast-hdr{padding:.5rem .85rem!important;}
   .forecast-year-label{font-size:12.5px!important;}
@@ -338,7 +338,7 @@
   .forecast-remedy-text{font-size:11px!important;}
   .forecast-chips{margin-top:.4rem!important;gap:3px!important;}
 
-  /* Career — tightened */
+  /* Career, tightened */
   .career-col{padding:.7rem .85rem!important;}
   .career-col-hdr{margin-bottom:.4rem!important;}
   .career-col-num{width:26px!important;height:26px!important;font-size:13px!important;}
@@ -347,7 +347,7 @@
   .career-domain-name{font-size:12px!important;margin-bottom:1px!important;}
   .career-domain-desc{font-size:10.5px!important;}
 
-  /* Relationship / compatibility — tightened */
+  /* Relationship / compatibility, tightened */
   .compat-group{margin-bottom:.55rem!important;}
   .compat-group-label{font-size:9.5px!important;margin-bottom:.35rem!important;}
   .compat-card{padding:.45rem .6rem!important;}
@@ -355,7 +355,7 @@
   .compat-planet{font-size:10px!important;margin-bottom:.2rem!important;}
   .compat-note{font-size:10.5px!important;line-height:1.4!important;}
 
-  /* Remedies — tightened */
+  /* Remedies, tightened */
   .remedy-card{padding:.55rem .75rem!important;gap:.5rem!important;}
 
   /* Disclaimer + summary panel: trim padding to save final-page space */
@@ -400,7 +400,7 @@
   .rpt-section>.sec-label{break-after:avoid;page-break-after:avoid;}
   .rpt-section>p{break-after:avoid;break-inside:avoid;}
   #forecastContainer{break-before:avoid;}
-  /* Name correction options must never split — each card whole */
+  /* Name correction options must never split, each card whole */
   .name-options-grid>div{break-inside:avoid;page-break-inside:avoid;}
   /* Headings + first paragraph stay together (orphans/widows) */
   h1,h2,h3,.sec-label{break-after:avoid;page-break-after:avoid;}
@@ -500,7 +500,7 @@ hr.divider{display:none;}
 #scIgHelper{font-size:11.5px;color:var(--text3);text-align:center;line-height:1.55;max-width:560px;margin:0 auto;font-style:italic;}
 @media screen and (max-width:640px){.sc-bottom{grid-template-columns:1fr;text-align:center;}.sc-bottom canvas,.sc-bottom img{margin:0 auto;}}
 @media print{
-  /* Don't force a fresh page before the share card — let it flow
+  /* Don't force a fresh page before the share card, let it flow
      naturally so the report stays at ~15 pages. Still keep the
      section whole if it can fit. */
   #shareCardSection{break-inside:avoid!important;}
@@ -517,7 +517,7 @@ hr.divider{display:none;}
 /* ── Tooltip system (phase 3) ─────────────────────────────────
    Inline, accessible, keyboard- and touch-friendly. Uses focus-
    within so taps on mobile open the popover; hover handles
-   desktop. No JS required for the visual behaviour — content is
+   desktop. No JS required for the visual behaviour, content is
    injected by a small helper (window.tt) into the existing DOM. */
 .tt{position:relative;display:inline-flex;align-items:center;gap:3px;cursor:help;}
 .tt-i{display:inline-flex;align-items:center;justify-content:center;width:13px;height:13px;border-radius:50%;background:rgba(201,162,39,.18);border:1px solid rgba(201,162,39,.45);color:#c9a227;font-size:9px;font-weight:700;font-family:sans-serif;font-style:normal;line-height:1;flex-shrink:0;}
@@ -632,7 +632,7 @@ hr.divider{display:none;}
   <!-- ─ 1. CORE NUMBERS ──────────────────────────────────────── -->
   <div class="rpt-section">
     <div class="sec-label">Your Core Chaldean Numbers</div>
-    <div class="sec-hint">Your three foundational numbers — Birth Number (from your day of birth), Life Path Number (from your full date of birth) and Name Number (from your name's Chaldean sum). Together they describe how you operate, where destiny compounds your effort, and the vibration you carry into the world.</div>
+    <div class="sec-hint">Your three foundational numbers, Birth Number (from your day of birth), Life Path Number (from your full date of birth) and Name Number (from your name's Chaldean sum). Together they describe how you operate, where destiny compounds your effort, and the vibration you carry into the world.</div>
     <div class="grid-3" id="coreNumbersGrid">
       <!-- Injected by JS -->
     </div>
@@ -643,7 +643,7 @@ hr.divider{display:none;}
   <!-- ─ 1b. COMBINATION NUMBER ──────────────────────────────── -->
   <div class="rpt-section" style="padding-top:0;">
     <div class="sec-label">Your Number Combination, <span id="comboLabel"></span></div>
-    <div class="sec-hint">The interplay between your Birth Number and Life Path Number reveals a recurring life-rhythm — how you naturally take action, and how destiny tends to respond. Each combination has its own signature.</div>
+    <div class="sec-hint">The interplay between your Birth Number and Life Path Number reveals a recurring life-rhythm, how you naturally take action, and how destiny tends to respond. Each combination has its own signature.</div>
     <div id="combinationSection"><!-- Injected by JS --></div>
   </div>
 
@@ -652,7 +652,7 @@ hr.divider{display:none;}
   <!-- ─ 2. ALIGNMENT BANNER + CHALDEAN ALIGNMENT BREAKDOWN + NAME SUGGESTIONS ─ -->
   <div class="rpt-section" style="padding-top:0;">
     <div class="sec-label">Chaldean Alignment Score</div>
-    <div class="sec-hint">A weighted measure of how well your name vibration interacts with your birth and destiny numbers. Higher alignment means less internal friction; lower alignment doesn't mean "bad" — just that your name carries different strengths than your birth pattern. The breakdown below shows how each dimension contributes.</div>
+    <div class="sec-hint">A weighted measure of how well your name vibration interacts with your birth and destiny numbers. Higher alignment means less internal friction; lower alignment doesn't mean "bad", just that your name carries different strengths than your birth pattern. The breakdown below shows how each dimension contributes.</div>
     <div class="align-banner" id="alignBanner">
       <!-- Injected by JS -->
     </div>
@@ -687,7 +687,7 @@ hr.divider{display:none;}
   <!-- ─ 4. 5-YEAR FORECAST ───────────────────────────────────── -->
   <div class="rpt-section long-section" style="padding-top:0;">
     <div class="sec-label">5-Year <span class="tt-anchor" data-tt="personalYear">Personal Year</span> Forecast</div>
-    <div class="sec-hint">Your Personal Year shifts each birthday and runs on a 9-year cycle — each year carrying its own theme (foundations, change, completion, etc.). Knowing the active cycle lets you time decisions to the energy of the year, rather than against it.</div>
+    <div class="sec-hint">Your Personal Year shifts each birthday and runs on a 9-year cycle, each year carrying its own theme (foundations, change, completion, etc.). Knowing the active cycle lets you time decisions to the energy of the year, rather than against it.</div>
     <p style="font-size:13px;color:var(--text2);font-family:sans-serif;margin-bottom:.75rem;">Your Personal Year cycles are derived from your <strong>Chaldean birth numbers</strong> and influence how planetary energies affect your life each year.</p>
     <div style="background:linear-gradient(135deg,rgba(220,38,38,.08),rgba(201,162,39,.06));border:1px solid rgba(201,162,39,.3);border-left:4px solid #c9a227;border-radius:var(--r);padding:.85rem 1.1rem;margin-bottom:1.25rem;font-family:sans-serif;font-size:13px;color:var(--text);line-height:1.55;">
       ⚡ <strong>Certain years act as activation points</strong> where decisions carry long-term impact. Knowing which years are yours gives you a decisive edge.
@@ -716,7 +716,7 @@ hr.divider{display:none;}
   <!-- ─ 6. CHALDEAN COMPATIBILITY INSIGHT ─────────────────────── -->
   <div class="rpt-section" style="padding-top:0;">
     <div class="sec-label">🔗 Chaldean Compatibility Insight</div>
-    <div class="sec-hint">Compatibility in Chaldean numerology comes from how the ruling planets of two numbers interact — friendly, neutral or with friction. It describes natural emotional rhythm; relationships at any combination thrive when both people understand the dynamic.</div>
+    <div class="sec-hint">Compatibility in Chaldean numerology comes from how the ruling planets of two numbers interact, friendly, neutral or with friction. It describes natural emotional rhythm; relationships at any combination thrive when both people understand the dynamic.</div>
     <p style="font-size:13px;color:var(--text2);font-family:sans-serif;margin-bottom:.5rem;">In Chaldean numerology, compatibility is determined by <strong>planetary interactions</strong> between numbers, not just shared traits or birth months. Your Birth Number <strong id="birthNumRel"></strong> is ruled by <strong id="birthPlanetRel"></strong>.</p>
     <p style="font-size:11.5px;color:var(--text3);font-family:sans-serif;font-style:italic;margin-bottom:1.25rem;">Focuses on vibration, not just numbers, based on Chaldean numerology principles.</p>
     <div id="compatContainer">
@@ -729,7 +729,7 @@ hr.divider{display:none;}
   <!-- ─ 7. REMEDIES ─────────────────────────────────────────── -->
   <div class="rpt-section" style="padding-top:0;">
     <div class="sec-label">Remedies &amp; Planetary Activation</div>
-    <div class="sec-hint">Small daily practices that activate the planetary energies of your Birth Number. None are mandatory — pick the ones that fit your life. Consistency, not intensity, is what makes them work.</div>
+    <div class="sec-hint">Small daily practices that activate the planetary energies of your Birth Number. None are mandatory, pick the ones that fit your life. Consistency, not intensity, is what makes them work.</div>
     <p style="font-size:13px;color:var(--text2);font-family:sans-serif;margin-bottom:.5rem;">Practical habits calibrated to your planetary ruler. Tick each remedy as you adopt it, consistency activates the vibration.</p>
     <p style="font-size:11.5px;color:var(--text3);font-family:sans-serif;font-style:italic;margin-bottom:1.25rem;">Used for sound-based name alignment · Focuses on vibration, not just numbers.</p>
     <div id="remediesGrid" style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
@@ -753,7 +753,7 @@ hr.divider{display:none;}
   <!-- ─ 8c. SHARE YOUR CARD (in PDF + screen) ────────────────── -->
   <div class="rpt-section" id="shareCardSection" style="padding-top:0;">
     <div class="sec-label">Share Your Insight Card</div>
-    <div class="sec-hint">A keepsake image summarising your reading. Scan the QR code below to open the free analyser pre-loaded with your details — handy for sharing with someone you'd like to check next.</div>
+    <div class="sec-hint">A keepsake image summarising your reading. Scan the QR code below to open the free analyser pre-loaded with your details, handy for sharing with someone you'd like to check next.</div>
     <div class="sc-stack">
       <div class="sc-intro">
         <div class="sc-eyebrow">A keepsake worth sharing</div>
@@ -777,13 +777,13 @@ hr.divider{display:none;}
         </a>
         <a id="scNativeBtn" href="#" class="sc-btn sc-btn-outline" style="display:none;">📲 More options…</a>
       </div>
-      <div id="scIgHelper" class="no-print" style="display:none;">Image saved — open <strong>Instagram</strong> and post it to your feed or story.</div>
+      <div id="scIgHelper" class="no-print" style="display:none;">Image saved, open <strong>Instagram</strong> and post it to your feed or story.</div>
 
       <div class="sc-bottom">
         <img id="shareCardQR" alt="Scan QR" />
         <div class="sc-qr-text">
           <strong>Or scan to open the card on your phone</strong>
-          Same keepsake — opens on a phone with no DOB or full analysis exposed. Useful when sharing the printed PDF.
+          Same keepsake, opens on a phone with no DOB or full analysis exposed. Useful when sharing the printed PDF.
         </div>
       </div>
       <div class="sc-caption">"Every name carries its own strengths. Discover what yours already supports, and how to enhance it further. → namealigned.com/analyzer"</div>
@@ -850,7 +850,7 @@ hr.divider{display:none;}
       <div class="card">
         <div style="font-size:28px;margin-bottom:.75rem;">💬</div>
         <h4 style="font-size:16px;margin-bottom:.5rem;">Share Your Insight</h4>
-        <p style="font-size:13px;color:var(--text2);font-family:sans-serif;line-height:1.65;margin-bottom:1rem;">Share your numerology insight card with a friend or family member — pick the channel that suits you.</p>
+        <p style="font-size:13px;color:var(--text2);font-family:sans-serif;line-height:1.65;margin-bottom:1rem;">Share your numerology insight card with a friend or family member, pick the channel that suits you.</p>
         <div style="display:flex;flex-direction:column;gap:.5rem;">
           <a id="waShareBtn" href="#" class="share-wa" target="_blank" rel="noopener">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
@@ -972,22 +972,22 @@ hr.divider{display:none;}
   // useful) whether it's fixed or changeable. Tone is informative,
   // never mystical-jargony.
   var TOOLTIPS = {
-    moolank: 'Your <strong>Birth Number</strong> (Driver/Birth Number) is the single digit your day of birth reduces to. It is your most powerful and unchangeable number — the core lens through which you experience the world.',
+    moolank: 'Your <strong>Birth Number</strong> (Driver/Birth Number) is the single digit your day of birth reduces to. It is your most powerful and unchangeable number, the core lens through which you experience the world.',
     bhagyank: 'Your <strong>Life Path Number</strong> (Destiny/Life-Path Number) is the sum of every digit in your full date of birth. It describes the long-arc themes, opportunities and lessons your life tends to gravitate toward.',
-    nameNumber: 'Your <strong>Name Number</strong> is the Chaldean sum of your name reduced to a single digit. Unlike Birth Number, this one is changeable — adjusting spelling shifts the vibration without changing how the name sounds.',
+    nameNumber: 'Your <strong>Name Number</strong> is the Chaldean sum of your name reduced to a single digit. Unlike Birth Number, this one is changeable, adjusting spelling shifts the vibration without changing how the name sounds.',
     compoundNumber: 'A <strong>compound number</strong> is the full double-digit total of your name <em>before</em> reduction (like 26 or 41). In Chaldean numerology, compounds carry deeper symbolic meaning than the final single digit and often shape life patterns more strongly.',
-    chaldeanAlignment: '<strong>Chaldean Alignment</strong> measures how well your name vibration interacts with your birth and destiny numbers. Higher alignment means less internal friction; lower alignment doesn\'t mean "bad" — just that the name carries different strengths than the birth pattern.',
-    planetaryRuler: 'Each number 1–9 is ruled by a planet (Sun, Moon, Mars, etc.). The <strong>planetary ruler</strong> describes the energetic style of that number — leadership, sensitivity, discipline, and so on.',
+    chaldeanAlignment: '<strong>Chaldean Alignment</strong> measures how well your name vibration interacts with your birth and destiny numbers. Higher alignment means less internal friction; lower alignment doesn\'t mean "bad", just that the name carries different strengths than the birth pattern.',
+    planetaryRuler: 'Each number 1-9 is ruled by a planet (Sun, Moon, Mars, etc.). The <strong>planetary ruler</strong> describes the energetic style of that number, leadership, sensitivity, discipline, and so on.',
     personalYear: 'Your <strong>Personal Year</strong> shifts every birthday and runs on a 9-year cycle. Each number has a different theme (foundation-building, change, completion). Knowing the current cycle helps you time decisions to the energy of the year.',
     mobileRoot: 'Your <strong>Mobile Root Number</strong> is the sum of every digit in your phone number, reduced to a single digit. It influences the type of conversations and opportunities your phone tends to attract.',
     compoundQuality: '<strong>Compound Quality</strong> rates the symbolic weight of your name\'s unreduced compound. In Chaldean tradition some compounds (like 23, 27, 41) are highly supportive; others (like 26, 29) ask for more conscious handling.',
     rootHarmony: '<strong>Root Harmony</strong> compares your Name Number against your Birth Number or Life Path Number using planetary friendship rules. Identical numbers = strongest match; friendly planetary pairs = supportive; non-friendly = neutral interaction.',
     planetaryHarmony: '<strong>Planetary Harmony</strong> looks at all three of your rulers together (Name, Birth Number, Life Path Number). When all three planets get along, decisions and outcomes feel more coherent.',
-    phoneticStability: '<strong>Phonetic Stability</strong> reflects how heavy your name compound is to "carry". Lighter compounds (10–22) tend to feel settled; very high compounds (45+) carry more karmic weight and ask for steadier handling.',
-    amplification: '<strong>Amplification</strong> measures resonance between your three numbers. When two or three numbers match (e.g. Birth Number 2, Life Path Number 2), the energy of that planet is amplified — both its gifts and its lessons.',
-    rootReduction: '<strong>Root reduction</strong> means adding the digits of a number until a single digit (1–9) remains. For example, 26 → 2+6 = 8. Chaldean numerology preserves the unreduced compound for deeper meaning.',
-    friendlyNumbers: '<strong>Friendly numbers</strong> are number-pairs whose ruling planets harmonise — like Sun (1) and Moon (2), or Mercury (5) and Venus (6). Names whose vibration matches a friendly pair tend to feel less effortful.',
-    karmicNumber: 'Some compounds are called <strong>karmic numbers</strong> (like 13, 16, 19) — they don\'t mean "bad luck"; they describe patterns that recur until consciously handled, and tend to develop specific inner strengths once met with awareness.',
+    phoneticStability: '<strong>Phonetic Stability</strong> reflects how heavy your name compound is to "carry". Lighter compounds (10-22) tend to feel settled; very high compounds (45+) carry more karmic weight and ask for steadier handling.',
+    amplification: '<strong>Amplification</strong> measures resonance between your three numbers. When two or three numbers match (e.g. Birth Number 2, Life Path Number 2), the energy of that planet is amplified, both its gifts and its lessons.',
+    rootReduction: '<strong>Root reduction</strong> means adding the digits of a number until a single digit (1-9) remains. For example, 26 → 2+6 = 8. Chaldean numerology preserves the unreduced compound for deeper meaning.',
+    friendlyNumbers: '<strong>Friendly numbers</strong> are number-pairs whose ruling planets harmonise, like Sun (1) and Moon (2), or Mercury (5) and Venus (6). Names whose vibration matches a friendly pair tend to feel less effortful.',
+    karmicNumber: 'Some compounds are called <strong>karmic numbers</strong> (like 13, 16, 19), they don\'t mean "bad luck"; they describe patterns that recur until consciously handled, and tend to develop specific inner strengths once met with awareness.',
   };
 
   // Wrap a label with an info icon + tooltip popover. The icon and
@@ -1447,7 +1447,7 @@ hr.divider{display:none;}
           qrImg.src = dataUrl;
         });
       } else if (qrImg) {
-        // CDN fallback if the QRCode library failed to load —
+        // CDN fallback if the QRCode library failed to load , 
         // still gives the user a scannable code in the printout.
         qrImg.src = 'https://api.qrserver.com/v1/create-qr-code/?size=216x216&data=' + encodeURIComponent(url);
       }
@@ -1510,7 +1510,7 @@ hr.divider{display:none;}
     var traits = PLANET_TRAITS[nameNum] || PLANET_TRAITS[1];
     var bhTraits = PLANET_TRAITS[birthNum] || PLANET_TRAITS[1];
 
-    // Tone-shifted alignment narrative — pull the canonical
+    // Tone-shifted alignment narrative, pull the canonical
     // tier short-line directly from the new 7-tier interpretation
     // engine so wording is consistent with the banner above.
     var __tier = (typeof getAlignmentTier === 'function') ? getAlignmentTier(pct) : null;
@@ -1546,7 +1546,7 @@ hr.divider{display:none;}
     };
     var outcome = OUTCOMES_LONG[birthNum] || OUTCOMES_LONG[1];
 
-    // Closing conclusion — verdict tuned per tier (phase 4a) so
+    // Closing conclusion, verdict tuned per tier (phase 4a) so
     // every score range gets language that fits its psychological
     // texture, not a generic "good/medium/needs work" rollup.
     var __tierKey = __tier ? __tier.key : 'tier-mixed';
@@ -1555,16 +1555,16 @@ hr.divider{display:none;}
       'tier-strong':          'your name actively supports your patterns. The Name Optimization section offers refinements for the few areas of natural friction every profile carries.',
       'tier-supportive':      'the supportive base is strong; the Name Optimization section addresses the recurring areas of tension or overcompensation specifically.',
       'tier-mixed':           'there is meaningful room to enhance the parts of your personality that currently feel inconsistent or emotionally tiring. The Name Optimization section offers three natural-sounding options.',
-      'tier-friction':        'the recurring friction the score reflects can be steadied — the Name Optimization section offers three natural-sounding options that improve compound quality without changing how your name sounds.',
-      'tier-recalibration':   'growth in this range tends to come through recalibration — the Name Optimization section is a starting point, alongside the boundaries and self-understanding work the profile suggests.',
+      'tier-friction':        'the recurring friction the score reflects can be steadied, the Name Optimization section offers three natural-sounding options that improve compound quality without changing how your name sounds.',
+      'tier-recalibration':   'growth in this range tends to come through recalibration, the Name Optimization section is a starting point, alongside the boundaries and self-understanding work the profile suggests.',
       'tier-transformational':'this profile is reinvention-led; alignment can support the journey but never replaces the inner work. The Name Optimization section offers three natural-sounding options worth considering when you are ready.'
     })[__tierKey] || 'the Name Optimization section offers three natural-sounding options that improve compound quality without changing how your name sounds.';
 
-    // "Friction without failure" — every profile, even highly
+    // "Friction without failure", every profile, even highly
     // aligned ones, gets a growth observation so the user feels
     // seen rather than flattered. Keyed off Birth Number behaviour.
     var GROWTH_NOTE = 'A recurring growth theme in your profile is the rhythm of '+b.behaviour+' followed by '+b.challenge+
-      ' — not a problem to solve, but a pattern to notice with kindness.';
+      ', not a problem to solve, but a pattern to notice with kindness.';
 
     var html =
       '<p style="margin:0 0 .85rem;"><strong style="color:#8a6a1a;">'+firstName+',</strong> your Chaldean profile is shaped by the interaction between your <strong style="color:#8a6a1a;">name vibration</strong> and your <strong style="color:#8a6a1a;">birth numbers</strong>.</p>'+
@@ -2655,7 +2655,7 @@ hr.divider{display:none;}
     var waUrl='https://wa.me/?text='+encodeURIComponent(summary);
     qs('waShareBtn').href=waUrl;
 
-    // Instagram — there's no public web→IG share endpoint, so the
+    // Instagram, there's no public web→IG share endpoint, so the
     // pragmatic flow is: open the public insight-card URL in a new
     // tab so the user can long-press / right-click the image to
     // save, then post it on their feed/story. instagram://library
@@ -2669,7 +2669,7 @@ hr.divider{display:none;}
       });
     }
 
-    // Native share sheet (mobile) — surfaces every install share
+    // Native share sheet (mobile), surfaces every install share
     // target the OS knows about (Telegram, Mail, etc.).
     var nativeBtn = qs('nativeShareBtn');
     if (nativeBtn && navigator.share) {

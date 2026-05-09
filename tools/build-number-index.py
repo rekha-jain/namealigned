@@ -33,7 +33,7 @@ ARCH = {n: ncl.PERSONALITY[n]['archetype'] for n in range(1, 10)}
 TLDR_LINE = {n: ncl.PERSONALITY[n]['tldr'].split('. ')[0] + '.' for n in range(1, 10)}
 
 # Aspect pages currently shipped per number. Add love/compatibility here
-# once those slices ship — the hub will auto-list them.
+# once those slices ship, the hub will auto-list them.
 ASPECTS = [
     ('personality', '/number/{n}-personality',   'Personality'),
     ('career',      '/number/{n}-career',        'Career'),
@@ -41,10 +41,10 @@ ASPECTS = [
     ('lifepath',    '/life-path-number-{n}-meaning','Life Path'),
 ]
 
-TITLE = 'Numbers 1–9 in Chaldean Numerology — Personality, Career, Name & Life Path Guides'
-DESC  = 'Every Chaldean numerology number 1–9 explained — personality archetype, best careers, name number meaning and life path. Free, no signup.'
-OGTITLE = 'Numbers 1–9 in Chaldean Numerology · The complete guide'
-OGDESC  = 'Personality, career, name and life-path readings for each Chaldean number 1–9. Free.'
+TITLE = 'Numbers 1-9 in Chaldean Numerology, Personality, Career, Name & Life Path Guides'
+DESC  = 'Every Chaldean numerology number 1-9 explained, personality archetype, best careers, name number meaning and life path. Free, no signup.'
+OGTITLE = 'Numbers 1-9 in Chaldean Numerology · The complete guide'
+OGDESC  = 'Personality, career, name and life-path readings for each Chaldean number 1-9. Free.'
 CANON = f'{BASE}/number'
 
 ARTICLE = {
@@ -57,7 +57,7 @@ ITEMLIST = {
   '@context':'https://schema.org','@type':'ItemList','name':'Numbers 1 to 9',
   'itemListElement':[
     {'@type':'ListItem','position':n,'url':f'{BASE}/number/{n}-personality',
-     'name':f'Number {n} — {ARCH[n]} ({NUMBERS[n]["planet"]})'} for n in range(1,10)
+     'name':f'Number {n}, {ARCH[n]} ({NUMBERS[n]["planet"]})'} for n in range(1,10)
   ]
 }
 
@@ -223,9 +223,9 @@ def render():
     for n in range(1, 10):
         d = NUMBERS[n]
         arch = ARCH[n]
-        # Short blurb pulled from the personality TLDR — first sentence
+        # Short blurb pulled from the personality TLDR, first sentence
         blurb = TLDR_LINE[n]
-        # Build aspect links — only include if the page exists
+        # Build aspect links, only include if the page exists
         link_html = ''
         for key, tmpl, label in ASPECTS:
             link_html += f'<a href="{tmpl.format(n=n)}">{label}</a>'
@@ -247,15 +247,15 @@ def render():
 </nav>
 
 <header class="nh-hero">
-  <div class="badge">Chaldean Numerology · Numbers 1–9</div>
+  <div class="badge">Chaldean Numerology · Numbers 1-9</div>
   <h1>Every number in Chaldean numerology, in one place</h1>
-  <p>Each number 1–9 carries a planetary signature that shapes personality, career fit and the kind of relationships that thrive around you. Pick a number to read it from every angle.</p>
+  <p>Each number 1-9 carries a planetary signature that shapes personality, career fit and the kind of relationships that thrive around you. Pick a number to read it from every angle.</p>
 </header>
 
 <main class="nh-body">
 
   <h2>What is a number in Chaldean numerology?</h2>
-  <p>In Chaldean numerology — the system Cheiro popularised and the one most Indian numerologists still use — every single digit (1 through 9) is governed by a planet. The planet sets the temperament, the rhythm, and the natural arc of life events for anyone whose chart carries that number.</p>
+  <p>In Chaldean numerology, the system Cheiro popularised and the one most Indian numerologists still use, every single digit (1 through 9) is governed by a planet. The planet sets the temperament, the rhythm, and the natural arc of life events for anyone whose chart carries that number.</p>
   <p>Your chart carries multiple numbers. The four most important are:</p>
 
   <div class="nh-kinds">
@@ -267,7 +267,7 @@ def render():
     <div class="nh-kind">
       <div class="lbl">Life Path Number (Bhagyank / Destiny)</div>
       <h3>Your full birth-date sum</h3>
-      <p>Sum the entire birth date and reduce. This is the soul-curriculum — the long-arc lesson your life is shaped around.</p>
+      <p>Sum the entire birth date and reduce. This is the soul-curriculum, the long-arc lesson your life is shaped around.</p>
     </div>
     <div class="nh-kind">
       <div class="lbl">Name Number</div>
@@ -281,7 +281,7 @@ def render():
     </div>
   </div>
 
-  <p>The same single digit (say, Number 8) can show up in any of those four positions — and the meaning shifts subtly depending on where it lives in your chart. The pages below cover Number N as an archetype across the whole chart, plus the specific aspect pages where they exist.</p>
+  <p>The same single digit (say, Number 8) can show up in any of those four positions, and the meaning shifts subtly depending on where it lives in your chart. The pages below cover Number N as an archetype across the whole chart, plus the specific aspect pages where they exist.</p>
 
   <h2>Pick a number</h2>
   <div class="nh-grid">
@@ -290,7 +290,7 @@ def render():
 
   <div class="nh-cta-band">
     <h3>Don't know your numbers yet?</h3>
-    <p>The free Chaldean calculator gives you Birth Number, Life Path Number and Name Number — side by side, in 15 seconds.</p>
+    <p>The free Chaldean calculator gives you Birth Number, Life Path Number and Name Number, side by side, in 15 seconds.</p>
     <div class="btn-pair">
       <a class="primary" href="/name-numerology-calculator">Calculate my numbers →</a>
       <a class="outline" href="/analyzer">Full free analysis</a>
@@ -298,7 +298,7 @@ def render():
   </div>
 
   <h2>Going deeper</h2>
-  <p>For the complete picture — your specific Birth, Name and Life Path numbers in your own chart, plus a 5-year personal-year forecast, name-correction options and remedies — the <a href="/report">Full Destiny Report (₹499 / $5 USD)</a> generates a personalised PDF in 60 seconds.</p>
+  <p>For the complete picture, your specific Birth, Name and Life Path numbers in your own chart, plus a 5-year personal-year forecast, name-correction options and remedies, the <a href="/report">Full Destiny Report (₹499 / $5 USD)</a> generates a personalised PDF in 60 seconds.</p>
 
 </main>
 

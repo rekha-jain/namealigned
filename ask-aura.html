@@ -14,11 +14,11 @@
 <meta name="viewport" content="width=device-width,initial-scale=1.0,interactive-widget=resizes-content"/>
 <link rel="icon" type="image/svg+xml" href="/assets/namealigned-favicon.svg"/>
 <title>Ask Aura · Your Cosmic Confidante | NameAligned.com</title>
-<meta name="description" content="Aura is a mystical conversational guide — ask anything about love, career, life direction or your inner state. Free emotional companion built on Chaldean numerology and intuition."/>
+<meta name="description" content="Aura is a mystical conversational guide, ask anything about love, career, life direction or your inner state. Free emotional companion built on Chaldean numerology and intuition."/>
 <meta name="robots" content="index, follow"/>
 <link rel="canonical" href="https://www.namealigned.com/ask-aura"/>
 <meta property="og:title" content="Ask Aura · Your Cosmic Confidante"/>
-<meta property="og:description" content="A mystical conversational guide. Ask anything — love, career, direction, the questions you don't know how to ask."/>
+<meta property="og:description" content="A mystical conversational guide. Ask anything, love, career, direction, the questions you don't know how to ask."/>
 <meta property="og:type" content="website"/>
 <meta property="og:url" content="https://www.namealigned.com/ask-aura"/>
 <meta property="og:image" content="https://www.namealigned.com/assets/og/moolank-6.png"/>
@@ -79,7 +79,7 @@
   .aura-shell{flex:1;display:grid;grid-template-columns:minmax(280px,40%) 1fr;min-height:0;}
   @media (max-width:880px){.aura-shell{grid-template-columns:1fr;grid-template-rows:auto 1fr;flex:1;min-height:0;}}
 
-  /* Portrait panel (LEFT on desktop, top on mobile) — mystic backdrop
+  /* Portrait panel (LEFT on desktop, top on mobile), mystic backdrop
      with the angel as a centered, framed portrait rather than a full
      bleed (which felt overwhelming). Layered: deep purple gradient +
      starfield + angel oval. */
@@ -248,7 +248,7 @@
       <label>First name <input id="auraNameInput" type="text" placeholder="Jiya" maxlength="30"/></label>
       <label>Date of birth <input id="auraDobInput" type="date"/></label>
       <button id="auraSaveBirth">Save</button>
-      <span class="saved">✓ Saved — replies are now personalised.</span>
+      <span class="saved">✓ Saved, replies are now personalised.</span>
     </div>
 
     <div class="aura-messages" id="auraMessages" aria-live="polite"></div>
@@ -266,7 +266,7 @@
         <input id="auraInput" type="text" placeholder="Ask Aura anything..." aria-label="Your message" maxlength="500"/>
         <button id="auraSend" type="submit" aria-label="Send">SEND</button>
       </form>
-      <div class="aura-disclaim">For reflection &amp; self-insight only — not a substitute for medical, legal or financial advice.</div>
+      <div class="aura-disclaim">For reflection &amp; self-insight only, not a substitute for medical, legal or financial advice.</div>
     </div>
 
   </main>
@@ -336,7 +336,7 @@
     scrollBottom();
   }
 
-  // Typewriter effect — reveal the reply word by word so it feels
+  // Typewriter effect, reveal the reply word by word so it feels
   // like Aura is speaking, not dumping a wall of text. ~55-90ms per
   // word with a tiny pause after sentence-ending punctuation.
   function typeOutText(target, text){
@@ -404,7 +404,7 @@
     // Small minimum (700ms) so super-fast replies don't feel jarring.
     addTyping();
     const t0 = Date.now();
-    // Aura "thinks" — 6-9 seconds before showing the reply so it
+    // Aura "thinks", 6-9 seconds before showing the reply so it
     // feels considered, not instant, but doesn't drag.
     const minWait = 6000 + Math.floor(Math.random() * 3000);
     Aura.respondAsync(text, buildProfile()).then((reply)=>{
@@ -445,7 +445,7 @@
       const banner = document.getElementById('auraBanner');
       if (banner) banner.style.display = 'none';
     }, 900);
-    addAuraMsg(`Lovely — ${fn}, I have your details. From now on the readings will weave in your numerology pattern.`);
+    addAuraMsg(`Lovely, ${fn}, I have your details. From now on the readings will weave in your numerology pattern.`);
     if (typeof gtag === 'function') gtag('event','aura_profile_saved',{});
   });
 
@@ -454,14 +454,14 @@
   if (saved) {
     if (saved.firstName) nameIn.value = saved.firstName;
     if (saved.dob)       dobIn.value  = saved.dob;
-    // Already saved — keep the prompt banner hidden so the chat starts clean.
+    // Already saved, keep the prompt banner hidden so the chat starts clean.
     const banner = document.getElementById('auraBanner');
     if (banner) banner.style.display = 'none';
   }
 
   // Greeting on first visit, contextual on return.
   // Skip the welcome if the user is already mid-conversation in
-  // this browser — prevents the awkward 'Welcome back...' that
+  // this browser, prevents the awkward 'Welcome back...' that
   // appears every time the page is refreshed mid-thread.
   setTimeout(()=>{
     const state = (Aura._state ? Aura._state() : {}) || {};
@@ -471,7 +471,7 @@
     const profile = buildProfile();
     const opener = (profile.firstName)
       ? `Welcome back, ${profile.firstName}. The conversation continues.`
-      : "Hello. I'm Aura — a quiet companion for the questions that don't fit easily into a Google search. Ask me anything, or tap a starting point below.";
+      : "Hello. I'm Aura, a quiet companion for the questions that don't fit easily into a Google search. Ask me anything, or tap a starting point below.";
     addAuraMsg(opener);
   }, 250);
 })();

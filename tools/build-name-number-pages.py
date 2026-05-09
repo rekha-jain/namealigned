@@ -18,25 +18,25 @@ OUT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # ── Per-number data (deliberately distinct per number) ──────────
 NUMBERS = {
 1:{'planet':'Sun','glyph':'☀','tagline':'Leadership · Authority · Visibility','color':'Gold · Orange · Red',
-   'core':'Name number 1 places your daily expression under the influence of the Sun. Your name carries an authoritative, originating signature — people sense leadership, decisiveness and a willingness to start things from zero. The vibration tends to put you front-of-stage even in rooms where you didn\'t plan to lead.',
+   'core':'Name number 1 places your daily expression under the influence of the Sun. Your name carries an authoritative, originating signature, people sense leadership, decisiveness and a willingness to start things from zero. The vibration tends to put you front-of-stage even in rooms where you didn\'t plan to lead.',
    'strengths':[
-     'Pioneering instinct — you start things others only talk about','Unmistakable presence in a room','Decisive about direction once you\'ve thought it through','High agency in your own life — rarely a passenger','Originality of thought; you don\'t default to received wisdom'],
+     'Pioneering instinct, you start things others only talk about','Unmistakable presence in a room','Decisive about direction once you\'ve thought it through','High agency in your own life, rarely a passenger','Originality of thought; you don\'t default to received wisdom'],
    'growth':[
-     'Loneliness at the top — capable people often carry alone','Impatience with people who can\'t move at your pace','Tendency to over-extend before delegating'],
+     'Loneliness at the top, capable people often carry alone','Impatience with people who can\'t move at your pace','Tendency to over-extend before delegating'],
    'career':['CEO / Founder roles','Government & Public Office','Independent practice (law, medicine, consulting)','Entertainment & Media as a public figure','Gold, gemstone or luxury trade'],
    'compat_best':[1,2,4,9],'compat_good':[3,5,6],'compat_caution':[7,8],
    'famous':'Sun-ruled name vibrations are often found among monarchs, founders and people whose work bears their personal signature.',
    'how_known':'Your full name reduces (Chaldean letter values, summed and reduced to a single digit) to 1. The ruling planet of that single digit is the Sun.',
    'faq':[
-     ('Is name number 1 lucky?','Name number 1 carries Sun energy — strongly visible, naturally leadership-oriented and generally considered fortunate for first-borns and entrepreneurs. Whether it works for *you* depends on whether your Moolank and Bhagyank harmonise with the Sun.'),
-     ('What does name number 1 mean for marriage?','It tends to read as a partner who leads, decides and protects — best paired with name numbers 2, 4 and 9. Compatibility is more about planetary harmony than the single digit alone.'),
+     ('Is name number 1 lucky?','Name number 1 carries Sun energy, strongly visible, naturally leadership-oriented and generally considered fortunate for first-borns and entrepreneurs. Whether it works for *you* depends on whether your Moolank and Bhagyank harmonise with the Sun.'),
+     ('What does name number 1 mean for marriage?','It tends to read as a partner who leads, decides and protects, best paired with name numbers 2, 4 and 9. Compatibility is more about planetary harmony than the single digit alone.'),
      ('Can I change my name to a name number 1?','Yes, but only if your Moolank and Bhagyank already harmonise with Sun energy. Otherwise the change adds friction rather than ease.'),
-     ('What are the best careers for name number 1?','Roles where your judgement is the product — leadership, founder roles, government, top-of-firm professional services and visible public positions.'),
+     ('What are the best careers for name number 1?','Roles where your judgement is the product, leadership, founder roles, government, top-of-firm professional services and visible public positions.'),
    ]},
 2:{'planet':'Moon','glyph':'☾','tagline':'Sensitivity · Intuition · Harmony','color':'White · Silver · Cream',
-   'core':'Name number 2 puts your daily expression under the Moon. The vibration is intuitive, emotionally perceptive and quietly diplomatic — you read rooms before others have finished speaking. Strength here is relational; people open up around your name without quite knowing why.',
+   'core':'Name number 2 puts your daily expression under the Moon. The vibration is intuitive, emotionally perceptive and quietly diplomatic, you read rooms before others have finished speaking. Strength here is relational; people open up around your name without quite knowing why.',
    'strengths':[
-     'Empathic radar — you sense moods before they\'re stated','Diplomatic by default; you bring people together','Imaginative inner world that fuels creative work','Patience with processes that need to ripen','Loyal to a depth most people miss until they\'ve earned it'],
+     'Empathic radar, you sense moods before they\'re stated','Diplomatic by default; you bring people together','Imaginative inner world that fuels creative work','Patience with processes that need to ripen','Loyal to a depth most people miss until they\'ve earned it'],
    'growth':[
      'Absorbing other people\'s emotional states until you can\'t separate yours','Difficulty saying no when someone needs you','Decision fatigue when stakes feel too personal'],
    'career':['Counselling & Psychology','Hospitality & Food','Music, Poetry & the Arts','Nursing & Caregiving','Real Estate (homes, not commercial)'],
@@ -44,15 +44,15 @@ NUMBERS = {
    'famous':'Moon-ruled name vibrations are common among artists, healers, hospitality founders and people whose work touches the emotional life of others.',
    'how_known':'Your full name\'s Chaldean letter values, summed and reduced, equal 2. The ruling planet of 2 is the Moon.',
    'faq':[
-     ('Is name number 2 emotional?','Yes — it amplifies emotional sensitivity. That\'s a creative gift in art, hospitality and counselling, but asks for stronger boundaries in high-friction environments.'),
+     ('Is name number 2 emotional?','Yes, it amplifies emotional sensitivity. That\'s a creative gift in art, hospitality and counselling, but asks for stronger boundaries in high-friction environments.'),
      ('Is name number 2 good for marriage?','Generally yes; Moon energy is naturally relational. Best harmony with name numbers 1, 2 and 7; Moon-ruled people often pair well with Sun-ruled (1) partners.'),
-     ('What jobs suit name number 2?','Hospitality, food, the arts, counselling, nursing, residential real estate — anything where reading emotion is the value, not a side-effect.'),
-     ('Why does name number 2 feel emotionally tiring?','The Moon\'s gift — emotional permeability — is also its cost. Daily decompression rituals (journaling, water, quiet) keep the gift sustainable.'),
+     ('What jobs suit name number 2?','Hospitality, food, the arts, counselling, nursing, residential real estate, anything where reading emotion is the value, not a side-effect.'),
+     ('Why does name number 2 feel emotionally tiring?','The Moon\'s gift, emotional permeability, is also its cost. Daily decompression rituals (journaling, water, quiet) keep the gift sustainable.'),
    ]},
 3:{'planet':'Jupiter','glyph':'♃','tagline':'Expression · Optimism · Joy','color':'Yellow · Cream · Violet',
-   'core':'Name number 3 sits under Jupiter — the planet of expansion, teaching and celebration. The vibration is expressive, generous and naturally optimistic; people remember conversations with you. Strength here is the ability to make complex ideas land warmly with non-experts.',
+   'core':'Name number 3 sits under Jupiter, the planet of expansion, teaching and celebration. The vibration is expressive, generous and naturally optimistic; people remember conversations with you. Strength here is the ability to make complex ideas land warmly with non-experts.',
    'strengths':[
-     'Verbal charisma — you make hard topics feel easy','Natural teacher; ideas land when you explain them','Optimistic without being naive','Wide social range; you connect across worlds','Creative output flows in bursts you can\'t fully plan'],
+     'Verbal charisma, you make hard topics feel easy','Natural teacher; ideas land when you explain them','Optimistic without being naive','Wide social range; you connect across worlds','Creative output flows in bursts you can\'t fully plan'],
    'growth':[
      'Scattering across too many projects','Sounding the most fine when you\'re the least fine','Saying yes more than the calendar can hold'],
    'career':['Education & Teaching','Law & Justice','Banking & Finance','Religion / Spirituality','Publishing & Media'],
@@ -60,15 +60,15 @@ NUMBERS = {
    'famous':'Jupiter-ruled name vibrations are common among teachers, judges, religious leaders and influential writers.',
    'how_known':'Your full Chaldean name sum reduces to 3. Jupiter rules 3.',
    'faq':[
-     ('Is name number 3 a creative number?','Yes — Jupiter gives expressive range. Name 3 people often write, teach, perform or run creative ventures.'),
+     ('Is name number 3 a creative number?','Yes, Jupiter gives expressive range. Name 3 people often write, teach, perform or run creative ventures.'),
      ('Is name number 3 lucky for money?','Jupiter is traditionally the planet of abundance, especially through teaching, publishing, finance and law. Direct cash speculation is less reliable than expansive long-term work.'),
      ('Why does name number 3 attract attention?','Jupiter expands. Whatever your name carries gets amplified outward, including the parts of yourself you didn\'t plan to put forward.'),
-     ('What numbers harmonise best with name number 3?','3, 6 and 9 form a strong triangle — all expansion-oriented planets. 1 and 5 are also supportive.'),
+     ('What numbers harmonise best with name number 3?','3, 6 and 9 form a strong triangle, all expansion-oriented planets. 1 and 5 are also supportive.'),
    ]},
 4:{'planet':'Rahu','glyph':'◈','tagline':'Innovation · Logic · Structure','color':'Blue · Electric · Grey',
-   'core':'Name number 4 carries Rahu vibration — the unconventional, pattern-spotting, future-leaning energy. The signature reads as "different in a way you can\'t place" — a builder of systems, technologies and methods that don\'t exist yet. Strength here is seeing what others miss.',
+   'core':'Name number 4 carries Rahu vibration, the unconventional, pattern-spotting, future-leaning energy. The signature reads as "different in a way you can\'t place", a builder of systems, technologies and methods that don\'t exist yet. Strength here is seeing what others miss.',
    'strengths':[
-     'Pattern vision — you spot what others overlook','Comfort with the unconventional and the not-yet-mainstream','Calm under disruption; chaos doesn\'t throw you','Quietly reliable for things that matter long-term','Original thinker; rarely defaults to consensus'],
+     'Pattern vision, you spot what others overlook','Comfort with the unconventional and the not-yet-mainstream','Calm under disruption; chaos doesn\'t throw you','Quietly reliable for things that matter long-term','Original thinker; rarely defaults to consensus'],
    'growth':[
      'Misread as "difficult" by people who don\'t want to be questioned','Restlessness when systems become rigid','Abrupt shifts that test stability'],
    'career':['Engineering & Architecture','IT & Technology','Research & Analysis','Logistics & Supply Chain','Aviation, Foreign Trade, Anything cross-border'],
@@ -76,17 +76,17 @@ NUMBERS = {
    'famous':'Rahu-ruled name vibrations are common in engineering, deep-tech founders, foreign-service careers and pioneers of unfamiliar fields.',
    'how_known':'Your full Chaldean name sum reduces to 4. Rahu (the north node) rules 4 in the Chaldean system.',
    'faq':[
-     ('Is name number 4 unlucky?','No. The reputation comes from Rahu being misunderstood — but its gifts (innovation, foreign opportunity, technology) are genuine. Name 4 thrives in change-friendly environments.'),
+     ('Is name number 4 unlucky?','No. The reputation comes from Rahu being misunderstood, but its gifts (innovation, foreign opportunity, technology) are genuine. Name 4 thrives in change-friendly environments.'),
      ('Should I avoid name number 4?','Only if your Moolank or Bhagyank carries strong Sun (1) or Saturn (8) friction with Rahu. Otherwise it\'s a powerful name vibration for unconventional careers.'),
      ('What careers suit name number 4?','Tech, engineering, research, foreign trade, aviation, anything that rewards original thinking over conformity.'),
      ('Why does name number 4 feel like an outsider?','Rahu gives an unusual angle of perception. Outsider status is often the source of the very insight that makes you valuable.'),
    ]},
 5:{'planet':'Mercury','glyph':'☿','tagline':'Adaptability · Wit · Communication','color':'Green · Light Grey',
-   'core':'Name number 5 puts you under Mercury — speed, adaptability, wit and the ability to learn anything quickly. The vibration is conversational, curious and commercially nimble; people enjoy your company before they realise they\'ve learned something.',
+   'core':'Name number 5 puts you under Mercury, speed, adaptability, wit and the ability to learn anything quickly. The vibration is conversational, curious and commercially nimble; people enjoy your company before they realise they\'ve learned something.',
    'strengths':[
-     'Quick mind — you absorb and synthesise at unusual speed','Conversational charisma; you make small-talk valuable','Versatile across very different worlds','Curiosity at scale — you keep learning past most people\'s threshold','Trade and negotiation come naturally'],
+     'Quick mind, you absorb and synthesise at unusual speed','Conversational charisma; you make small-talk valuable','Versatile across very different worlds','Curiosity at scale, you keep learning past most people\'s threshold','Trade and negotiation come naturally'],
    'growth':[
-     'Losing interest before things mature','Restlessness in slow-moving environments','Mental overstimulation — too many tabs open'],
+     'Losing interest before things mature','Restlessness in slow-moving environments','Mental overstimulation, too many tabs open'],
    'career':['Media & Journalism','Sales & Marketing','Travel & Tourism','Stock Trading','Digital Startups'],
    'compat_best':[1,5,9],'compat_good':[3,6],'compat_caution':[2,4,8],
    'famous':'Mercury-ruled name vibrations are common in journalism, sales, broadcasting and high-velocity startup roles.',
@@ -94,13 +94,13 @@ NUMBERS = {
    'faq':[
      ('Is name number 5 good for business?','Particularly for trade, media, marketing, agency work and any role that rewards speed of communication.'),
      ('Is name number 5 a stable number?','It\'s mobile by nature. Stability comes from rituals you choose, not from the vibration itself.'),
-     ('What\'s the downside of name number 5?','Inability to slow down when slowing down would help — projects abandoned mid-maturation, decisions made before facts have settled.'),
+     ('What\'s the downside of name number 5?','Inability to slow down when slowing down would help, projects abandoned mid-maturation, decisions made before facts have settled.'),
      ('Which numbers pair well with name number 5?','1, 5 and 9 are strongest. 3 and 6 add expansion and harmony. 2, 4 and 8 ask for more conscious adjustment.'),
    ]},
 6:{'planet':'Venus','glyph':'♀','tagline':'Harmony · Love · Aesthetics','color':'Pink · White · Pastel Blue',
-   'core':'Name number 6 sits under Venus — beauty, harmony, relationship and aesthetic sense. The vibration is warm, devoted, and instinctively attuned to fairness in relationships. Strength here is making people and spaces feel held.',
+   'core':'Name number 6 sits under Venus, beauty, harmony, relationship and aesthetic sense. The vibration is warm, devoted, and instinctively attuned to fairness in relationships. Strength here is making people and spaces feel held.',
    'strengths':[
-     'Emotional fluency — you name what others can\'t articulate','Aesthetic instinct in design, dress, food, space','Devoted in relationships; loyalty runs deep','Caretaker presence that holds groups together','Strong sense of fair-play and reciprocity'],
+     'Emotional fluency, you name what others can\'t articulate','Aesthetic instinct in design, dress, food, space','Devoted in relationships; loyalty runs deep','Caretaker presence that holds groups together','Strong sense of fair-play and reciprocity'],
    'growth':[
      'Holding everyone together while no-one asks who holds you','Difficulty saying no to people you love','Idealising partners until reality intrudes'],
    'career':['Fashion & Design','Entertainment & Film','Hospitality','Cosmetics & Beauty','Social Work / NGO'],
@@ -108,15 +108,15 @@ NUMBERS = {
    'famous':'Venus-ruled name vibrations are common in design, hospitality, entertainment and any role where aesthetic taste is the product.',
    'how_known':'Your full Chaldean name sum reduces to 6. Venus rules 6.',
    'faq':[
-     ('Is name number 6 the love number?','Often called that. Venus rules relationship and aesthetic harmony — name 6 people gravitate toward partnership and beauty in everything they do.'),
+     ('Is name number 6 the love number?','Often called that. Venus rules relationship and aesthetic harmony, name 6 people gravitate toward partnership and beauty in everything they do.'),
      ('Is name number 6 good for women?','It works regardless of gender; the cultural framing of Venus as feminine is incidental. The vibration is about harmony, not gender.'),
-     ('What jobs suit name number 6?','Design, fashion, entertainment, hospitality, cosmetics, social work — fields where care and aesthetic taste are central, not decorative.'),
+     ('What jobs suit name number 6?','Design, fashion, entertainment, hospitality, cosmetics, social work, fields where care and aesthetic taste are central, not decorative.'),
      ('Which numbers pair well with name number 6?','3, 6 and 9 are strongest. 1, 4 and 5 are supportive. 2, 7 and 8 ask for more boundary work.'),
    ]},
 7:{'planet':'Ketu','glyph':'◉','tagline':'Wisdom · Introspection · Depth','color':'Violet · Purple · Grey',
-   'core':'Name number 7 carries Ketu — the south-node energy of detachment, depth and inner inquiry. The vibration reads as a person who thinks before speaking and asks the question others were quietly avoiding. Strength here is depth where most people only have surface.',
+   'core':'Name number 7 carries Ketu, the south-node energy of detachment, depth and inner inquiry. The vibration reads as a person who thinks before speaking and asks the question others were quietly avoiding. Strength here is depth where most people only have surface.',
    'strengths':[
-     'Deep insight — you research thoroughly','Independent mind; you trust your own conclusions','Calm under pressure others find unbearable','Discernment — you see through performances','Spiritual or philosophical orientation that grounds you'],
+     'Deep insight, you research thoroughly','Independent mind; you trust your own conclusions','Calm under pressure others find unbearable','Discernment, you see through performances','Spiritual or philosophical orientation that grounds you'],
    'growth':[
      'Over-thinking the final decision','Distance read as coldness when it\'s actually protection','Difficulty trusting people quickly'],
    'career':['Research & Science','Spirituality & Healing','Writing & Literature','Astrology & Mysticism','Philosophy & Academia'],
@@ -124,31 +124,31 @@ NUMBERS = {
    'famous':'Ketu-ruled name vibrations are common in research, spirituality, monastic traditions, philosophy and contemplative writing.',
    'how_known':'Your full Chaldean name sum reduces to 7. Ketu (the south node) rules 7.',
    'faq':[
-     ('Is name number 7 spiritual?','Strongly so. Ketu pulls toward inner inquiry — name 7 people often have a contemplative or research-driven thread running through their work.'),
+     ('Is name number 7 spiritual?','Strongly so. Ketu pulls toward inner inquiry, name 7 people often have a contemplative or research-driven thread running through their work.'),
      ('Is name number 7 lucky for marriage?','Best with name numbers 2 and 7. Otherwise marriage works when both partners respect the alone-time the vibration needs.'),
-     ('What does name number 7 mean for career?','Research-heavy, depth-rewarding fields — science, spirituality, writing, academia. Surface-level commercial roles tend to feel hollow over time.'),
-     ('Why does name number 7 prefer solitude?','Ketu rewards inner stillness. Solitude isn\'t avoidance — it\'s how the vibration regenerates.'),
+     ('What does name number 7 mean for career?','Research-heavy, depth-rewarding fields, science, spirituality, writing, academia. Surface-level commercial roles tend to feel hollow over time.'),
+     ('Why does name number 7 prefer solitude?','Ketu rewards inner stillness. Solitude isn\'t avoidance, it\'s how the vibration regenerates.'),
    ]},
 8:{'planet':'Saturn','glyph':'♄','tagline':'Discipline · Authority · Resilience','color':'Black · Dark Blue · Dark Grey',
-   'core':'Name number 8 sits under Saturn — discipline, structure, long-game ambition and earned authority. The vibration is heavy in the best sense; people feel that you\'ve worked for what you have. Strength here is endurance — playing long games most people can\'t see.',
+   'core':'Name number 8 sits under Saturn, discipline, structure, long-game ambition and earned authority. The vibration is heavy in the best sense; people feel that you\'ve worked for what you have. Strength here is endurance, playing long games most people can\'t see.',
    'strengths':[
-     'Strategic — you play long games','Resilient when others panic','Accountable; your word is your reputation','Endurance for projects that take years','Authority that\'s earned, not assumed'],
+     'Strategic, you play long games','Resilient when others panic','Accountable; your word is your reputation','Endurance for projects that take years','Authority that\'s earned, not assumed'],
    'growth':[
-     'Frustration before recognition arrives','Looking composed while carrying weight nobody sees','Slow trust — relationships take time to deepen'],
+     'Frustration before recognition arrives','Looking composed while carrying weight nobody sees','Slow trust, relationships take time to deepen'],
    'career':['Finance & Banking','Law & Courts','Mining & Heavy Industry','Import/Export','Real Estate Investment'],
    'compat_best':[2,4,6,8],'compat_good':[1,7],'compat_caution':[3,5,9],
    'famous':'Saturn-ruled name vibrations are common among judges, central bankers, long-game founders and people whose authority developed over decades.',
    'how_known':'Your full Chaldean name sum reduces to 8. Saturn rules 8.',
    'faq':[
      ('Is name number 8 unlucky?','No, but it\'s slow. Saturn rewards discipline and patience; quick-win approaches don\'t fit. Used well, name 8 builds enduring authority.'),
-     ('Is name number 8 good for business?','Yes — particularly finance, law, real estate, heavy industry and import-export. Less suited to fast-moving consumer or media careers.'),
+     ('Is name number 8 good for business?','Yes, particularly finance, law, real estate, heavy industry and import-export. Less suited to fast-moving consumer or media careers.'),
      ('Why does name number 8 feel heavy?','Saturn carries weight by design. The weight is what makes the eventual authority real, but it asks for endurance most people don\'t have.'),
      ('Which numbers pair well with name number 8?','2, 4, 6 and 8. Saturn-ruled pairings benefit from at least one Moon-ruled (2) partner who softens the structure.'),
    ]},
 9:{'planet':'Mars','glyph':'♂','tagline':'Courage · Energy · Action','color':'Red · Crimson · Deep Orange',
-   'core':'Name number 9 carries Mars — fire, courage, decisive action and protective force. The vibration moves first and explains later; people feel the heat in the room when you arrive. Strength here is the willingness to start and finish what others can\'t face.',
+   'core':'Name number 9 carries Mars, fire, courage, decisive action and protective force. The vibration moves first and explains later; people feel the heat in the room when you arrive. Strength here is the willingness to start and finish what others can\'t face.',
    'strengths':[
-     'Bold — you move first while others wait','Protective of the people you love','Driven; your fire fuels everyone around you','Courage in action under pressure','Cuts through noise and gets to the point'],
+     'Bold, you move first while others wait','Protective of the people you love','Driven; your fire fuels everyone around you','Courage in action under pressure','Cuts through noise and gets to the point'],
    'growth':[
      'Felt at a volume the world keeps asking you to turn down','Crash-and-recovery rhythm in long projects','Impatience with slow-moving environments'],
    'career':['Military & Defense','Surgery & Medicine','Sports & Athletics','Politics','Social Activism / NGO'],
@@ -156,9 +156,9 @@ NUMBERS = {
    'famous':'Mars-ruled name vibrations are common among soldiers, surgeons, athletes, activists and decisive political figures.',
    'how_known':'Your full Chaldean name sum reduces to 9. Mars rules 9.',
    'faq':[
-     ('Is name number 9 aggressive?','Energetic, not aggressive. Mars is a fire planet — used well it\'s courage and protection; misused it tips into unnecessary conflict.'),
+     ('Is name number 9 aggressive?','Energetic, not aggressive. Mars is a fire planet, used well it\'s courage and protection; misused it tips into unnecessary conflict.'),
      ('Is name number 9 good for women?','It works regardless of gender. Mars is courage; the cultural framing as masculine is incidental.'),
-     ('What jobs suit name number 9?','Defense, surgery, sports, activism, politics — roles requiring decisive action and the ability to handle physical or emotional intensity.'),
+     ('What jobs suit name number 9?','Defense, surgery, sports, activism, politics, roles requiring decisive action and the ability to handle physical or emotional intensity.'),
      ('Which numbers pair well with name number 9?','1, 3, 5 and 9. The fire-and-air combinations work; earth-and-water (2, 4, 8) ask for conscious effort.'),
    ]},
 }
@@ -287,8 +287,8 @@ FOOTER = '''
 
 def render(n, data):
     title = f'Name Number {n} Meaning · {data["planet"]} Energy in Chaldean Numerology'
-    desc = f'Name number {n} carries {data["planet"]} energy — {data["tagline"].lower()}. Read what name number {n} means for personality, career, marriage and compatibility, with a free Chaldean check.'
-    og_desc = f'Name number {n} ({data["planet"]}) decoded — strengths, growth themes, career fields and compatibility.'
+    desc = f'Name number {n} carries {data["planet"]} energy, {data["tagline"].lower()}. Read what name number {n} means for personality, career, marriage and compatibility, with a free Chaldean check.'
+    og_desc = f'Name number {n} ({data["planet"]}) decoded, strengths, growth themes, career fields and compatibility.'
     canon = f'{BASE}/name-number-{n}-meaning'
 
     article = {
@@ -366,7 +366,7 @@ def render(n, data):
   </ul>
 
   <h2>Growth themes for name number {n}</h2>
-  <p>Every name number has a recurring growth theme — not a problem to solve, but a pattern to notice with awareness. For name number {n}, the most common themes are:</p>
+  <p>Every name number has a recurring growth theme, not a problem to solve, but a pattern to notice with awareness. For name number {n}, the most common themes are:</p>
   <ul>
 {growth_html}
   </ul>
@@ -376,7 +376,7 @@ def render(n, data):
   <ul>
 {career_html}
   </ul>
-  <p>This isn\'t a checklist — many name {n} people thrive outside these fields. The list captures the natural slope; working against it isn\'t a problem, but takes more conscious adjustment.</p>
+  <p>This isn\'t a checklist, many name {n} people thrive outside these fields. The list captures the natural slope; working against it isn\'t a problem, but takes more conscious adjustment.</p>
 
   <h2>Compatibility for name number {n}</h2>
   <p>Compatibility in Chaldean numerology comes from how the ruling planets of two numbers interact. For name number {n}:</p>
@@ -388,7 +388,7 @@ def render(n, data):
   <p>{data["famous"]}</p>
 
   <h2>How do I know if I\'m a name number {n}?</h2>
-  <p>{data["how_known"]} If you don\'t want to do the math by hand, run the <a href="/name-numerology-calculator">free Chaldean Name Calculator</a> — it shows your letter-by-letter breakdown, the unreduced compound, the final reduced digit and the planet that rules it. The whole thing takes 15 seconds.</p>
+  <p>{data["how_known"]} If you don\'t want to do the math by hand, run the <a href="/name-numerology-calculator">free Chaldean Name Calculator</a>, it shows your letter-by-letter breakdown, the unreduced compound, the final reduced digit and the planet that rules it. The whole thing takes 15 seconds.</p>
 
   <div class="nn-cta-band">
     <h3>Find your exact name number in 15 seconds</h3>
@@ -406,14 +406,14 @@ def render(n, data):
 
   <div class="nn-cta-band">
     <h3>Want the complete picture?</h3>
-    <p>The personalised destiny report covers your name number, Moolank, Bhagyank, name correction options, 5-year forecast, career and compatibility — all in one PDF.</p>
+    <p>The personalised destiny report covers your name number, Moolank, Bhagyank, name correction options, 5-year forecast, career and compatibility, all in one PDF.</p>
     <div class="btn-pair">
       <a class="primary" href="/report">Full Destiny Report · INR 199/-</a>
       <a class="outline" href="/blog/moolank-meanings">Read Moolank meanings</a>
     </div>
   </div>
 
-  <h2>Related: name numbers 1–9</h2>
+  <h2>Related: name numbers 1-9</h2>
   <div class="nn-related">
     <div class="nn-related-grid">
 {related_html}

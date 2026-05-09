@@ -216,6 +216,9 @@
 
 .locked-section-label{font-family:'Playfair Display',Georgia,serif;font-size:18px;color:var(--text);margin:1.5rem 0 .75rem;text-align:center;font-weight:700}
 .locked-section-sub{font-family:sans-serif;font-size:13px;color:var(--text2);text-align:center;margin-bottom:1rem}
+.bridge-block{margin:2rem 0 1.25rem;padding:1.4rem 1.5rem;background:linear-gradient(135deg,rgba(124,58,237,.06),rgba(245,196,81,.04));border-left:3px solid rgba(245,196,81,.55);border-radius:8px}
+.bridge-line{font-family:'Playfair Display',Georgia,serif;font-style:italic;font-size:18px;color:var(--text);margin:0 0 .55rem;line-height:1.35;font-weight:600}
+.bridge-body{font-family:sans-serif;font-size:14px;color:var(--text2);line-height:1.7;margin:0}
 .locked-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:1rem}
 @media(max-width:520px){.locked-grid{grid-template-columns:1fr}}
 .locked-card{position:relative;background:linear-gradient(160deg,#1a1340 0%,#241651 60%,#1a1340 100%);border:1px solid rgba(157,127,255,.25);border-radius:14px;padding:1.4rem 1.1rem 1.1rem;overflow:hidden;cursor:pointer;transition:transform .2s,border-color .25s,box-shadow .25s;color:#f0eaff}
@@ -488,7 +491,7 @@
           <div style="font-size:10.5px;color:var(--text2);font-family:sans-serif;line-height:1.5;margin-bottom:.4rem">Friendships, partnerships and marriages with these numbers tend to feel naturally easy. Look for these in close circles.</div>
           <div id="rcFriendly" style="display:flex;flex-wrap:wrap;gap:5px;margin-bottom:.7rem"></div>
           <div style="font-size:10.5px;color:var(--text3);font-family:sans-serif;letter-spacing:.06em;text-transform:uppercase;font-weight:700;margin-bottom:.2rem">Needs more awareness</div>
-          <div style="font-size:10.5px;color:var(--text2);font-family:sans-serif;line-height:1.5;margin-bottom:.4rem">Not "bad" matches — they ask for clearer communication, named expectations and patience to thrive.</div>
+          <div style="font-size:10.5px;color:var(--text2);font-family:sans-serif;line-height:1.5;margin-bottom:.4rem">Not "bad" matches, they ask for clearer communication, named expectations and patience to thrive.</div>
           <div id="rcCaution" style="display:flex;flex-wrap:wrap;gap:5px"></div>
 
           <!-- CTA: compatibility check for partners / friends -->
@@ -539,9 +542,15 @@
       </div>
     </div>
 
-    <!-- 4. LOCKED PREMIUM CONTENT — emotional, identity-driven framing -->
+    <!-- BRIDGE: emotional handoff from free reading → locked premium -->
+    <div class="bridge-block">
+      <p class="bridge-line">There's a layer we left out on purpose.</p>
+      <p class="bridge-body">What you've just read is the part of your chart that's visible from the outside, the way your name lands on a room, the rhythm your birth date sets up. The part that's harder to see, the patterns that keep repeating, the friction you can name but can't quite explain, sits one layer down. That's the next reading.</p>
+    </div>
+
+    <!-- 4. LOCKED PREMIUM CONTENT, emotional, identity-driven framing -->
     <div class="locked-section-label">Where this reading goes deeper</div>
-    <div class="locked-section-sub">Your numbers carry four more patterns we haven't shown you yet — the ones that explain why certain choices keep repeating.</div>
+    <div class="locked-section-sub">Your numbers carry four more patterns we haven't shown you yet, the ones that explain why certain choices keep repeating.</div>
     <div class="locked-grid">
       <div class="locked-card" onclick="trackAndScrollCTA('locked_career')">
         <div class="lc-lock">🔒</div>
@@ -559,10 +568,10 @@
         <div class="lc-lock">🔒</div>
         <div class="lc-icon">❤️</div>
         <div class="lc-title">Why some relationships feel safe instantly, others slowly drain</div>
-        <div class="lc-teaser">There's a reason certain people feel like home from minute one — and others don't, despite genuine effort. The pattern is in your chart, not in luck.</div>
+        <div class="lc-teaser">There's a reason certain people feel like home from minute one, and others don't, despite genuine effort. The pattern is in your chart, not in luck.</div>
         <ul class="lc-bullets">
           <li>The five number-pairings wired for ease with you</li>
-          <li>The three pairings that ask for conscious work — and why</li>
+          <li>The three pairings that ask for conscious work, and why</li>
           <li>The one number your closest friendships keep sharing</li>
         </ul>
         <span class="lc-pill">✦ In your Full Reading</span>
@@ -574,7 +583,7 @@
         <div class="lc-teaser">Tiny phonetic adjustments shift your Chaldean sum and re-anchor the energy your birth chart actually wants. Most people change one letter and feel the difference within weeks.</div>
         <ul class="lc-bullets">
           <li>Three respellings of your name, each scored on alignment</li>
-          <li>What changes — career visibility, money, intimacy, health — for each variant</li>
+          <li>What changes, career visibility, money, intimacy, health, for each variant</li>
           <li>The version most professionals adopt without realising why it works</li>
         </ul>
         <span class="lc-pill">✦ In your Full Reading</span>
@@ -583,7 +592,7 @@
         <div class="lc-lock">🔒</div>
         <div class="lc-icon">🌀</div>
         <div class="lc-title">The version of you that hasn't fully shown up yet</div>
-        <div class="lc-teaser">Some of your strongest traits sit latent — they activate in specific years your chart already names. Knowing which years tells you when to expand, and when to consolidate.</div>
+        <div class="lc-teaser">Some of your strongest traits sit latent, they activate in specific years your chart already names. Knowing which years tells you when to expand, and when to consolidate.</div>
         <ul class="lc-bullets">
           <li>The five-year sequence currently active in your life</li>
           <li>The two pivot windows inside the next 36 months</li>
@@ -593,10 +602,10 @@
       </div>
     </div>
 
-    <!-- 5. CONVERSION CTA — premium framing, no manufactured urgency -->
+    <!-- 5. CONVERSION CTA, premium framing, no manufactured urgency -->
     <div class="cta-pro" id="ctaPro">
       <h3>Read the rest of what your chart is saying</h3>
-      <p class="cta-sub">Four deeper readings, written in plain English. The patterns under your patterns — career rhythm, relationship friction, name correction, the years coming.</p>
+      <p class="cta-sub">Four deeper readings, written in plain English. The patterns under your patterns, career rhythm, relationship friction, name correction, the years coming.</p>
       <div class="cta-pricing">
         <span class="cta-price">₹499</span>
         <span class="cta-save">or $5 USD</span>
@@ -611,8 +620,8 @@
 
     <!-- EXTEND THIS INSIGHT, repeat-purchase triggers -->
     <div style="margin-top:2rem;padding:1.5rem;background:linear-gradient(135deg,rgba(124,58,237,.05),rgba(201,162,39,.04));border:1px solid var(--gold-b);border-radius:var(--rl);">
-      <div style="font-family:'Playfair Display',Georgia,serif;font-size:18px;font-weight:700;color:var(--text);margin-bottom:.4rem;">🔗 Extend This Insight</div>
-      <p style="font-family:sans-serif;font-size:13px;color:var(--text2);line-height:1.6;margin-bottom:1rem;">Your alignment is also influenced by close relationships and decisions like naming a child or business. Each carries its own vibration.</p>
+      <div style="font-family:'Playfair Display',Georgia,serif;font-size:18px;font-weight:700;color:var(--text);margin-bottom:.4rem;">Read it from another angle</div>
+      <p style="font-family:sans-serif;font-size:13px;color:var(--text2);line-height:1.6;margin-bottom:1rem;">Your alignment lives inside other relationships too, the partner whose chart sits next to yours, the business name you're considering, the child you're about to name. Each one runs its own quiet calculation against your numbers.</p>
       <div class="extend-grid">
         <a class="engage-btn" href="love-compatibility-numerology" onclick="trackEvent('extend_clicked',{kind:'partner'})" style="display:flex;flex-direction:column;align-items:center;gap:4px;padding:1rem .5rem;text-decoration:none;color:inherit;">
           <span style="font-size:22px">💞</span>
@@ -632,16 +641,16 @@
       </div>
     </div>
 
-    <!-- Email capture -->
+    <!-- Email capture, premium, low-friction tone -->
     <div class="email-banner mt-4" id="emailCapture">
       <div style="font-size:24px;margin-bottom:8px">✉️</div>
-      <h3 style="font-size:18px;margin-bottom:6px">Save your analysis</h3>
-      <p>Enter your email to save this report and receive your personalised numerology tips.</p>
+      <h3 style="font-size:18px;margin-bottom:6px">Keep this reading somewhere you'll find it again</h3>
+      <p>We'll email you this analysis, plus the next-year insight when your Personal Year shifts. No spam, no daily horoscopes.</p>
       <div class="email-row" id="emailRow">
         <input type="email" id="captureEmail" placeholder="your@email.com"/>
-        <button class="btn btn-gold btn-sm" onclick="captureEmail()">Save free →</button>
+        <button class="btn btn-gold btn-sm" onclick="captureEmail()">Send it to me →</button>
       </div>
-      <div id="emailDone" style="display:none;color:#b0a898;font-family:sans-serif;font-size:13px">✓ Saved! Check your inbox.</div>
+      <div id="emailDone" style="display:none;color:#b0a898;font-family:sans-serif;font-size:13px">✓ Sent. Check your inbox.</div>
     </div>
 
     <div style="display:flex;gap:10px;margin-top:1.5rem;flex-wrap:wrap">
@@ -686,7 +695,7 @@ const MOOLANK_INSIGHTS = {
   1:{ hook:'a strong leadership signature that makes you instinctively step forward when others hesitate',
       traits:['You tend to start things others only talk about','You value independence over approval','You often find that authority figures either champion you, or test you'],
       pattern:'You make decisions quickly, then privately doubt them, yet rarely change course',
-      surprise:'People with Birth Number 1 often experience a major identity shift between ages 28–35'},
+      surprise:'People with Birth Number 1 often experience a major identity shift between ages 28-35'},
   2:{ hook:'a sensitive, intuitive energy that reads the room before anyone else does',
       traits:['You tend to feel emotional shifts in others before they speak','You prefer collaboration over confrontation','You often find yourself mediating conflicts you didn\'t start'],
       pattern:'You absorb the moods around you, then need solitude to recalibrate',
@@ -702,7 +711,7 @@ const MOOLANK_INSIGHTS = {
   5:{ hook:'a quick, adaptive intelligence that thrives on change and curiosity',
       traits:['You tend to learn fast and lose interest faster','You value variety more than stability','You often find yourself in roles requiring travel, talk, or trade'],
       pattern:'You adapt to change well, but resist routine even when it would help you',
-      surprise:'Birth Number 5 individuals frequently change cities, careers, or social circles every 4–7 years'},
+      surprise:'Birth Number 5 individuals frequently change cities, careers, or social circles every 4-7 years'},
   6:{ hook:'a magnetic, harmonising energy that draws people toward you for advice and comfort',
       traits:['You tend to value beauty, comfort, and aesthetics deeply','You prefer harmony and quietly avoid open conflict','You often find that people share their problems with you within minutes of meeting'],
       pattern:'You give freely to those you love, and feel deeply hurt when it isn\'t reciprocated',
@@ -714,14 +723,14 @@ const MOOLANK_INSIGHTS = {
   8:{ hook:'a disciplined, justice-driven energy that earns recognition slowly but lasts long',
       traits:['You tend to take responsibility others avoid','You value fairness and dislike shortcuts','You often find that early life tests your patience, and rewards arrive later'],
       pattern:'You work hard quietly, then feel frustrated when faster-moving peers get noticed first',
-      surprise:'Birth Number 8 (Saturn) frequently shows a major financial or career breakthrough between ages 36–42'},
+      surprise:'Birth Number 8 (Saturn) frequently shows a major financial or career breakthrough between ages 36-42'},
   9:{ hook:'a courageous, action-driven energy that finishes what others are afraid to start',
       traits:['You tend to act first and reflect later','You value loyalty and protect those you love fiercely','You often find yourself in roles requiring courage, leadership, or physical drive'],
       pattern:'You move with high intensity for long stretches, then crash and need full reset',
       surprise:'Birth Number 9 often signals a recurring theme of conflict-then-resolution, relationships, careers, even health follow this rhythm'}
 };
 
-// ── ARCHETYPE NARRATIVE TABLES (per Birth Number 1–9) ──────────────────────
+// ── ARCHETYPE NARRATIVE TABLES (per Birth Number 1-9) ──────────────────────
 // Used by the new identity-driven Step 2 layout. One archetype, one
 // identity line, four core traits, an emotional truth, three strengths,
 // three "you might notice…" recognition moments, all written to feel
@@ -999,7 +1008,7 @@ function renderAnalysis(){
   document.getElementById('nrrShare').innerHTML =
     `Send this to the friend who'd say <em>"this is so you"</em>, let them see if their numbers match yours. <strong>👀</strong>`;
 
-  // Badge (now lives inside align-mini) — uses the same 7-tier
+  // Badge (now lives inside align-mini), uses the same 7-tier
   // interpretation as the TL;DR pill above so wording stays
   // consistent across the page.
   const badgeEl = document.getElementById('ahBadge');
@@ -1044,10 +1053,10 @@ function renderAnalysis(){
   // 2c. TL;DR SUMMARY (the at-a-glance line that opens the result)
   // Uses the same 7-tier interpretation system as the paid report
   // (numerology.js → getAlignmentTier) so users see consistent and
-  // honest tier labels everywhere — '78%' is never called 'Strong'
+  // honest tier labels everywhere, '78%' is never called 'Strong'
   // when there's still meaningful headroom to improve.
   try {
-    // Colour palettes per tone — supportive (green-tinted), balanced
+    // Colour palettes per tone, supportive (green-tinted), balanced
     // (gold), observant (warm orange-red, never harsh red).
     const TIER_PALETTE = {
       'tier-rare':           { bg:'rgba(76,175,132,.18)', fg:'#1f6e4a', border:'rgba(76,175,132,.45)' },
@@ -1058,7 +1067,7 @@ function renderAnalysis(){
       'tier-recalibration':  { bg:'rgba(220,100,70,.14)', fg:'#a04032', border:'rgba(220,100,70,.40)' },
       'tier-transformational':{bg:'rgba(157,127,255,.14)', fg:'#5a3aa8', border:'rgba(157,127,255,.45)' },
     };
-    // Per-tier sentence to land on the user's profile honestly —
+    // Per-tier sentence to land on the user's profile honestly , 
     // matches the phrasing in the paid report so messaging is
     // consistent across free + paid.
     const TIER_TLDR = {
@@ -1068,7 +1077,7 @@ function renderAnalysis(){
       'tier-mixed':           "The fit is workable, some areas feel natural, others feel inconsistent and would benefit from awareness.",
       'tier-friction':        "There's noticeable internal friction, your name and birth pattern push against each other in measurable ways.",
       'tier-recalibration':   "The fit asks for recalibration, growth comes from boundaries and emotional discernment more than from comfort.",
-      'tier-transformational':"The vibration is reinvention-led — uncommon by design, growth comes through deeper self-understanding.",
+      'tier-transformational':"The vibration is reinvention-led, uncommon by design, growth comes through deeper self-understanding.",
     };
     const tier = (typeof getAlignmentTier === 'function') ? getAlignmentTier(pct) : { key:'tier-mixed', title:'Mixed but Workable Energies' };
     const pal  = TIER_PALETTE[tier.key] || TIER_PALETTE['tier-mixed'];
@@ -1108,27 +1117,27 @@ function renderAnalysis(){
 
     // Plain-English explanations for what each missing number indicates
     // and one practical practice to develop that quality consciously.
-    // Strengths-led — missing isn't bad, just a quality to grow into.
+    // Strengths-led, missing isn't bad, just a quality to grow into.
     const MISSING_MEANING = {
       1:{trait:'Self-confidence and decisiveness', do:'Practice making one small daily decision without second-guessing it.'},
       2:{trait:'Sensitivity and emotional perception', do:'Journal one observed emotion (yours or others\') each evening for 60 days.'},
-      3:{trait:'Self-expression and creativity', do:'Speak or write one new idea publicly each week — short posts count.'},
+      3:{trait:'Self-expression and creativity', do:'Speak or write one new idea publicly each week, short posts count.'},
       4:{trait:'Discipline, structure and follow-through', do:'Pick one daily 15-minute ritual and keep it for 30 days unbroken.'},
-      5:{trait:'Adaptability and freedom of movement', do:'Take one new route or try one new place every week — break a habit deliberately.'},
-      6:{trait:'Aesthetic sense and harmonising relationships', do:'Beautify one corner of your home each month — small, intentional touches.'},
-      7:{trait:'Inner reflection and quiet thinking', do:'Take 20 minutes of phone-free solitude every day — walk, sit, or write.'},
+      5:{trait:'Adaptability and freedom of movement', do:'Take one new route or try one new place every week, break a habit deliberately.'},
+      6:{trait:'Aesthetic sense and harmonising relationships', do:'Beautify one corner of your home each month, small, intentional touches.'},
+      7:{trait:'Inner reflection and quiet thinking', do:'Take 20 minutes of phone-free solitude every day, walk, sit, or write.'},
       8:{trait:'Long-game discipline and material patience', do:'Commit to a 12-month savings or learning goal with a single visible tracker.'},
-      9:{trait:'Courage, action and decisive completion', do:'Finish one small project a week, even if imperfect — closure matters more than polish.'}
+      9:{trait:'Courage, action and decisive completion', do:'Finish one small project a week, even if imperfect, closure matters more than polish.'}
     };
     const missingEl = document.getElementById('loshuMissingMeaning');
     if (Array.isArray(missing) && missing.length) {
       const items = missing.map(n => {
         const m = MISSING_MEANING[n];
-        return m ? `<div style="margin-top:.35rem;"><strong style="color:#6d4ed1;font-style:normal;">${n}</strong> — ${m.trait}. <em style="color:var(--text3);">Try:</em> ${m.do}</div>` : '';
+        return m ? `<div style="margin-top:.35rem;"><strong style="color:#6d4ed1;font-style:normal;">${n}</strong>, ${m.trait}. <em style="color:var(--text3);">Try:</em> ${m.do}</div>` : '';
       }).join('');
       missingEl.innerHTML = items;
     } else {
-      missingEl.textContent = 'You carry all nine energies — a balanced grid is rare and naturally well-rounded.';
+      missingEl.textContent = 'You carry all nine energies, a balanced grid is rare and naturally well-rounded.';
     }
 
     // Daily Remedies, planet-anchored, per-Birth Number
@@ -1413,18 +1422,18 @@ function buildShareCard(){
     const strengths = (LABELS[moolank]  || LABELS[1]   || []).slice(0,3);
     const archetype = ARCH[moolank]     || ARCH[1]     || 'The Original';
 
-    // Always reset the bitmap to a clean state — guarantees we
+    // Always reset the bitmap to a clean state, guarantees we
     // start from blank even if the canvas was partially drawn.
     ctx.clearRect(0, 0, W, H);
 
-    // ── BACKGROUND (single fillRect — can never fail silently) ─
+    // ── BACKGROUND (single fillRect, can never fail silently) ─
     try {
       const bg = ctx.createLinearGradient(0, 0, 0, H);
       bg.addColorStop(0, '#1a0e52'); bg.addColorStop(0.6, '#2a1180'); bg.addColorStop(1, '#0d0521');
       ctx.fillStyle = bg; ctx.fillRect(0, 0, W, H);
     } catch(e) { ctx.fillStyle = '#1a0e52'; ctx.fillRect(0, 0, W, H); }
 
-    // Decorative star dots — wrapped because Math.random failures
+    // Decorative star dots, wrapped because Math.random failures
     // (rare) shouldn't kill the rest of the card.
     try {
       ctx.fillStyle = 'rgba(255,255,255,0.55)';
@@ -1550,7 +1559,7 @@ function buildShareCard(){
       ctx.strokeStyle = 'rgba(201,162,39,0.25)'; ctx.lineWidth = 1;
       ctx.beginPath(); ctx.moveTo(rcx, 320); ctx.lineTo(W - 50, 320); ctx.stroke();
 
-      // STRENGTHS (always render even if missing — show fallback)
+      // STRENGTHS (always render even if missing, show fallback)
       ctx.fillStyle = '#c9a227';
       ctx.font = '700 13px "Helvetica Neue", Arial, sans-serif';
       ctx.fillText('WHERE YOUR POWER LIVES', rcx, 350);
@@ -1601,7 +1610,7 @@ function buildShareCard(){
   }
 }
 
-// Local helpers used only by buildShareCard — prefixed so they
+// Local helpers used only by buildShareCard, prefixed so they
 // can't collide with anything else if the file grows.
 function _scRoundRect(ctx, x, y, w, h, r){
   ctx.beginPath();
@@ -1634,7 +1643,7 @@ function _scWrap(ctx, text, x, y, maxW, lineH, maxLines){
   lines.forEach((l, i) => ctx.fillText(l, x, y + i*lineH));
 }
 
-// Original implementation below — replaced by the bulletproof
+// Original implementation below, replaced by the bulletproof
 // version above. Kept commented to make the diff reviewable.
 function _legacy_buildShareCard_unused(){
   const canvas = document.getElementById('shareCanvas');

@@ -537,7 +537,7 @@ const MOOLANK_INSIGHTS = {
   1:{ hook:'a strong leadership signature that makes you instinctively step forward when others hesitate',
       traits:['You tend to start things others only talk about','You value independence over approval','You often find that authority figures either champion you, or test you'],
       pattern:'You make decisions quickly, then privately doubt them, yet rarely change course',
-      surprise:'People with Moolank 1 often experience a major identity shift between ages 28–35'},
+      surprise:'People with Moolank 1 often experience a major identity shift between ages 28-35'},
   2:{ hook:'a sensitive, intuitive energy that reads the room before anyone else does',
       traits:['You tend to feel emotional shifts in others before they speak','You prefer collaboration over confrontation','You often find yourself mediating conflicts you didn\'t start'],
       pattern:'You absorb the moods around you, then need solitude to recalibrate',
@@ -553,7 +553,7 @@ const MOOLANK_INSIGHTS = {
   5:{ hook:'a quick, adaptive intelligence that thrives on change and curiosity',
       traits:['You tend to learn fast and lose interest faster','You value variety more than stability','You often find yourself in roles requiring travel, talk, or trade'],
       pattern:'You adapt to change well, but resist routine even when it would help you',
-      surprise:'Moolank 5 individuals frequently change cities, careers, or social circles every 4–7 years'},
+      surprise:'Moolank 5 individuals frequently change cities, careers, or social circles every 4-7 years'},
   6:{ hook:'a magnetic, harmonising energy that draws people toward you for advice and comfort',
       traits:['You tend to value beauty, comfort, and aesthetics deeply','You prefer harmony and quietly avoid open conflict','You often find that people share their problems with you within minutes of meeting'],
       pattern:'You give freely to those you love, and feel deeply hurt when it isn\'t reciprocated',
@@ -565,7 +565,7 @@ const MOOLANK_INSIGHTS = {
   8:{ hook:'a disciplined, justice-driven energy that earns recognition slowly but lasts long',
       traits:['You tend to take responsibility others avoid','You value fairness and dislike shortcuts','You often find that early life tests your patience, and rewards arrive later'],
       pattern:'You work hard quietly, then feel frustrated when faster-moving peers get noticed first',
-      surprise:'Moolank 8 (Saturn) frequently shows a major financial or career breakthrough between ages 36–42'},
+      surprise:'Moolank 8 (Saturn) frequently shows a major financial or career breakthrough between ages 36-42'},
   9:{ hook:'a courageous, action-driven energy that finishes what others are afraid to start',
       traits:['You tend to act first and reflect later','You value loyalty and protect those you love fiercely','You often find yourself in roles requiring courage, leadership, or physical drive'],
       pattern:'You move with high intensity for long stretches, then crash and need full reset',
@@ -705,7 +705,7 @@ function renderAnalysis(){
   const pill=compound?compound.q:'n', pillLabel=compound?compound.l:'Standard vibration';
   document.getElementById('lbEq').innerHTML=`<div class="lb-eq-row"><span>${eqNums} =</span><span class="lb-raw">${nameRaw}</span><span style="color:var(--text3)">→</span><span class="lb-reduced">${nameNum}</span><span class="lb-cpill ${pill}">${nameRaw}/${nameNum} · ${pillLabel}</span></div>`;
 
-  // 3. INSIGHTS (free, 4–5 with one surprise)
+  // 3. INSIGHTS (free, 4-5 with one surprise)
   const traitIcons = ['◆','◆','◆'];
   const insightsHtml =
     insights.traits.map((t,i)=>
@@ -716,7 +716,7 @@ function renderAnalysis(){
   document.getElementById('insightsList').innerHTML = insightsHtml;
 
   // Confidence pill
-  const confidencePct = 78 + (birthNum % 5) * 2; // 78–86%
+  const confidencePct = 78 + (birthNum % 5) * 2; // 78-86%
   document.getElementById('confidencePill').innerHTML =
     `✓ This insight matches <strong style="margin:0 4px">${confidencePct}%</strong> of users with Moolank ${birthNum}`;
 

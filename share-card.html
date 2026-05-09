@@ -67,17 +67,17 @@
     <a href="/analyzer" class="btn btn-outline">✦ Run my own</a>
   </div>
   <div id="igHelper" style="display:none;font-size:12px;color:#9d8db2;margin:-8px 0 24px;line-height:1.55;">
-    Image saved to your device — open <strong style="color:#f0b429">Instagram</strong>, tap your profile, then add to your story or feed.
+    Image saved to your device, open <strong style="color:#f0b429">Instagram</strong>, tap your profile, then add to your story or feed.
   </div>
 
   <div class="footer-cta">
     <strong>Want your full Chaldean reading?</strong>
-    Get a personalised destiny report — name optimisation, 5-year forecast, career & wealth domains and more for <strong style="display:inline">INR 499/-</strong>. <a href="/report">See full report →</a>
+    Get a personalised destiny report, name optimisation, 5-year forecast, career & wealth domains and more for <strong style="display:inline">INR 499/-</strong>. <a href="/report">See full report →</a>
   </div>
 </div>
 
 <script>
-// Per-Birth Number profile copy — kept in lockstep with the same data
+// Per-Birth Number profile copy, kept in lockstep with the same data
 // in generate-report.html → MOOLANK_PROFILES_PDF. If you change
 // strengths/insight there, mirror it here.
 var MOOLANK_PROFILES = {
@@ -355,13 +355,13 @@ function renderCard(displayName, moolank){
     } catch(err){ console.warn('Save failed', err); alert('Could not save the image. Try right-clicking the card and choosing "Save image as".'); }
   });
 
-  // WhatsApp share — text + URL (most chat apps render OG preview from the URL)
+  // WhatsApp share, text + URL (most chat apps render OG preview from the URL)
   var wa = document.getElementById('waBtn');
   var shareUrl = location.href;
-  var msg = displayName + '’s Chaldean numerology insight — Driver Number ' + moolank + '. ' + shareUrl;
+  var msg = displayName + '’s Chaldean numerology insight, Driver Number ' + moolank + '. ' + shareUrl;
   wa.href = 'https://wa.me/?text=' + encodeURIComponent(msg);
 
-  // Instagram — there is no public web→IG share endpoint, so the
+  // Instagram, there is no public web→IG share endpoint, so the
   // pragmatic flow is: save the image, then prompt the user to
   // open Instagram and post it. On a phone with the IG app
   // installed, instagram:// also focuses the app.
@@ -381,7 +381,7 @@ function renderCard(displayName, moolank){
     setTimeout(function(){ window.location.href = 'instagram://library'; }, 250);
   });
 
-  // Native share — uses navigator.share() on supported devices
+  // Native share, uses navigator.share() on supported devices
   // (most modern mobiles). Surfaces the OS share sheet which
   // includes WhatsApp, Instagram, Telegram, Mail and more.
   var nativeBtn = document.getElementById('nativeShareBtn');

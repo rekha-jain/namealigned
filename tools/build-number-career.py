@@ -3,7 +3,7 @@
 Generate /number/{n}-career cluster (1-9).
 
 Distinct from /number/{n}-personality (which already has a 5-item career
-list) — this page goes deeper: ranked top 10 careers, industries to
+list), this page goes deeper: ranked top 10 careers, industries to
 AVOID, self-employment business types, launch timing windows, and the
 numerological signals that say "pivot now". Targets the commercial-
 intent search queries: "best careers for number 8", "what business
@@ -42,13 +42,13 @@ ARCHETYPE = {n: ncm.PERSONALITY[n]['archetype'] for n in range(1, 10)}
 
 # Career-specific data, written distinctly per number. Each entry is
 # additional content on top of base['career'] (the 5 fields shown on
-# the personality page) — top10 has 10 ranked roles with WHY copy,
+# the personality page), top10 has 10 ranked roles with WHY copy,
 # avoid lists 3-5 industries, biz_types is for self-employed direction,
 # launch_timing is the numerological window, pivot is the signal that
 # tells you to switch.
 CAREER = {
 1:{
-  'why':'Sun energy is leadership-shaped — it operates best when the work bears your personal stamp. Number 1 rarely thrives as the seventh person in a team of fifty; it does its best work as the named partner, the founder, the principal, or the public face. The vibration also rewards original thought over received wisdom, which is why Number 1 people often build categories rather than fit into existing ones.',
+  'why':'Sun energy is leadership-shaped, it operates best when the work bears your personal stamp. Number 1 rarely thrives as the seventh person in a team of fifty; it does its best work as the named partner, the founder, the principal, or the public face. The vibration also rewards original thought over received wisdom, which is why Number 1 people often build categories rather than fit into existing ones.',
   'top10':[
     ('Founder / CEO of a category-defining company','Sun rules first-things; the first-mover advantage is built into your numerology'),
     ('Independent professional practice (law, medicine, consulting)','Your judgement is the product; firm-of-one reads as authoritative, not lonely'),
@@ -65,16 +65,16 @@ CAREER = {
   'biz_types':['Founder-led services firm where your name is the brand','Premium 1-on-1 consultancy','Product company where you remain the public face beyond Series A'],
   'launch_timing':'Sun-ruled best timing: Sundays, dates that reduce to 1 (1st, 10th, 19th, 28th), and the year following your Personal Year 1. Avoid launching anything material on a Saturday in a Personal Year 7.',
   'pivot':'Number 1 should consider a pivot when (a) you\'ve been the third-person at the table for more than two years and (b) your Personal Year shifts to 1 or 5. Both signals together are unusually strong.',
-  'pros':'Founders, monarchs, principal partners, signature performing artists and category-defining inventors — Sun-ruled professionals concentrate at the top of structures their work created.',
+  'pros':'Founders, monarchs, principal partners, signature performing artists and category-defining inventors, Sun-ruled professionals concentrate at the top of structures their work created.',
   'faq':[
     ('What is the best business for Number 1?','One where your name IS the brand. Founder-led professional services, premium consultancies, or product companies where you remain the public face fit Sun-ruled energy best.'),
-    ('Should Number 1 quit a salaried job?','Not automatically. The signal is whether your decisions are the deliverable. Salaried roles where you call shots and own outcomes work — salaried roles where you execute someone else\'s vision will quietly drain you.'),
+    ('Should Number 1 quit a salaried job?','Not automatically. The signal is whether your decisions are the deliverable. Salaried roles where you call shots and own outcomes work, salaried roles where you execute someone else\'s vision will quietly drain you.'),
     ('What career suits Number 1 women?','Same answer as men. Sun-ruled energy is leadership-shaped regardless of gender; the cultural framing as masculine is incidental.'),
     ('When should Number 1 launch a business?','In a Personal Year 1, ideally on a Sunday or a date reducing to 1. The first 90 days of any Personal Year 1 carry founding momentum that rarely repeats for nine years.')
   ]
 },
 2:{
-  'why':'Moon energy is relational and emotionally fluent — it does its best work where reading people accurately is the product. Number 2 thrives in fields that reward patience, trust, and the slow arc of relationship-building. The vibration is allergic to high-friction, win-at-all-costs environments where emotional permeability becomes a tax rather than an asset.',
+  'why':'Moon energy is relational and emotionally fluent, it does its best work where reading people accurately is the product. Number 2 thrives in fields that reward patience, trust, and the slow arc of relationship-building. The vibration is allergic to high-friction, win-at-all-costs environments where emotional permeability becomes a tax rather than an asset.',
   'top10':[
     ('Therapist / counsellor / clinical psychologist','Reading emotions IS the deliverable; Moon energy is built for it'),
     ('Hospitality founder (boutique hotel, restaurant)','Atmosphere and care become a moat competitors can\'t copy'),
@@ -89,18 +89,18 @@ CAREER = {
   ],
   'avoid':['High-volume cold sales','Commercial real estate / leasing','Litigation as a primary practice','Tech-startup growth roles with weekly metrics','Investment banking trading floor'],
   'biz_types':['Boutique therapy or coaching practice','Hospitality (small inn, residential restaurant, retreat)','Independent residential real-estate brokerage'],
-  'launch_timing':'Moon-ruled best timing: Mondays, dates reducing to 2 or 7 (2nd, 7th, 11th, 16th, 20th, 25th, 29th), and Personal Year 2. Avoid major launches in Personal Year 9 — that year is for closing chapters, not starting them.',
-  'pivot':'Number 2 should consider a pivot when emotional fatigue persists for more than six months despite good rest, or when your Personal Year shifts to 2 — that\'s the diplomacy-and-partnership year that often surfaces a better collaboration than the current one.',
-  'pros':'Therapists, hospitality founders, poets, musicians, hospice leaders, and family-business stewards — Moon-ruled professionals concentrate in fields where the deliverable is emotional accuracy.',
+  'launch_timing':'Moon-ruled best timing: Mondays, dates reducing to 2 or 7 (2nd, 7th, 11th, 16th, 20th, 25th, 29th), and Personal Year 2. Avoid major launches in Personal Year 9, that year is for closing chapters, not starting them.',
+  'pivot':'Number 2 should consider a pivot when emotional fatigue persists for more than six months despite good rest, or when your Personal Year shifts to 2, that\'s the diplomacy-and-partnership year that often surfaces a better collaboration than the current one.',
+  'pros':'Therapists, hospitality founders, poets, musicians, hospice leaders, and family-business stewards, Moon-ruled professionals concentrate in fields where the deliverable is emotional accuracy.',
   'faq':[
-    ('Is Number 2 good for business?','Yes — for the right kind of business. Relationship-led, atmosphere-led, hospitality-led, or care-led businesses do exceptionally well. Volume-and-velocity businesses fight the vibration.'),
+    ('Is Number 2 good for business?','Yes, for the right kind of business. Relationship-led, atmosphere-led, hospitality-led, or care-led businesses do exceptionally well. Volume-and-velocity businesses fight the vibration.'),
     ('What career should Number 2 avoid?','High-volume cold sales, courtroom litigation, and aggressive investment-banking floor roles. The emotional permeability that\'s a creative gift becomes a daily tax in those environments.'),
-    ('Is Number 2 too sensitive for leadership?','Permeable, not soft. Moon-ruled leaders pull through patience, rapport and consistency rather than command — which often builds longer-lasting organisations than louder leadership styles.'),
+    ('Is Number 2 too sensitive for leadership?','Permeable, not soft. Moon-ruled leaders pull through patience, rapport and consistency rather than command, which often builds longer-lasting organisations than louder leadership styles.'),
     ('When should Number 2 launch?','In a Personal Year 2, on a Monday, ideally a date reducing to 2 or 7. Co-founder partnerships started in PY 2 tend to outlast those started elsewhere.')
   ]
 },
 3:{
-  'why':'Jupiter energy expands whatever it touches — ideas, audiences, classrooms, conversations. Number 3 thrives in fields that reward verbal articulation and the ability to make complex ideas land warmly. The vibration also rewards generosity with knowledge, which is why teachers, public lecturers, and judges often carry strong Number 3 signatures.',
+  'why':'Jupiter energy expands whatever it touches, ideas, audiences, classrooms, conversations. Number 3 thrives in fields that reward verbal articulation and the ability to make complex ideas land warmly. The vibration also rewards generosity with knowledge, which is why teachers, public lecturers, and judges often carry strong Number 3 signatures.',
   'top10':[
     ('Educator (school, university, online cohort-based)','Jupiter literally rules teachers; the vibration is most native here'),
     ('Senior judge or appellate lawyer','Jupiter rules justice; the vibration favours people who weigh rather than fight'),
@@ -115,18 +115,18 @@ CAREER = {
   ],
   'avoid':['Solo deep research with zero external audience','Pure operations roles with no narrative work','High-frequency trading','Intelligence services / classified work','Anonymous backend engineering for the long term'],
   'biz_types':['Education / cohort-based course business','Boutique publishing or media','Public-speaking + advisory hybrid practice'],
-  'launch_timing':'Jupiter-ruled best timing: Thursdays, dates reducing to 3, 6 or 9 (3rd, 6th, 9th, 12th, 15th, 18th, 21st, 24th, 27th, 30th), and Personal Year 3. Personal Year 3 is your most amplification-friendly year — start the public-facing thing then.',
+  'launch_timing':'Jupiter-ruled best timing: Thursdays, dates reducing to 3, 6 or 9 (3rd, 6th, 9th, 12th, 15th, 18th, 21st, 24th, 27th, 30th), and Personal Year 3. Personal Year 3 is your most amplification-friendly year, start the public-facing thing then.',
   'pivot':'Number 3 should consider a pivot when your work has gone fully behind-the-scenes for more than 18 months without your name attached to outcomes, or when your Personal Year shifts to 3 (the natural visibility year).',
-  'pros':'Teachers, judges, popular authors, broadcasters, religious leaders, and trusted financial advisors — Jupiter-ruled professionals concentrate in fields where wisdom is transmitted at scale.',
+  'pros':'Teachers, judges, popular authors, broadcasters, religious leaders, and trusted financial advisors, Jupiter-ruled professionals concentrate in fields where wisdom is transmitted at scale.',
   'faq':[
-    ('Is Number 3 good for finance?','Yes for relationship-led wealth advisory, asset management, and senior banking — fields where trust + articulation matter. High-frequency trading and pure quant work fit Mercury (Number 5) better.'),
-    ('Should Number 3 do solo work?','Only with an audience attached. Jupiter is amplification — solo work with no public surface tends to feel like underutilisation rather than depth.'),
+    ('Is Number 3 good for finance?','Yes for relationship-led wealth advisory, asset management, and senior banking, fields where trust + articulation matter. High-frequency trading and pure quant work fit Mercury (Number 5) better.'),
+    ('Should Number 3 do solo work?','Only with an audience attached. Jupiter is amplification, solo work with no public surface tends to feel like underutilisation rather than depth.'),
     ('When should Number 3 launch a course or media business?','In a Personal Year 3, ideally beginning on a Thursday. The 9-month window after a PY 3 starts is unusually warm for content-led launches.'),
-    ('Why does Number 3 attract so many opportunities?','Jupiter expands the surface area of whatever you carry. Opportunities multiply because the vibration makes ideas — and the person delivering them — feel bigger than the room.')
+    ('Why does Number 3 attract so many opportunities?','Jupiter expands the surface area of whatever you carry. Opportunities multiply because the vibration makes ideas, and the person delivering them, feel bigger than the room.')
   ]
 },
 4:{
-  'why':'Rahu energy is lateral, restless, and pattern-seeing in ways other numbers find disorienting. Number 4 thrives in fields that reward unconventional building — categories that don\'t exist yet, systems that need disruption, or technical work that lateral thinking unlocks. The vibration struggles inside slow, hierarchical, tradition-defending environments.',
+  'why':'Rahu energy is lateral, restless, and pattern-seeing in ways other numbers find disorienting. Number 4 thrives in fields that reward unconventional building, categories that don\'t exist yet, systems that need disruption, or technical work that lateral thinking unlocks. The vibration struggles inside slow, hierarchical, tradition-defending environments.',
   'top10':[
     ('Tech-platform founder / category-creator','Rahu rules new categories; you\'re wired to build them'),
     ('Inventor / patent-holder','Lateral thinking IS the deliverable'),
@@ -141,18 +141,18 @@ CAREER = {
   ],
   'avoid':['Government bureaucracy below senior leadership','Traditional family-run firms with strong succession rules','Long-tenure academic departments resistant to new methods','Religious or institutional leadership in deeply orthodox systems','Pure compliance roles where deviation is penalised'],
   'biz_types':['Tech platform with a contrarian founding insight','Independent investigation / forensic practice','Renewable / alternative-energy venture'],
-  'launch_timing':'Rahu-ruled best timing: Sundays and Saturdays (Rahu echoes both Sun and Saturn axes), dates reducing to 4 or 8 (4th, 8th, 13th, 17th, 22nd, 26th, 31st), and Personal Years 4 or 8. Avoid public launches in Personal Year 2 — it dilutes Rahu\'s edge.',
+  'launch_timing':'Rahu-ruled best timing: Sundays and Saturdays (Rahu echoes both Sun and Saturn axes), dates reducing to 4 or 8 (4th, 8th, 13th, 17th, 22nd, 26th, 31st), and Personal Years 4 or 8. Avoid public launches in Personal Year 2, it dilutes Rahu\'s edge.',
   'pivot':'Number 4 should consider a pivot when restlessness spikes alongside a sense that the current category is closed to new thinking. Personal Year 4 is the structure-building year; Personal Year 5 is the fast-pivot year. Both can be exit signals depending on which way the restlessness points.',
-  'pros':'Inventors, contrarian founders, forensic specialists, investigative journalists and architects of unconventional systems — Rahu-ruled professionals concentrate in fields where seeing differently is the unfair advantage.',
+  'pros':'Inventors, contrarian founders, forensic specialists, investigative journalists and architects of unconventional systems, Rahu-ruled professionals concentrate in fields where seeing differently is the unfair advantage.',
   'faq':[
-    ('Is Number 4 unlucky for career?','That\'s a misconception. Rahu energy is unconventional and intense — it asks for the right environment, not avoidance. In tech, alternative energy, forensic work and lateral creative fields, Number 4 outperforms.'),
+    ('Is Number 4 unlucky for career?','That\'s a misconception. Rahu energy is unconventional and intense, it asks for the right environment, not avoidance. In tech, alternative energy, forensic work and lateral creative fields, Number 4 outperforms.'),
     ('What business suits Number 4?','One built on a contrarian insight. Rahu-ruled businesses do best when they\'re creating a new category rather than competing inside an old one.'),
     ('Should Number 4 work in tradition-bound institutions?','Generally only at senior levels where the institution itself is willing to change. Lower-rank tradition-defending roles consistently feel like compression.'),
     ('When should Number 4 pivot?','In Personal Year 5 (the fast-pivot year) or when restlessness has lasted 9+ months in a closed category. Rahu rewards the bold move when it\'s aimed at a new paradigm, not a sideways step.')
   ]
 },
 5:{
-  'why':'Mercury energy is fast, information-fluent and pivot-comfortable — it thrives where speed of synthesis is the deliverable. Number 5 does its best work in fields that reward quick context-switching and turning information into leverage. The vibration is allergic to slow, single-domain mastery roles where finishing matters more than improvising.',
+  'why':'Mercury energy is fast, information-fluent and pivot-comfortable, it thrives where speed of synthesis is the deliverable. Number 5 does its best work in fields that reward quick context-switching and turning information into leverage. The vibration is allergic to slow, single-domain mastery roles where finishing matters more than improvising.',
   'top10':[
     ('Trader (equities, derivatives, FX)','Mercury rules trading floors; speed and information are the product'),
     ('Journalist (news desk, breaking-story specialist)','Information-into-narrative on tight cycles'),
@@ -167,18 +167,18 @@ CAREER = {
   ],
   'avoid':['Solo, slow, decade-long research','Heavy-industry operations','Long-arc apprenticeship trades','Slow-moving family business succession','Roles measured in 5-year deliverables'],
   'biz_types':['Trading or active-investment practice','Multi-hyphenate creator brand (newsletter + advisory + product)','Fast-cycle consumer-tech startup'],
-  'launch_timing':'Mercury-ruled best timing: Wednesdays, dates reducing to 5 (5th, 14th, 23rd), and Personal Year 5. PY 5 is your pivot year — the launches that feel destined often fail in PY 4 (too rigid) but succeed in PY 5.',
-  'pivot':'Number 5 should consider a pivot when boredom is the dominant signal for 6+ months — Mercury reads sustained boredom as a directive. PY 5 is the natural switching year; ignoring it tends to compound restlessness into impulsive moves later.',
-  'pros':'Traders, journalists, comedians, multi-hyphenate creators, sales leaders, and tech founders in fast-moving categories — Mercury-ruled professionals concentrate in fields where speed of synthesis is the moat.',
+  'launch_timing':'Mercury-ruled best timing: Wednesdays, dates reducing to 5 (5th, 14th, 23rd), and Personal Year 5. PY 5 is your pivot year, the launches that feel destined often fail in PY 4 (too rigid) but succeed in PY 5.',
+  'pivot':'Number 5 should consider a pivot when boredom is the dominant signal for 6+ months, Mercury reads sustained boredom as a directive. PY 5 is the natural switching year; ignoring it tends to compound restlessness into impulsive moves later.',
+  'pros':'Traders, journalists, comedians, multi-hyphenate creators, sales leaders, and tech founders in fast-moving categories, Mercury-ruled professionals concentrate in fields where speed of synthesis is the moat.',
   'faq':[
     ('What business is best for Number 5?','One where pivoting is a feature, not a bug. Trading, fast-cycle tech, multi-hyphenate creator brands, and active-management financial practices fit Mercury energy best.'),
-    ('Should Number 5 commit to one career?','One direction, many shapes. Mercury thrives with a stable theme (e.g. "information") expressed through several roles over a decade — versus a single role held for two decades.'),
+    ('Should Number 5 commit to one career?','One direction, many shapes. Mercury thrives with a stable theme (e.g. "information") expressed through several roles over a decade, versus a single role held for two decades.'),
     ('When should Number 5 launch?','In Personal Year 5, on a Wednesday. PY 5 launches with a pivot built in tend to outlast PY 5 launches positioned as permanent commitments.'),
     ('Is Number 5 good for stable jobs?','Stable in theme, not stable in shape. Long tenure in a single role tends to feel like compression by year four; lateral movement within a domain works much better.')
   ]
 },
 6:{
-  'why':'Venus energy creates atmosphere — beauty, ease, care, aesthetic sensibility — and Number 6 thrives in fields where the environment IS the product. The vibration does best in design, hospitality, education-of-children, fine arts, and relationship-led businesses where warmth becomes the moat.',
+  'why':'Venus energy creates atmosphere, beauty, ease, care, aesthetic sensibility, and Number 6 thrives in fields where the environment IS the product. The vibration does best in design, hospitality, education-of-children, fine arts, and relationship-led businesses where warmth becomes the moat.',
   'top10':[
     ('Designer (interior, product, brand)','Venus rules aesthetics; design is its native form'),
     ('Hospitality / boutique hotel founder','The room IS the deliverable'),
@@ -193,18 +193,18 @@ CAREER = {
   ],
   'avoid':['Hard-charging cold sales','Mining, demolition, heavy industry','Litigation','High-frequency trading','Adversarial procurement / negotiation roles'],
   'biz_types':['Design studio (boutique, founder-led)','Hospitality (restaurant, hotel, event company)','Beauty / wellness / lifestyle brand'],
-  'launch_timing':'Venus-ruled best timing: Fridays, dates reducing to 6 (6th, 15th, 24th), and Personal Year 6. PY 6 is the relationship-and-home year — launches positioned around community and beauty resonate strongest then.',
-  'pivot':'Number 6 should consider a pivot when the current role offers no aesthetic agency — when you can\'t shape the environment, only execute inside it. PY 6 is the natural relationship-and-home year, often surfacing a more values-aligned offer.',
-  'pros':'Designers, hoteliers, restaurateurs, fine artists, family therapists, and curators — Venus-ruled professionals concentrate in fields where the made world feels like home.',
+  'launch_timing':'Venus-ruled best timing: Fridays, dates reducing to 6 (6th, 15th, 24th), and Personal Year 6. PY 6 is the relationship-and-home year, launches positioned around community and beauty resonate strongest then.',
+  'pivot':'Number 6 should consider a pivot when the current role offers no aesthetic agency, when you can\'t shape the environment, only execute inside it. PY 6 is the natural relationship-and-home year, often surfacing a more values-aligned offer.',
+  'pros':'Designers, hoteliers, restaurateurs, fine artists, family therapists, and curators, Venus-ruled professionals concentrate in fields where the made world feels like home.',
   'faq':[
-    ('Is Number 6 good for business?','Outstanding for design, hospitality, beauty and lifestyle. The Venus moat — atmosphere — is hard for competitors to copy.'),
+    ('Is Number 6 good for business?','Outstanding for design, hospitality, beauty and lifestyle. The Venus moat, atmosphere, is hard for competitors to copy.'),
     ('Should Number 6 do high-pressure work?','High-stakes, yes; high-friction, no. Venus thrives where pressure is creative; it suffers where pressure is adversarial.'),
-    ('What jobs should Number 6 avoid?','Adversarial roles where someone has to lose for you to win — hard sales, litigation, demolition, hostile-takeover finance. The Venus vibration becomes the hostage.'),
+    ('What jobs should Number 6 avoid?','Adversarial roles where someone has to lose for you to win, hard sales, litigation, demolition, hostile-takeover finance. The Venus vibration becomes the hostage.'),
     ('When should Number 6 launch a brand?','In Personal Year 6, on a Friday, ideally a date reducing to 6. PY 6 launches that lean into beauty and community tend to compound for years.')
   ]
 },
 7:{
-  'why':'Ketu energy is inward, research-driven, and rewards depth over breadth. Number 7 thrives in fields where going deep into one subject for years IS the work. The vibration is allergic to surface-level commercial hustle, fast-pivot environments, and roles measured in weekly metrics — those fields read as hollow within months.',
+  'why':'Ketu energy is inward, research-driven, and rewards depth over breadth. Number 7 thrives in fields where going deep into one subject for years IS the work. The vibration is allergic to surface-level commercial hustle, fast-pivot environments, and roles measured in weekly metrics, those fields read as hollow within months.',
   'top10':[
     ('Research scientist / PI of a long-arc lab','Depth-over-breadth is the entire deliverable'),
     ('Theologian / religious scholar','Ketu rules contemplative work'),
@@ -219,18 +219,18 @@ CAREER = {
   ],
   'avoid':['High-volume retail sales','Fast-cycle consumer marketing','Trading floor / day-trading','Network-effect social-media careers','Roles where weekly output is the deliverable'],
   'biz_types':['Research-led consultancy (one-domain mastery)','Long-form publishing (books, multi-year podcast)','Specialist clinical or contemplative practice'],
-  'launch_timing':'Ketu-ruled best timing: Mondays and Sundays, dates reducing to 7 (7th, 16th, 25th), and Personal Year 7. PY 7 is the inward year — quiet, research-led launches in PY 7 outperform loud ones every cycle.',
-  'pivot':'Number 7 should consider a pivot when the current role offers no depth — when output is rewarded over insight. PY 7 is the natural inward year, often surfacing the question "what work would I do if no one applauded?"',
-  'pros':'Researchers, theologians, mystics, contemplative writers, cinematographers, forensic specialists, and quiet polymath authors — Ketu-ruled professionals concentrate in fields where depth and originality compound over decades.',
+  'launch_timing':'Ketu-ruled best timing: Mondays and Sundays, dates reducing to 7 (7th, 16th, 25th), and Personal Year 7. PY 7 is the inward year, quiet, research-led launches in PY 7 outperform loud ones every cycle.',
+  'pivot':'Number 7 should consider a pivot when the current role offers no depth, when output is rewarded over insight. PY 7 is the natural inward year, often surfacing the question "what work would I do if no one applauded?"',
+  'pros':'Researchers, theologians, mystics, contemplative writers, cinematographers, forensic specialists, and quiet polymath authors, Ketu-ruled professionals concentrate in fields where depth and originality compound over decades.',
   'faq':[
-    ('Is Number 7 bad for business?','Bad for fast commercial hustle; excellent for research-led specialist practices. The vibration\'s edge is depth — businesses that monetise depth do unusually well.'),
+    ('Is Number 7 bad for business?','Bad for fast commercial hustle; excellent for research-led specialist practices. The vibration\'s edge is depth, businesses that monetise depth do unusually well.'),
     ('Should Number 7 work alone?','Often yes. Ketu regenerates in solitude; co-working environments tend to drain the vibration unless solitude is actively protected within them.'),
-    ('What jobs should Number 7 avoid?','High-volume sales, fast-cycle marketing, day-trading, and social-media network-effect careers. The vibration\'s gift is depth — surface-level work corrodes it.'),
+    ('What jobs should Number 7 avoid?','High-volume sales, fast-cycle marketing, day-trading, and social-media network-effect careers. The vibration\'s gift is depth, surface-level work corrodes it.'),
     ('When should Number 7 launch a research practice?','In Personal Year 7, on a Monday. Quiet, narrow, deep launches in PY 7 reliably outperform broad commercial launches in the same year.')
   ]
 },
 8:{
-  'why':'Saturn energy is structural, patient, and rewards endurance — Number 8 thrives in fields where authority compounds over decades rather than years. The vibration is exceptional in finance, law, real estate, infrastructure, and any field where the value of your judgement increases with time on the job.',
+  'why':'Saturn energy is structural, patient, and rewards endurance, Number 8 thrives in fields where authority compounds over decades rather than years. The vibration is exceptional in finance, law, real estate, infrastructure, and any field where the value of your judgement increases with time on the job.',
   'top10':[
     ('Senior partner at a law firm','Saturn rules law; long-tenure authority is built in'),
     ('Central / commercial banker','Compounding institutional trust'),
@@ -245,18 +245,18 @@ CAREER = {
   ],
   'avoid':['Fast-fashion / weekly-trend retail','Day-trading','Stand-up comedy as a primary career','Influencer / social-media-led careers','Roles measured in 90-day OKRs'],
   'biz_types':['Long-cycle real-estate or infrastructure venture','Family-office or wealth-preservation practice','Specialist law / compliance / regulatory firm'],
-  'launch_timing':'Saturn-ruled best timing: Saturdays, dates reducing to 8 (8th, 17th, 26th), and Personal Year 8. PY 8 is the authority-and-money year — material moves made in PY 8 with patience tend to anchor for decades.',
-  'pivot':'Number 8 should consider a pivot when the current path offers no compounding — when years of effort don\'t accumulate into authority or assets. PY 8 is the natural recompounding year; PY 4 is the restructuring year.',
-  'pros':'Long-game founders, senior partners, central bankers, judges, real-estate developers, and infrastructure leaders — Saturn-ruled professionals concentrate in fields where authority compounds invisibly until it becomes unmistakable.',
+  'launch_timing':'Saturn-ruled best timing: Saturdays, dates reducing to 8 (8th, 17th, 26th), and Personal Year 8. PY 8 is the authority-and-money year, material moves made in PY 8 with patience tend to anchor for decades.',
+  'pivot':'Number 8 should consider a pivot when the current path offers no compounding, when years of effort don\'t accumulate into authority or assets. PY 8 is the natural recompounding year; PY 4 is the restructuring year.',
+  'pros':'Long-game founders, senior partners, central bankers, judges, real-estate developers, and infrastructure leaders, Saturn-ruled professionals concentrate in fields where authority compounds invisibly until it becomes unmistakable.',
   'faq':[
-    ('Is Number 8 good for business?','Excellent — particularly long-cycle businesses (real estate, finance, infrastructure, law). Less suited to fast-moving consumer or trend-driven markets.'),
-    ('Why does Number 8 feel slow?','Saturn\'s curriculum is patience. The pace isn\'t a flaw — it\'s the engine. Used well, the eventual authority is rare and lasting.'),
-    ('Should Number 8 take risky bets?','Calculated, structural ones — yes. Speculative, fast-flip ones — no. Saturn rewards patience priced into the bet.'),
+    ('Is Number 8 good for business?','Excellent, particularly long-cycle businesses (real estate, finance, infrastructure, law). Less suited to fast-moving consumer or trend-driven markets.'),
+    ('Why does Number 8 feel slow?','Saturn\'s curriculum is patience. The pace isn\'t a flaw, it\'s the engine. Used well, the eventual authority is rare and lasting.'),
+    ('Should Number 8 take risky bets?','Calculated, structural ones, yes. Speculative, fast-flip ones, no. Saturn rewards patience priced into the bet.'),
     ('When should Number 8 launch?','In Personal Year 8, on a Saturday, ideally a date reducing to 8. PY 8 launches anchored in long-cycle thinking compound for years past their starting points.')
   ]
 },
 9:{
-  'why':'Mars energy is decisive, courageous, and protective — Number 9 thrives in fields that reward moving first under pressure. The vibration does its best work in defense, surgery, sports, activism, and any field where someone has to act before the situation is fully understood.',
+  'why':'Mars energy is decisive, courageous, and protective, Number 9 thrives in fields that reward moving first under pressure. The vibration does its best work in defense, surgery, sports, activism, and any field where someone has to act before the situation is fully understood.',
   'top10':[
     ('Surgeon / emergency physician','Mars rules cutting-and-decisive medicine'),
     ('Military / defence leadership','Native Mars territory'),
@@ -271,12 +271,12 @@ CAREER = {
   ],
   'avoid':['Slow consensus-building academic roles','Long-tenure family-business succession','Hospitality at scale','Mediation / dispute-resolution as primary practice','Curatorial / archival work'],
   'biz_types':['Specialist surgical or emergency medical practice','Defence / security consulting','Cause-led activist organisation or campaign'],
-  'launch_timing':'Mars-ruled best timing: Tuesdays, dates reducing to 9 (9th, 18th, 27th), and Personal Year 9. PY 9 is the closing-and-launching-the-next-cycle year — the launches that survive PY 9 tend to be the right ones.',
-  'pivot':'Number 9 should consider a pivot when the current role doesn\'t require courage — when you\'re using maintenance energy where action energy is wired in. PY 9 is the natural cycle-closing year, often surfacing the next courage-shaped move.',
-  'pros':'Surgeons, soldiers, athletes, activists, trial lawyers, first responders and decisive political leaders — Mars-ruled professionals concentrate in fields where moving first under pressure is the entire deliverable.',
+  'launch_timing':'Mars-ruled best timing: Tuesdays, dates reducing to 9 (9th, 18th, 27th), and Personal Year 9. PY 9 is the closing-and-launching-the-next-cycle year, the launches that survive PY 9 tend to be the right ones.',
+  'pivot':'Number 9 should consider a pivot when the current role doesn\'t require courage, when you\'re using maintenance energy where action energy is wired in. PY 9 is the natural cycle-closing year, often surfacing the next courage-shaped move.',
+  'pros':'Surgeons, soldiers, athletes, activists, trial lawyers, first responders and decisive political leaders, Mars-ruled professionals concentrate in fields where moving first under pressure is the entire deliverable.',
   'faq':[
     ('Is Number 9 too aggressive for business?','Energetic, not aggressive. Mars is courage and protection; channeled correctly it builds decisive organisations. Channeled poorly it burns the team out.'),
-    ('What business suits Number 9?','Specialist surgical / emergency medical practice, defence consulting, cause-led activist organisations, and elite sports performance — fields where decisive action is the product.'),
+    ('What business suits Number 9?','Specialist surgical / emergency medical practice, defence consulting, cause-led activist organisations, and elite sports performance, fields where decisive action is the product.'),
     ('Should Number 9 work in slow industries?','Generally only at senior levels where you can drive pace. Lower ranks in slow industries tend to feel like compression by year three.'),
     ('When should Number 9 launch?','In Personal Year 9, on a Tuesday. PY 9 launches that emerge from genuine cycle-closing energy outlast PY 9 launches that are reactive starts.')
   ]
@@ -458,10 +458,10 @@ def render(n):
     glyph = base['glyph']
     archetype = ARCHETYPE[n]
 
-    title = f'Best Careers for Number {n} — Top 10 Profession Matches'
+    title = f'Best Careers for Number {n}, Top 10 Profession Matches'
     og_title = f'Number {n} Careers: 10 fields where {planet} energy compounds'
-    desc = f'Best careers for Number {n} in Chaldean numerology — top 10 ranked roles, industries to avoid, business types for self-employment, lucky launch timing and when to pivot careers under {planet} energy.'
-    og_desc = f'Top 10 careers for Number {n} ({planet}) — plus what to avoid, the best self-employment shapes and ideal launch windows.'
+    desc = f'Best careers for Number {n} in Chaldean numerology, top 10 ranked roles, industries to avoid, business types for self-employment, lucky launch timing and when to pivot careers under {planet} energy.'
+    og_desc = f'Top 10 careers for Number {n} ({planet}), plus what to avoid, the best self-employment shapes and ideal launch windows.'
     canon = f'{BASE}/number/{n}-career'
 
     article = {
@@ -503,11 +503,11 @@ def render(n):
 
     related = [m for m in [1,2,3,4,5,6,7,8,9] if m != n][:6]
     related_html = '\n'.join(
-        f'    <a href="/number/{m}-career" class="nc-rel-card"><span class="eb">Number {m} · {BASE_NUMBERS[m]["planet"]}</span><span class="ti">Best careers — {ARCHETYPE[m]}</span></a>'
+        f'    <a href="/number/{m}-career" class="nc-rel-card"><span class="eb">Number {m} · {BASE_NUMBERS[m]["planet"]}</span><span class="ti">Best careers, {ARCHETYPE[m]}</span></a>'
         for m in related
     )
 
-    tldr = f'Number {n} in Chaldean numerology is {planet}-ruled — career fields where {planet}\'s rhythm compounds tend to outperform fields that fight it. The top 10 roles below are ranked by how natively the work fits {planet} energy, plus a list of industries to avoid, the best shapes for self-employment, and the numerological windows that say "launch now" or "pivot now".'
+    tldr = f'Number {n} in Chaldean numerology is {planet}-ruled, career fields where {planet}\'s rhythm compounds tend to outperform fields that fight it. The top 10 roles below are ranked by how natively the work fits {planet} energy, plus a list of industries to avoid, the best shapes for self-employment, and the numerological windows that say "launch now" or "pivot now".'
 
     body = f'''
 {NAV}
@@ -522,7 +522,7 @@ def render(n):
   <div class="container">
     <div class="badge">Career Numerology · Number {n}</div>
     <div class="glyph">{glyph}</div>
-    <h1>Best Careers for Number {n} — {archetype}</h1>
+    <h1>Best Careers for Number {n}, {archetype}</h1>
     <div class="tag">{base["tagline"]}</div>
   </div>
   <div class="nc-tldr"><strong>In short.</strong> {tldr}</div>
@@ -543,7 +543,7 @@ def render(n):
   <ul>
 {avoid_html}
   </ul>
-  <p>This isn\'t a hard prohibition — many people make these careers work — but the energy budget required is high enough that most never reach the authority they would have in a better-aligned field.</p>
+  <p>This isn\'t a hard prohibition, many people make these careers work, but the energy budget required is high enough that most never reach the authority they would have in a better-aligned field.</p>
 
   <h2>Best business types if Number {n} goes self-employed</h2>
   <ul>
@@ -555,7 +555,7 @@ def render(n):
 
   <div class="nc-cta-band">
     <h3>Find your exact numbers in 15 seconds</h3>
-    <p>Free Chaldean calculator — Birth Number, Life Path Number and Name Number, side by side. The combination, not any single digit, drives career fit.</p>
+    <p>Free Chaldean calculator, Birth Number, Life Path Number and Name Number, side by side. The combination, not any single digit, drives career fit.</p>
     <div class="btn-pair">
       <a class="primary" href="/name-numerology-calculator">Calculate my numbers →</a>
       <a class="outline" href="/analyzer">Full free analysis</a>
@@ -584,9 +584,9 @@ def render(n):
 
   <h2>Related: Number {n} on every chart</h2>
   <ul>
-    <li><a href="/number/{n}-personality">Number {n} personality</a> — the archetype across the whole chart</li>
-    <li><a href="/name-number-{n}-meaning">Name Number {n} meaning</a> — what the name does</li>
-    <li><a href="/life-path-number-{n}-meaning">Life Path Number {n} meaning</a> — the soul curriculum</li>
+    <li><a href="/number/{n}-personality">Number {n} personality</a>, the archetype across the whole chart</li>
+    <li><a href="/name-number-{n}-meaning">Name Number {n} meaning</a>, what the name does</li>
+    <li><a href="/life-path-number-{n}-meaning">Life Path Number {n} meaning</a>, the soul curriculum</li>
   </ul>
 
   <h2>Other number careers</h2>

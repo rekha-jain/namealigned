@@ -65,7 +65,7 @@
 
     // Synthetic paymentId so generate-report.html proceeds. We
     // deliberately omit `email` so its saveAndEmail() short-circuits
-    // — no DB row, no real email triggered during staging tests.
+    //, no DB row, no real email triggered during staging tests.
     var qp = new URLSearchParams({
       paymentId: 'STAGING-' + Date.now(),
       name:      name,
