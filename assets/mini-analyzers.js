@@ -638,7 +638,7 @@ function miniResultHTML({eyebrow,title,score,tier,pair,narrative,extraHtml,upsel
     <div style="background:rgba(245,196,81,.08);border:1px dashed rgba(245,196,81,.5);border-radius:10px;padding:.8rem 1rem;font-family:sans-serif;font-size:12.5px;color:var(--text);line-height:1.55;margin-bottom:.85rem;">
       <strong style="color:#9d4edd">${lead}</strong> ${upsell}
     </div>
-    <a href="report?ref=mini_${kind}" class="mini-cta" onclick="trackEvent('mini_cta_clicked',{kind:'${kind}'})">Unlock Full Chaldean Report, ₹199 →</a>
+    <a href="report?ref=mini_${kind}" class="mini-cta" onclick="trackEvent('mini_cta_clicked',{kind:'${kind}'})">Unlock Full Chaldean Report, ₹499 →</a>
   `;
   return `
     <div class="mini-eyebrow">${eyebrow}</div>
@@ -657,10 +657,10 @@ function miniResultHTML({eyebrow,title,score,tier,pair,narrative,extraHtml,upsel
 }
 
 // Tightened upsell-pivot copy: connects free brand-tool result to the
-// founder's own ₹199 personal report explicitly.
-const UPSELL_BUSINESS = 'This free check is about <strong>your brand</strong>. The ₹199 Chaldean Destiny Report is about <strong>you, the founder</strong>, your Birth Number, planetary alignment and 5-year personal-year cycle, so you know which year favours launching, scaling or rebranding. Brands can change. The founder is constant.';
-const UPSELL_CHILD    = 'This free check tells you about <strong>the name</strong> you\'re considering. The ₹199 Chaldean Destiny Report is about <strong>you, the parent</strong>, your Birth Number, planetary alignment and 5-year personal-year cycle, so you understand the energy you carry into naming and raising your child.';
-const UPSELL_PARTNER  = 'This free check shows the pairing. The ₹199 Chaldean Destiny Report includes a dedicated <strong>Compatibility Insight chapter</strong>, planetary interaction map, friction-points and harmony-builders, based on your own complete Chaldean reading.';
+// founder's own ₹499 personal report explicitly.
+const UPSELL_BUSINESS = 'This free check is about <strong>your brand</strong>. The ₹499 Chaldean Destiny Report is about <strong>you, the founder</strong>, your Birth Number, planetary alignment and 5-year personal-year cycle, so you know which year favours launching, scaling or rebranding. Brands can change. The founder is constant.';
+const UPSELL_CHILD    = 'This free check tells you about <strong>the name</strong> you\'re considering. The ₹499 Chaldean Destiny Report is about <strong>you, the parent</strong>, your Birth Number, planetary alignment and 5-year personal-year cycle, so you understand the energy you carry into naming and raising your child.';
+const UPSELL_PARTNER  = 'This free check shows the pairing. The ₹499 Chaldean Destiny Report includes a dedicated <strong>Compatibility Insight chapter</strong>, planetary interaction map, friction-points and harmony-builders, based on your own complete Chaldean reading.';
 
 function buildPartnerResultHTML(yn,yd,pn,pd, opts){
   const yMoo = getBirthNum(yd), yBhag = getDestinyNum(yd);

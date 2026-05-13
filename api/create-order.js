@@ -18,7 +18,7 @@ const CORS_HEADERS = {
   'Access-Control-Allow-Headers': 'Content-Type',
 };
 
-// New pricing: ₹499 full, ₹249 (50% off). Legacy ₹199/₹99 kept temporarily
+// New pricing: ₹499 full, ₹249 (50% off). Legacy ₹499/₹99 kept temporarily
 // so any in-flight pre-price-change orders still validate; remove once
 // confirmed no traffic on the old amounts.
 const ALLOWED_AMOUNTS_PAISE = [49900, 24900, 19900, 9900];

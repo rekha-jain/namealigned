@@ -68,7 +68,7 @@ export async function getAccessToken() {
    always sends amount explicitly in createOrder ($5 full, $2.50 with the
    50%-off promo) — this default only kicks in if a future caller forgets
    to pass amount, in which case we want the canonical price, not whatever
-   was in env from the old ₹199/$2.99 era. */
+   was in env from the old ₹499/$2.99 era. */
 export function getDefaultAmount() {
   return {
     value:    '5.00',

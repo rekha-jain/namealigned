@@ -178,7 +178,7 @@ async function sendBrevoEmail({ name, dob, email, birthNum, destNum, nameNum }) 
                         background:linear-gradient(135deg,#f0b429,#f5d060);
                         color:#1a0533;text-decoration:none;border-radius:8px;
                         font-size:16px;font-weight:700;letter-spacing:0.5px;">
-                Get Your 5-Year Destiny Report, ₹199 →
+                Get Your 5-Year Destiny Report, ₹499 →
               </a>
             </td>
           </tr>
@@ -191,7 +191,7 @@ async function sendBrevoEmail({ name, dob, email, birthNum, destNum, nameNum }) 
                 ✦ 5-year personalised forecast<br>
                 ✦ Year-by-year career, love, wealth &amp; health &nbsp;·&nbsp;
                 ✦ Mobile number analysis<br>
-                ✦ Downloadable PDF, One-time ₹199, instant delivery
+                ✦ Downloadable PDF, One-time ₹499, instant delivery
               </p>
             </td>
           </tr>

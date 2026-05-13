@@ -855,9 +855,9 @@ function quickSubmit(e){
     document.addEventListener('DOMContentLoaded',()=>{
       document.querySelectorAll('a[href="report"], a[href="/report"]').forEach(a=>{
         a.innerHTML = a.innerHTML
-          .replace(/INR\s*199\/?-?/gi,'$5 USD')
+          .replace(/INR\s*499\/?-?/gi,'$5 USD')
           .replace(/Get the Full Report, \$2\.99 USD/, 'Get the Full Report, $5 USD')
-          .replace(/INR\s*199/g,'$5 USD');
+          .replace(/INR\s*499/g,'$5 USD');
       });
     });
   }catch(e){}
