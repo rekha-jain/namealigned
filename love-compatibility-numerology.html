@@ -403,10 +403,31 @@
 
 <script>
 function copyShareLink_loveCompat(){
-  const url='https://www.namealigned.com/love-compatibility-numerology';
-  const cb=()=>{const el=document.getElementById('copyText_loveCompat');el.textContent='✓ Copied!';setTimeout(()=>{el.textContent='Copy link';},2500);};
-  if(navigator.clipboard){navigator.clipboard.writeText(url).then(cb).catch(()=>{const ta=document.createElement('textarea');ta.value=url;ta.style.position='fixed';ta.style.opacity='0';document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);cb();});}else{const ta=document.createElement('textarea');ta.value=url;ta.style.position='fixed';ta.style.opacity='0';document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);cb();}
+  // Copy the SAME rich share text that goes to WhatsApp (reading + prefill URL).
+  const text = window.__loveCompatShareText || 'https://www.namealigned.com/love-compatibility-numerology';
+  const cb = () => { const el = document.getElementById('copyText_loveCompat'); if(el){ el.textContent = '✓ Copied!'; setTimeout(() => { el.textContent = 'Copy reading'; }, 2500); } };
+  if(navigator.clipboard){ navigator.clipboard.writeText(text).then(cb).catch(() => { const ta = document.createElement('textarea'); ta.value = text; ta.style.position='fixed'; ta.style.opacity='0'; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta); cb(); }); }
+  else { const ta = document.createElement('textarea'); ta.value = text; ta.style.position='fixed'; ta.style.opacity='0'; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta); cb(); }
 }
+
+// URL prefill: if a shared link arrives with y/yd/p/pd params,
+// auto-fill the form and run the check so the receiver lands
+// straight on the same reading their friend saw.
+(function autoFillFromShareLink(){
+  try {
+    const u = new URL(location.href);
+    const y = u.searchParams.get('y'), yd = u.searchParams.get('yd');
+    const p = u.searchParams.get('p'), pd = u.searchParams.get('pd');
+    if(!y || !yd || !p || !pd) return;
+    document.addEventListener('DOMContentLoaded', () => {
+      const setVal = (id, v) => { const el = document.getElementById(id); if(el) el.value = v; };
+      setVal('youName', y);    setVal('youDob', yd);
+      setVal('partnerName', p); setVal('partnerDob', pd);
+      // Small delay so the form is paint-stable before scrolling/running.
+      setTimeout(() => { if(typeof runPartner === 'function') runPartner(); }, 250);
+    });
+  } catch(e){}
+})();
 </script>
 
 <footer class="footer">
@@ -462,6 +483,41 @@ function copyShareLink_loveCompat(){
 const navHam=document.getElementById('navHamburger'), navMob=document.getElementById('navMobile');
 if(navHam&&navMob) navHam.addEventListener('click',()=>navMob.classList.toggle('open'));
 
+// Build the rich share text: includes the actual reading so the
+// receiver doesn't have to click cold. Returns plain text suitable
+// for WhatsApp / clipboard.
+function buildPartnerShareText(yn, yd, pn, pd){
+  const yMoo = getBirthNum(yd), yBhag = getDestinyNum(yd);
+  const pMoo = getBirthNum(pd), pBhag = getDestinyNum(pd);
+  const score = partnerScore(yMoo, yBhag, pMoo, pBhag);
+  const tier  = tierOf(score);
+  const yPlanet = getPlanet(yMoo), pPlanet = getPlanet(pMoo);
+  const yArche = ARCHETYPES[yMoo], pArche = ARCHETYPES[pMoo];
+  const yFirst = (yn.split(/\s+/)[0] || 'You');
+  const pFirst = (pn.split(/\s+/)[0] || 'Them');
+  // One memorable, tier-specific line that lands honestly.
+  const LINE = {
+    high: 'Your rhythms run on the same frequency. Most disagreements resolve themselves once spoken aloud.',
+    mid:  'Different rhythms, real warmth. The friction is rhythm, not feeling, and naming it closes most of the gap.',
+    low:  'The contrast is the gift when used consciously. People who acknowledge the differences often build more conscious relationships than higher-scoring pairs.',
+  };
+  const memorable = LINE[tier.cls] || LINE.mid;
+  // Prefill URL so the receiver opens to the same reading without re-typing.
+  const url = 'https://www.namealigned.com/love-compatibility-numerology'
+    + '?y='  + encodeURIComponent(yn)
+    + '&yd=' + encodeURIComponent(yd)
+    + '&p='  + encodeURIComponent(pn)
+    + '&pd=' + encodeURIComponent(pd);
+  return (
+    'Just read this on us, see if you agree:\n\n' +
+    '✦ ' + yFirst + ' × ' + pFirst + '\n' +
+    score + '%, ' + tier.label + '\n' +
+    yPlanet + ' × ' + pPlanet + ' (' + yArche + ' × ' + pArche + ')\n\n' +
+    '"' + memorable + '"\n\n' +
+    'Full reading here:\n' + url
+  );
+}
+
 function runPartner(){
   const errEl = document.getElementById('partnerErr');
   const showErr = msg => { errEl.textContent = msg; errEl.style.display = 'block'; };
@@ -471,21 +527,19 @@ function runPartner(){
   const pn = document.getElementById('partnerName').value.trim();
   const pd = document.getElementById('partnerDob').value;
   if(!yn || !yd) return showErr('Please fill your name and date of birth.');
-  if(!pn || !pd) return showErr('Please fill your partner\'s name and date of birth.');
+  if(!pn || !pd) return showErr('Please fill the other person\'s name and date of birth.');
 
   const html = buildPartnerResultHTML(yn, yd, pn, pd, {inline:true});
   const target = document.getElementById('partnerResult');
 
-  // Personalised share: use first names so the CTA reads
-  // "Send this to {partner}" instead of a generic prompt.
+  // Personalised share text + URL with prefilled params so the
+  // receiver lands on the SAME reading auto-loaded.
   const yFirst = (yn.split(/\s+/)[0] || 'you');
   const pFirst = (pn.split(/\s+/)[0] || 'them');
-  const waText = encodeURIComponent(
-    'Just ran our Chaldean dynamic on NameAligned\n' +
-    yFirst + ' × ' + pFirst + ', see if you read it the same way as me:\n' +
-    'https://www.namealigned.com/love-compatibility-numerology'
-  );
-  const waUrl = 'https://wa.me/?text=' + waText;
+  const shareText = buildPartnerShareText(yn, yd, pn, pd);
+  // Stash for the Copy button so it sends the same text as WhatsApp.
+  window.__loveCompatShareText = shareText;
+  const waUrl = 'https://wa.me/?text=' + encodeURIComponent(shareText);
 
   target.innerHTML =
     `<div class="mini-result-inline">${html}
@@ -493,8 +547,8 @@ function runPartner(){
       <!-- ── EMOTIONAL SHARE CALLOUT (personalised) ────────── -->
       <div style="background:linear-gradient(135deg,#fff8e8,#fff5e6);border:1.5px solid rgba(240,180,41,.45);border-radius:14px;padding:1.3rem 1.4rem;margin:1.5rem 0;box-shadow:0 8px 28px rgba(240,180,41,.12);">
         <div style="font-family:'DM Sans',sans-serif;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:#c9a227;font-weight:700;margin-bottom:.45rem;">✦ Send this to ${escapeHtml(pFirst)}</div>
-        <div style="font-family:'Playfair Display',Georgia,serif;font-size:19px;font-weight:700;color:var(--text);line-height:1.3;margin-bottom:.4rem;">See if they read this version of you two the same way.</div>
-        <div style="font-family:sans-serif;font-size:13.5px;color:var(--text2);line-height:1.6;margin-bottom:1rem;">Most people find their match identifies with at least one of the patterns above. Some agree out loud, some quietly screenshot, some send back a long voice note. All of those count.</div>
+        <div style="font-family:'Playfair Display',Georgia,serif;font-size:19px;font-weight:700;color:var(--text);line-height:1.3;margin-bottom:.4rem;">${escapeHtml(pFirst)} will probably recognise themselves in at least one line.</div>
+        <div style="font-family:sans-serif;font-size:13.5px;color:var(--text2);line-height:1.6;margin-bottom:1rem;">The full reading goes in the message so ${escapeHtml(pFirst)} sees it before they click. The link opens to this same dynamic, no re-typing.</div>
         <div style="display:flex;gap:.6rem;flex-wrap:wrap;">
           <a href="${waUrl}" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:7px;background:#25D366;color:#fff;padding:11px 18px;border-radius:10px;font-family:var(--font-sans);font-size:14px;font-weight:700;text-decoration:none;box-shadow:0 4px 14px rgba(37,211,102,.35);">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 2C6.477 2 2 6.477 2 12c0 1.89.525 3.66 1.438 5.168L2 22l4.985-1.418A9.956 9.956 0 0012 22c5.523 0 10-4.477 10-10S17.523 2 12 2zm0 18a7.946 7.946 0 01-4.337-1.284l-.31-.186-3.224.917.874-3.147-.203-.323A7.944 7.944 0 014 12c0-4.411 3.589-8 8-8s8 3.589 8 8-3.589 8-8 8z"/></svg>
@@ -502,7 +556,7 @@ function runPartner(){
           </a>
           <button onclick="copyShareLink_loveCompat()" style="display:inline-flex;align-items:center;gap:7px;background:transparent;color:#6d4ed1;border:1.5px solid rgba(109,78,209,.5);padding:11px 18px;border-radius:10px;font-family:var(--font-sans);font-size:14px;font-weight:600;cursor:pointer;">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
-            <span id="copyText_loveCompat">Copy link</span>
+            <span id="copyText_loveCompat">Copy reading</span>
           </button>
         </div>
       </div>
