@@ -85,6 +85,14 @@ body{
 }
 
 /* ── TYPOGRAPHY ─────────────────────────────────────────────── */
+/* Global numeral rule: force lining (uniform, on-baseline) digits
+   everywhere. Playfair Display's default old-style figures (where
+   some digits descend below the baseline) make numerals like 1995
+   or 4 look inconsistent next to body text. */
+html, body, h1, h2, h3, h4, h5, h6, p, span, div, a, li, td, th, em, strong, label, input, button, blockquote, cite{
+  font-variant-numeric: lining-nums;
+  font-feature-settings: "lnum" 1, "tnum" 0;
+}
 h1,h2,h3,h4{
   font-family: var(--font-serif);
   font-weight: 600;
