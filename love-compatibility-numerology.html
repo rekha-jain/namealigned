@@ -475,28 +475,84 @@ function runPartner(){
 
   const html = buildPartnerResultHTML(yn, yd, pn, pd, {inline:true});
   const target = document.getElementById('partnerResult');
+
+  // Personalised share: use first names so the CTA reads
+  // "Send this to {partner} 👀" instead of a generic prompt.
+  const yFirst = (yn.split(/\s+/)[0] || 'you');
+  const pFirst = (pn.split(/\s+/)[0] || 'them');
+  const waText = encodeURIComponent(
+    'Just ran our Chaldean dynamic on NameAligned 👀\n' +
+    yFirst + ' × ' + pFirst + ', see if you read it the same way as me:\n' +
+    'https://www.namealigned.com/love-compatibility-numerology'
+  );
+  const waUrl = 'https://wa.me/?text=' + waText;
+
   target.innerHTML =
     `<div class="mini-result-inline">${html}
-      <div style="background:linear-gradient(135deg,#fafafa,#fff5e6);border:1px solid rgba(245,196,81,.3);border-radius:12px;padding:1rem 1.25rem;margin:1.25rem 0;display:flex;align-items:center;gap:1rem;flex-wrap:wrap;justify-content:space-between;">
-        <div style="flex:1 1 240px;min-width:0;">
-          <div style="font-family:'DM Sans',sans-serif;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--gold-d);font-weight:700;margin-bottom:.2rem;">✦ Found it useful?</div>
-          <div style="font-family:'Playfair Display',Georgia,serif;font-size:16px;font-weight:700;color:var(--text);line-height:1.3;margin-bottom:.15rem;">Send it to someone curious about their match.</div>
-          <div style="font-family:sans-serif;font-size:12.5px;color:var(--text2);line-height:1.5;">Free 30-second Chaldean compatibility check.</div>
-        </div>
-        <div style="display:flex;gap:.5rem;flex-wrap:wrap;">
-          <a href="https://wa.me/?text=Free%20Chaldean%20love%20compatibility%20check%20on%20NameAligned.com%20%F0%9F%91%87%0Ahttps%3A%2F%2Fwww.namealigned.com%2Flove-compatibility-numerology" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:6px;background:#25D366;color:#fff;padding:9px 16px;border-radius:8px;font-family:var(--font-sans);font-size:13px;font-weight:600;text-decoration:none;">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 2C6.477 2 2 6.477 2 12c0 1.89.525 3.66 1.438 5.168L2 22l4.985-1.418A9.956 9.956 0 0012 22c5.523 0 10-4.477 10-10S17.523 2 12 2zm0 18a7.946 7.946 0 01-4.337-1.284l-.31-.186-3.224.917.874-3.147-.203-.323A7.944 7.944 0 014 12c0-4.411 3.589-8 8-8s8 3.589 8 8-3.589 8-8 8z"/></svg>
-            WhatsApp
+
+      <!-- ── EMOTIONAL SHARE CALLOUT (personalised) ────────── -->
+      <div style="background:linear-gradient(135deg,#fff8e8,#fff5e6);border:1.5px solid rgba(240,180,41,.45);border-radius:14px;padding:1.3rem 1.4rem;margin:1.5rem 0;box-shadow:0 8px 28px rgba(240,180,41,.12);">
+        <div style="font-family:'DM Sans',sans-serif;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:#c9a227;font-weight:700;margin-bottom:.45rem;">✦ Send this to ${escapeHtml(pFirst)} 👀</div>
+        <div style="font-family:'Playfair Display',Georgia,serif;font-size:19px;font-weight:700;color:var(--text);line-height:1.3;margin-bottom:.4rem;">See if they read this version of you two the same way.</div>
+        <div style="font-family:sans-serif;font-size:13.5px;color:var(--text2);line-height:1.6;margin-bottom:1rem;">Most people find their match identifies with at least one of the patterns above. Some agree out loud, some quietly screenshot, some send back a long voice note. All of those count.</div>
+        <div style="display:flex;gap:.6rem;flex-wrap:wrap;">
+          <a href="${waUrl}" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:7px;background:#25D366;color:#fff;padding:11px 18px;border-radius:10px;font-family:var(--font-sans);font-size:14px;font-weight:700;text-decoration:none;box-shadow:0 4px 14px rgba(37,211,102,.35);">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 2C6.477 2 2 6.477 2 12c0 1.89.525 3.66 1.438 5.168L2 22l4.985-1.418A9.956 9.956 0 0012 22c5.523 0 10-4.477 10-10S17.523 2 12 2zm0 18a7.946 7.946 0 01-4.337-1.284l-.31-.186-3.224.917.874-3.147-.203-.323A7.944 7.944 0 014 12c0-4.411 3.589-8 8-8s8 3.589 8 8-3.589 8-8 8z"/></svg>
+            Send on WhatsApp
           </a>
-          <button onclick="copyShareLink_loveCompat()" style="display:inline-flex;align-items:center;gap:6px;background:transparent;color:var(--gold-d);border:1.5px solid rgba(240,180,41,.5);padding:9px 16px;border-radius:8px;font-family:var(--font-sans);font-size:13px;font-weight:600;cursor:pointer;">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
-            <span id="copyText_loveCompat">Copy</span>
+          <button onclick="copyShareLink_loveCompat()" style="display:inline-flex;align-items:center;gap:7px;background:transparent;color:#6d4ed1;border:1.5px solid rgba(109,78,209,.5);padding:11px 18px;border-radius:10px;font-family:var(--font-sans);font-size:14px;font-weight:600;cursor:pointer;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+            <span id="copyText_loveCompat">Copy link</span>
           </button>
         </div>
       </div>
-      <div class="mini-rerun-hint">✦ Try another pairing above, change names or dates and click <strong>Reveal compatibility</strong> again. <a href="#tool">Back to form ↑</a></div>
+
+      <!-- ── CHECK ANOTHER RELATIONSHIP MATRIX (drive pages/session) ── -->
+      <div style="margin:1.5rem 0;">
+        <div style="font-family:'DM Sans',sans-serif;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:#9d4edd;font-weight:700;margin-bottom:.6rem;">✦ Check another relationship</div>
+        <div style="font-family:sans-serif;font-size:14px;color:var(--text);line-height:1.6;margin-bottom:.9rem;">Once you've read one dynamic, the next ones get interesting. Try with someone you've been quietly wondering about.</div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:.6rem;">
+          <a href="#tool" onclick="document.getElementById('partnerName').value='';document.getElementById('partnerDob').value='';document.getElementById('partnerName').focus();" style="background:rgba(124,58,237,.05);border:1px solid rgba(124,58,237,.2);border-radius:10px;padding:.85rem 1rem;text-decoration:none;color:var(--text);display:block;transition:all .15s ease;">
+            <div style="font-size:18px;margin-bottom:.2rem;">👫</div>
+            <div style="font-family:'Playfair Display',Georgia,serif;font-size:14.5px;font-weight:700;color:#6d4ed1;margin-bottom:.15rem;">Try with a best friend</div>
+            <div style="font-family:sans-serif;font-size:11.5px;color:var(--text2);line-height:1.45;">See why some friendships always flow and others feel like work.</div>
+          </a>
+          <a href="#tool" onclick="document.getElementById('partnerName').value='';document.getElementById('partnerDob').value='';document.getElementById('partnerName').focus();" style="background:rgba(124,58,237,.05);border:1px solid rgba(124,58,237,.2);border-radius:10px;padding:.85rem 1rem;text-decoration:none;color:var(--text);display:block;">
+            <div style="font-size:18px;margin-bottom:.2rem;">🪞</div>
+            <div style="font-family:'Playfair Display',Georgia,serif;font-size:14.5px;font-weight:700;color:#6d4ed1;margin-bottom:.15rem;">Try with a sibling</div>
+            <div style="font-family:sans-serif;font-size:11.5px;color:var(--text2);line-height:1.45;">Decode the family-dinner friction you grew up with.</div>
+          </a>
+          <a href="#tool" onclick="document.getElementById('partnerName').value='';document.getElementById('partnerDob').value='';document.getElementById('partnerName').focus();" style="background:rgba(124,58,237,.05);border:1px solid rgba(124,58,237,.2);border-radius:10px;padding:.85rem 1rem;text-decoration:none;color:var(--text);display:block;">
+            <div style="font-size:18px;margin-bottom:.2rem;">💼</div>
+            <div style="font-family:'Playfair Display',Georgia,serif;font-size:14.5px;font-weight:700;color:#6d4ed1;margin-bottom:.15rem;">Try with a coworker</div>
+            <div style="font-family:sans-serif;font-size:11.5px;color:var(--text2);line-height:1.45;">Read why one teammate is easy and another is always uphill.</div>
+          </a>
+          <a href="#tool" onclick="document.getElementById('partnerName').value='';document.getElementById('partnerDob').value='';document.getElementById('partnerName').focus();" style="background:rgba(124,58,237,.05);border:1px solid rgba(124,58,237,.2);border-radius:10px;padding:.85rem 1rem;text-decoration:none;color:var(--text);display:block;">
+            <div style="font-size:18px;margin-bottom:.2rem;">👨‍👩‍👧</div>
+            <div style="font-family:'Playfair Display',Georgia,serif;font-size:14.5px;font-weight:700;color:#6d4ed1;margin-bottom:.15rem;">Try with a parent or child</div>
+            <div style="font-family:sans-serif;font-size:11.5px;color:var(--text2);line-height:1.45;">Read the rhythm that explains the way you two communicate.</div>
+          </a>
+          <a href="#tool" onclick="document.getElementById('partnerName').value='';document.getElementById('partnerDob').value='';document.getElementById('partnerName').focus();" style="background:rgba(124,58,237,.05);border:1px solid rgba(124,58,237,.2);border-radius:10px;padding:.85rem 1rem;text-decoration:none;color:var(--text);display:block;">
+            <div style="font-size:18px;margin-bottom:.2rem;">🌙</div>
+            <div style="font-family:'Playfair Display',Georgia,serif;font-size:14.5px;font-weight:700;color:#6d4ed1;margin-bottom:.15rem;">Try with an ex</div>
+            <div style="font-family:sans-serif;font-size:11.5px;color:var(--text2);line-height:1.45;">Read in hindsight. Some patterns only make sense from the other side.</div>
+          </a>
+          <a href="#tool" onclick="document.getElementById('partnerName').value='';document.getElementById('partnerDob').value='';document.getElementById('partnerName').focus();" style="background:rgba(124,58,237,.05);border:1px solid rgba(124,58,237,.2);border-radius:10px;padding:.85rem 1rem;text-decoration:none;color:var(--text);display:block;">
+            <div style="font-size:18px;margin-bottom:.2rem;">🤝</div>
+            <div style="font-family:'Playfair Display',Georgia,serif;font-size:14.5px;font-weight:700;color:#6d4ed1;margin-bottom:.15rem;">Try with a business partner</div>
+            <div style="font-family:sans-serif;font-size:11.5px;color:var(--text2);line-height:1.45;">See why one collaborator clicks and another grates.</div>
+          </a>
+        </div>
+      </div>
+
+      <div class="mini-rerun-hint">✦ Or change just one name above and read a fresh dynamic. <a href="#tool">Back to form ↑</a></div>
     </div>`;
   target.scrollIntoView({behavior:'smooth', block:'start'});
+}
+
+// Small HTML-escape so a name with quotes or angle brackets cannot break the share callout.
+function escapeHtml(s){
+  return String(s||'').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;','\'':'&#39;'}[c]));
 }
 </script>
 <script src="/assets/aura-fab.js" defer></script>
