@@ -300,6 +300,7 @@
 
 </style>
 <script src="/assets/mixpanel.js"></script>
+<script src="/assets/analytics.js"></script>
 
 <script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://www.namealigned.com/"}, {"@type": "ListItem", "position": 2, "name": "Free Chaldean Analyser", "item": "https://www.namealigned.com/analyzer"}]}</script>
 </head>
@@ -999,6 +1000,13 @@ function goToStep2(){
   S.mobile  = '';
   // Mixpanel canonical event
   if (window.naTrack) window.naTrack('Analyzer Started', { name_length: name.length, has_dob: !!dob });
+  // GA4 canonical event
+  if (window.NA && NA.track) {
+    NA.track('analyzer_started', {
+      source_page: NA.sourcePage(),
+      device_type: NA.deviceType(),
+    });
+  }
   S.birthNum = getBirthNum(dob);
   S.destNum  = getDestinyNum(dob);
   const {raw,reduced} = getNameNum(name);
@@ -1274,6 +1282,16 @@ function renderAnalysis(){
     moolank: birthNum, bhagyank: destNum, name_number: nameNum,
     alignment: pct, status: status,
   });
+  // ── GA4 canonical event names ─────────────────────────────
+  if (window.NA && NA.track) {
+    NA.track('analyzer_completed', {
+      alignment_score_range: NA.scoreRange(pct),
+      score: pct,
+      name_number: nameNum,
+      life_path_number: destNum,
+      device_type: NA.deviceType(),
+    });
+  }
 }
 
 // ── Engagement loop ───────────────────────────────────────────────────
@@ -1338,6 +1356,14 @@ function buildShareUrl(){
 
 function copyAnalyzerLink(){
   trackEvent('share_clicked',{channel:'copy_link'});
+  // GA4 canonical event names
+  if (window.NA && NA.track) {
+    NA.track('copy_share_link', { content_type: 'analyzer' });
+    NA.track('analyzer_shared', {
+      share_method: 'copy_link',
+      alignment_score_range: NA.scoreRange((window.S && S.pct) || null),
+    });
+  }
   const url = buildShareUrl();
   const showCopied = () => {
     const btn = document.getElementById('copyLinkText');
@@ -2053,6 +2079,14 @@ function buildShareCaption(){
 
 async function shareCardWA(){
   trackEvent('share_card_clicked', {channel:'whatsapp'});
+  // GA4 canonical event names
+  if (window.NA && NA.track) {
+    NA.track('share_whatsapp', { content_type: 'analyzer' });
+    NA.track('analyzer_shared', {
+      share_method: 'whatsapp',
+      alignment_score_range: NA.scoreRange((window.S && S.pct) || null),
+    });
+  }
   const text = buildShareCaption();
   // Mobile + desktop: wa.me works everywhere and opens WhatsApp/Web with
   // text pre-filled. WhatsApp auto-fetches the OG preview from the URL.

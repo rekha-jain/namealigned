@@ -109,6 +109,7 @@
 .cross-tool .ct-sub{font-family:sans-serif;font-size:12.5px;color:var(--text2);line-height:1.5}
 </style>
 <script src="/assets/mixpanel.js"></script>
+<script src="/assets/analytics.js"></script>
 
 <script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://www.namealigned.com/"}, {"@type": "ListItem", "position": 2, "name": "Relationship Compatibility", "item": "https://www.namealigned.com/love-compatibility-numerology"}]}</script>
 </head>
@@ -234,7 +235,7 @@
 </section>
 
 <!-- ── RELATIONSHIP ARCHETYPES (screenshot-worthy) ──────────── -->
-<section class="section" style="padding-top:1rem">
+<section class="section" id="relArchetypes" style="padding-top:1rem">
   <div class="eyebrow-tag">Eight relationship archetypes</div>
   <h2>The shape your dynamic tends to take.</h2>
   <p>The numbers settle into one of a handful of recurring shapes. Once you see which one your relationship leans toward, the small mysteries get explanations.</p>
@@ -402,13 +403,73 @@
 </section>
 
 <script>
+// Matrix-card handler: fires relationship_type_selected +
+// check_another_relationship, then resets the partner half of the
+// form and refocuses, preserving the previous reset behaviour.
+function selectAnotherRelationship(el){
+  const newType = (el && el.getAttribute('data-rel-type')) || 'unspecified';
+  const prev = window.__loveCompatRelType || 'unspecified';
+  if(window.NA){
+    NA.track('relationship_type_selected', { relationship_type: newType });
+    NA.track('check_another_relationship', {
+      previous_relationship_type: prev,
+      new_relationship_type: newType,
+    });
+  }
+  window.__loveCompatRelType = newType;
+  const pn = document.getElementById('partnerName');
+  const pd = document.getElementById('partnerDob');
+  if(pn) pn.value = '';
+  if(pd) pd.value = '';
+  if(pn) pn.focus();
+}
+
 function copyShareLink_loveCompat(){
+  // analytics
+  if(window.NA){
+    NA.track('copy_share_link', {content_type:'compatibility'});
+    NA.track('compatibility_shared', {share_method:'copy_link', relationship_type:window.__loveCompatRelType||'unspecified'});
+  }
   // Copy the SAME rich share text that goes to WhatsApp (reading + prefill URL).
   const text = window.__loveCompatShareText || 'https://www.namealigned.com/love-compatibility-numerology';
   const cb = () => { const el = document.getElementById('copyText_loveCompat'); if(el){ el.textContent = '✓ Copied!'; setTimeout(() => { el.textContent = 'Copy reading'; }, 2500); } };
   if(navigator.clipboard){ navigator.clipboard.writeText(text).then(cb).catch(() => { const ta = document.createElement('textarea'); ta.value = text; ta.style.position='fixed'; ta.style.opacity='0'; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta); cb(); }); }
   else { const ta = document.createElement('textarea'); ta.value = text; ta.style.position='fixed'; ta.style.opacity='0'; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta); cb(); }
 }
+
+// ── Analytics: archetype_viewed when the relationship-archetypes
+// section enters the viewport (fires once per page load).
+(function(){
+  if(!('IntersectionObserver' in window) || !window.NA) return;
+  document.addEventListener('DOMContentLoaded', () => {
+    const el = document.getElementById('relArchetypes');
+    if(!el) return;
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if(e.isIntersecting){
+          NA.track('archetype_viewed', { archetype_name: 'relationship_archetypes_grid' });
+          io.disconnect();
+        }
+      });
+    }, { threshold: 0.25 });
+    io.observe(el);
+  });
+})();
+
+// ── Analytics: related_insight_clicked on the Explore-next matrix
+// cards (the 4 cross-tool tiles that link to the calculator, name
+// correction, business and Ask Aura). Uses event delegation so we
+// don't have to inline onclick on every link.
+document.addEventListener('click', (e) => {
+  if(!window.NA) return;
+  const a = e.target.closest && e.target.closest('a.cross-tool');
+  if(!a) return;
+  const dest = (a.getAttribute('href') || '').replace(/^\//,'').replace(/\/$/,'') || 'unknown';
+  NA.track('related_insight_clicked', {
+    source_page: NA.sourcePage(),
+    destination_page: dest,
+  });
+});
 
 // URL prefill: if a shared link arrives with y/yd/p/pd params,
 // auto-fill the form and run the check so the receiver lands
@@ -502,6 +563,11 @@ function buildPartnerShareText(yn, yd, pn, pd){
   );
 }
 
+// Tracks the relationship-type the user is currently exploring,
+// updated by check-another matrix clicks so we can emit it on
+// the next compatibility_started/completed pair.
+window.__loveCompatRelType = window.__loveCompatRelType || 'unspecified';
+
 function runPartner(){
   const errEl = document.getElementById('partnerErr');
   const showErr = msg => { errEl.textContent = msg; errEl.style.display = 'block'; };
@@ -512,6 +578,16 @@ function runPartner(){
   const pd = document.getElementById('partnerDob').value;
   if(!yn || !yd) return showErr('Please fill your name and date of birth.');
   if(!pn || !pd) return showErr('Please fill the other person\'s name and date of birth.');
+
+  // ── analytics: compatibility_started ───────────────────────────
+  // Fires once we have a valid submission (both halves filled).
+  if(window.NA && NA.track){
+    NA.track('compatibility_started', {
+      relationship_type: window.__loveCompatRelType || 'unspecified',
+      source_page: NA.sourcePage(),
+      device_type: NA.deviceType(),
+    });
+  }
 
   const html = buildPartnerResultHTML(yn, yd, pn, pd, {inline:true});
   const target = document.getElementById('partnerResult');
@@ -525,6 +601,26 @@ function runPartner(){
   window.__loveCompatShareText = shareText;
   const waUrl = 'https://wa.me/?text=' + encodeURIComponent(shareText);
 
+  // ── analytics: compatibility_completed ─────────────────────────
+  // Recomputes the score/tier locally so we can attach the bucketed
+  // dynamic type + archetype combo. Score range is bucketed.
+  if(window.NA && NA.track && typeof getBirthNum === 'function' && typeof partnerScore === 'function'){
+    try {
+      const yMoo = getBirthNum(yd), pMoo = getBirthNum(pd);
+      const yBhag = getDestinyNum(yd), pBhag = getDestinyNum(pd);
+      const _score = partnerScore(yMoo, yBhag, pMoo, pBhag);
+      const _tier  = (typeof tierOf === 'function') ? tierOf(_score) : {cls:'unknown'};
+      NA.track('compatibility_completed', {
+        relationship_type: window.__loveCompatRelType || 'unspecified',
+        score_range: NA.scoreRange(_score),
+        score: _score,
+        emotional_dynamic_type: NA.dynamicType(_tier.cls),
+        compatibility_archetype: NA.compatArchetype(yMoo, pMoo),
+        device_type: NA.deviceType(),
+      });
+    } catch(e){}
+  }
+
   target.innerHTML =
     `<div class="mini-result-inline">${html}
 
@@ -534,7 +630,7 @@ function runPartner(){
         <div style="font-family:'Playfair Display',Georgia,serif;font-size:19px;font-weight:700;color:var(--text);line-height:1.3;margin-bottom:.4rem;">It reads what you've probably both felt but never quite named.</div>
         <div style="font-family:sans-serif;font-size:13.5px;color:var(--text2);line-height:1.6;margin-bottom:1rem;">The full reading goes in the message, so ${escapeHtml(pFirst)} sees it straight away. The link opens to this same dynamic, no re-typing.</div>
         <div style="display:flex;gap:.6rem;flex-wrap:wrap;">
-          <a href="${waUrl}" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:7px;background:#25D366;color:#fff;padding:11px 18px;border-radius:10px;font-family:var(--font-sans);font-size:14px;font-weight:700;text-decoration:none;box-shadow:0 4px 14px rgba(37,211,102,.35);">
+          <a href="${waUrl}" target="_blank" rel="noopener" onclick="if(window.NA){NA.track('share_whatsapp',{content_type:'compatibility',relationship_type:window.__loveCompatRelType||'unspecified'});NA.track('compatibility_shared',{share_method:'whatsapp',relationship_type:window.__loveCompatRelType||'unspecified'});}" style="display:inline-flex;align-items:center;gap:7px;background:#25D366;color:#fff;padding:11px 18px;border-radius:10px;font-family:var(--font-sans);font-size:14px;font-weight:700;text-decoration:none;box-shadow:0 4px 14px rgba(37,211,102,.35);">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 2C6.477 2 2 6.477 2 12c0 1.89.525 3.66 1.438 5.168L2 22l4.985-1.418A9.956 9.956 0 0012 22c5.523 0 10-4.477 10-10S17.523 2 12 2zm0 18a7.946 7.946 0 01-4.337-1.284l-.31-.186-3.224.917.874-3.147-.203-.323A7.944 7.944 0 014 12c0-4.411 3.589-8 8-8s8 3.589 8 8-3.589 8-8 8z"/></svg>
             Send on WhatsApp
           </a>
@@ -550,32 +646,32 @@ function runPartner(){
         <div style="font-family:'DM Sans',sans-serif;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:#9d4edd;font-weight:700;margin-bottom:.6rem;">✦ Check another relationship</div>
         <div style="font-family:sans-serif;font-size:14px;color:var(--text);line-height:1.6;margin-bottom:.9rem;">Once you've read one dynamic, the next ones get interesting. Try with someone you've been quietly wondering about.</div>
         <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:.6rem;">
-          <a href="#tool" onclick="document.getElementById('partnerName').value='';document.getElementById('partnerDob').value='';document.getElementById('partnerName').focus();" style="background:rgba(124,58,237,.05);border:1px solid rgba(124,58,237,.2);border-radius:10px;padding:.85rem 1rem;text-decoration:none;color:var(--text);display:block;transition:all .15s ease;">
+          <a href="#tool" data-rel-type="friend" onclick="selectAnotherRelationship(this);" style="background:rgba(124,58,237,.05);border:1px solid rgba(124,58,237,.2);border-radius:10px;padding:.85rem 1rem;text-decoration:none;color:var(--text);display:block;transition:all .15s ease;">
             <div style="font-size:18px;margin-bottom:.2rem;">👫</div>
             <div style="font-family:'Playfair Display',Georgia,serif;font-size:14.5px;font-weight:700;color:#6d4ed1;margin-bottom:.15rem;">Try with a best friend</div>
             <div style="font-family:sans-serif;font-size:11.5px;color:var(--text2);line-height:1.45;">See why some friendships always flow and others feel like work.</div>
           </a>
-          <a href="#tool" onclick="document.getElementById('partnerName').value='';document.getElementById('partnerDob').value='';document.getElementById('partnerName').focus();" style="background:rgba(124,58,237,.05);border:1px solid rgba(124,58,237,.2);border-radius:10px;padding:.85rem 1rem;text-decoration:none;color:var(--text);display:block;">
+          <a href="#tool" data-rel-type="sibling" onclick="selectAnotherRelationship(this);" style="background:rgba(124,58,237,.05);border:1px solid rgba(124,58,237,.2);border-radius:10px;padding:.85rem 1rem;text-decoration:none;color:var(--text);display:block;">
             <div style="font-size:18px;margin-bottom:.2rem;">🪞</div>
             <div style="font-family:'Playfair Display',Georgia,serif;font-size:14.5px;font-weight:700;color:#6d4ed1;margin-bottom:.15rem;">Try with a sibling</div>
             <div style="font-family:sans-serif;font-size:11.5px;color:var(--text2);line-height:1.45;">Decode the family-dinner friction you grew up with.</div>
           </a>
-          <a href="#tool" onclick="document.getElementById('partnerName').value='';document.getElementById('partnerDob').value='';document.getElementById('partnerName').focus();" style="background:rgba(124,58,237,.05);border:1px solid rgba(124,58,237,.2);border-radius:10px;padding:.85rem 1rem;text-decoration:none;color:var(--text);display:block;">
+          <a href="#tool" data-rel-type="coworker" onclick="selectAnotherRelationship(this);" style="background:rgba(124,58,237,.05);border:1px solid rgba(124,58,237,.2);border-radius:10px;padding:.85rem 1rem;text-decoration:none;color:var(--text);display:block;">
             <div style="font-size:18px;margin-bottom:.2rem;">💼</div>
             <div style="font-family:'Playfair Display',Georgia,serif;font-size:14.5px;font-weight:700;color:#6d4ed1;margin-bottom:.15rem;">Try with a coworker</div>
             <div style="font-family:sans-serif;font-size:11.5px;color:var(--text2);line-height:1.45;">Read why one teammate is easy and another is always uphill.</div>
           </a>
-          <a href="#tool" onclick="document.getElementById('partnerName').value='';document.getElementById('partnerDob').value='';document.getElementById('partnerName').focus();" style="background:rgba(124,58,237,.05);border:1px solid rgba(124,58,237,.2);border-radius:10px;padding:.85rem 1rem;text-decoration:none;color:var(--text);display:block;">
+          <a href="#tool" data-rel-type="parent_child" onclick="selectAnotherRelationship(this);" style="background:rgba(124,58,237,.05);border:1px solid rgba(124,58,237,.2);border-radius:10px;padding:.85rem 1rem;text-decoration:none;color:var(--text);display:block;">
             <div style="font-size:18px;margin-bottom:.2rem;">👨‍👩‍👧</div>
             <div style="font-family:'Playfair Display',Georgia,serif;font-size:14.5px;font-weight:700;color:#6d4ed1;margin-bottom:.15rem;">Try with a parent or child</div>
             <div style="font-family:sans-serif;font-size:11.5px;color:var(--text2);line-height:1.45;">Read the rhythm that explains the way you two communicate.</div>
           </a>
-          <a href="#tool" onclick="document.getElementById('partnerName').value='';document.getElementById('partnerDob').value='';document.getElementById('partnerName').focus();" style="background:rgba(124,58,237,.05);border:1px solid rgba(124,58,237,.2);border-radius:10px;padding:.85rem 1rem;text-decoration:none;color:var(--text);display:block;">
+          <a href="#tool" data-rel-type="ex" onclick="selectAnotherRelationship(this);" style="background:rgba(124,58,237,.05);border:1px solid rgba(124,58,237,.2);border-radius:10px;padding:.85rem 1rem;text-decoration:none;color:var(--text);display:block;">
             <div style="font-size:18px;margin-bottom:.2rem;">🌙</div>
             <div style="font-family:'Playfair Display',Georgia,serif;font-size:14.5px;font-weight:700;color:#6d4ed1;margin-bottom:.15rem;">Try with an ex</div>
             <div style="font-family:sans-serif;font-size:11.5px;color:var(--text2);line-height:1.45;">Read in hindsight. Some patterns only make sense from the other side.</div>
           </a>
-          <a href="#tool" onclick="document.getElementById('partnerName').value='';document.getElementById('partnerDob').value='';document.getElementById('partnerName').focus();" style="background:rgba(124,58,237,.05);border:1px solid rgba(124,58,237,.2);border-radius:10px;padding:.85rem 1rem;text-decoration:none;color:var(--text);display:block;">
+          <a href="#tool" data-rel-type="business_partner" onclick="selectAnotherRelationship(this);" style="background:rgba(124,58,237,.05);border:1px solid rgba(124,58,237,.2);border-radius:10px;padding:.85rem 1rem;text-decoration:none;color:var(--text);display:block;">
             <div style="font-size:18px;margin-bottom:.2rem;">🤝</div>
             <div style="font-family:'Playfair Display',Georgia,serif;font-size:14.5px;font-weight:700;color:#6d4ed1;margin-bottom:.15rem;">Try with a business partner</div>
             <div style="font-family:sans-serif;font-size:11.5px;color:var(--text2);line-height:1.45;">See why one collaborator clicks and another grates.</div>
