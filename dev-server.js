@@ -133,7 +133,7 @@ server.listen(PORT, () => {
   console.log('║                                                    ║');
   console.log('║  Test paid report page (no real payment needed):  ║');
   console.log('║  http://localhost:' + PORT + '/generate-report?          ║');
-  console.log('║    paymentId=pay_test&name=Rekha+Jain&            ║');
+  console.log('║    paymentId=pay_test&name=Priya+Jain&            ║');
   console.log('║    dob=1985-05-14&email=test@test.com&            ║');
   console.log('║    birthNum=5&destNum=6&nameNum=3&pct=82          ║');
   console.log('║                                                    ║');

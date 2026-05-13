@@ -2519,13 +2519,13 @@ hr.divider{display:none;}
   // Rules: double a vowel, elongate end, insert 'i' before vowel (diphthong),
   // remove/add silent 'h', vowel substitutions (e↔ee, i↔ee, y↔i), etc.
   // Each word in the full name is mutated independently so both first-name
-  // and surname variants are explored (e.g. Rekha Jaiin from Jain).
+  // and surname variants are explored (e.g. Priya Jaiin from Jain).
 
   function getPhoneticWordVariants(w){
     var out=[];
 
     // 1. Double each individual vowel in the word
-    //    Rekha → Reekha (double e), Rekhaa already caught below
+    //    Priya → Preeya (double e), Priyaa already caught below
     for(var i=0;i<w.length;i++){
       if(!/[aeiou]/i.test(w[i])) continue;
       // Skip if already doubled
@@ -2534,11 +2534,11 @@ hr.divider{display:none;}
       out.push(w.slice(0,i)+w[i]+w[i]+w.slice(i+1));
     }
 
-    // 2. Append duplicate of last letter if it's a vowel → Rekha→Rekhaa, Jain→Jainn
+    // 2. Append duplicate of last letter if it's a vowel → Priya→Priyaa, Jain→Jainn
     var last=w[w.length-1];
     if(/[aeiou]/i.test(last)){
-      out.push(w+last);          // Rekha → Rekhaa
-      out.push(w+'h');           // Rekha → Rekhah
+      out.push(w+last);          // Priya → Priyaa
+      out.push(w+'h');           // Priya → Priyah
     } else {
       out.push(w+last);          // Jain  → Jainn  (double last consonant)
       out.push(w+'a');           // Ritu  → Ritua (soften ending)
@@ -2552,12 +2552,12 @@ hr.divider{display:none;}
     }
 
     // 4. Remove a silent 'h' that follows a consonant (kh→k, etc.)
-    //    Rekha has no ch/kh but covers names like Shikha→Sikha, Neha→Nea (skip too short)
+    //    Priya has no ch/kh but covers names like Shikha→Sikha, Neha→Nea (skip too short)
     var noH=w.replace(/([^aeiou\s])h/i,'$1');
     if(noH!==w && noH.length>=3) out.push(noH);
 
     // 5. Add silent 'h' after first consonant cluster
-    //    Reka→Rekha, Mona→Mohna etc.
+    //    Reka→Priya, Mona→Mohna etc.
     var addH=w.replace(/([^aeiou\s])([aeiou])/i,'$1h$2');
     if(addH!==w) out.push(addH);
 
@@ -2572,7 +2572,7 @@ hr.divider{display:none;}
     if(w.search(/u(?!u)/i)>=0)       out.push(w.replace(/u(?!u)/i,'oo'));              // u→oo
     if(w.search(/oo/i)>=0)           out.push(w.replace(/oo/i,'u'));                   // oo→u
 
-    // 7. Deduplicate removed: remove consecutive double letters (Rekkhaa→Rekha)
+    // 7. Deduplicate removed: remove consecutive double letters (Rekkhaa→Priya)
     var dedup=w.replace(/([a-z])\1+/gi,'$1');
     if(dedup!==w && dedup.length>=3) out.push(dedup);
 
