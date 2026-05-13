@@ -703,8 +703,11 @@ function buildPartnerResultHTML(yn,yd,pn,pd, opts){
     pair:`${yArche} <span style="opacity:.55">×</span> ${pArche}`,
     narrative,
     extraHtml: buildPartnerToolkit(yMoo, yBhag, pMoo, pBhag, yFirst, pFirst),
-    upsellLead:'Go deeper:',
-    upsell:UPSELL_PARTNER,
+    // Hide the mid-result upsell on the relationship flow, the
+    // dedicated share callout below now leads instead of the report
+    // pitch. The report CTA is still reachable from the nav, footer,
+    // and the page's own 'Unlock Full Report' nav link.
+    hideUpsell:true,
     kind:'partner',
     inline: !!(opts&&opts.inline)
   });
