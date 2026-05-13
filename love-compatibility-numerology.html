@@ -487,48 +487,18 @@ if(navHam&&navMob) navHam.addEventListener('click',()=>navMob.classList.toggle('
 // receiver doesn't have to click cold. Returns plain text suitable
 // for WhatsApp / clipboard.
 function buildPartnerShareText(yn, yd, pn, pd){
-  const yMoo = getBirthNum(yd), yBhag = getDestinyNum(yd);
-  const pMoo = getBirthNum(pd), pBhag = getDestinyNum(pd);
-  const score = partnerScore(yMoo, yBhag, pMoo, pBhag);
-  const tier  = tierOf(score);
-  const yPlanet = getPlanet(yMoo), pPlanet = getPlanet(pMoo);
-  const yArche = ARCHETYPES[yMoo], pArche = ARCHETYPES[pMoo];
-  const yFirst = (yn.split(/\s+/)[0] || 'You');
-  const pFirst = (pn.split(/\s+/)[0] || 'Them');
-  // Soften the tier label for plain-text WhatsApp readability,
-  // the shouty all-caps version is fine in the UI pill but lands
-  // aggressively in a chat message.
-  const TIER_TEXT = {
-    high: 'Strong Harmony',
-    mid:  'Workable, with conscious effort',
-    low:  'Needs awareness, the rhythms differ',
-  };
-  const tierLabel = TIER_TEXT[tier.cls] || tier.label;
-  // One memorable, tier-specific line that lands honestly with someone
-  // who has not read the rest of the page.
-  const LINE = {
-    high: 'Your rhythms run on the same frequency. Most disagreements resolve once spoken aloud.',
-    mid:  'Different rhythms, real warmth. The friction here is pace, not feeling, and naming it closes most of the gap.',
-    low:  'The contrast is the gift when used consciously. People who name the differences often build more conscious relationships than higher-scoring pairs.',
-  };
-  const memorable = LINE[tier.cls] || LINE.mid;
-  // Make the lower-case article match the archetype name (which is
-  // capitalised already as a noun, so we add a leading lowercase 'the'
-  // for natural sentence flow).
-  const archeLine = 'the ' + yArche.replace(/^The\s+/i,'') + ' meets the ' + pArche.replace(/^The\s+/i,'');
-  // Prefill URL so the receiver opens to the same reading without re-typing.
+  // Short, curiosity-led share. Names are full names (as entered), so
+  // the receiver sees exactly who the reading is on. The URL prefills
+  // the form so the click lands them straight on the same dynamic.
   const url = 'https://www.namealigned.com/love-compatibility-numerology'
     + '?y='  + encodeURIComponent(yn)
     + '&yd=' + encodeURIComponent(yd)
     + '&p='  + encodeURIComponent(pn)
     + '&pd=' + encodeURIComponent(pd);
   return (
-    'Just read this on us. Take a look:\n\n' +
-    '✦ ' + yFirst + ' × ' + pFirst + '\n' +
-    yPlanet + ' × ' + pPlanet + ', ' + archeLine + '.\n' +
-    score + '%, ' + tierLabel + '.\n\n' +
-    '"' + memorable + '"\n\n' +
-    'Full reading (opens to our names, no re-typing):\n' + url
+    'Just ran our Chaldean dynamic on NameAligned 💟\n' +
+    yn + ' × ' + pn + ', see if you read it the same way as me.\n' +
+    'Full reading here:\n' + url
   );
 }
 
