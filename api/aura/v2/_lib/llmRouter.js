@@ -1,9 +1,14 @@
 /**
- * Gemini-only streaming router. Cascades across free-tier models so that
- * 429/503/500 on one model falls through to the next, never to the user.
+ * Gemini-only LLM router. Cascades across free-tier models, returning
+ * the full reply as one chunk. The frontend typewriter creates the
+ * streaming feel.
  *
- * Streaming uses Gemini's :streamGenerateContent endpoint with SSE.
- * Each yielded chunk is a plain text fragment ready for the bubble.
+ * We previously used :streamGenerateContent with SSE, but it was
+ * fragile on the free tier (intermittent empty streams). The legacy
+ * /api/aura endpoint uses :generateContent reliably; we mirror that.
+ *
+ * The async-generator shape is preserved so the orchestrator code in
+ * message.js does not change.
  */
 
 'use strict';
@@ -18,6 +23,8 @@ function buildPayload({ system, contents }) {
       temperature: 0.8,
       topP: 0.95,
       maxOutputTokens: 220,
+      // Gemini 2.5 burns "thinking" tokens against this budget; disable
+      // so replies are fast and full.
       thinkingConfig: { thinkingBudget: 0 },
     },
     safetySettings: [
@@ -30,12 +37,47 @@ function buildPayload({ system, contents }) {
 }
 
 /**
- * Stream chunks of text from Gemini using the SSE streaming endpoint.
- * Yields plain text fragments. Throws if every model in the cascade
- * returns a retryable error.
- *
- * The caller is responsible for the upstream quota gate, so this
- * function assumes it is allowed to call Gemini.
+ * Call one model. Returns the assistant text or throws.
+ */
+async function callModel(model, payload, apiKey) {
+  const url = 'https://generativelanguage.googleapis.com/v1beta/models/'
+    + encodeURIComponent(model)
+    + ':generateContent?key=' + encodeURIComponent(apiKey);
+
+  const ctrl = new AbortController();
+  const timer = setTimeout(() => ctrl.abort(), 20000);
+  try {
+    const r = await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+      signal: ctrl.signal,
+    });
+
+    if (!r.ok) {
+      const errText = await r.text().catch(() => '');
+      const err = Object.assign(new Error('upstream_' + r.status), {
+        status: r.status, body: errText.slice(0, 400), model,
+      });
+      throw err;
+    }
+
+    const data = await r.json();
+    const parts = (((data.candidates || [])[0] || {}).content || {}).parts || [];
+    const text = parts.map(p => (p && p.text) ? p.text : '').join('').trim();
+    if (!text) {
+      const finish = ((data.candidates || [])[0] || {}).finishReason || 'unknown';
+      throw Object.assign(new Error('empty_reply'), { model, finish, status: 502 });
+    }
+    return text;
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
+/**
+ * Async generator wrapper. Yields a single { text, model } chunk on
+ * success. Throws after every model in the cascade fails.
  */
 async function* streamLLM({ system, userText, history }) {
   const apiKey = process.env.GEMINI_API_KEY;
@@ -43,7 +85,7 @@ async function* streamLLM({ system, userText, history }) {
     const e = new Error('GEMINI_API_KEY not set'); e.code = 'no_api_key'; throw e;
   }
 
-  // Build contents in Gemini's format.
+  // Build Gemini-format contents from chat history + latest user turn.
   const contents = [];
   for (const m of history || []) {
     if (!m || !m.content) continue;
@@ -57,77 +99,25 @@ async function* streamLLM({ system, userText, history }) {
   contents.push({ role: 'user', parts: [{ text: String(userText) }] });
 
   const payload = buildPayload({ system, contents });
+
   let lastErr;
-
   for (const model of FREE_CASCADE) {
-    const url = 'https://generativelanguage.googleapis.com/v1beta/models/'
-      + encodeURIComponent(model)
-      + ':streamGenerateContent?alt=sse&key=' + encodeURIComponent(apiKey);
-
     try {
-      const ctrl = new AbortController();
-      const timer = setTimeout(() => ctrl.abort(), 30000);
-      const r = await fetch(url, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', Accept: 'text/event-stream' },
-        body: JSON.stringify(payload),
-        signal: ctrl.signal,
-      });
-
-      if (!r.ok) {
-        clearTimeout(timer);
-        const errText = await r.text().catch(() => '');
-        lastErr = Object.assign(new Error('upstream_' + r.status), { status: r.status, body: errText.slice(0, 400), model });
-        // Retryable -> cascade. Other errors (401/403/404) -> bail.
-        if (r.status === 429 || r.status === 500 || r.status === 503) continue;
-        throw lastErr;
-      }
-
-      // Stream parser. Gemini SSE emits "data: {json}\n\n" frames.
-      const reader = r.body.getReader();
-      const decoder = new TextDecoder('utf-8');
-      let buf = '';
-      let produced = false;
-      try {
-        while (true) {
-          const { value, done } = await reader.read();
-          if (done) break;
-          buf += decoder.decode(value, { stream: true });
-          let nl;
-          while ((nl = buf.indexOf('\n\n')) !== -1) {
-            const frame = buf.slice(0, nl);
-            buf = buf.slice(nl + 2);
-            const line = frame.split('\n').find(l => l.startsWith('data: '));
-            if (!line) continue;
-            const json = line.slice(6).trim();
-            if (!json || json === '[DONE]') continue;
-            let evt;
-            try { evt = JSON.parse(json); } catch { continue; }
-            const parts = (((evt.candidates || [])[0] || {}).content || {}).parts || [];
-            const text = parts.map(p => (p && p.text) ? p.text : '').join('');
-            if (text) { produced = true; yield { text, model }; }
-          }
-        }
-      } finally {
-        clearTimeout(timer);
-        try { reader.releaseLock(); } catch {}
-      }
-      if (produced) return;
-      // Empty stream, try next model.
-      lastErr = Object.assign(new Error('empty_stream'), { model });
-      continue;
+      const text = await callModel(model, payload, apiKey);
+      yield { text, model };
+      return;
     } catch (err) {
-      if (err && err.name === 'AbortError') {
-        lastErr = Object.assign(new Error('timeout'), { model });
-        continue;
-      }
       lastErr = err;
-      // Don't blindly cascade on programmer errors.
-      if (err && err.status && (err.status === 401 || err.status === 403 || err.status === 404)) throw err;
+      const status = err && err.status;
+      // Retryable -> cascade. Programmer errors (401/403/404) bail.
+      if (status === 401 || status === 403 || status === 404) {
+        console.error('[aura/llmRouter] non-retryable on model=' + model, status, err && err.body);
+        throw err;
+      }
+      console.error('[aura/llmRouter] model=' + model + ' failed:', err && err.message, err && err.body);
       continue;
     }
   }
-
   throw lastErr || new Error('all_models_failed');
 }
 
