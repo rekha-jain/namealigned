@@ -391,6 +391,120 @@
     return profile;
   }
 
+  // ── V2 feature flag ───────────────────────────────────────
+  // Enable Aura V2 (server-side history, SSE streaming, daily quota gate)
+  // when ?aura_v2=1 is in the URL or localStorage.aura_v2 === '1'.
+  // Falls back to the legacy /api/aura path automatically on any error.
+  function v2Enabled(){
+    try {
+      const qs = new URLSearchParams(window.location.search);
+      if (qs.get('aura_v2') === '1') { try { localStorage.setItem('aura_v2','1'); } catch(e){} return true; }
+      if (qs.get('aura_v2') === '0') { try { localStorage.removeItem('aura_v2'); } catch(e){} return false; }
+      return localStorage.getItem('aura_v2') === '1';
+    } catch(e){ return false; }
+  }
+  function getAnonToken(){
+    try { return localStorage.getItem('aura_anon') || ''; } catch(e){ return ''; }
+  }
+  function setAnonToken(t){
+    try { if (t) localStorage.setItem('aura_anon', t); } catch(e){}
+  }
+  function getConversationId(){
+    try { return localStorage.getItem('aura_conv_id') || ''; } catch(e){ return ''; }
+  }
+  function setConversationId(id){
+    try { if (id) localStorage.setItem('aura_conv_id', id); } catch(e){}
+  }
+
+  // Stream from /api/aura/v2/message. Reads the response body as an SSE
+  // stream and yields { event, data } frames via the supplied callbacks.
+  async function streamV2(payload, callbacks){
+    const r = await fetch('/api/aura/v2/message', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'text/event-stream',
+        'X-Aura-Anon': getAnonToken(),
+      },
+      body: JSON.stringify(payload),
+    });
+    if (!r.ok || !r.body) throw new Error('http_' + r.status);
+    const reader  = r.body.getReader();
+    const decoder = new TextDecoder('utf-8');
+    let buf = '';
+    while (true){
+      const { value, done } = await reader.read();
+      if (done) break;
+      buf += decoder.decode(value, { stream: true });
+      let nl;
+      while ((nl = buf.indexOf('\n\n')) !== -1){
+        const frame = buf.slice(0, nl);
+        buf = buf.slice(nl + 2);
+        let evt = 'message', data = '';
+        frame.split('\n').forEach(line => {
+          if (line.startsWith('event: ')) evt  = line.slice(7).trim();
+          else if (line.startsWith('data: ')) data = line.slice(6);
+        });
+        if (!data) continue;
+        let parsed; try { parsed = JSON.parse(data); } catch { continue; }
+        if (callbacks[evt]) callbacks[evt](parsed);
+      }
+    }
+  }
+
+  async function sendV2(text){
+    // Build the assistant bubble up front so we can stream into it.
+    const bubble = document.createElement('div');
+    bubble.className = 'msg aura';
+    bubble.innerHTML = '<div class="av" aria-hidden="true"></div><div class="body"></div>';
+    messagesEl.appendChild(bubble);
+    const bodyEl = bubble.querySelector('.body');
+    bodyEl.innerHTML = '<span class="typing"><span></span><span></span><span></span></span>';
+    scrollBottom();
+
+    let firstToken = true;
+    let buffered = '';
+    let typing = false;
+    function pumpTypewriter(){
+      if (typing) return;
+      typing = true;
+      (function tick(){
+        if (!buffered.length){ typing = false; return; }
+        // Reveal one character at a time for streaming smoothness.
+        bodyEl.textContent += buffered[0];
+        buffered = buffered.slice(1);
+        scrollBottom();
+        const last = bodyEl.textContent.slice(-1);
+        const delay = /[.!?]/.test(last) ? 90 + Math.random()*60
+                    : /[,;:]/.test(last) ? 60 + Math.random()*30
+                    : 18 + Math.random()*22;
+        setTimeout(tick, delay);
+      })();
+    }
+
+    await streamV2({
+      conversationId: getConversationId() || undefined,
+      message: text,
+      profile: buildProfile(),
+    }, {
+      started: (d) => {
+        if (d.anonToken) setAnonToken(d.anonToken);
+        if (d.conversationId) setConversationId(d.conversationId);
+      },
+      thinking: () => {},
+      token: (d) => {
+        if (firstToken){ firstToken = false; bodyEl.textContent = ''; }
+        buffered += String(d.text || '');
+        pumpTypewriter();
+      },
+      done: () => {
+        if (firstToken){ bodyEl.textContent = ''; firstToken = false; }
+        if (typeof gtag === 'function') gtag('event','aura_v2_message_done',{ length: bodyEl.textContent.length });
+      },
+      error: (d) => { throw new Error(d && d.code || 'sse_error'); },
+    });
+  }
+
   // ── Send flow ─────────────────────────────────────────────
   function send(text){
     text = (text||'').trim();
@@ -400,6 +514,23 @@
     inputEl.value = '';
     sendBtn.disabled = true;
 
+    // V2 path, opt-in via ?aura_v2=1
+    if (v2Enabled()){
+      sendV2(text).then(()=>{
+        sendBtn.disabled = false;
+        if (typeof gtag === 'function') gtag('event','aura_message_sent',{intent_text_length:text.length, v2:1});
+      }).catch((err)=>{
+        // Silent fallback to legacy path so users never see a broken bubble.
+        try { console.warn('[aura/v2] falling back:', err && err.message); } catch(e){}
+        sendLegacy(text, /*fromV2Fallback=*/true);
+      });
+      return;
+    }
+
+    sendLegacy(text, false);
+  }
+
+  function sendLegacy(text, fromV2Fallback){
     // Show typing bubble immediately, keep it until reply lands.
     // Small minimum (700ms) so super-fast replies don't feel jarring.
     addTyping();
@@ -413,7 +544,7 @@
         removeTyping();
         addAuraMsg(reply);
         sendBtn.disabled = false;
-        if (typeof gtag === 'function') gtag('event','aura_message_sent',{intent_text_length:text.length});
+        if (typeof gtag === 'function') gtag('event','aura_message_sent',{intent_text_length:text.length, v2_fallback: fromV2Fallback?1:0});
       }, remaining);
     }).catch(()=>{
       removeTyping();
