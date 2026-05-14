@@ -8,7 +8,8 @@
   "scripts": {
     "og:render": "node tools/render-og-cards.js",
     "og:pages": "node tools/build-share-pages.js",
-    "og:build": "node tools/render-og-cards.js && node tools/build-share-pages.js"
+    "og:build": "node tools/render-og-cards.js && node tools/build-share-pages.js",
+    "aura:ingest": "node ingestion/ingest.js"
   },
   "dependencies": {
     "canvas": "^3.2.3",

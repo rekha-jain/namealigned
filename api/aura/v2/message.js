@@ -31,6 +31,7 @@ import { preFilterSafety } from './_lib/safety.js';
 import { reserveQuota, AURA_RESTING_MESSAGE } from './_lib/quota.js';
 import { buildAuraPrompt } from './_lib/prompt.js';
 import { streamLLM } from './_lib/llmRouter.js';
+import { retrieveSymbols } from './_lib/symbolic.js';
 import { sanitizeChunk, finalize, isTimingQuestion } from './_lib/sanitize.js';
 import { persistTurn } from './_lib/persistTurn.js';
 import { startSSE, sendEvent, endSSE, sseSingleReply } from './_lib/sse.js';
@@ -97,12 +98,21 @@ export default async function handler(req, res) {
     return;
   }
 
-  // 4. PROMPT
+  // 4. RETRIEVE symbolic grounding (Phase C). Best-effort.
+  //    Returns [] if the corpus is empty or embedding fails.
+  let symbols = [];
+  try {
+    symbols = await retrieveSymbols(message, { topK: 4 });
+  } catch (err) {
+    console.warn('[aura/v2/message] retrieve failed:', err && err.message);
+  }
+
+  // 5. PROMPT
   const profile = (body.profile && typeof body.profile === 'object') ? body.profile : (session.user.profile || {});
   const system = buildAuraPrompt({
     profile,
     memories: null,   // Phase B
-    symbols: null,    // Phase C
+    symbols,
     sky: null,        // Phase B
   });
   const askingTime = isTimingQuestion(message);
@@ -110,7 +120,7 @@ export default async function handler(req, res) {
     ? message + '\n\n[INTERNAL: This is a timing question. Your reply MUST contain a specific tentative window, e.g. "in the next 4 to 6 weeks" or "before the year-end". A reply without a window fails the brief.]'
     : message;
 
-  // 5. STREAM
+  // 6. STREAM
   startSSE(res);
   // Optimistic insert of the user message so it's persisted even if the
   // stream is cut mid-reply. We persist the assistant turn at the end.
@@ -168,7 +178,7 @@ export default async function handler(req, res) {
   });
   endSSE(res);
 
-  // 6. PERSIST (async)
+  // 7. PERSIST (async)
   // We already wrote the user message above; only persist the assistant turn now.
   insertInto('aura_messages', {
     conversation_id: session.conversation.id,
@@ -177,5 +187,6 @@ export default async function handler(req, res) {
     content: assistantText,
     model_used: modelUsed || (streamError ? 'fallback_error' : 'unknown'),
     latency_ms: Date.now() - t0,
+    symbol_ids: (symbols || []).map(s => s.id).filter(Boolean),
   }).catch(err => console.error('[aura/v2/message] assistant-message insert failed:', err && err.message));
 }

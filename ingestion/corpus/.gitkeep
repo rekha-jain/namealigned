@@ -1,0 +1,4 @@
+# Drop source text files here.
+# Filename = source key (e.g. cheiro_book_of_numbers.txt).
+# Plain UTF-8 text, blank line between paragraphs.
+# Files in this folder are gitignored.
