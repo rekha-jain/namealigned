@@ -8,7 +8,8 @@
 
 'use strict';
 
-const MODEL = 'text-embedding-004';
+const MODEL = 'gemini-embedding-001';
+const OUT_DIM = 768;
 
 async function embedTexts(texts, apiKey) {
   if (!apiKey) throw new Error('GEMINI_API_KEY not set');
@@ -22,6 +23,7 @@ async function embedTexts(texts, apiKey) {
       model: 'models/' + MODEL,
       content: { parts: [{ text: String(t).slice(0, 8000) }] },
       taskType: 'RETRIEVAL_DOCUMENT',
+      outputDimensionality: OUT_DIM,
     })),
   };
 
@@ -47,6 +49,7 @@ async function embedText(text, apiKey, taskType = 'RETRIEVAL_QUERY') {
     model: 'models/' + MODEL,
     content: { parts: [{ text: String(text).slice(0, 8000) }] },
     taskType,
+    outputDimensionality: OUT_DIM,
   };
   const r = await fetch(url, {
     method: 'POST',

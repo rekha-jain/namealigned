@@ -8,7 +8,8 @@
 
 'use strict';
 
-const MODEL = 'text-embedding-004';
+const MODEL = 'gemini-embedding-001';
+const OUT_DIM = 768;
 
 async function embedQuery(text) {
   const apiKey = process.env.GEMINI_API_KEY;
@@ -20,6 +21,7 @@ async function embedQuery(text) {
     model: 'models/' + MODEL,
     content: { parts: [{ text: String(text).slice(0, 4000) }] },
     taskType: 'RETRIEVAL_QUERY',
+    outputDimensionality: OUT_DIM,
   };
 
   const ctrl = new AbortController();
