@@ -82,13 +82,15 @@ function buildPrompt({ chunk, source, sourceRef, sectionHint }) {
   ].join('\n');
 }
 
-async function extractCards({ chunk, source, sourceRef, sectionHint, apiKey, model = 'gemini-flash-latest' }) {
-  if (!apiKey) throw new Error('GEMINI_API_KEY not set');
-  const prompt = buildPrompt({ chunk, source, sourceRef, sectionHint });
+// Cascade order: lite first because it has the highest RPM/RPD on the free
+// tier (1000 RPD, 15 RPM), then 2.5-flash, then flash-latest. Lite quality
+// is plenty for symbol-card extraction (it is structured JSON in / out).
+const EXTRACT_CASCADE = ['gemini-2.5-flash-lite', 'gemini-2.5-flash', 'gemini-flash-latest'];
+
+async function callExtractModel(model, prompt, apiKey) {
   const url = 'https://generativelanguage.googleapis.com/v1beta/models/'
     + encodeURIComponent(model)
     + ':generateContent?key=' + encodeURIComponent(apiKey);
-
   const body = {
     contents: [{ role: 'user', parts: [{ text: prompt }] }],
     generationConfig: {
@@ -99,7 +101,6 @@ async function extractCards({ chunk, source, sourceRef, sectionHint, apiKey, mod
       thinkingConfig: { thinkingBudget: 0 },
     },
   };
-
   const r = await fetch(url, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -107,11 +108,34 @@ async function extractCards({ chunk, source, sourceRef, sectionHint, apiKey, mod
   });
   if (!r.ok) {
     const t = await r.text().catch(() => '');
-    throw Object.assign(new Error('extract_failed_' + r.status), { body: t.slice(0, 400) });
+    throw Object.assign(new Error('extract_failed_' + r.status), { body: t.slice(0, 400), status: r.status, model });
   }
   const data = await r.json();
   const text = (((data.candidates || [])[0] || {}).content || {}).parts || [];
-  const raw  = text.map(p => p.text || '').join('').trim();
+  return text.map(p => p.text || '').join('').trim();
+}
+
+async function extractCards({ chunk, source, sourceRef, sectionHint, apiKey }) {
+  if (!apiKey) throw new Error('GEMINI_API_KEY not set');
+  const prompt = buildPrompt({ chunk, source, sourceRef, sectionHint });
+
+  let raw = '';
+  let lastErr;
+  for (const model of EXTRACT_CASCADE) {
+    try {
+      raw = await callExtractModel(model, prompt, apiKey);
+      break;
+    } catch (err) {
+      lastErr = err;
+      const status = err && err.status;
+      // 429 (rate-limit) or 503 (overloaded) -> cascade to next model.
+      // 401/403/404 -> bail, not retryable.
+      if (status === 401 || status === 403 || status === 404) throw err;
+      continue;
+    }
+  }
+  if (!raw) throw lastErr || new Error('extract_failed_all_models');
+
   let parsed;
   try { parsed = JSON.parse(raw); } catch { return []; }
   const cards = Array.isArray(parsed && parsed.cards) ? parsed.cards : [];

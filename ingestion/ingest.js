@@ -212,8 +212,9 @@ async function main() {
       }
     }
 
-    // Gentle pacing to stay well under per-minute limits.
-    await sleep(800);
+    // Gentle pacing: 4.5s per chunk gives ~13 calls/min, comfortably
+    // under gemini-2.5-flash-lite's 15 RPM. Embed has its own quota.
+    await sleep(4500);
   }
 
   console.log('\n[ingest] done. totals=' + JSON.stringify(totals));
