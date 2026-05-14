@@ -47,6 +47,10 @@
     {
       "source": "/api/aura",
       "destination": "/api/aura.js"
+    },
+    {
+      "source": "/api/health-supabase",
+      "destination": "/api/health-supabase.js"
     }
   ],
 
