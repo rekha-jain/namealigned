@@ -297,6 +297,9 @@ def render_page(
     <div class="glyph">{glyph}</div>
     <h1>{hero_h1}</h1>
     <div class="tag">{hero_tag}</div>
+    <div style="margin-top:1rem;font-family:sans-serif;font-size:11.5px;color:rgba(240,236,224,.6);letter-spacing:.05em;">
+      Reviewed by the NameAligned team &middot; Last updated 15 May 2026 &middot; <a href="/methodology" style="color:rgba(245,208,96,.8);text-decoration:underline;">methodology</a> &middot; <a href="/sources" style="color:rgba(245,208,96,.8);text-decoration:underline;">sources</a>
+    </div>
   </div>
 </header>
 
