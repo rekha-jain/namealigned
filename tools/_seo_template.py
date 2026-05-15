@@ -77,11 +77,27 @@ HEAD = '''<!DOCTYPE html>
 <link rel="stylesheet" href="/assets/theme-cosmic-light.css"/>
 <style>
 .seo-hero{{padding:3.5rem 0 1.75rem;text-align:center;background:linear-gradient(160deg,#1a1340 0%,#2a1a5c 100%);color:#f0ece0;}}
-.seo-hero .badge{{display:inline-block;font-family:sans-serif;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:#f0b429;background:rgba(240,180,41,.12);padding:5px 14px;border-radius:20px;border:1px solid rgba(240,180,41,.35);margin-bottom:1rem;}}
-.seo-hero h1{{font-family:'Playfair Display',Georgia,serif;font-size:clamp(28px,4.2vw,42px);line-height:1.2;margin:0 auto .5rem;max-width:780px;}}
-.seo-hero .glyph{{font-size:42px;color:#f0b429;line-height:1;margin-bottom:.75rem;}}
-.seo-hero .tag{{font-family:sans-serif;font-size:14px;color:rgba(240,236,224,.78);letter-spacing:.04em;max-width:680px;margin:0 auto;line-height:1.5;}}
-.seo-body{{max-width:780px;margin:0 auto;padding:2rem 1.25rem;}}
+.seo-hero .badge{{display:inline-block;font-family:sans-serif;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:#f0b429 !important;background:rgba(240,180,41,.12);padding:5px 14px;border-radius:20px;border:1px solid rgba(240,180,41,.35);margin-bottom:1rem;}}
+.seo-hero h1{{font-family:'Playfair Display',Georgia,serif;font-size:clamp(28px,4.2vw,42px);line-height:1.2;margin:0 auto .5rem;max-width:780px;color:#f0ece0 !important;text-shadow:0 2px 24px rgba(124,92,255,.35);}}
+.seo-hero .glyph{{font-size:42px;color:#f0b429 !important;line-height:1;margin-bottom:.75rem;}}
+.seo-hero .tag{{font-family:sans-serif;font-size:14px;color:rgba(240,236,224,.85) !important;letter-spacing:.04em;max-width:680px;margin:0 auto;line-height:1.5;}}
+/* Two-column layout: article + sticky CTA sidebar (matches /blog) */
+.seo-wrap{{max-width:1080px;margin:0 auto;padding:0 1.25rem;display:grid;grid-template-columns:1fr 280px;gap:2.5rem;align-items:start;}}
+@media(max-width:880px){{.seo-wrap{{grid-template-columns:1fr;gap:0;}}}}
+.seo-body{{padding:2rem 0;}}
+.seo-aside{{padding-top:2rem;}}
+@media(max-width:880px){{.seo-aside{{padding-top:0;margin-bottom:2rem;}}}}
+.article-sidebar{{position:sticky;top:90px;background:linear-gradient(135deg,#03090f,#060d18);border-radius:14px;padding:1.5rem;color:#f0ece0;border:1px solid rgba(157,127,255,.18);}}
+.article-sidebar .eyebrow{{font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:#f0b429;font-family:sans-serif;margin-bottom:.6rem;font-weight:600;}}
+.article-sidebar h3{{font-family:Georgia,serif;font-size:18px;color:#f0ece0;margin:0 0 .55rem;line-height:1.3;}}
+.article-sidebar p{{font-size:13px;color:#b0a898;font-family:sans-serif;line-height:1.6;margin:0 0 1rem;}}
+.article-sidebar .price-row{{display:flex;gap:.5rem;align-items:baseline;margin-bottom:1rem;}}
+.article-sidebar .price-inr{{font-size:18px;color:#f0b429;font-weight:700;font-family:sans-serif;}}
+.article-sidebar .price-usd{{font-size:13px;color:#9d7fff;font-family:sans-serif;}}
+.article-sidebar a.cta{{display:block;text-align:center;background:#f0b429;color:#0a0820;font-family:sans-serif;font-size:13.5px;font-weight:700;padding:10px 14px;border-radius:8px;text-decoration:none;transition:background .2s;}}
+.article-sidebar a.cta:hover{{background:#f5c247;}}
+.article-sidebar a.cta.outline{{background:transparent;color:#cbb8e8;border:1px solid rgba(157,127,255,.35);margin-top:.55rem;}}
+.article-sidebar .sep{{height:1px;background:rgba(157,127,255,.15);margin:1.1rem 0;}}
 .seo-body h2{{font-family:'Playfair Display',Georgia,serif;font-size:24px;color:var(--text);margin:2rem 0 .65rem;line-height:1.25;}}
 .seo-body h3{{font-family:'Playfair Display',Georgia,serif;font-size:18px;color:var(--text);margin:1.5rem 0 .5rem;}}
 .seo-body p{{font-family:sans-serif;font-size:14.5px;line-height:1.75;color:var(--text);margin-bottom:1rem;}}
@@ -108,7 +124,7 @@ HEAD = '''<!DOCTYPE html>
 .seo-rel-card:hover{{transform:translateY(-2px);box-shadow:0 6px 20px rgba(201,162,39,.12);}}
 .seo-rel-card .eb{{font-family:sans-serif;font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--gold-d);font-weight:700;margin-bottom:.25rem;}}
 .seo-rel-card .ti{{font-family:Georgia,serif;font-size:14.5px;font-weight:700;line-height:1.3;}}
-nav.crumb{{font-family:sans-serif;font-size:12px;color:var(--text3);padding:1rem 1.25rem 0;max-width:780px;margin:0 auto;}}
+nav.crumb{{font-family:sans-serif;font-size:12px;color:var(--text3);padding:1rem 1.25rem 0;max-width:1080px;margin:0 auto;}}
 nav.crumb a{{color:var(--text3);text-decoration:none;}}
 .seo-tells{{background:rgba(157,127,255,.05);border:1px solid rgba(157,127,255,.18);border-radius:12px;padding:1.25rem 1.5rem;margin:1.5rem 0;}}
 .seo-tells h3{{margin:0 0 .65rem;font-family:Georgia,serif;font-size:17px;color:var(--gold-d);}}
@@ -139,7 +155,7 @@ FOOTER = '''
   <div class="container">
     <div class="footer-grid">
       <div><div class="footer-brand">☽ NameAligned.com</div><p class="footer-tagline">Free Chaldean numerology for everyone.</p></div>
-      <div><div class="footer-col-title">Free Tools</div><ul class="footer-links"><li><a href="/name-numerology-calculator">Name Calculator</a></li><li><a href="/name-correction-numerology">Name Correction</a></li><li><a href="/business-name-numerology">Business Name</a></li><li><a href="/love-compatibility-numerology">Love Compatibility</a></li><li><a href="/ask-aura">Ask Aura</a></li><li><a href="/report">Full Report INR 499/-</a></li></ul></div>
+      <div><div class="footer-col-title">Free Tools</div><ul class="footer-links"><li><a href="/name-numerology-calculator">Name Calculator</a></li><li><a href="/name-correction-numerology">Name Correction</a></li><li><a href="/business-name-numerology">Business Name</a></li><li><a href="/love-compatibility-numerology">Love Compatibility</a></li><li><a href="/ask-aura">Ask Aura</a></li><li><a href="/report">Full Report INR 499 · $5 USD</a></li></ul></div>
       <div><div class="footer-col-title">Guides</div><ul class="footer-links"><li><a href="/blog/chaldean-numerology-guide">Chaldean Guide</a></li><li><a href="/blog/moolank-meanings">Birth Number Meanings</a></li><li><a href="/blog/personal-year-guide">Personal Year</a></li><li><a href="/blog/name-correction-guide">Name Correction</a></li><li><a href="/blog/compound-numbers-cheiro">Compound Numbers</a></li><li><a href="/blog/lo-shu-grid-guide">Lo Shu Grid</a></li></ul></div>
       <div><div class="footer-col-title">More</div><ul class="footer-links"><li><a href="/blog">All Articles</a></li><li><a href="/about">About</a></li><li><a href="/sitemap-pages">Site Map</a></li><li><a href="/privacy">Privacy</a></li><li><a href="/terms">Terms</a></li><li><a href="/refund">Refund</a></li></ul></div>
     </div>
@@ -233,13 +249,37 @@ def render_page(
 
     cta = cta_block_html or f'''
 <div class="seo-cta-band">
-  <h3>See your own pattern in 10 seconds</h3>
-  <p>Free Chaldean check, no signup. Your birth date and name, decoded.</p>
+  <h3>See your own full Chaldean pattern in 10 seconds</h3>
+  <p>Free analysis · No signup. Or unlock the full destiny report for <strong>INR 499 · $5 USD</strong>.</p>
   <div class="btn-pair">
     <a href="/analyzer" class="primary">Free Analysis →</a>
+    <a href="/report" class="outline">Full Report INR 499 · $5</a>
     <a href="/ask-aura" class="outline">Ask Aura</a>
   </div>
 </div>
+'''
+
+    # Sticky right-rail CTA, matches /blog style. Sits next to the article on
+    # desktop, stacks above the article on mobile.
+    sidebar = f'''
+  <aside class="seo-aside">
+    <div class="article-sidebar">
+      <div class="eyebrow">Free Analysis</div>
+      <h3>Decode your full chart</h3>
+      <p>Moolank, Bhagyank, name number, lucky stones, compatibility map. 10 seconds, no signup.</p>
+      <a href="/analyzer" class="cta">Start free →</a>
+      <a href="/ask-aura" class="cta outline">✦ Ask Aura</a>
+      <div class="sep"></div>
+      <div class="eyebrow">Full Destiny Report</div>
+      <h3>Your personalised PDF</h3>
+      <div class="price-row">
+        <span class="price-inr">INR 499</span>
+        <span class="price-usd">or $5 USD</span>
+      </div>
+      <p>5-year forecast, name corrections, remedies, compatibility, mobile-number check.</p>
+      <a href="/report" class="cta">Get the report →</a>
+    </div>
+  </aside>
 '''
 
     page = f'''
@@ -260,25 +300,31 @@ def render_page(
   </div>
 </header>
 
-<main class="seo-body">
+<div class="seo-wrap">
+
+  <main class="seo-body">
 
 {body_html}
 
 {cta}
 
-  <h2>Frequently asked</h2>
-  <div class="seo-faq">
+    <h2>Frequently asked</h2>
+    <div class="seo-faq">
 {faq_html}
-  </div>
-
-  <section class="seo-related">
-    <h2>Continue exploring</h2>
-    <div class="seo-related-grid">
-{related_html}
     </div>
-  </section>
 
-</main>
+    <section class="seo-related">
+      <h2>Continue exploring</h2>
+      <div class="seo-related-grid">
+{related_html}
+      </div>
+    </section>
+
+  </main>
+
+{sidebar}
+
+</div>
 
 {FOOTER}
 '''
