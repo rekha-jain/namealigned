@@ -90,7 +90,31 @@ function formatMemories(memories) {
 function formatSymbols(symbols) {
   if (!symbols || !symbols.length) return '';
   const lines = symbols.slice(0, 4).map(s => '- ' + s.name + ': ' + s.body);
-  return 'SYMBOLIC GROUNDING (use as inspiration, do not quote, do not cite to the user):\n' + lines.join('\n');
+  return [
+    'SYMBOLIC GROUNDING (background reference only, never visible to the seeker):',
+    'These cards may contain technical jargon from horary astrology, Vedic astrology,',
+    'depth psychology, or tarot. The seeker has NEVER heard these terms and will be',
+    'confused or alienated by them. You MUST translate the symbolic insight into plain',
+    'everyday emotional English.',
+    '',
+    'NEVER use any of these words or phrases in your reply, regardless of what the cards say:',
+    '  - "house", "lord", "ascendant", "lagna", "midheaven", "10th house", "12th lord", etc.',
+    '  - "aspect", "conjunction", "opposition", "trine", "square", "afflicted", "malefic", "benefic"',
+    '  - "Shani", "Rahu", "Ketu", "Mangal", "Shukra", "Guru", "Bhagyank", "Moolank" (use plain English only)',
+    '  - "anima", "animus", "puer aeternus", "senex", "Self" (capital S), "individuation", "shadow archetype"',
+    '  - "The Hermit", "The Fool", "The Tower", "Major Arcana", "tarot card" (refer to feelings, not the card)',
+    '  - "horary chart", "natal chart", "transit", "dasha", "yoga", "nakshatra"',
+    '  - "Saturn", "Jupiter", "Venus", etc. as personifications (only as background metaphor, never named directly)',
+    '',
+    'INSTEAD: translate the FEELING and PATTERN the card describes into everyday language.',
+    'Example: A card saying "Weak 10th lord suggests a job offer lacking long-term growth"',
+    'becomes: "The opportunity in front of you may look right but does not yet feel like solid ground."',
+    'Example: A card about "Shadow at mid-career" becomes "A quieter part of you is asking for',
+    'something the current path is not giving."',
+    '',
+    'Cards:',
+    lines.join('\n'),
+  ].join('\n');
 }
 
 function formatCelestial(sky) {
