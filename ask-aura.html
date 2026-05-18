@@ -1,8 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
+<!DOCTYPE html><html lang="en"><head>
 <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-70GFTN27M6"></script>
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-70GFTN27M6"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
@@ -10,18 +8,18 @@
   gtag('config', 'G-70GFTN27M6');
 </script>
 
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1.0,interactive-widget=resizes-content"/>
-<link rel="icon" type="image/svg+xml" href="/assets/namealigned-favicon.svg"/>
-<title>Ask Aura · Your Cosmic Confidante | NameAligned.com</title>
-<meta name="description" content="Aura is a mystical conversational guide, ask anything about love, career, life direction or your inner state. Free emotional companion built on Chaldean numerology and intuition."/>
-<meta name="robots" content="index, follow"/>
-<link rel="canonical" href="https://www.namealigned.com/ask-aura"/>
-<meta property="og:title" content="Ask Aura · Your Cosmic Confidante"/>
-<meta property="og:description" content="A mystical conversational guide. Ask anything, love, career, direction, the questions you don't know how to ask."/>
-<meta property="og:type" content="website"/>
-<meta property="og:url" content="https://www.namealigned.com/ask-aura"/>
-<meta property="og:image" content="https://www.namealigned.com/assets/og/moolank-6.jpg"/>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,interactive-widget=resizes-content">
+<link rel="icon" type="image/svg+xml" href="/assets/namealigned-favicon.svg">
+<title>Ask Aura: Numerology Chat for Love and Career</title>
+<meta name="description" content="Ask Aura about love, career, timing, names, and emotional patterns using your Chaldean numerology context as a reflective guide.">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://www.namealigned.com/ask-aura">
+<meta property="og:title" content="Ask Aura: Numerology Chat for Love and Career">
+<meta property="og:description" content="Ask Aura about love, career, timing, names, and emotional patterns using your Chaldean numerology context as a reflective guide.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://www.namealigned.com/ask-aura">
+<meta property="og:image" content="https://www.namealigned.com/assets/og/moolank-6.jpg">
 
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"WebApplication","name":"Aura · Mystical Conversational Companion","url":"https://www.namealigned.com/ask-aura","description":"A mystical conversational guide that responds with emotional intelligence and Chaldean numerology insight.","applicationCategory":"LifestyleApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"INR"},"publisher":{"@type":"Organization","name":"NameAligned.com","url":"https://www.namealigned.com/"}}
@@ -211,6 +209,7 @@
   .aura-birth .saved{color:#7ce0b0;font-size:11.5px;display:none;}
   .aura-birth.saved-state .saved{display:inline;}
 </style>
+<link rel="stylesheet" href="assets/internal-linking.css">
 </head>
 <body>
 
@@ -237,7 +236,12 @@
   </aside>
 
   <!-- Chat panel -->
-  <main class="aura-chat" role="main" aria-label="Aura chat">
+  <!-- NA_BREADCRUMB_START -->
+<nav class="na-breadcrumb" aria-label="Breadcrumb">
+  <a href="/">Home</a><span>/</span><a href="/sitemap-pages">Site Map</a><span>/</span><span>Your cosmic confidante</span>
+</nav>
+<!-- NA_BREADCRUMB_END -->
+<main class="aura-chat" role="main" aria-label="Aura chat">
 
     <div class="aura-banner" id="auraBanner">
       <span>Add your name and date of birth for a more personal reading.</span>
@@ -245,8 +249,8 @@
     </div>
 
     <div class="aura-birth" id="auraBirth" aria-label="Add your birth details">
-      <label>First name <input id="auraNameInput" type="text" placeholder="Jiya" maxlength="30"/></label>
-      <label>Date of birth <input id="auraDobInput" type="date"/></label>
+      <label>First name <input id="auraNameInput" type="text" placeholder="Jiya" maxlength="30"></label>
+      <label>Date of birth <input id="auraDobInput" type="date"></label>
       <button id="auraSaveBirth">Save</button>
       <span class="saved">✓ Saved, replies are now personalised.</span>
     </div>
@@ -254,16 +258,17 @@
     <div class="aura-messages" id="auraMessages" aria-live="polite"></div>
 
     <div class="aura-suggested" id="auraSuggested">
-      <span class="chip">How is my career energy lately?</span>
-      <span class="chip">Why does love feel hard right now?</span>
-      <span class="chip">I feel lost.</span>
-      <span class="chip">Will I find my purpose?</span>
-      <span class="chip">What's coming next for me?</span>
+      <span class="chip">Read me like a tarot card today</span>
+      <span class="chip">Why do I keep meeting the same kind of person?</span>
+      <span class="chip">What is the universe nudging me toward?</span>
+      <span class="chip">Is the timing right for a big move?</span>
+      <span class="chip">What part of me have I been ignoring?</span>
+      <span class="chip">Should I trust this gut feeling?</span>
     </div>
 
     <div class="aura-input-wrap">
       <form class="aura-input" id="auraForm" autocomplete="off">
-        <input id="auraInput" type="text" placeholder="Ask Aura anything..." aria-label="Your message" maxlength="500"/>
+        <input id="auraInput" type="text" placeholder="Ask Aura anything..." aria-label="Your message" maxlength="500">
         <button id="auraSend" type="submit" aria-label="Send">SEND</button>
       </form>
       <div class="aura-disclaim">For reflection &amp; self-insight only, not a substitute for medical, legal or financial advice.</div>
@@ -304,8 +309,8 @@
   document.addEventListener('focusout', () => setTimeout(sync, 50));
 })();
 </script>
-<script src="/assets/numerology.js" defer></script>
-<script src="/assets/aura.js" defer></script>
+<script src="/assets/numerology.js" defer=""></script>
+<script src="/assets/aura.js" defer=""></script>
 <script>
 (function(){
   const messagesEl = document.getElementById('auraMessages');
@@ -608,5 +613,23 @@
 })();
 </script>
 
-</body>
-</html>
+<!-- NA_RELATED_INSIGHTS_START -->
+<section class="na-related-insights" aria-labelledby="na-related-title">
+  <div class="na-related-inner">
+    <div class="na-related-kicker">Continue the pattern</div>
+    <h2 id="na-related-title">Related insights</h2>
+    <p>Use these next paths to keep the exploration connected, from calculation to meaning to relationship context.</p>
+    <div class="na-related-grid">
+      <a class="na-related-card" href="/analyzer"><span>Start with your full number map</span><strong>Run your free Chaldean analysis</strong></a>
+      <a class="na-related-card" href="/love-compatibility-numerology"><span>Partners, friends, family, coworkers</span><strong>Compare a relationship dynamic</strong></a>
+      <a class="na-related-card" href="/number"><span>All numbers, all angles</span><strong>Explore the number archetype hub</strong></a>
+      <a class="na-related-card" href="/report"><span>Name, career, timing, compatibility</span><strong>Unlock the full destiny report</strong></a>
+      <a class="na-related-card" href="/blog/chaldean-numerology-guide"><span>Method behind the site</span><strong>Read the Chaldean guide</strong></a>
+      <a class="na-related-card" href="/sitemap-pages"><span>All pages by cluster</span><strong>Browse the complete site map</strong></a>
+    </div>
+  </div>
+</section>
+<!-- NA_RELATED_INSIGHTS_END -->
+
+
+</body></html>

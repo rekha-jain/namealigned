@@ -89,21 +89,41 @@ async function retrieveSymbols(message, { topK = 4 } = {}) {
   }
   if (!Array.isArray(rows) || !rows.length) return [];
 
+  // Per-source weight. Synthesized cards (Jung, Prashna, Lal Kitab, Tarot)
+  // are authored in clean emotional English specifically for this product
+  // and translate gracefully into replies. Lilly's Christian Astrology
+  // is genuine 17th-century chart-reading language with mechanical, literal
+  // imagery (ledgers, houses, malefics) that can produce hallucinated-
+  // sounding metaphors when paraphrased. Down-weight it.
+  const SOURCE_WEIGHTS = {
+    jungian_archetypes_synthesized: 1.10,
+    lal_kitab_synthesized:          1.10,
+    prasna_marga_synthesized:       1.05,
+    tarot_major_arcana_synthesized: 1.05,
+    cheiro_book_of_numbers:         0.90,
+    christian_astrology:            0.65,
+  };
+
   const intentTags = inferIntentTags(text);
   const scored = rows.map(r => {
     const overlap = Array.isArray(r.intent_tags)
       ? r.intent_tags.filter(t => intentTags.includes(t)).length
       : 0;
-    return Object.assign({}, r, { score: (r.similarity || 0) + 0.05 * overlap });
+    const weight = SOURCE_WEIGHTS[r.source] || 1.0;
+    return Object.assign({}, r, {
+      score: ((r.similarity || 0) + 0.05 * overlap) * weight,
+    });
   });
   scored.sort((a, b) => b.score - a.score);
 
-  // Take top-K but ensure source diversity: max 2 from the same source.
+  // Take top-K but ensure source diversity: max 1 from any single source.
+  // Tighter than before (was 2) because of how dominant Lilly was; this
+  // forces tradition diversity across every reply.
   const out = [];
   const perSource = {};
   for (const r of scored) {
     const src = r.source || 'unknown';
-    if ((perSource[src] || 0) >= 2) continue;
+    if ((perSource[src] || 0) >= 1) continue;
     out.push(r);
     perSource[src] = (perSource[src] || 0) + 1;
     if (out.length >= topK) break;
