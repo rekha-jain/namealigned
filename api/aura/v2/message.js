@@ -37,6 +37,38 @@ import { persistTurn } from './_lib/persistTurn.js';
 import { startSSE, sendEvent, endSSE, sseSingleReply } from './_lib/sse.js';
 import { insertInto } from './_lib/supabaseAdmin.js';
 
+/**
+ * Cheap regex-based register classifier. No Gemini call.
+ * Returns 'casual' | 'practical' | 'reflective'.
+ *
+ *   casual:     greetings, thanks, very short social messages
+ *   practical:  everyday logic, decisions, weather, advice, recommendations
+ *   reflective: life direction, identity, love, career, purpose, symbolic, timing
+ */
+function classifyRegister(message) {
+  const m = String(message || '').trim().toLowerCase();
+  if (!m) return 'reflective';
+
+  // Very short greeting-style messages.
+  if (m.length <= 25 && /^(hi|hello|hey|yo|namaste|good (morning|evening|night|afternoon)|how are you|thanks?|thank you|ok|okay|cool|nice|got it|bye|aura\??)$/i.test(m)) {
+    return 'casual';
+  }
+
+  // Practical "should I", "is it safe", weather/temperature, "what should I",
+  // "where", "when (logistically)", "how do I", everyday recommendation requests.
+  const practicalPatterns = [
+    /\b(should i|is it (safe|smart|wise|worth)|can i|will it|do i need|how do i|what should i (eat|wear|do|buy|cook|say)|where (can|should) i|how much|how many|how long does)\b/i,
+    /\b(temperature|weather|degree|degrees|rainy|sunny|hot|cold|humid|monsoon|traffic|metro|cab|uber|ola|flight|train|delivery|restaurant|food)\b/i,
+    /\b(tomorrow|today|tonight|this evening|this morning|this afternoon|right now|currently)\b.*\b(should|safe|good|okay|ok|smart|worth)\b/i,
+    /\b(was it (right|wrong|a good idea|smart)|did i (do|make) the right|in retrospect)\b/i,
+    /\b(recommend|suggestion|advise|advice|tip)\b/i,
+  ];
+  if (practicalPatterns.some(re => re.test(m))) return 'practical';
+
+  // Default: reflective (life / love / purpose / identity / timing / symbolic).
+  return 'reflective';
+}
+
 export default async function handler(req, res) {
   // CORS preflight
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -98,16 +130,24 @@ export default async function handler(req, res) {
     return;
   }
 
-  // 4. RETRIEVE symbolic grounding (Phase C). Best-effort.
-  //    Returns [] if the corpus is empty or embedding fails.
+  // 4. CLASSIFY register: casual / practical / reflective.
+  //    Only the reflective register benefits from symbolic retrieval.
+  //    Casual and practical questions waste a Gemini embedding call AND
+  //    pollute the prompt with irrelevant cards, so we skip retrieval
+  //    for them. This roughly halves quota usage on the common case.
+  const register = classifyRegister(message);
+
+  // 5. RETRIEVE symbolic grounding only for reflective questions.
   let symbols = [];
-  try {
-    symbols = await retrieveSymbols(message, { topK: 4 });
-  } catch (err) {
-    console.warn('[aura/v2/message] retrieve failed:', err && err.message);
+  if (register === 'reflective') {
+    try {
+      symbols = await retrieveSymbols(message, { topK: 4 });
+    } catch (err) {
+      console.warn('[aura/v2/message] retrieve failed:', err && err.message);
+    }
   }
 
-  // 5. PROMPT
+  // 5. PROMPT (with register hint so Gemini knows which voice to use)
   const profile = (body.profile && typeof body.profile === 'object') ? body.profile : (session.user.profile || {});
   const system = buildAuraPrompt({
     profile,
@@ -116,9 +156,19 @@ export default async function handler(req, res) {
     sky: null,        // Phase B
   });
   const askingTime = isTimingQuestion(message);
-  const userText = askingTime
-    ? message + '\n\n[INTERNAL: This is a timing question. Your reply MUST contain a specific tentative window, e.g. "in the next 4 to 6 weeks" or "before the year-end". A reply without a window fails the brief.]'
-    : message;
+
+  // Build an internal hint that locks Gemini into the right register,
+  // so the regex classifier's call wins even if Gemini would have
+  // classified the message differently.
+  const registerHint =
+    register === 'casual'    ? '[INTERNAL: This is a CASUAL message. Reply with ONE warm sentence. No numerology. No symbolic framing.]' :
+    register === 'practical' ? '[INTERNAL: This is a PRACTICAL everyday question. Reply like a thoughtful friend, 2 to 4 sentences, lead with a clear useful answer. Do NOT force numerology, planets, or symbolic framing.]' :
+                               '[INTERNAL: This is a REFLECTIVE question. 1 to 2 sentences, warm and grounded, drawing on the cards if they fit.]';
+
+  const userText = (
+    message + '\n\n' + registerHint +
+    (askingTime ? '\n\n[INTERNAL: This is also a timing question. Include a specific tentative future window like "in the next 4 to 6 weeks" or "before the year-end". The window MUST be in the future relative to today.]' : '')
+  );
 
   // 6. STREAM
   startSSE(res);
@@ -176,7 +226,13 @@ export default async function handler(req, res) {
     }
     sendEvent(res, 'token', { text: assistantText });
   }
-  assistantText = finalize(assistantText, { maxSentences: askingTime ? 3 : 2 });
+  // Sentence cap depends on register, practical answers need room to reason.
+  const maxSentences =
+    register === 'practical' ? 4 :
+    askingTime               ? 3 :
+    register === 'casual'    ? 1 :
+                               2;
+  assistantText = finalize(assistantText, { maxSentences });
 
   sendEvent(res, 'done', {
     kind: streamError ? 'partial' : 'ok',
