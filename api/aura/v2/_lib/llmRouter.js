@@ -13,7 +13,16 @@
 
 'use strict';
 
-const FREE_CASCADE = ['gemini-flash-latest', 'gemini-2.5-flash', 'gemini-2.5-flash-lite'];
+// Cascade order: highest free-tier capacity FIRST so we don't burn rate-limit
+// tokens on the lower-cap models. gemini-2.5-flash-lite has 1000 RPD / 15 RPM,
+// the other two are 250 RPD / 10 RPM each. Lite gives us the most headroom
+// for live users, especially after a heavy ingestion burst.
+const FREE_CASCADE = ['gemini-2.5-flash-lite', 'gemini-2.5-flash', 'gemini-flash-latest'];
+
+// Small wait between cascade attempts when we get rate-limited. Burning all
+// three cascade calls in <1s on a 429 just rebuilds the same rate-limit
+// pressure for the next user request.
+function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
 
 function buildPayload({ system, contents }) {
   return {
@@ -101,7 +110,8 @@ async function* streamLLM({ system, userText, history }) {
   const payload = buildPayload({ system, contents });
 
   let lastErr;
-  for (const model of FREE_CASCADE) {
+  for (let i = 0; i < FREE_CASCADE.length; i++) {
+    const model = FREE_CASCADE[i];
     try {
       const text = await callModel(model, payload, apiKey);
       yield { text, model };
@@ -115,10 +125,18 @@ async function* streamLLM({ system, userText, history }) {
         throw err;
       }
       console.error('[aura/llmRouter] model=' + model + ' failed:', err && err.message, err && err.body);
+      // On rate-limit, give the next model a moment instead of cascading instantly.
+      // Most rate-limits are per-minute windows; even 250ms pause prevents the
+      // burst from triggering the same window on the next model.
+      if (status === 429 && i < FREE_CASCADE.length - 1) {
+        await sleep(300);
+      }
       continue;
     }
   }
-  throw lastErr || new Error('all_models_failed');
+  // Tag the final error so message.js can show a rate-limit-specific fallback.
+  if (lastErr) throw lastErr;
+  throw new Error('all_models_failed');
 }
 
 export { streamLLM, FREE_CASCADE };

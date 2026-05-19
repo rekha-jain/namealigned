@@ -163,8 +163,17 @@ export default async function handler(req, res) {
 
   let assistantText = collected.join('');
   if (!assistantText) {
-    // Last-resort fallback so the user never sees an empty bubble.
-    assistantText = "The signal is faint just now. Try again in a moment, sometimes the pattern needs a beat to settle.";
+    // Pick a clearer fallback based on what actually failed.
+    // 429 / rate-limited: tell the user to wait a moment.
+    // Anything else: generic try-again.
+    const status = streamError && streamError.status;
+    const body   = (streamError && String(streamError.body || streamError.message || '')) || '';
+    const isRateLimit = status === 429 || /quota|rate.?limit|exceeded|too many/i.test(body);
+    if (isRateLimit) {
+      assistantText = "Aura is briefly catching her breath, this happens when many people are asking at once. Please try again in about a minute.";
+    } else {
+      assistantText = "Aura could not reach the line just now. Please try sending that again, and if it keeps happening, refresh the page.";
+    }
     sendEvent(res, 'token', { text: assistantText });
   }
   assistantText = finalize(assistantText, { maxSentences: askingTime ? 3 : 2 });
