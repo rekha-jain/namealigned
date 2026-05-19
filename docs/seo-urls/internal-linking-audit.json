@@ -1,0 +1,1128 @@
+{
+  "generatedAt": "2026-05-17T05:21:11.455Z",
+  "pagesProcessed": 140,
+  "pagesChanged": 139,
+  "weakPagesRemaining": [],
+  "pages": [
+    {
+      "route": "/about",
+      "cluster": "site",
+      "relatedLinksAdded": 7,
+      "file": "about.html",
+      "inbound": 138,
+      "outbound": 25
+    },
+    {
+      "route": "/ai-disclosure",
+      "cluster": "site",
+      "relatedLinksAdded": 7,
+      "file": "ai-disclosure.html",
+      "inbound": 4,
+      "outbound": 21
+    },
+    {
+      "route": "/analyzer",
+      "cluster": "tool",
+      "relatedLinksAdded": 9,
+      "file": "analyzer.html",
+      "inbound": 139,
+      "outbound": 22
+    },
+    {
+      "route": "/ask-aura",
+      "cluster": "site",
+      "relatedLinksAdded": 6,
+      "file": "ask-aura.html",
+      "inbound": 139,
+      "outbound": 8
+    },
+    {
+      "route": "/blog/chaldean-numerology-guide",
+      "cluster": "blog",
+      "relatedLinksAdded": 10,
+      "file": "blog/chaldean-numerology-guide.html",
+      "inbound": 139,
+      "outbound": 23
+    },
+    {
+      "route": "/blog/chaldean-vs-pythagorean-numerology",
+      "cluster": "blog",
+      "relatedLinksAdded": 10,
+      "file": "blog/chaldean-vs-pythagorean-numerology.html",
+      "inbound": 5,
+      "outbound": 25
+    },
+    {
+      "route": "/blog/compound-numbers-cheiro",
+      "cluster": "blog",
+      "relatedLinksAdded": 10,
+      "file": "blog/compound-numbers-cheiro.html",
+      "inbound": 138,
+      "outbound": 23
+    },
+    {
+      "route": "/blog/how-numerology-works-for-names",
+      "cluster": "blog",
+      "relatedLinksAdded": 10,
+      "file": "blog/how-numerology-works-for-names.html",
+      "inbound": 9,
+      "outbound": 26
+    },
+    {
+      "route": "/blog/how-to-choose-lucky-name",
+      "cluster": "blog",
+      "relatedLinksAdded": 10,
+      "file": "blog/how-to-choose-lucky-name.html",
+      "inbound": 8,
+      "outbound": 26
+    },
+    {
+      "route": "/blog",
+      "cluster": "blog-hub",
+      "relatedLinksAdded": 10,
+      "file": "blog/index.html",
+      "inbound": 139,
+      "outbound": 33
+    },
+    {
+      "route": "/blog/is-name-correction-effective",
+      "cluster": "tool",
+      "relatedLinksAdded": 10,
+      "file": "blog/is-name-correction-effective.html",
+      "inbound": 7,
+      "outbound": 27
+    },
+    {
+      "route": "/blog/lo-shu-grid-guide",
+      "cluster": "blog",
+      "relatedLinksAdded": 10,
+      "file": "blog/lo-shu-grid-guide.html",
+      "inbound": 138,
+      "outbound": 23
+    },
+    {
+      "route": "/blog/lucky-numbers-india",
+      "cluster": "blog",
+      "relatedLinksAdded": 10,
+      "file": "blog/lucky-numbers-india.html",
+      "inbound": 4,
+      "outbound": 22
+    },
+    {
+      "route": "/blog/moolank-meanings",
+      "cluster": "blog",
+      "relatedLinksAdded": 10,
+      "file": "blog/moolank-meanings.html",
+      "inbound": 138,
+      "outbound": 23
+    },
+    {
+      "route": "/blog/name-correction-guide",
+      "cluster": "tool",
+      "relatedLinksAdded": 10,
+      "file": "blog/name-correction-guide.html",
+      "inbound": 138,
+      "outbound": 26
+    },
+    {
+      "route": "/blog/name-numerology-business",
+      "cluster": "blog",
+      "relatedLinksAdded": 10,
+      "file": "blog/name-numerology-business.html",
+      "inbound": 3,
+      "outbound": 23
+    },
+    {
+      "route": "/blog/number-4-8-cheiro",
+      "cluster": "blog",
+      "relatedLinksAdded": 10,
+      "file": "blog/number-4-8-cheiro.html",
+      "inbound": 6,
+      "outbound": 23
+    },
+    {
+      "route": "/blog/personal-year-1-meaning",
+      "cluster": "blog",
+      "relatedLinksAdded": 10,
+      "file": "blog/personal-year-1-meaning.html",
+      "inbound": 5,
+      "outbound": 24
+    },
+    {
+      "route": "/blog/personal-year-2026",
+      "cluster": "blog",
+      "relatedLinksAdded": 10,
+      "file": "blog/personal-year-2026.html",
+      "inbound": 5,
+      "outbound": 24
+    },
+    {
+      "route": "/blog/personal-year-9-meaning",
+      "cluster": "blog",
+      "relatedLinksAdded": 10,
+      "file": "blog/personal-year-9-meaning.html",
+      "inbound": 5,
+      "outbound": 24
+    },
+    {
+      "route": "/blog/personal-year-guide",
+      "cluster": "blog",
+      "relatedLinksAdded": 10,
+      "file": "blog/personal-year-guide.html",
+      "inbound": 138,
+      "outbound": 24
+    },
+    {
+      "route": "/blog/relationship-compatibility-numerology",
+      "cluster": "blog",
+      "relatedLinksAdded": 10,
+      "file": "blog/relationship-compatibility-numerology.html",
+      "inbound": 112,
+      "outbound": 22
+    },
+    {
+      "route": "/blog/should-i-change-my-name",
+      "cluster": "blog",
+      "relatedLinksAdded": 10,
+      "file": "blog/should-i-change-my-name.html",
+      "inbound": 8,
+      "outbound": 25
+    },
+    {
+      "route": "/blog/what-is-name-numerology",
+      "cluster": "blog",
+      "relatedLinksAdded": 10,
+      "file": "blog/what-is-name-numerology.html",
+      "inbound": 18,
+      "outbound": 25
+    },
+    {
+      "route": "/business-name-numerology",
+      "cluster": "tool",
+      "relatedLinksAdded": 9,
+      "file": "business-name-numerology.html",
+      "inbound": 138,
+      "outbound": 22
+    },
+    {
+      "route": "/how-it-works",
+      "cluster": "site",
+      "relatedLinksAdded": 7,
+      "file": "how-it-works.html",
+      "inbound": 4,
+      "outbound": 21
+    },
+    {
+      "route": "/",
+      "cluster": "home",
+      "relatedLinksAdded": 10,
+      "file": "index.html",
+      "inbound": 139,
+      "outbound": 22
+    },
+    {
+      "route": "/life-path-number-1-meaning",
+      "cluster": "life-path",
+      "relatedLinksAdded": 15,
+      "file": "life-path-number-1-meaning.html",
+      "inbound": 26,
+      "outbound": 41
+    },
+    {
+      "route": "/life-path-number-2-meaning",
+      "cluster": "life-path",
+      "relatedLinksAdded": 15,
+      "file": "life-path-number-2-meaning.html",
+      "inbound": 22,
+      "outbound": 39
+    },
+    {
+      "route": "/life-path-number-3-meaning",
+      "cluster": "life-path",
+      "relatedLinksAdded": 15,
+      "file": "life-path-number-3-meaning.html",
+      "inbound": 23,
+      "outbound": 40
+    },
+    {
+      "route": "/life-path-number-4-meaning",
+      "cluster": "life-path",
+      "relatedLinksAdded": 15,
+      "file": "life-path-number-4-meaning.html",
+      "inbound": 23,
+      "outbound": 40
+    },
+    {
+      "route": "/life-path-number-5-meaning",
+      "cluster": "life-path",
+      "relatedLinksAdded": 15,
+      "file": "life-path-number-5-meaning.html",
+      "inbound": 24,
+      "outbound": 41
+    },
+    {
+      "route": "/life-path-number-6-meaning",
+      "cluster": "life-path",
+      "relatedLinksAdded": 15,
+      "file": "life-path-number-6-meaning.html",
+      "inbound": 24,
+      "outbound": 40
+    },
+    {
+      "route": "/life-path-number-7-meaning",
+      "cluster": "life-path",
+      "relatedLinksAdded": 15,
+      "file": "life-path-number-7-meaning.html",
+      "inbound": 20,
+      "outbound": 39
+    },
+    {
+      "route": "/life-path-number-8-meaning",
+      "cluster": "life-path",
+      "relatedLinksAdded": 15,
+      "file": "life-path-number-8-meaning.html",
+      "inbound": 15,
+      "outbound": 40
+    },
+    {
+      "route": "/life-path-number-9-meaning",
+      "cluster": "life-path",
+      "relatedLinksAdded": 15,
+      "file": "life-path-number-9-meaning.html",
+      "inbound": 17,
+      "outbound": 41
+    },
+    {
+      "route": "/love-compatibility-numerology",
+      "cluster": "relationship-hub",
+      "relatedLinksAdded": 10,
+      "file": "love-compatibility-numerology.html",
+      "inbound": 139,
+      "outbound": 52
+    },
+    {
+      "route": "/lucky-attributes-number-1",
+      "cluster": "lucky",
+      "relatedLinksAdded": 15,
+      "file": "lucky-attributes-number-1.html",
+      "inbound": 9,
+      "outbound": 37
+    },
+    {
+      "route": "/lucky-attributes-number-2",
+      "cluster": "lucky",
+      "relatedLinksAdded": 15,
+      "file": "lucky-attributes-number-2.html",
+      "inbound": 9,
+      "outbound": 35
+    },
+    {
+      "route": "/lucky-attributes-number-3",
+      "cluster": "lucky",
+      "relatedLinksAdded": 15,
+      "file": "lucky-attributes-number-3.html",
+      "inbound": 9,
+      "outbound": 36
+    },
+    {
+      "route": "/lucky-attributes-number-4",
+      "cluster": "lucky",
+      "relatedLinksAdded": 15,
+      "file": "lucky-attributes-number-4.html",
+      "inbound": 9,
+      "outbound": 36
+    },
+    {
+      "route": "/lucky-attributes-number-5",
+      "cluster": "lucky",
+      "relatedLinksAdded": 15,
+      "file": "lucky-attributes-number-5.html",
+      "inbound": 9,
+      "outbound": 37
+    },
+    {
+      "route": "/lucky-attributes-number-6",
+      "cluster": "lucky",
+      "relatedLinksAdded": 15,
+      "file": "lucky-attributes-number-6.html",
+      "inbound": 9,
+      "outbound": 36
+    },
+    {
+      "route": "/lucky-attributes-number-7",
+      "cluster": "lucky",
+      "relatedLinksAdded": 15,
+      "file": "lucky-attributes-number-7.html",
+      "inbound": 9,
+      "outbound": 35
+    },
+    {
+      "route": "/lucky-attributes-number-8",
+      "cluster": "lucky",
+      "relatedLinksAdded": 15,
+      "file": "lucky-attributes-number-8.html",
+      "inbound": 9,
+      "outbound": 36
+    },
+    {
+      "route": "/lucky-attributes-number-9",
+      "cluster": "lucky",
+      "relatedLinksAdded": 15,
+      "file": "lucky-attributes-number-9.html",
+      "inbound": 9,
+      "outbound": 37
+    },
+    {
+      "route": "/methodology",
+      "cluster": "site",
+      "relatedLinksAdded": 7,
+      "file": "methodology.html",
+      "inbound": 39,
+      "outbound": 25
+    },
+    {
+      "route": "/name-alignment",
+      "cluster": "site",
+      "relatedLinksAdded": 7,
+      "file": "name-alignment.html",
+      "inbound": 4,
+      "outbound": 22
+    },
+    {
+      "route": "/name-correction-numerology",
+      "cluster": "tool",
+      "relatedLinksAdded": 9,
+      "file": "name-correction-numerology.html",
+      "inbound": 138,
+      "outbound": 22
+    },
+    {
+      "route": "/name-number-1-meaning",
+      "cluster": "identity",
+      "relatedLinksAdded": 15,
+      "file": "name-number-1-meaning.html",
+      "inbound": 26,
+      "outbound": 41
+    },
+    {
+      "route": "/name-number-2-meaning",
+      "cluster": "identity",
+      "relatedLinksAdded": 15,
+      "file": "name-number-2-meaning.html",
+      "inbound": 26,
+      "outbound": 39
+    },
+    {
+      "route": "/name-number-3-meaning",
+      "cluster": "identity",
+      "relatedLinksAdded": 15,
+      "file": "name-number-3-meaning.html",
+      "inbound": 26,
+      "outbound": 40
+    },
+    {
+      "route": "/name-number-4-meaning",
+      "cluster": "identity",
+      "relatedLinksAdded": 15,
+      "file": "name-number-4-meaning.html",
+      "inbound": 26,
+      "outbound": 40
+    },
+    {
+      "route": "/name-number-5-meaning",
+      "cluster": "identity",
+      "relatedLinksAdded": 15,
+      "file": "name-number-5-meaning.html",
+      "inbound": 26,
+      "outbound": 41
+    },
+    {
+      "route": "/name-number-6-meaning",
+      "cluster": "identity",
+      "relatedLinksAdded": 15,
+      "file": "name-number-6-meaning.html",
+      "inbound": 26,
+      "outbound": 40
+    },
+    {
+      "route": "/name-number-7-meaning",
+      "cluster": "identity",
+      "relatedLinksAdded": 15,
+      "file": "name-number-7-meaning.html",
+      "inbound": 22,
+      "outbound": 39
+    },
+    {
+      "route": "/name-number-8-meaning",
+      "cluster": "identity",
+      "relatedLinksAdded": 15,
+      "file": "name-number-8-meaning.html",
+      "inbound": 18,
+      "outbound": 40
+    },
+    {
+      "route": "/name-number-9-meaning",
+      "cluster": "identity",
+      "relatedLinksAdded": 15,
+      "file": "name-number-9-meaning.html",
+      "inbound": 18,
+      "outbound": 41
+    },
+    {
+      "route": "/name-numerology-calculator",
+      "cluster": "tool",
+      "relatedLinksAdded": 10,
+      "file": "name-numerology-calculator.html",
+      "inbound": 138,
+      "outbound": 43
+    },
+    {
+      "route": "/number/1-career",
+      "cluster": "career",
+      "relatedLinksAdded": 15,
+      "file": "number/1-career.html",
+      "inbound": 16,
+      "outbound": 41
+    },
+    {
+      "route": "/number/1-personality",
+      "cluster": "personality",
+      "relatedLinksAdded": 15,
+      "file": "number/1-personality.html",
+      "inbound": 24,
+      "outbound": 49
+    },
+    {
+      "route": "/number/2-career",
+      "cluster": "career",
+      "relatedLinksAdded": 15,
+      "file": "number/2-career.html",
+      "inbound": 16,
+      "outbound": 39
+    },
+    {
+      "route": "/number/2-personality",
+      "cluster": "personality",
+      "relatedLinksAdded": 15,
+      "file": "number/2-personality.html",
+      "inbound": 20,
+      "outbound": 47
+    },
+    {
+      "route": "/number/3-career",
+      "cluster": "career",
+      "relatedLinksAdded": 15,
+      "file": "number/3-career.html",
+      "inbound": 16,
+      "outbound": 40
+    },
+    {
+      "route": "/number/3-personality",
+      "cluster": "personality",
+      "relatedLinksAdded": 15,
+      "file": "number/3-personality.html",
+      "inbound": 21,
+      "outbound": 47
+    },
+    {
+      "route": "/number/4-career",
+      "cluster": "career",
+      "relatedLinksAdded": 15,
+      "file": "number/4-career.html",
+      "inbound": 16,
+      "outbound": 40
+    },
+    {
+      "route": "/number/4-personality",
+      "cluster": "personality",
+      "relatedLinksAdded": 15,
+      "file": "number/4-personality.html",
+      "inbound": 21,
+      "outbound": 48
+    },
+    {
+      "route": "/number/5-career",
+      "cluster": "career",
+      "relatedLinksAdded": 15,
+      "file": "number/5-career.html",
+      "inbound": 16,
+      "outbound": 41
+    },
+    {
+      "route": "/number/5-personality",
+      "cluster": "personality",
+      "relatedLinksAdded": 15,
+      "file": "number/5-personality.html",
+      "inbound": 22,
+      "outbound": 48
+    },
+    {
+      "route": "/number/6-career",
+      "cluster": "career",
+      "relatedLinksAdded": 15,
+      "file": "number/6-career.html",
+      "inbound": 16,
+      "outbound": 40
+    },
+    {
+      "route": "/number/6-personality",
+      "cluster": "personality",
+      "relatedLinksAdded": 15,
+      "file": "number/6-personality.html",
+      "inbound": 21,
+      "outbound": 48
+    },
+    {
+      "route": "/number/7-career",
+      "cluster": "career",
+      "relatedLinksAdded": 15,
+      "file": "number/7-career.html",
+      "inbound": 14,
+      "outbound": 39
+    },
+    {
+      "route": "/number/7-personality",
+      "cluster": "personality",
+      "relatedLinksAdded": 15,
+      "file": "number/7-personality.html",
+      "inbound": 18,
+      "outbound": 47
+    },
+    {
+      "route": "/number/8-career",
+      "cluster": "career",
+      "relatedLinksAdded": 15,
+      "file": "number/8-career.html",
+      "inbound": 8,
+      "outbound": 40
+    },
+    {
+      "route": "/number/8-personality",
+      "cluster": "personality",
+      "relatedLinksAdded": 15,
+      "file": "number/8-personality.html",
+      "inbound": 13,
+      "outbound": 48
+    },
+    {
+      "route": "/number/9-career",
+      "cluster": "career",
+      "relatedLinksAdded": 15,
+      "file": "number/9-career.html",
+      "inbound": 8,
+      "outbound": 41
+    },
+    {
+      "route": "/number/9-personality",
+      "cluster": "personality",
+      "relatedLinksAdded": 15,
+      "file": "number/9-personality.html",
+      "inbound": 15,
+      "outbound": 49
+    },
+    {
+      "route": "/number",
+      "cluster": "number-hub",
+      "relatedLinksAdded": 11,
+      "file": "number/index.html",
+      "inbound": 139,
+      "outbound": 103
+    },
+    {
+      "route": "/number-1-and-1-compatibility",
+      "cluster": "compatibility",
+      "relatedLinksAdded": 9,
+      "file": "number-1-and-1-compatibility.html",
+      "inbound": 3,
+      "outbound": 26
+    },
+    {
+      "route": "/number-1-and-2-compatibility",
+      "cluster": "compatibility",
+      "relatedLinksAdded": 12,
+      "file": "number-1-and-2-compatibility.html",
+      "inbound": 18,
+      "outbound": 30
+    },
+    {
+      "route": "/number-1-and-3-compatibility",
+      "cluster": "compatibility",
+      "relatedLinksAdded": 12,
+      "file": "number-1-and-3-compatibility.html",
+      "inbound": 18,
+      "outbound": 30
+    },
+    {
+      "route": "/number-1-and-4-compatibility",
+      "cluster": "compatibility",
+      "relatedLinksAdded": 12,
+      "file": "number-1-and-4-compatibility.html",
+      "inbound": 18,
+      "outbound": 30
+    },
+    {
+      "route": "/number-1-and-5-compatibility",
+      "cluster": "compatibility",
+      "relatedLinksAdded": 12,
+      "file": "number-1-and-5-compatibility.html",
+      "inbound": 18,
+      "outbound": 30
+    },
+    {
+      "route": "/number-1-and-6-compatibility",
+      "cluster": "compatibility",
+      "relatedLinksAdded": 12,
+      "file": "number-1-and-6-compatibility.html",
+      "inbound": 18,
+      "outbound": 30
+    },
+    {
+      "route": "/number-1-and-8-compatibility",
+      "cluster": "compatibility",
+      "relatedLinksAdded": 12,
+      "file": "number-1-and-8-compatibility.html",
+      "inbound": 18,
+      "outbound": 30
+    },
+    {
+      "route": "/number-1-and-9-compatibility",
+      "cluster": "compatibility",
+      "relatedLinksAdded": 12,
+      "file": "number-1-and-9-compatibility.html",
+      "inbound": 18,
+      "outbound": 30
+    },
+    {
+      "route": "/number-1-in-love",
+      "cluster": "love-style",
+      "relatedLinksAdded": 15,
+      "file": "number-1-in-love.html",
+      "inbound": 17,
+      "outbound": 37
+    },
+    {
+      "route": "/number-1-spiritual-meaning",
+      "cluster": "spiritual",
+      "relatedLinksAdded": 15,
+      "file": "number-1-spiritual-meaning.html",
+      "inbound": 9,
+      "outbound": 37
+    },
+    {
+      "route": "/number-2-and-2-compatibility",
+      "cluster": "compatibility",
+      "relatedLinksAdded": 9,
+      "file": "number-2-and-2-compatibility.html",
+      "inbound": 11,
+      "outbound": 26
+    },
+    {
+      "route": "/number-2-and-7-compatibility",
+      "cluster": "compatibility",
+      "relatedLinksAdded": 12,
+      "file": "number-2-and-7-compatibility.html",
+      "inbound": 18,
+      "outbound": 30
+    },
+    {
+      "route": "/number-2-and-9-compatibility",
+      "cluster": "compatibility",
+      "relatedLinksAdded": 12,
+      "file": "number-2-and-9-compatibility.html",
+      "inbound": 18,
+      "outbound": 30
+    },
+    {
+      "route": "/number-2-in-love",
+      "cluster": "love-style",
+      "relatedLinksAdded": 15,
+      "file": "number-2-in-love.html",
+      "inbound": 13,
+      "outbound": 35
+    },
+    {
+      "route": "/number-2-spiritual-meaning",
+      "cluster": "spiritual",
+      "relatedLinksAdded": 15,
+      "file": "number-2-spiritual-meaning.html",
+      "inbound": 9,
+      "outbound": 35
+    },
+    {
+      "route": "/number-3-and-3-compatibility",
+      "cluster": "compatibility",
+      "relatedLinksAdded": 9,
+      "file": "number-3-and-3-compatibility.html",
+      "inbound": 11,
+      "outbound": 26
+    },
+    {
+      "route": "/number-3-and-5-compatibility",
+      "cluster": "compatibility",
+      "relatedLinksAdded": 12,
+      "file": "number-3-and-5-compatibility.html",
+      "inbound": 18,
+      "outbound": 30
+    },
+    {
+      "route": "/number-3-and-6-compatibility",
+      "cluster": "compatibility",
+      "relatedLinksAdded": 12,
+      "file": "number-3-and-6-compatibility.html",
+      "inbound": 18,
+      "outbound": 30
+    },
+    {
+      "route": "/number-3-and-9-compatibility",
+      "cluster": "compatibility",
+      "relatedLinksAdded": 12,
+      "file": "number-3-and-9-compatibility.html",
+      "inbound": 18,
+      "outbound": 30
+    },
+    {
+      "route": "/number-3-in-love",
+      "cluster": "love-style",
+      "relatedLinksAdded": 15,
+      "file": "number-3-in-love.html",
+      "inbound": 14,
+      "outbound": 36
+    },
+    {
+      "route": "/number-3-spiritual-meaning",
+      "cluster": "spiritual",
+      "relatedLinksAdded": 15,
+      "file": "number-3-spiritual-meaning.html",
+      "inbound": 9,
+      "outbound": 36
+    },
+    {
+      "route": "/number-4-and-4-compatibility",
+      "cluster": "compatibility",
+      "relatedLinksAdded": 9,
+      "file": "number-4-and-4-compatibility.html",
+      "inbound": 11,
+      "outbound": 26
+    },
+    {
+      "route": "/number-4-and-5-compatibility",
+      "cluster": "compatibility",
+      "relatedLinksAdded": 12,
+      "file": "number-4-and-5-compatibility.html",
+      "inbound": 18,
+      "outbound": 30
+    },
+    {
+      "route": "/number-4-and-8-compatibility",
+      "cluster": "compatibility",
+      "relatedLinksAdded": 12,
+      "file": "number-4-and-8-compatibility.html",
+      "inbound": 19,
+      "outbound": 30
+    },
+    {
+      "route": "/number-4-and-9-compatibility",
+      "cluster": "compatibility",
+      "relatedLinksAdded": 12,
+      "file": "number-4-and-9-compatibility.html",
+      "inbound": 18,
+      "outbound": 30
+    },
+    {
+      "route": "/number-4-in-love",
+      "cluster": "love-style",
+      "relatedLinksAdded": 15,
+      "file": "number-4-in-love.html",
+      "inbound": 14,
+      "outbound": 36
+    },
+    {
+      "route": "/number-4-spiritual-meaning",
+      "cluster": "spiritual",
+      "relatedLinksAdded": 15,
+      "file": "number-4-spiritual-meaning.html",
+      "inbound": 9,
+      "outbound": 36
+    },
+    {
+      "route": "/number-5-and-5-compatibility",
+      "cluster": "compatibility",
+      "relatedLinksAdded": 9,
+      "file": "number-5-and-5-compatibility.html",
+      "inbound": 11,
+      "outbound": 26
+    },
+    {
+      "route": "/number-5-and-6-compatibility",
+      "cluster": "compatibility",
+      "relatedLinksAdded": 12,
+      "file": "number-5-and-6-compatibility.html",
+      "inbound": 18,
+      "outbound": 30
+    },
+    {
+      "route": "/number-5-and-7-compatibility",
+      "cluster": "compatibility",
+      "relatedLinksAdded": 12,
+      "file": "number-5-and-7-compatibility.html",
+      "inbound": 18,
+      "outbound": 30
+    },
+    {
+      "route": "/number-5-in-love",
+      "cluster": "love-style",
+      "relatedLinksAdded": 15,
+      "file": "number-5-in-love.html",
+      "inbound": 15,
+      "outbound": 37
+    },
+    {
+      "route": "/number-5-spiritual-meaning",
+      "cluster": "spiritual",
+      "relatedLinksAdded": 15,
+      "file": "number-5-spiritual-meaning.html",
+      "inbound": 9,
+      "outbound": 37
+    },
+    {
+      "route": "/number-6-and-6-compatibility",
+      "cluster": "compatibility",
+      "relatedLinksAdded": 9,
+      "file": "number-6-and-6-compatibility.html",
+      "inbound": 11,
+      "outbound": 26
+    },
+    {
+      "route": "/number-6-and-9-compatibility",
+      "cluster": "compatibility",
+      "relatedLinksAdded": 12,
+      "file": "number-6-and-9-compatibility.html",
+      "inbound": 18,
+      "outbound": 30
+    },
+    {
+      "route": "/number-6-in-love",
+      "cluster": "love-style",
+      "relatedLinksAdded": 15,
+      "file": "number-6-in-love.html",
+      "inbound": 14,
+      "outbound": 36
+    },
+    {
+      "route": "/number-6-spiritual-meaning",
+      "cluster": "spiritual",
+      "relatedLinksAdded": 15,
+      "file": "number-6-spiritual-meaning.html",
+      "inbound": 9,
+      "outbound": 36
+    },
+    {
+      "route": "/number-7-and-7-compatibility",
+      "cluster": "compatibility",
+      "relatedLinksAdded": 9,
+      "file": "number-7-and-7-compatibility.html",
+      "inbound": 11,
+      "outbound": 26
+    },
+    {
+      "route": "/number-7-and-8-compatibility",
+      "cluster": "compatibility",
+      "relatedLinksAdded": 12,
+      "file": "number-7-and-8-compatibility.html",
+      "inbound": 18,
+      "outbound": 30
+    },
+    {
+      "route": "/number-7-in-love",
+      "cluster": "love-style",
+      "relatedLinksAdded": 15,
+      "file": "number-7-in-love.html",
+      "inbound": 13,
+      "outbound": 35
+    },
+    {
+      "route": "/number-7-spiritual-meaning",
+      "cluster": "spiritual",
+      "relatedLinksAdded": 15,
+      "file": "number-7-spiritual-meaning.html",
+      "inbound": 9,
+      "outbound": 35
+    },
+    {
+      "route": "/number-8-and-8-compatibility",
+      "cluster": "compatibility",
+      "relatedLinksAdded": 9,
+      "file": "number-8-and-8-compatibility.html",
+      "inbound": 11,
+      "outbound": 26
+    },
+    {
+      "route": "/number-8-and-9-compatibility",
+      "cluster": "compatibility",
+      "relatedLinksAdded": 12,
+      "file": "number-8-and-9-compatibility.html",
+      "inbound": 18,
+      "outbound": 30
+    },
+    {
+      "route": "/number-8-in-love",
+      "cluster": "love-style",
+      "relatedLinksAdded": 15,
+      "file": "number-8-in-love.html",
+      "inbound": 14,
+      "outbound": 36
+    },
+    {
+      "route": "/number-8-spiritual-meaning",
+      "cluster": "spiritual",
+      "relatedLinksAdded": 15,
+      "file": "number-8-spiritual-meaning.html",
+      "inbound": 9,
+      "outbound": 36
+    },
+    {
+      "route": "/number-9-and-9-compatibility",
+      "cluster": "compatibility",
+      "relatedLinksAdded": 9,
+      "file": "number-9-and-9-compatibility.html",
+      "inbound": 11,
+      "outbound": 26
+    },
+    {
+      "route": "/number-9-in-love",
+      "cluster": "love-style",
+      "relatedLinksAdded": 15,
+      "file": "number-9-in-love.html",
+      "inbound": 16,
+      "outbound": 37
+    },
+    {
+      "route": "/number-9-spiritual-meaning",
+      "cluster": "spiritual",
+      "relatedLinksAdded": 15,
+      "file": "number-9-spiritual-meaning.html",
+      "inbound": 9,
+      "outbound": 37
+    },
+    {
+      "route": "/privacy",
+      "cluster": "site",
+      "relatedLinksAdded": 7,
+      "file": "privacy.html",
+      "inbound": 138,
+      "outbound": 20
+    },
+    {
+      "route": "/refund",
+      "cluster": "site",
+      "relatedLinksAdded": 7,
+      "file": "refund.html",
+      "inbound": 138,
+      "outbound": 20
+    },
+    {
+      "route": "/report",
+      "cluster": "report",
+      "relatedLinksAdded": 9,
+      "file": "report.html",
+      "inbound": 139,
+      "outbound": 27
+    },
+    {
+      "route": "/sitemap-pages",
+      "cluster": "site",
+      "relatedLinksAdded": 6,
+      "file": "sitemap-pages.html",
+      "inbound": 139,
+      "outbound": 121
+    },
+    {
+      "route": "/sources",
+      "cluster": "site",
+      "relatedLinksAdded": 7,
+      "file": "sources.html",
+      "inbound": 40,
+      "outbound": 21
+    },
+    {
+      "route": "/terms",
+      "cluster": "site",
+      "relatedLinksAdded": 7,
+      "file": "terms.html",
+      "inbound": 138,
+      "outbound": 20
+    },
+    {
+      "route": "/why-number-1-overthinks",
+      "cluster": "emotional-pattern",
+      "relatedLinksAdded": 15,
+      "file": "why-number-1-overthinks.html",
+      "inbound": 17,
+      "outbound": 37
+    },
+    {
+      "route": "/why-number-2-overthinks",
+      "cluster": "emotional-pattern",
+      "relatedLinksAdded": 15,
+      "file": "why-number-2-overthinks.html",
+      "inbound": 13,
+      "outbound": 35
+    },
+    {
+      "route": "/why-number-3-overthinks",
+      "cluster": "emotional-pattern",
+      "relatedLinksAdded": 15,
+      "file": "why-number-3-overthinks.html",
+      "inbound": 14,
+      "outbound": 36
+    },
+    {
+      "route": "/why-number-4-overthinks",
+      "cluster": "emotional-pattern",
+      "relatedLinksAdded": 15,
+      "file": "why-number-4-overthinks.html",
+      "inbound": 14,
+      "outbound": 36
+    },
+    {
+      "route": "/why-number-5-overthinks",
+      "cluster": "emotional-pattern",
+      "relatedLinksAdded": 15,
+      "file": "why-number-5-overthinks.html",
+      "inbound": 15,
+      "outbound": 37
+    },
+    {
+      "route": "/why-number-6-overthinks",
+      "cluster": "emotional-pattern",
+      "relatedLinksAdded": 15,
+      "file": "why-number-6-overthinks.html",
+      "inbound": 14,
+      "outbound": 36
+    },
+    {
+      "route": "/why-number-7-overthinks",
+      "cluster": "emotional-pattern",
+      "relatedLinksAdded": 15,
+      "file": "why-number-7-overthinks.html",
+      "inbound": 13,
+      "outbound": 35
+    },
+    {
+      "route": "/why-number-8-overthinks",
+      "cluster": "emotional-pattern",
+      "relatedLinksAdded": 15,
+      "file": "why-number-8-overthinks.html",
+      "inbound": 14,
+      "outbound": 36
+    },
+    {
+      "route": "/why-number-9-overthinks",
+      "cluster": "emotional-pattern",
+      "relatedLinksAdded": 15,
+      "file": "why-number-9-overthinks.html",
+      "inbound": 16,
+      "outbound": 37
+    }
+  ]
+}
