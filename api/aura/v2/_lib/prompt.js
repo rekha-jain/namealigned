@@ -136,6 +136,35 @@ function formatCelestial(sky) {
 }
 
 /**
+ * Format the current date in IST so Gemini knows where in time we are.
+ * Without this, replies suggest windows that have already passed
+ * ("early to mid 2026" when we are already in mid-2026).
+ */
+function formatToday() {
+  const now  = new Date();
+  // Render in IST so Indian users see times that match their timezone.
+  const dateFmt = new Intl.DateTimeFormat('en-IN', {
+    timeZone: 'Asia/Kolkata',
+    weekday: 'long', day: 'numeric', month: 'long', year: 'numeric',
+  });
+  const today = dateFmt.format(now);
+  const month = new Intl.DateTimeFormat('en-IN', { timeZone: 'Asia/Kolkata', month: 'long' }).format(now);
+  const year  = new Intl.DateTimeFormat('en-IN', { timeZone: 'Asia/Kolkata', year: 'numeric' }).format(now);
+  return [
+    'TODAY IS:',
+    '  Date: ' + today + ' (Asia/Kolkata).',
+    '  We are currently in ' + month + ' ' + year + '.',
+    '',
+    'TIMING DISCIPLINE:',
+    '- All future windows you mention MUST be in the future relative to today.',
+    '- Never suggest a window like "early to mid ' + year + '" if today is already past that point.',
+    '- Prefer relative windows ("in the next 6 to 9 weeks", "by the end of this quarter")',
+    '  over absolute calendar windows when possible.',
+    '- When using absolute windows, anchor them after today\'s date.',
+  ].join('\n');
+}
+
+/**
  * Build the system prompt. All context sections are optional, so V2
  * Phase A (no celestial/symbols/memory yet) still produces a clean prompt.
  */
@@ -145,6 +174,7 @@ function buildAuraPrompt({ profile, memories, symbols, sky }) {
     AURA_VOICE_RULES,
     AURA_REGISTER_RULES,
     AURA_TIMING_RULES,
+    formatToday(),
     AURA_SHAPE,
     formatProfile(profile),
     formatMemories(memories),
