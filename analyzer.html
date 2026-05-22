@@ -311,10 +311,11 @@
     <ul class="nav-links">
       <li><a href="/analyzer" style="color:var(--gold)">Free Analysis</a></li>
       <li><a href="/number">Numbers</a></li>
-      <li><a href="/love-compatibility-numerology">Compatibility</a></li><li><a href="/ask-aura" class="nav-aura" style="background:linear-gradient(135deg,rgba(124,58,237,.12),rgba(245,196,81,.10));border:1px solid rgba(157,127,255,.45);padding:5px 12px;border-radius:18px;font-weight:700;">✦ Ask Aura</a></li>
+      <li><a href="/love-compatibility-numerology">Compatibility</a></li>
+      <li><a href="/emotional-archetypes">Archetypes</a></li>
+      <li><a href="/ask-aura" class="nav-aura" style="background:linear-gradient(135deg,rgba(124,58,237,.12),rgba(245,196,81,.10));border:1px solid rgba(157,127,255,.45);padding:5px 12px;border-radius:18px;font-weight:700;">✦ Ask Aura</a></li>
       <li><a href="/blog">Blog</a></li>
-      <li><a href="/about">About</a></li>
-      <li><a href="/report" class="nav-cta">Full Report ₹499 / $5</a></li><li><a href="/ask-aura">✦ Ask Aura · Conversational</a></li>
+      <li><a href="/report" class="nav-cta">Full Report ₹499 / $5</a></li>
     </ul>
     <div class="nav-hamburger" id="navHamburger"><span></span><span></span><span></span></div>
   </div>
@@ -324,12 +325,6 @@
     <a href="/blog">Blog</a>
   </div>
 </nav>
-
-<!-- NA_BREADCRUMB_START -->
-<nav class="na-breadcrumb" aria-label="Breadcrumb">
-  <a href="/">Home</a><span>/</span><a href="/sitemap-pages">Site Map</a><span>/</span><span>Free Chaldean Numerology Calculator</span>
-</nav>
-<!-- NA_BREADCRUMB_END -->
 
 <!-- Dark cosmic hero -->
 <div style="background:linear-gradient(160deg,#1a1340 0%,#2a1a5c 100%);padding:1.4rem 1.5rem 1.2rem;text-align:center;">
@@ -387,6 +382,12 @@
       <h1 class="id-archetype" id="idArchetype">The Harmonizer</h1>
       <div class="id-num-row" id="idNumRow"></div>
       <p class="id-line" id="idLine"></p>
+      <a id="archetypeDeeperLink" href="/emotional-archetypes"
+         style="display:inline-block;margin-top:.9rem;padding:7px 16px;background:rgba(245,196,81,.18);border:1px solid rgba(245,196,81,.55);border-radius:20px;font-family:'Inter',sans-serif;font-size:12.5px;font-weight:600;color:#f5d060;text-decoration:none;transition:all .15s ease;"
+         data-na-event="archetype_viewed"
+         data-na-params='{"source":"analyzer_result"}'>
+        Read the deeper emotional archetype →
+      </a>
     </div>
 
     <!-- 1b. NARRATIVE CARD, single story thread -->
@@ -1039,6 +1040,28 @@ function renderAnalysis(){
   document.getElementById('idArchetype').textContent = archetype;
   document.getElementById('idNumRow').textContent = `Birth Number ${birthNum} · ${corePlanet}`;
   document.getElementById('idLine').textContent = IDENTITY_LINES[birthNum] || IDENTITY_LINES[1];
+
+  // Wire the "Read the deeper emotional archetype" link to the right page.
+  // Maps the analyzer's surface archetype name to the deeper /emotional-archetype-* page.
+  const DEEPER_ARCHETYPE_SLUG = {
+    1: 'the-inner-sovereign',
+    2: 'the-mirror',
+    3: 'the-translator',
+    4: 'the-quiet-disruptor',
+    5: 'the-restless-mind',
+    6: 'the-devoted-beautifier',
+    7: 'the-inward-witness',
+    8: 'the-patient-builder',
+    9: 'the-protector',
+  };
+  const deeperLink = document.getElementById('archetypeDeeperLink');
+  if (deeperLink) {
+    const slug = DEEPER_ARCHETYPE_SLUG[birthNum] || DEEPER_ARCHETYPE_SLUG[1];
+    deeperLink.href = '/emotional-archetype-' + slug;
+    deeperLink.setAttribute('data-na-params', JSON.stringify({
+      source: 'analyzer_result', archetype: slug, number: birthNum,
+    }));
+  }
 
   // Narrative, Core
   document.getElementById('nrrSub').textContent = `Birth Number ${birthNum} · ${corePlanet}`;

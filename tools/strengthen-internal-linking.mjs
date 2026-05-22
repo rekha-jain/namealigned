@@ -35,6 +35,10 @@ const exclude = [
   // breadcrumb / related-insights sections breaks the layout because the
   // page is built on flex height:100vh + overflow:hidden. Skip.
   /^ask-aura\.html$/,
+  // analyzer.html is a multi-step calculator with its own internal nav
+  // (Details / Analysis / Full Report stepper). External breadcrumbs and
+  // related-insights blocks clutter the flow. Skip.
+  /^analyzer\.html$/,
 ];
 
 function walk(dir) {
