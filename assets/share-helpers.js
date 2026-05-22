@@ -34,7 +34,7 @@
       '<p>' + escapeHTML(prompt) + '</p>' +
       '<div class="share-buttons">' +
         '<a class="wa" href="' + waHref + '" target="_blank" rel="noopener" data-share-method="whatsapp">' +
-          '<span aria-hidden="true">WA</span> Send on WhatsApp' +
+          'Send on WhatsApp' +
         '</a>' +
         '<button class="copy" type="button" data-share-method="copy">Copy link</button>' +
         (navigator.share ? '<button class="copy" type="button" data-share-method="native">More</button>' : '') +
