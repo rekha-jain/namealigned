@@ -147,9 +147,86 @@
     }
   }
 
+  // ── Engagement events (v2 emotional layer) ──────────────────
+  // Convenience wrappers so call sites do not have to remember exact
+  // parameter names. Each wrapper enforces a consistent shape and
+  // auto-attaches source_page + device_type.
+  const events = {
+    analyzerStarted: function(p) {
+      trackEvent('analyzer_started', Object.assign({ source_page: sourcePage(), device_type: deviceType() }, p || {}));
+    },
+    analyzerCompleted: function(p) {
+      // p: { number, name_number, birth_number, life_path }
+      trackEvent('analyzer_completed', Object.assign({ source_page: sourcePage() }, p || {}));
+    },
+    compatibilityStarted: function(p) {
+      trackEvent('compatibility_started', Object.assign({ source_page: sourcePage(), device_type: deviceType() }, p || {}));
+    },
+    compatibilityCompleted: function(p) {
+      // p: { relationship_type, dynamic_type, score_range, archetype }
+      trackEvent('compatibility_completed', Object.assign({ source_page: sourcePage() }, p || {}));
+    },
+    compatibilityShared: function(p) {
+      // p: { share_method ('whatsapp'|'copy'|'native'), relationship_type, archetype }
+      trackEvent('compatibility_shared', Object.assign({ source_page: sourcePage() }, p || {}));
+    },
+    shareWhatsApp: function(p) {
+      // p: { source ('insight_card'|'pair_insight'|'compatibility_result'|...) }
+      trackEvent('share_whatsapp', Object.assign({ source_page: sourcePage() }, p || {}));
+    },
+    shareCopy: function(p) {
+      trackEvent('share_copy', Object.assign({ source_page: sourcePage() }, p || {}));
+    },
+    archetypeViewed: function(p) {
+      // p: { archetype, number }
+      trackEvent('archetype_viewed', Object.assign({ source_page: sourcePage() }, p || {}));
+    },
+    relatedInsightClicked: function(p) {
+      // p: { from_page, to_page, link_text }
+      trackEvent('related_insight_clicked', Object.assign({ source_page: sourcePage() }, p || {}));
+    },
+    reportClicked: function(p) {
+      // p: { source ('cta_band'|'sidebar'|'footer'|'analyzer_result'|...) }
+      trackEvent('report_clicked', Object.assign({ source_page: sourcePage() }, p || {}));
+    },
+    checkAnotherRelationship: function(p) {
+      // p: { from_result, relationship_type }
+      trackEvent('check_another_relationship', Object.assign({ source_page: sourcePage() }, p || {}));
+    },
+    insightCopied: function(p) {
+      trackEvent('insight_copied', Object.assign({ source_page: sourcePage() }, p || {}));
+    },
+  };
+
+  // Auto-instrumentation: any element with [data-na-event] fires that
+  // event on click. Optional [data-na-params] is a JSON string of params.
+  // Makes it easy to instrument new CTAs in HTML without touching JS.
+  function bindAutoEvents(root) {
+    (root || document).querySelectorAll('[data-na-event]').forEach((el) => {
+      if (el.__naEventBound) return;
+      el.__naEventBound = true;
+      el.addEventListener('click', function() {
+        const name = el.getAttribute('data-na-event');
+        let params = {};
+        const raw = el.getAttribute('data-na-params');
+        if (raw) { try { params = JSON.parse(raw); } catch (e) {} }
+        trackEvent(name, Object.assign({ source_page: sourcePage(), device_type: deviceType() }, params));
+      }, { passive: true });
+    });
+  }
+  if (typeof document !== 'undefined') {
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', function(){ bindAutoEvents(); });
+    } else {
+      bindAutoEvents();
+    }
+  }
+
   // ── Expose ──────────────────────────────────────────────────
   g.NA = g.NA || {};
   g.NA.track       = trackEvent;
+  g.NA.events      = events;
+  g.NA.bindAutoEvents = bindAutoEvents;
   g.NA.scoreRange  = scoreRange;
   g.NA.deviceType  = deviceType;
   g.NA.sourcePage  = sourcePage;

@@ -1,0 +1,190 @@
+/* Emotional insight cards, screenshot-worthy. */
+.insight-card{
+  background: linear-gradient(135deg, #1a1340 0%, #2a1a5c 100%);
+  border: 1px solid rgba(245,208,96,.25);
+  border-radius: 14px;
+  padding: 1.5rem 1.6rem;
+  margin: 1rem 0;
+  color: #f0ece0;
+  box-shadow: 0 6px 24px rgba(15,9,40,.18);
+  position: relative;
+  overflow: hidden;
+}
+.insight-card::before{
+  content: '\201C';  /* opening curly quote */
+  position: absolute;
+  top: -.6rem; left: 1rem;
+  font-family: Georgia, 'Playfair Display', serif;
+  font-size: 64px;
+  color: rgba(245,208,96,.18);
+  pointer-events: none;
+  line-height: 1;
+}
+.insight-quote{
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: clamp(17px, 2.6vw, 21px);
+  line-height: 1.45;
+  margin: 0 0 1rem;
+  color: #f6efd5;
+  font-weight: 500;
+}
+.insight-actions{
+  display: flex;
+  gap: .55rem;
+  flex-wrap: wrap;
+}
+.insight-btn{
+  font-family: 'Inter', sans-serif;
+  font-size: 12.5px;
+  font-weight: 600;
+  padding: 7px 14px;
+  border-radius: 18px;
+  border: 1px solid rgba(245,208,96,.4);
+  background: rgba(245,208,96,.08);
+  color: #f5d060;
+  cursor: pointer;
+  transition: all .15s ease;
+}
+.insight-btn:hover{
+  background: rgba(245,208,96,.18);
+  color: #fff;
+}
+.insight-btn-wa{
+  background: rgba(37,211,102,.12);
+  border-color: rgba(37,211,102,.45);
+  color: #5fdc8b;
+}
+.insight-btn-wa:hover{
+  background: rgba(37,211,102,.2);
+  color: #fff;
+}
+
+/* Compact strip used on personality / archetype pages */
+.emotional-insights-strip{
+  display: grid;
+  gap: .9rem;
+  margin: 1.5rem 0 2rem;
+}
+@media (min-width: 720px){
+  .emotional-insights-strip{
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  }
+}
+
+/* "Continue exploring emotionally" navigation block */
+.emotion-paths{
+  background: rgba(157,127,255,.06);
+  border: 1px solid rgba(157,127,255,.2);
+  border-radius: 14px;
+  padding: 1.3rem 1.5rem;
+  margin: 2rem 0;
+}
+.emotion-paths h2{
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 19px;
+  color: #f5d060;
+  margin: 0 0 .75rem;
+}
+.emotion-paths p{
+  font-size: 14px;
+  color: #cbb8e8;
+  margin: 0 0 1rem;
+  line-height: 1.6;
+}
+.emotion-paths-grid{
+  display: grid;
+  gap: .6rem;
+  grid-template-columns: 1fr;
+}
+@media (min-width: 640px){
+  .emotion-paths-grid{
+    grid-template-columns: 1fr 1fr;
+  }
+}
+.emotion-path-link{
+  display: flex;
+  flex-direction: column;
+  background: rgba(255,255,255,.04);
+  border: 1px solid rgba(245,208,96,.2);
+  border-radius: 10px;
+  padding: .9rem 1rem;
+  text-decoration: none;
+  color: #f0ece0;
+  transition: all .15s ease;
+}
+.emotion-path-link:hover{
+  background: rgba(245,208,96,.1);
+  border-color: rgba(245,208,96,.5);
+  transform: translateY(-2px);
+}
+.emotion-path-link .ep-eyebrow{
+  font-family: 'Inter', sans-serif;
+  font-size: 10.5px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: #f5d060;
+  font-weight: 700;
+  margin-bottom: .25rem;
+}
+.emotion-path-link .ep-title{
+  font-family: Georgia, serif;
+  font-size: 14.5px;
+  line-height: 1.35;
+}
+
+/* Share strip on result pages */
+.share-strip{
+  background: linear-gradient(135deg, rgba(37,211,102,.08), rgba(157,127,255,.08));
+  border: 1px solid rgba(37,211,102,.3);
+  border-radius: 14px;
+  padding: 1.2rem 1.4rem;
+  margin: 1.5rem 0;
+  text-align: center;
+}
+.share-strip h3{
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 18px;
+  margin: 0 0 .35rem;
+  color: #f0ece0;
+}
+.share-strip p{
+  font-size: 13.5px;
+  color: #cbb8e8;
+  margin: 0 0 .9rem;
+}
+.share-strip .share-buttons{
+  display: flex;
+  gap: .6rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+.share-strip a, .share-strip button{
+  display: inline-flex;
+  align-items: center;
+  gap: .4rem;
+  padding: 9px 16px;
+  border-radius: 22px;
+  font-family: 'Inter', sans-serif;
+  font-size: 13.5px;
+  font-weight: 600;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+  transition: all .15s ease;
+}
+.share-strip a.wa, .share-strip button.wa{
+  background: #25d366;
+  color: #fff;
+}
+.share-strip a.wa:hover, .share-strip button.wa:hover{
+  background: #20bf5b;
+}
+.share-strip a.copy, .share-strip button.copy{
+  background: rgba(245,208,96,.15);
+  color: #f5d060;
+  border: 1px solid rgba(245,208,96,.4);
+}
+.share-strip a.copy:hover, .share-strip button.copy:hover{
+  background: rgba(245,208,96,.25);
+  color: #fff;
+}
