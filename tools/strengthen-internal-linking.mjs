@@ -39,6 +39,10 @@ const exclude = [
   // (Details / Analysis / Full Report stepper). External breadcrumbs and
   // related-insights blocks clutter the flow. Skip.
   /^analyzer\.html$/,
+  // love-compatibility-numerology.html is the relationship calculator
+  // with its own hero, eyebrow tags, and result flow. Breadcrumb injection
+  // duplicates content already in the hero. Skip.
+  /^love-compatibility-numerology\.html$/,
 ];
 
 function walk(dir) {
