@@ -23,35 +23,49 @@
   margin:44px auto 28px;
   padding:0 1.5rem;
 }
+/* Self-contained dark card so it works on BOTH light theme pages and the
+   dark cosmic homepage. Previously the heading inherited var(--text) which
+   resolved to dark text and went invisible on dark page backgrounds. */
 .na-related-inner{
-  border:1px solid rgba(6,182,212,.18);
-  background:linear-gradient(160deg,rgba(6,182,212,.055),rgba(240,180,41,.045));
-  border-radius:12px;
-  padding:24px;
+  border:1px solid rgba(245,196,81,.32);
+  background:linear-gradient(160deg,#1a0e52 0%,#2a1a5c 60%,#1a0e52 100%);
+  border-radius:14px;
+  padding:28px;
+  box-shadow:0 10px 30px rgba(15,9,40,.18);
+  position:relative;
+  overflow:hidden;
+}
+.na-related-inner::before{
+  content:'';
+  position:absolute;
+  top:0;left:0;right:0;
+  height:3px;
+  background:linear-gradient(90deg,transparent,rgba(245,196,81,.85),transparent);
 }
 .na-related-kicker{
   font-family:var(--font-sans,system-ui,sans-serif);
   font-size:11px;
-  letter-spacing:.14em;
+  letter-spacing:.16em;
   text-transform:uppercase;
   font-weight:700;
-  color:#7c3aed;
-  margin-bottom:6px;
+  color:#f5d060;
+  margin-bottom:8px;
 }
 .na-related-insights h2{
   font-family:var(--font-serif,Georgia,serif);
   font-size:clamp(22px,3vw,30px);
   line-height:1.2;
-  color:var(--text,#0f1c26);
-  margin:0 0 8px;
+  color:#ffffff !important;
+  margin:0 0 10px;
+  font-weight:700;
 }
 .na-related-insights p{
   max-width:760px;
-  margin:0 0 18px;
+  margin:0 0 20px;
   font-family:var(--font-sans,system-ui,sans-serif);
   font-size:14.5px;
   line-height:1.7;
-  color:var(--text2,#0e7490);
+  color:rgba(240,236,224,.82);
 }
 .na-related-grid{
   display:grid;
@@ -59,16 +73,16 @@
   gap:10px;
 }
 .na-related-card{
-  min-height:92px;
+  min-height:96px;
   display:flex;
   flex-direction:column;
   justify-content:flex-start;
   gap:6px;
   background:#fff;
-  border:1px solid rgba(6,182,212,.2);
-  border-radius:8px;
-  padding:13px 14px;
-  color:var(--text,#0f1c26);
+  border:1px solid rgba(245,196,81,.35);
+  border-radius:10px;
+  padding:14px 16px;
+  color:#0f0a28;
   text-decoration:none;
   transition:transform .16s ease,border-color .16s ease,box-shadow .16s ease;
 }
@@ -76,44 +90,61 @@
   font-family:var(--font-sans,system-ui,sans-serif);
   font-size:11px;
   line-height:1.35;
-  color:var(--text3,#6b9aaa);
+  letter-spacing:.04em;
+  color:#6d4ed1;
+  font-weight:600;
+  text-transform:uppercase;
 }
 .na-related-card strong{
   font-family:var(--font-serif,Georgia,serif);
-  font-size:15px;
-  line-height:1.25;
-  color:var(--text,#0f1c26);
+  font-size:15.5px;
+  line-height:1.3;
+  color:#0f0a28;
+  font-weight:700;
 }
 .na-related-card:hover{
   transform:translateY(-2px);
-  border-color:rgba(240,180,41,.48);
-  box-shadow:0 8px 22px rgba(6,182,212,.1);
+  border-color:rgba(245,196,81,.7);
+  box-shadow:0 8px 22px rgba(0,0,0,.18);
 }
 .na-hub-discovery{
   max-width:1100px;
   margin:44px auto 28px;
   padding:0 1.5rem;
 }
+/* Same dark-card treatment as .na-related-inner so the block reads on
+   light AND dark page backgrounds. */
 .na-hub-inner{
-  border:1px solid rgba(124,58,237,.18);
-  background:rgba(124,58,237,.045);
-  border-radius:12px;
-  padding:24px;
+  border:1px solid rgba(157,127,255,.4);
+  background:linear-gradient(160deg,#1a0e52 0%,#2a1a5c 60%,#1a0e52 100%);
+  border-radius:14px;
+  padding:28px;
+  box-shadow:0 10px 30px rgba(15,9,40,.18);
+  position:relative;
+  overflow:hidden;
+}
+.na-hub-inner::before{
+  content:'';
+  position:absolute;
+  top:0;left:0;right:0;
+  height:3px;
+  background:linear-gradient(90deg,transparent,rgba(157,127,255,.85),transparent);
 }
 .na-hub-discovery h2{
   font-family:var(--font-serif,Georgia,serif);
   font-size:clamp(22px,3vw,30px);
   line-height:1.2;
-  color:var(--text,#0f1c26);
-  margin:0 0 8px;
+  color:#ffffff !important;
+  margin:0 0 10px;
+  font-weight:700;
 }
 .na-hub-discovery p{
   max-width:780px;
-  margin:0 0 18px;
+  margin:0 0 20px;
   font-family:var(--font-sans,system-ui,sans-serif);
   font-size:14.5px;
   line-height:1.7;
-  color:var(--text2,#0e7490);
+  color:rgba(240,236,224,.82);
 }
 .na-hub-link-grid{
   display:grid;
