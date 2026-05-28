@@ -31,7 +31,7 @@ import { preFilterSafety } from './_lib/safety.js';
 import { reserveQuota, AURA_RESTING_MESSAGE } from './_lib/quota.js';
 import { buildAuraPrompt } from './_lib/prompt.js';
 import { streamLLM } from './_lib/llmRouter.js';
-import { retrieveSymbols } from './_lib/symbolic.js';
+import { retrieveSymbols, isTarotRequest } from './_lib/symbolic.js';
 import { sanitizeChunk, finalize, isTimingQuestion } from './_lib/sanitize.js';
 import { persistTurn } from './_lib/persistTurn.js';
 import { startSSE, sendEvent, endSSE, sseSingleReply } from './_lib/sse.js';
@@ -62,6 +62,17 @@ function classifyRegister(message) {
     /\b(tomorrow|today|tonight|this evening|this morning|this afternoon|right now|currently)\b.*\b(should|safe|good|okay|ok|smart|worth)\b/i,
     /\b(was it (right|wrong|a good idea|smart)|did i (do|make) the right|in retrospect)\b/i,
     /\b(recommend|suggestion|advise|advice|tip)\b/i,
+    // Real-world money / employer / payment timing. Salary from a specific
+    // company is a PRACTICAL question (talk to HR), not a karmic-family
+    // reflection. Catching this here stops retrieval from pulling Lal
+    // Kitab "Mother's Lineage and Financial Flow" type cards onto a
+    // simple "when does my salary come" question.
+    /\b(salary|paycheck|pay\s*check|wages|payment|reimbursement|invoice|payout|payroll|stipend|appraisal|increment|bonus|paid|pay\s*day|pay\s*date|credit(ed)?|got\s*paid|hr\s*department|hr\s*team)\b/i,
+    // Tarot requests are tarot-mode (handled in retrieval), but they get
+    // the reflective register because the reply needs the symbolic voice.
+    // EXCEPT when the underlying question is a real-world practical one
+    // ("do a tarot to check when my Beem salary comes") which the salary
+    // pattern above will already catch.
   ];
   if (practicalPatterns.some(re => re.test(m))) return 'practical';
 
@@ -131,15 +142,23 @@ export default async function handler(req, res) {
   }
 
   // 4. CLASSIFY register: casual / practical / reflective.
-  //    Only the reflective register benefits from symbolic retrieval.
-  //    Casual and practical questions waste a Gemini embedding call AND
-  //    pollute the prompt with irrelevant cards, so we skip retrieval
-  //    for them. This roughly halves quota usage on the common case.
+  //    Plus tarot-mode detection: when user explicitly asks for tarot,
+  //    we pull 3 tarot cards regardless of register.
   const register = classifyRegister(message);
+  const tarotMode = isTarotRequest(message);
 
-  // 5. RETRIEVE symbolic grounding only for reflective questions.
+  // 5. RETRIEVE symbolic grounding.
+  //    - tarotMode: always retrieve, but ONLY from tarot corpus (3 cards).
+  //    - reflective: regular cross-tradition retrieval (4 cards, max 1 per source).
+  //    - practical / casual: skip retrieval (cards just dilute the practical answer).
   let symbols = [];
-  if (register === 'reflective') {
+  if (tarotMode) {
+    try {
+      symbols = await retrieveSymbols(message, { topK: 3, tarotMode: true });
+    } catch (err) {
+      console.warn('[aura/v2/message] tarot retrieve failed:', err && err.message);
+    }
+  } else if (register === 'reflective') {
     try {
       symbols = await retrieveSymbols(message, { topK: 4 });
     } catch (err) {
@@ -160,10 +179,40 @@ export default async function handler(req, res) {
   // Build an internal hint that locks Gemini into the right register,
   // so the regex classifier's call wins even if Gemini would have
   // classified the message differently.
-  const registerHint =
-    register === 'casual'    ? '[INTERNAL: This is a CASUAL message. Reply with ONE warm sentence. No numerology. No symbolic framing.]' :
-    register === 'practical' ? '[INTERNAL: This is a PRACTICAL everyday question. Reply like a thoughtful friend, 2 to 4 sentences, lead with a clear useful answer. Do NOT force numerology, planets, or symbolic framing.]' :
-                               '[INTERNAL: This is a REFLECTIVE question. 1 to 2 sentences, warm and grounded, drawing on the cards if they fit.]';
+  let registerHint;
+  if (tarotMode && symbols.length >= 1) {
+    // Tarot reading mode: do a structured Past / Present / Future reading
+    // using the 3 cards we retrieved. Name each card. Anchor every line
+    // in the SPECIFIC subject of the user's question (not generic life).
+    const labels = ['Past', 'Present', 'Future'];
+    const cardList = symbols.slice(0, 3).map((s, i) =>
+      `  ${labels[i] || 'Card ' + (i + 1)}: "${s.name}" — ${s.body.slice(0, 180)}`
+    ).join('\n');
+    registerHint = [
+      '[INTERNAL: TAROT READING MODE.',
+      'The user explicitly asked for a tarot reading. Do a structured 3-card reading.',
+      'The cards drawn (in order Past, Present, Future):',
+      cardList,
+      '',
+      'STRUCTURE OF YOUR REPLY:',
+      '1. Name all three cards by their actual names in one short opener.',
+      '2. Then for EACH card (Past, Present, Future), write 1-2 sentences interpreting it',
+      '   IN THE SPECIFIC CONTEXT of the user\'s exact question.',
+      '3. End with a short, grounded summary line.',
+      '',
+      'CRITICAL: anchor every interpretation in the SPECIFIC subject the user named',
+      '(employer, company name, salary, partner name, the exact decision, etc.).',
+      'Do NOT drift into abstract themes like "family financial patterns" or',
+      '"unseen forces" unless the user\'s question is actually about that.',
+      'If the user asks about salary from a named company, the reading is about',
+      'the salary from that company, NOT about family money karma.]',
+    ].join('\n');
+  } else {
+    registerHint =
+      register === 'casual'    ? '[INTERNAL: This is a CASUAL message. Reply with ONE warm sentence. No numerology. No symbolic framing.]' :
+      register === 'practical' ? '[INTERNAL: This is a PRACTICAL everyday question. Reply like a thoughtful friend, 2 to 4 sentences, lead with a clear useful answer. Do NOT force numerology, planets, or symbolic framing. If the user named a specific company, person, or thing, your reply MUST stay anchored on THAT specific subject, not drift into general themes.]' :
+                                 '[INTERNAL: This is a REFLECTIVE question. 1 to 2 sentences, warm and grounded, drawing on the cards if they fit. Anchor your reply in the SPECIFIC subject the user named (their job, their partner, their company, their decision), not abstract themes.]';
+  }
 
   const userText = (
     message + '\n\n' + registerHint +
@@ -226,12 +275,15 @@ export default async function handler(req, res) {
     }
     sendEvent(res, 'token', { text: assistantText });
   }
-  // Sentence cap depends on register, practical answers need room to reason.
+  // Sentence cap depends on register. Tarot readings need the most room
+  // (opener + 3 cards × 2 sentences + closer = ~8 sentences). Practical
+  // questions get 4. Casual gets 1. Default reflective gets 2.
   const maxSentences =
-    register === 'practical' ? 4 :
-    askingTime               ? 3 :
-    register === 'casual'    ? 1 :
-                               2;
+    (tarotMode && symbols.length >= 1) ? 9 :
+    register === 'practical'           ? 4 :
+    askingTime                          ? 3 :
+    register === 'casual'               ? 1 :
+                                          2;
   assistantText = finalize(assistantText, { maxSentences });
 
   sendEvent(res, 'done', {

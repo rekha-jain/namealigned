@@ -53,18 +53,28 @@ function inferIntentTags(message) {
 }
 
 /**
+ * Detect when the user explicitly asked for a tarot reading.
+ * Matches: tarot, tarrot (common misspelling), pull cards, do a reading,
+ * card reading, draw a card.
+ */
+function isTarotRequest(message) {
+  const m = String(message || '').toLowerCase();
+  return /\b(tarr?ot|pull\s+(?:a\s+)?cards?|do\s+a\s+(?:tarr?ot\s+)?reading|card\s+reading|draw\s+(?:a|the)?\s*cards?)\b/i.test(m);
+}
+
+/**
  * Retrieve top-K symbol cards relevant to the user's message.
  * Returns: [ { id, name, body, planet, source, source_ref, intent_tags, similarity } ]
  *
- * Behaviour:
- *   - Embed the user message (RETRIEVAL_QUERY task type)
- *   - pgvector cosine top-20 from aura_symbols
- *   - Re-rank: similarity + 0.05 per matching intent tag
- *   - Return top topK
+ * Options:
+ *   topK            (number, default 4)
+ *   tarotMode       (bool, default false)  if true, pulls 3 tarot cards only
+ *   excludeSources  (array, optional) sources to filter out of results
  *
  * Best-effort: any failure returns [] and logs.
  */
-async function retrieveSymbols(message, { topK = 4 } = {}) {
+async function retrieveSymbols(message, opts = {}) {
+  const { topK = 4, tarotMode = false, excludeSources = [] } = opts;
   const text = String(message || '').trim();
   if (!text) return [];
 
@@ -81,7 +91,7 @@ async function retrieveSymbols(message, { topK = 4 } = {}) {
   try {
     rows = await rpc('match_aura_symbols', {
       query_embedding: qEmb,
-      match_count: 20,
+      match_count: 40,
     });
   } catch (err) {
     console.warn('[aura/symbolic] rpc failed, skipping retrieval:', err && err.message);
@@ -89,23 +99,42 @@ async function retrieveSymbols(message, { topK = 4 } = {}) {
   }
   if (!Array.isArray(rows) || !rows.length) return [];
 
-  // Per-source weight. Synthesized cards (Jung, Prashna, Lal Kitab, Tarot)
-  // are authored in clean emotional English specifically for this product
-  // and translate gracefully into replies. Lilly's Christian Astrology
-  // is genuine 17th-century chart-reading language with mechanical, literal
-  // imagery (ledgers, houses, malefics) that can produce hallucinated-
-  // sounding metaphors when paraphrased. Down-weight it.
+  // ── TAROT MODE ───────────────────────────────────────────────
+  // When user explicitly asked for tarot, only pull from the tarot
+  // corpus and return 3 distinct cards (for Past / Present / Future).
+  // Forced source-diversity becomes irrelevant; the entire reading is
+  // one tradition, which is the actual user expectation.
+  if (tarotMode) {
+    const tarotCards = rows
+      .filter(r => r.source === 'tarot_major_arcana_synthesized')
+      .slice(0, Math.max(3, topK));
+    if (tarotCards.length >= 1) return tarotCards.slice(0, 3);
+    // No tarot cards available, fall through to normal flow as graceful
+    // degradation (better to return SOMETHING than nothing).
+  }
+
+  // Per-source weight. Synthesized cards translate gracefully into
+  // replies; Lilly's Christian Astrology has 17th-century mechanical
+  // imagery that paraphrases badly. Tarot is bumped a touch for
+  // accessibility.
   const SOURCE_WEIGHTS = {
     jungian_archetypes_synthesized: 1.10,
-    lal_kitab_synthesized:          1.10,
+    lal_kitab_synthesized:          1.05,  // was 1.10, lowered: it
+                                            //   over-pulls on any "money"
+                                            //   query into family-karma
+                                            //   framing
     prasna_marga_synthesized:       1.05,
     tarot_major_arcana_synthesized: 1.05,
     cheiro_book_of_numbers:         0.90,
     christian_astrology:            0.65,
   };
 
+  // Skip excluded sources entirely.
+  const excludeSet = new Set(excludeSources);
+  const filtered = rows.filter(r => !excludeSet.has(r.source));
+
   const intentTags = inferIntentTags(text);
-  const scored = rows.map(r => {
+  const scored = filtered.map(r => {
     const overlap = Array.isArray(r.intent_tags)
       ? r.intent_tags.filter(t => intentTags.includes(t)).length
       : 0;
@@ -116,9 +145,8 @@ async function retrieveSymbols(message, { topK = 4 } = {}) {
   });
   scored.sort((a, b) => b.score - a.score);
 
-  // Take top-K but ensure source diversity: max 1 from any single source.
-  // Tighter than before (was 2) because of how dominant Lilly was; this
-  // forces tradition diversity across every reply.
+  // Take top-K with source diversity: max 1 from any single source.
+  // Forces tradition diversity across every reply.
   const out = [];
   const perSource = {};
   for (const r of scored) {
@@ -131,4 +159,4 @@ async function retrieveSymbols(message, { topK = 4 } = {}) {
   return out;
 }
 
-export { retrieveSymbols, inferIntentTags };
+export { retrieveSymbols, inferIntentTags, isTarotRequest };
