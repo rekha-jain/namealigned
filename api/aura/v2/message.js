@@ -31,7 +31,7 @@ import { preFilterSafety } from './_lib/safety.js';
 import { reserveQuota, AURA_RESTING_MESSAGE } from './_lib/quota.js';
 import { buildAuraPrompt } from './_lib/prompt.js';
 import { streamLLM } from './_lib/llmRouter.js';
-import { retrieveSymbols, isTarotRequest } from './_lib/symbolic.js';
+import { retrieveSymbols, detectReadingMode } from './_lib/symbolic.js';
 import { sanitizeChunk, finalize, isTimingQuestion } from './_lib/sanitize.js';
 import { persistTurn } from './_lib/persistTurn.js';
 import { startSSE, sendEvent, endSSE, sseSingleReply } from './_lib/sse.js';
@@ -141,22 +141,34 @@ export default async function handler(req, res) {
     return;
   }
 
-  // 4. CLASSIFY register: casual / practical / reflective.
-  //    Plus tarot-mode detection: when user explicitly asks for tarot,
-  //    we pull 3 tarot cards regardless of register.
+  // 4. CLASSIFY register + detect reading mode.
+  //    Reading mode (tarot / prashna) is detected from the current
+  //    message AND the recent history. This handles the pattern:
+  //      user: "Can you do prashna kundali?"
+  //      aura: "What clarity do you need?"
+  //      user: "will my salary come Friday?" <-- this is the prashna question
+  //    Without history-awareness, that last message classifies as practical
+  //    (because "salary") and skips the reading entirely.
   const register = classifyRegister(message);
-  const tarotMode = isTarotRequest(message);
+  const readingMode = detectReadingMode(message, session.history);  // 'tarot' | 'prashna' | null
 
   // 5. RETRIEVE symbolic grounding.
-  //    - tarotMode: always retrieve, but ONLY from tarot corpus (3 cards).
-  //    - reflective: regular cross-tradition retrieval (4 cards, max 1 per source).
-  //    - practical / casual: skip retrieval (cards just dilute the practical answer).
+  //    - readingMode === 'tarot':   pull 3 tarot cards (Past/Present/Future)
+  //    - readingMode === 'prashna': pull 3 horary cards (Significator/Cusp/Timing)
+  //    - reflective: regular cross-tradition retrieval (4 cards, max 1 per source)
+  //    - practical / casual (without reading mode): skip retrieval entirely
   let symbols = [];
-  if (tarotMode) {
+  if (readingMode === 'tarot') {
     try {
       symbols = await retrieveSymbols(message, { topK: 3, tarotMode: true });
     } catch (err) {
       console.warn('[aura/v2/message] tarot retrieve failed:', err && err.message);
+    }
+  } else if (readingMode === 'prashna') {
+    try {
+      symbols = await retrieveSymbols(message, { topK: 3, prashnaMode: true });
+    } catch (err) {
+      console.warn('[aura/v2/message] prashna retrieve failed:', err && err.message);
     }
   } else if (register === 'reflective') {
     try {
@@ -180,10 +192,9 @@ export default async function handler(req, res) {
   // so the regex classifier's call wins even if Gemini would have
   // classified the message differently.
   let registerHint;
-  if (tarotMode && symbols.length >= 1) {
-    // Tarot reading mode: do a structured Past / Present / Future reading
-    // using the 3 cards we retrieved. Name each card. Anchor every line
-    // in the SPECIFIC subject of the user's question (not generic life).
+
+  if (readingMode === 'tarot' && symbols.length >= 1) {
+    // Tarot reading mode: structured Past / Present / Future with named cards.
     const labels = ['Past', 'Present', 'Future'];
     const cardList = symbols.slice(0, 3).map((s, i) =>
       `  ${labels[i] || 'Card ' + (i + 1)}: "${s.name}" — ${s.body.slice(0, 180)}`
@@ -202,11 +213,44 @@ export default async function handler(req, res) {
       '',
       'CRITICAL: anchor every interpretation in the SPECIFIC subject the user named',
       '(employer, company name, salary, partner name, the exact decision, etc.).',
-      'Do NOT drift into abstract themes like "family financial patterns" or',
-      '"unseen forces" unless the user\'s question is actually about that.',
-      'If the user asks about salary from a named company, the reading is about',
-      'the salary from that company, NOT about family money karma.]',
+      'Do NOT drift into abstract themes. If the user asked about salary from a named',
+      'company, the reading is about the salary from that company, NOT about family karma.]',
     ].join('\n');
+
+  } else if (readingMode === 'prashna' && symbols.length >= 1) {
+    // Prashna kundali (horary) mode: structured Significator / Cusp / Timing.
+    const labels = ['Significator', 'Cusp Reading', 'Timing'];
+    const cardList = symbols.slice(0, 3).map((s, i) =>
+      `  ${labels[i] || 'Element ' + (i + 1)}: "${s.name}" — ${s.body.slice(0, 200)}`
+    ).join('\n');
+    registerHint = [
+      '[INTERNAL: PRASHNA KUNDALI / HORARY READING MODE.',
+      'The user explicitly asked for a prashna (horary) reading. This is the Indic and',
+      'Western horary tradition of reading the chart of the MOMENT the question was asked.',
+      'The horary cards drawn:',
+      cardList,
+      '',
+      'STRUCTURE OF YOUR REPLY:',
+      '1. Open by naming this as a prashna reading on the user\'s specific question.',
+      '2. Significator: 1-2 sentences on who/what represents the matter (the asker,',
+      '   the company, the salary, the partner, the situation). Use plain everyday',
+      '   English, NOT jargon like "10th lord" or "lagna".',
+      '3. Cusp Reading: 1-2 sentences on the current state of the matter, with a CLEAR',
+      '   yes / leaning yes / leaning no / no signal.',
+      '4. Timing: 1-2 sentences giving a specific tentative future window for resolution',
+      '   (e.g. "within the next 7 to 10 days", "before the second week of June").',
+      '   The window MUST be in the future relative to today.',
+      '5. End with a single sentence of grounded human guidance.',
+      '',
+      'CRITICAL:',
+      '- Anchor in the SPECIFIC subject (employer name, person, decision) the user named.',
+      '- NEVER use horary jargon ("malefic", "10th house", "rashi", "nakshatra").',
+      '- Translate the symbolic reading into plain English the user can act on.',
+      '- For "will I get my Beem April salary in June first week" type questions, give a',
+      '  clear directional answer: leaning yes (first week likely), leaning no (delayed,',
+      '  expect second/third week), or yes (looks well-aspected for first week).]',
+    ].join('\n');
+
   } else {
     registerHint =
       register === 'casual'    ? '[INTERNAL: This is a CASUAL message. Reply with ONE warm sentence. No numerology. No symbolic framing.]' :
@@ -275,15 +319,17 @@ export default async function handler(req, res) {
     }
     sendEvent(res, 'token', { text: assistantText });
   }
-  // Sentence cap depends on register. Tarot readings need the most room
-  // (opener + 3 cards × 2 sentences + closer = ~8 sentences). Practical
-  // questions get 4. Casual gets 1. Default reflective gets 2.
+  // Sentence cap depends on register.
+  // Tarot reading (opener + 3 cards × 2 sentences + closer) = 9.
+  // Prashna reading (significator + cusp + timing + closer + framing) = 9.
+  // Practical questions: 4. Casual: 1. Reflective default: 2.
+  const readingActive = (readingMode === 'tarot' || readingMode === 'prashna') && symbols.length >= 1;
   const maxSentences =
-    (tarotMode && symbols.length >= 1) ? 9 :
-    register === 'practical'           ? 4 :
-    askingTime                          ? 3 :
-    register === 'casual'               ? 1 :
-                                          2;
+    readingActive            ? 9 :
+    register === 'practical' ? 4 :
+    askingTime               ? 3 :
+    register === 'casual'    ? 1 :
+                               2;
   assistantText = finalize(assistantText, { maxSentences });
 
   sendEvent(res, 'done', {

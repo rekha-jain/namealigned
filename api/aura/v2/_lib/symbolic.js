@@ -63,18 +63,61 @@ function isTarotRequest(message) {
 }
 
 /**
+ * Detect when the user explicitly asked for a prashna / horary reading.
+ * Matches: prashna kundali, prashna marga, prasna, horary, horary reading,
+ * horary chart, kundali reading (for the moment).
+ */
+function isPrashnaRequest(message) {
+  const m = String(message || '').toLowerCase();
+  return /\b(pra[s]?h?na(\s+(kundali|marga|tantra|chart|reading))?|horary(\s+(reading|chart))?|kundali\s+(reading|for\s+this))\b/i.test(m);
+}
+
+/**
+ * Detect any reading-mode request (tarot OR prashna), looking at the
+ * current message FIRST and falling back to the most recent prior user
+ * message in history. This handles the conversation pattern:
+ *   user: "Can you do prashna kundali?"
+ *   aura: "What clarity do you need?"
+ *   user: "will I get my salary by Friday?"   <-- this is the prashna question
+ * Without history-awareness, that last message would classify as practical
+ * and skip the reading entirely.
+ *
+ * Returns one of: 'tarot' | 'prashna' | null.
+ */
+function detectReadingMode(message, history) {
+  if (isTarotRequest(message))   return 'tarot';
+  if (isPrashnaRequest(message)) return 'prashna';
+
+  // Look at the most recent prior user message. If it requested a reading
+  // mode AND the message in between is short/clarifying (assistant asking
+  // "what is your question"), the current message is the reading subject.
+  if (!Array.isArray(history) || !history.length) return null;
+  const userTurns = history.filter(m => m && m.role === 'user').slice(-2);
+  for (const t of userTurns) {
+    const txt = String(t.content || '');
+    // Skip if the prior user message ALSO had a clear, full question (then
+    // the reading-mode request was probably standalone, not paired).
+    if (isTarotRequest(txt)   && txt.length < 40) return 'tarot';
+    if (isPrashnaRequest(txt) && txt.length < 60) return 'prashna';
+  }
+  return null;
+}
+
+/**
  * Retrieve top-K symbol cards relevant to the user's message.
  * Returns: [ { id, name, body, planet, source, source_ref, intent_tags, similarity } ]
  *
  * Options:
  *   topK            (number, default 4)
  *   tarotMode       (bool, default false)  if true, pulls 3 tarot cards only
+ *   prashnaMode     (bool, default false)  if true, pulls 3 horary cards only
+ *                                          (prasna_marga_synthesized + christian_astrology)
  *   excludeSources  (array, optional) sources to filter out of results
  *
  * Best-effort: any failure returns [] and logs.
  */
 async function retrieveSymbols(message, opts = {}) {
-  const { topK = 4, tarotMode = false, excludeSources = [] } = opts;
+  const { topK = 4, tarotMode = false, prashnaMode = false, excludeSources = [] } = opts;
   const text = String(message || '').trim();
   if (!text) return [];
 
@@ -111,6 +154,19 @@ async function retrieveSymbols(message, opts = {}) {
     if (tarotCards.length >= 1) return tarotCards.slice(0, 3);
     // No tarot cards available, fall through to normal flow as graceful
     // degradation (better to return SOMETHING than nothing).
+  }
+
+  // ── PRASHNA MODE ─────────────────────────────────────────────
+  // When user explicitly asked for prashna kundali / horary reading,
+  // pull only from the horary traditions (Prashna Marga + William Lilly).
+  // Return 3 cards interpreted as Significator / Cusp / Timing.
+  if (prashnaMode) {
+    const horarySources = new Set(['prasna_marga_synthesized', 'christian_astrology']);
+    const horaryCards = rows
+      .filter(r => horarySources.has(r.source))
+      .slice(0, Math.max(3, topK));
+    if (horaryCards.length >= 1) return horaryCards.slice(0, 3);
+    // graceful degradation: fall through if no horary cards available
   }
 
   // Per-source weight. Synthesized cards translate gracefully into
@@ -159,4 +215,10 @@ async function retrieveSymbols(message, opts = {}) {
   return out;
 }
 
-export { retrieveSymbols, inferIntentTags, isTarotRequest };
+export {
+  retrieveSymbols,
+  inferIntentTags,
+  isTarotRequest,
+  isPrashnaRequest,
+  detectReadingMode,
+};
