@@ -64,7 +64,7 @@ function snippetFor(route) {
   if (route === '/ask-aura') return ['Ask Aura: Numerology Chat for Love and Career', 'Ask Aura about love, career, timing, names, and emotional patterns using your Chaldean numerology context as a reflective guide.'];
   if (route === '/report') return ['Full Chaldean Numerology Report PDF | NameAligned', 'Get a personalised Chaldean numerology PDF with name alignment, 5-year forecast, career themes, compatibility, remedies, and timing.'];
   if (route === '/name-alignment') return ['Name Alignment Meaning in Chaldean Numerology', 'Name alignment shows how well your name vibration supports your birth numbers, identity, confidence, work rhythm, and relationships.'];
-  if (route === '/name-numerology-calculator') return ['Name Numerology Calculator: Chaldean Letter Values', 'Calculate your Chaldean name number from letter values, see the compound total, and understand what your daily-use name communicates.'];
+  if (route === '/name-numerology-calculator') return ['Free Name Numerology Calculator: Is Your Name Lucky?', 'Check your name number instantly with a free Chaldean numerology calculator. Get your name score, Birth Number, Life Path Number, archetype and lucky days.'];
   if (route === '/name-correction-numerology') return ['Name Correction Numerology: Free Spelling Check', 'Check whether your spelling supports your Chaldean birth numbers and explore realistic name correction guidance without overpromising.'];
   if (route === '/business-name-numerology') return ['Business Name Numerology Calculator | Chaldean', 'Check whether a business or brand name aligns with founder numbers, venture timing, compound vibration, and long-term identity.'];
 

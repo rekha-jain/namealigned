@@ -1,0 +1,5 @@
+timestamp_utc,site,to_email,subject,mode,result,message
+2026-06-08T10:18:58+00:00,Name Echo,office@nameecho.com,Chaldean name-number chart for Name Echo readers,dry-run,ok,
+2026-06-08T10:18:58+00:00,Name Numerology Calculator,support@namenumerologycalculator.in,Chaldean letter-values reference for your readers,dry-run,ok,
+2026-06-08T10:18:58+00:00,Meditation Bro,contact@meditationbro.com,Astrology guest post idea with practical numerology tool,dry-run,ok,
+2026-06-08T10:19:55+00:00,Name Echo,office@nameecho.com,Chaldean name-number chart for Name Echo readers,send,ok,

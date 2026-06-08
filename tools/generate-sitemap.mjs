@@ -4,7 +4,7 @@ import { JSDOM } from 'jsdom';
 
 const ROOT = path.resolve(new URL('..', import.meta.url).pathname);
 const BASE = 'https://www.namealigned.com';
-const LASTMOD = '2026-05-17';
+const LASTMOD = '2026-05-29';
 
 function walk(dir) {
   return fs.readdirSync(dir, { withFileTypes: true }).flatMap((entry) => {
