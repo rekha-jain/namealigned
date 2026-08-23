@@ -14,6 +14,7 @@
 'use strict';
 
 import { insertSupabaseRow } from './_supabase.js';
+import { sendBrevoEmail as deliverViaBrevo } from './_brevo.js';
 import { mpTrack, mpSetPeople } from './_mixpanel.js';
 
 const CORS_HEADERS = {
@@ -32,8 +33,9 @@ function sendJSON(res, statusCode, payload) {
 // ---------------------------------------------------------------------------
 // Helper: insert lead row into Supabase
 // ---------------------------------------------------------------------------
-async function saveLeadToSupabase({ name, dob, email, mobile, birthNum, destNum, nameNum, pct, source }) {
-  return await insertSupabaseRow('leads', {
+async function saveLeadToSupabase({ name, dob, email, mobile, birthNum, destNum, nameNum, pct }) {
+  const created_at = new Date().toISOString();
+  const fullRow = {
     name,
     dob,
     email,
@@ -42,14 +44,53 @@ async function saveLeadToSupabase({ name, dob, email, mobile, birthNum, destNum,
     bhagyank: destNum ?? null,
     name_number: nameNum ?? null,
     alignment_score: pct ?? null,
-    created_at: new Date().toISOString(),
-  }, { duplicateOk: true });
+    created_at,
+  };
+
+  const attempts = [
+    fullRow,
+    {
+      name,
+      dob,
+      email,
+      phone: mobile || null,
+      moolank: birthNum ?? null,
+      bhagyank: destNum ?? null,
+      name_number: nameNum ?? null,
+      created_at,
+    },
+    {
+      name,
+      dob,
+      email,
+      mobile: mobile || null,
+      birth_num: birthNum ?? null,
+      dest_num: destNum ?? null,
+      name_num: nameNum ?? null,
+      pct: pct ?? null,
+      created_at,
+    },
+    { name, email, dob: dob || '1900-01-01', created_at },
+  ];
+
+  let lastErr;
+  for (const row of attempts) {
+    try {
+      return await insertSupabaseRow('leads', row, { duplicateOk: true });
+    } catch (err) {
+      lastErr = err;
+      if (!/column|PGRST|42703/i.test(String(err && err.message))) throw err;
+      console.warn('[leads] insert attempt failed, trying simpler row:', err.message);
+    }
+  }
+
+  throw lastErr || new Error('Supabase leads insert failed');
 }
 
 // ---------------------------------------------------------------------------
 // Helper: send Brevo transactional email
 // ---------------------------------------------------------------------------
-async function sendBrevoEmail({ name, dob, email, birthNum, destNum, nameNum }) {
+async function sendLeadEmail({ name, dob, email, birthNum, destNum, nameNum }) {
   const analyserUrl =
     `https://namealigned.com/analyzer.html` +
     `?name=${encodeURIComponent(name || '')}` +
@@ -216,28 +257,13 @@ async function sendBrevoEmail({ name, dob, email, birthNum, destNum, nameNum }) 
 </body>
 </html>`.trim();
 
-  const response = await fetch('https://api.brevo.com/v3/smtp/email', {
-    method: 'POST',
-    headers: {
-      'api-key': process.env.BREVO_API_KEY,
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      sender: { name: 'NameAligned', email: 'support@namealigned.com' },
-      to: [{ email, name }],
-      subject: 'Your free Chaldean numerology analysis is ready',
-      htmlContent,
-    }),
+  return deliverViaBrevo({
+    to: email,
+    toName: name,
+    subject: 'Your free Chaldean numerology analysis is ready',
+    htmlContent,
+    tags: ['lead-capture'],
   });
-
-  if (!response.ok) {
-    const errorText = await response.text();
-    // Non-fatal: log but don't throw, we don't want email failure to fail the lead capture
-    console.error(`Brevo email failed [${response.status}]: ${errorText}`);
-    return null;
-  }
-
-  return await response.json();
 }
 
 // ---------------------------------------------------------------------------
@@ -283,8 +309,8 @@ export default async function handler(req, res) {
     const cleanName = name.trim();
     const cleanEmail = email.trim().toLowerCase();
 
-    // --- Persist to Supabase ---
-    let savedRow;
+    // --- Persist to Supabase (best-effort; don't block email delivery) ---
+    let savedRow = null;
     try {
       savedRow = await saveLeadToSupabase({
         name: cleanName,
@@ -295,32 +321,15 @@ export default async function handler(req, res) {
         destNum: destNum ?? null,
         nameNum: nameNum ?? null,
         pct: pct ?? null,
-        source: source || 'website',
       });
     } catch (dbErr) {
-      console.error('Supabase error:', dbErr);
-      return sendJSON(res, 500, { success: false, error: 'Failed to save lead' });
+      console.error('[capture-lead] Supabase error (continuing to email):', dbErr);
     }
 
-    // --- Mixpanel: Lead Created (server-side, reliable) ---
+    // --- Send welcome email (primary user-facing outcome) ---
+    let emailResult = { ok: false };
     try {
-      await mpSetPeople(cleanEmail, { name: cleanName });
-      await mpTrack('Lead Created', cleanEmail, {
-        name:     cleanName,
-        dob:      dob || null,
-        moolank:  birthNum ?? null,
-        bhagyank: destNum ?? null,
-        name_number: nameNum ?? null,
-        alignment_score: pct ?? null,
-        source:   source || 'website',
-      });
-    } catch (mpErr) {
-      console.error('[mixpanel] Lead Created failed:', mpErr);
-    }
-
-    // --- Send welcome email (best-effort) ---
-    try {
-      await sendBrevoEmail({
+      emailResult = await sendLeadEmail({
         name: cleanName,
         dob: dob || '',
         email: cleanEmail,
@@ -329,13 +338,38 @@ export default async function handler(req, res) {
         nameNum,
       });
     } catch (emailErr) {
-      // Already logged inside sendBrevoEmail; we still return success
-      console.error('Brevo unexpected error:', emailErr);
+      console.error('[capture-lead] Brevo unexpected error:', emailErr);
+    }
+
+    if (!emailResult.ok && !savedRow) {
+      return sendJSON(res, 500, {
+        success: false,
+        error: 'Could not email your analysis right now. Please try again in a minute.',
+      });
+    }
+
+    // --- Mixpanel: Lead Created (server-side, only when DB row exists) ---
+    if (savedRow) {
+      try {
+        await mpSetPeople(cleanEmail, { name: cleanName });
+        await mpTrack('Lead Created', cleanEmail, {
+          name:     cleanName,
+          dob:      dob || null,
+          moolank:  birthNum ?? null,
+          bhagyank: destNum ?? null,
+          name_number: nameNum ?? null,
+          alignment_score: pct ?? null,
+          source:   source || 'website',
+        });
+      } catch (mpErr) {
+        console.error('[mixpanel] Lead Created failed:', mpErr);
+      }
     }
 
     return sendJSON(res, 200, {
       success: true,
       id: savedRow?.id ?? null,
+      emailSent: !!emailResult.ok,
     });
   } catch (err) {
     console.error('Unhandled error in capture-lead:', err);

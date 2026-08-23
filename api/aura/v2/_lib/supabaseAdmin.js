@@ -6,6 +6,8 @@
 
 'use strict';
 
+import { buildSupabaseHeaders } from '../../_supabaseHeaders.js';
+
 const SUPABASE_URL = (process.env.SUPABASE_URL || '').replace(/\/+$/, '');
 const SUPABASE_KEY = process.env.SUPABASE_SERVICE_KEY || '';
 
@@ -18,11 +20,9 @@ function ensureConfigured() {
 }
 
 function baseHeaders(extra) {
-  return Object.assign({
-    apikey: SUPABASE_KEY,
-    Authorization: 'Bearer ' + SUPABASE_KEY,
+  return buildSupabaseHeaders(SUPABASE_KEY, Object.assign({
     'Content-Type': 'application/json',
-  }, extra || {});
+  }, extra || {}));
 }
 
 /**

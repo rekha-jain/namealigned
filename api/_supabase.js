@@ -1,5 +1,7 @@
 'use strict';
 
+import { buildSupabaseHeaders } from './_supabaseHeaders.js';
+
 export function getSupabaseConfig() {
   const url = (process.env.SUPABASE_URL || '').replace(/\/+$/, '');
   // ENFORCE service key on the server. Anon key + RLS silently rejects inserts.
@@ -23,12 +25,10 @@ export async function insertSupabaseRow(
 
   const response = await fetch(`${url}/rest/v1/${table}`, {
     method: 'POST',
-    headers: {
-      apikey: key,
-      Authorization: `Bearer ${key}`,
+    headers: buildSupabaseHeaders(key, {
       'Content-Type': 'application/json',
       Prefer: prefer,
-    },
+    }),
     body: JSON.stringify(row),
   });
 
@@ -56,7 +56,7 @@ export async function findLeadIdByEmail(email) {
   const { url, key } = getSupabaseConfig();
   const res = await fetch(
     `${url}/rest/v1/leads?email=eq.${encodeURIComponent(email)}&select=id&order=created_at.desc&limit=1`,
-    { headers: { apikey: key, Authorization: `Bearer ${key}` } }
+    { headers: buildSupabaseHeaders(key) }
   );
   if (!res.ok) {
     console.error(`[supabase] lead lookup failed status=${res.status} body=${await res.text()}`);

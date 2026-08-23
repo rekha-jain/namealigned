@@ -18,6 +18,8 @@
 
 'use strict';
 
+import { buildSupabaseHeaders } from './_supabaseHeaders.js';
+
 const ORDERS_COLUMNS = [
   'lead_id', 'name', 'dob', 'payment_status',
   'razorpay_payment_id', 'paypal_order_id', 'paypal_capture_id',
@@ -59,7 +61,7 @@ export default async function handler(req, res) {
   // 2. Connectivity + auth (HEAD on a system view)
   try {
     const r = await fetch(`${url}/rest/v1/orders?select=*&limit=0`, {
-      headers: { apikey: key, Authorization: `Bearer ${key}`, Prefer: 'count=exact' },
+      headers: buildSupabaseHeaders(key, { Prefer: 'count=exact' }),
     });
     report.checks.orders_table_reachable = r.ok;
     report.checks.orders_row_count       = r.headers.get('content-range');
@@ -94,7 +96,7 @@ export default async function handler(req, res) {
   try {
     const ins = await fetch(`${url}/rest/v1/orders`, {
       method: 'POST',
-      headers: { apikey: key, Authorization: `Bearer ${key}`, 'Content-Type': 'application/json', Prefer: 'return=representation' },
+      headers: buildSupabaseHeaders(key, { 'Content-Type': 'application/json', Prefer: 'return=representation' }),
       body: JSON.stringify({
         name: 'health-probe',
         email: probeEmail,
@@ -110,7 +112,7 @@ export default async function handler(req, res) {
       // Clean up the probe row
       await fetch(`${url}/rest/v1/orders?razorpay_payment_id=eq.${encodeURIComponent(probeId)}`, {
         method: 'DELETE',
-        headers: { apikey: key, Authorization: `Bearer ${key}`, Prefer: 'return=minimal' },
+        headers: buildSupabaseHeaders(key, { Prefer: 'return=minimal' }),
       });
     }
   } catch (e) {
@@ -124,7 +126,7 @@ async function probeColumns(table, cols, url, key, report) {
   for (const col of cols) {
     try {
       const r = await fetch(`${url}/rest/v1/${table}?select=${col}&limit=0`, {
-        headers: { apikey: key, Authorization: `Bearer ${key}` },
+        headers: buildSupabaseHeaders(key),
       });
       if (r.ok) report.schema[table].present.push(col);
       else {
@@ -145,7 +147,7 @@ async function fetchLatest(url, key, table, select, limit) {
   try {
     const r = await fetch(
       `${url}/rest/v1/${table}?select=${select}&order=created_at.desc&limit=${limit}`,
-      { headers: { apikey: key, Authorization: `Bearer ${key}` } }
+      { headers: buildSupabaseHeaders(key) }
     );
     if (!r.ok) return { error: 'status=' + r.status, body: (await r.text()).slice(0, 200) };
     return await r.json();

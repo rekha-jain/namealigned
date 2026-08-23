@@ -16,6 +16,7 @@
 
 import crypto from 'crypto';
 import { insertSupabaseRow, findLeadIdByEmail } from './_supabase.js';
+import { sendBrevoEmail as deliverViaBrevo } from './_brevo.js';
 import { mpTrack } from './_mixpanel.js';
 
 const CORS_HEADERS = {
@@ -292,27 +293,16 @@ async function sendReportEmail({ paymentId, name, email, dob, mobile, birthNum, 
 </body>
 </html>`.trim();
 
-  const response = await fetch('https://api.brevo.com/v3/smtp/email', {
-    method: 'POST',
-    headers: {
-      'api-key': process.env.BREVO_API_KEY,
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      sender: { name: 'NameAligned', email: 'support@namealigned.com' },
-      to: [{ email, name }],
-      subject: 'Your numerology report is ready 🌟',
-      htmlContent,
-    }),
+  const result = await deliverViaBrevo({
+    to: email,
+    toName: name,
+    subject: 'Your numerology report is ready 🌟',
+    htmlContent,
+    tags: ['report-delivery'],
   });
 
-  if (!response.ok) {
-    const errorText = await response.text();
-    console.error(`Brevo report email failed [${response.status}]: ${errorText}`);
-    return null;
-  }
-
-  return await response.json();
+  if (!result.ok) return null;
+  return result.data;
 }
 
 // ---------------------------------------------------------------------------
@@ -482,8 +472,8 @@ export default async function handler(req, res) {
       });
     }
 
-    // --- Send delivery email (best-effort) ---
-    if (orderInserted) {
+    // --- Send delivery email (best-effort; send even on duplicate insert) ---
+    if (orderSaved) {
       try {
         await sendReportEmail({
           paymentId: cleanPaymentId,

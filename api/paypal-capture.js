@@ -16,6 +16,7 @@
 
 import { getPaypalConfig, getAccessToken } from './_paypal.js';
 import { insertSupabaseRow, findLeadIdByEmail } from './_supabase.js';
+import { sendBrevoEmail as deliverViaBrevo } from './_brevo.js';
 import { mpTrack } from './_mixpanel.js';
 
 const CORS_HEADERS = {
@@ -89,17 +90,14 @@ Questions? <a href="mailto:hello@namealigned.com" style="color:#0e7490;">hello@n
 © ${new Date().getFullYear()} NameAligned.com</p></td></tr>
 </table></td></tr></table></body></html>`;
 
-  const r = await fetch('https://api.brevo.com/v3/smtp/email', {
-    method: 'POST',
-    headers: { 'api-key': process.env.BREVO_API_KEY, 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      sender: { name: 'NameAligned', email: 'support@namealigned.com' },
-      to: [{ email, name: name || email }],
-      subject: 'Your numerology report is ready 🌟',
-      htmlContent: html,
-    }),
+  const result = await deliverViaBrevo({
+    to: email,
+    toName: name || email,
+    subject: 'Your numerology report is ready 🌟',
+    htmlContent: html,
+    tags: ['report-delivery', 'paypal'],
   });
-  if (!r.ok) console.error(`[paypal/brevo] email failed [${r.status}]: ${await r.text()}`);
+  if (!result.ok) console.error('[paypal/brevo] email failed:', result.error);
 }
 
 export default async function handler(req, res) {

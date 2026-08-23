@@ -21,6 +21,7 @@
 
 import crypto from 'crypto';
 import { insertSupabaseRow, findLeadIdByEmail } from './_supabase.js';
+import { sendBrevoEmail as deliverViaBrevo } from './_brevo.js';
 import { mpTrack } from './_mixpanel.js';
 
 // ---------------------------------------------------------------------------
@@ -135,21 +136,15 @@ async function sendDeliveryEmail({ paymentId, name, email, dob, mobile }) {
   </table>
 </body></html>`.trim();
 
-  const response = await fetch('https://api.brevo.com/v3/smtp/email', {
-    method: 'POST',
-    headers: { 'api-key': process.env.BREVO_API_KEY, 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      sender: { name: 'NameAligned', email: 'support@namealigned.com' },
-      to: [{ email, name: name || email }],
-      subject: 'Your numerology report is ready 🌟',
-      htmlContent,
-    }),
+  const result = await deliverViaBrevo({
+    to: email,
+    toName: name || email,
+    subject: 'Your numerology report is ready 🌟',
+    htmlContent,
+    tags: ['report-delivery', 'razorpay-webhook'],
   });
 
-  if (!response.ok) {
-    const text = await response.text();
-    console.error(`Brevo webhook email failed [${response.status}]: ${text}`);
-  }
+  if (!result.ok) console.error('[razorpay/brevo] webhook email failed:', result.error);
 }
 
 // ---------------------------------------------------------------------------
