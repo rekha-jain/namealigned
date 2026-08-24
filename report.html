@@ -353,7 +353,7 @@
           <div id="orderPriceStrike" style="font-size:16px;color:var(--text3);text-decoration:line-through;font-family:sans-serif;">$5</div>
           <div id="orderPriceInr" style="font-size:16px;color:var(--text2);font-family:sans-serif;">· ₹249</div>
         </div>
-        <div id="orderPriceUsdLine" style="font-size:12.5px;color:var(--text2);font-family:sans-serif;margin-bottom:.85rem"><strong style="color:#7c3aed;">$2.50 USD</strong> via PayPal · or <strong style="color:var(--gold);">₹249</strong> via Razorpay · One-time · Yours forever</div>
+        <div id="orderPriceUsdLine" style="font-size:12.5px;color:var(--text2);font-family:sans-serif;margin-bottom:.85rem"><strong style="color:#7c3aed;"><del style="opacity:.55;font-weight:500;">$5</del> $2.50</strong> via PayPal · or <strong style="color:var(--gold);"><del style="opacity:.55;font-weight:500;">₹499</del> ₹249</strong> via Razorpay · One-time · Yours forever</div>
 
         <!-- Emotional bridge microcopy directly above the form, gives the
              order card a softer entry rather than a sudden checkout shift. -->
@@ -679,7 +679,7 @@ function updatePriceDisplay(){
     if(orderUsdMain) orderUsdMain.textContent = '$2.50';
     if(orderStrike) orderStrike.textContent = '$5';
     if(orderInr) orderInr.textContent = '· ₹249';
-    if(orderUsd) orderUsd.innerHTML = '<strong style="color:#7c3aed;">$2.50 USD</strong> via PayPal · or <strong style="color:var(--gold);">₹249</strong> via Razorpay · One-time · Yours forever';
+    if(orderUsd) orderUsd.innerHTML = '<strong style="color:#7c3aed;"><del style="opacity:.55;font-weight:500;">$5</del> $2.50</strong> via PayPal · or <strong style="color:var(--gold);"><del style="opacity:.55;font-weight:500;">₹499</del> ₹249</strong> via Razorpay · One-time · Yours forever';
     if(heroUsd) heroUsd.innerHTML = '<span style="text-decoration:line-through;opacity:.55;font-size:16px;margin-right:6px;">$5</span>$2.50 USD';
     if(heroInr) heroInr.innerHTML = 'INR 249<span style="font-size:16px;font-weight:400;color:#cbb8e8;text-decoration:line-through;margin-left:8px;">INR 499</span>';
     if(stickyIn) stickyIn.textContent = '⚡ 50% off · $2.50 / ₹249 · Instant';
