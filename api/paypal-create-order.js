@@ -5,7 +5,7 @@
  * which the JS SDK then uses to render the approval flow on PayPal's domain.
  *
  * Body (optional):
- *   { amount: '5.00', currency: 'USD', name: '...', email: '...', dob: '...' }
+ *   { amount: '5.00', currency: 'USD', promo_discount: 50, name, email, dob }
  *   amount '2.50' for 50%-off promo
  *
  * Returns: { id: 'PAYPAL_ORDER_ID' }
@@ -20,7 +20,24 @@ const CORS_HEADERS = {
   'Access-Control-Allow-Headers': 'Content-Type',
 };
 
+const FULL_AMOUNT_USD = '5.00';
+const SALE_AMOUNT_USD = '2.50';
+const ALLOWED_AMOUNTS_USD = new Set([FULL_AMOUNT_USD, SALE_AMOUNT_USD]);
+
 function sendJSON(res, status, payload) { res.status(status).json(payload); }
+
+function resolveAmount(body) {
+  const promo = Number(body && body.promo_discount) || 0;
+  // Server is authoritative for sale pricing.
+  if (promo === 50) return SALE_AMOUNT_USD;
+
+  const raw = body && body.amount != null ? String(body.amount).trim() : '';
+  if (ALLOWED_AMOUNTS_USD.has(raw)) return raw;
+
+  // Default launch checkout to the sale price when amount is omitted.
+  if (!raw) return SALE_AMOUNT_USD;
+  return null;
+}
 
 export default async function handler(req, res) {
   Object.entries(CORS_HEADERS).forEach(([k, v]) => res.setHeader(k, v));
@@ -28,10 +45,14 @@ export default async function handler(req, res) {
   if (req.method !== 'POST') return sendJSON(res, 405, { success: false, error: 'Method not allowed' });
 
   try {
-    const { amount: bodyAmount, currency: bodyCurrency, name, email, dob, mobile } = req.body || {};
+    const { currency: bodyCurrency, name, email, dob, mobile, promo_discount } = req.body || {};
     const def = getDefaultAmount();
-    const amount   = bodyAmount   || def.value;
+    const amount = resolveAmount(req.body || {});
     const currency = bodyCurrency || def.currency;
+
+    if (!amount) {
+      return sendJSON(res, 400, { success: false, error: 'Invalid amount' });
+    }
 
     const { baseUrl } = getPaypalConfig();
     const token = await getAccessToken();
@@ -40,7 +61,9 @@ export default async function handler(req, res) {
       intent: 'CAPTURE',
       purchase_units: [{
         amount: { currency_code: currency, value: String(amount) },
-        description: '5-Year Chaldean Destiny Report',
+        description: Number(promo_discount) === 50
+          ? '5-Year Chaldean Destiny Report (50% off)'
+          : '5-Year Chaldean Destiny Report',
         // We stash buyer info into custom_id so it's available on capture
         // even if the browser dies between approve and capture.
         custom_id: JSON.stringify({
@@ -48,6 +71,7 @@ export default async function handler(req, res) {
           email:  email  || '',
           dob:    dob    || '',
           mobile: mobile || '',
+          promo_discount: Number(promo_discount) || 0,
         }).slice(0, 127), // PayPal limit
       }],
       application_context: {
@@ -73,8 +97,8 @@ export default async function handler(req, res) {
     }
 
     const data = await r.json();
-    console.log(`[paypal] order created id=${data.id} amount=${amount} ${currency}`);
-    return sendJSON(res, 200, { success: true, id: data.id });
+    console.log(`[paypal] order created id=${data.id} amount=${amount} ${currency} promo=${Number(promo_discount)||0}`);
+    return sendJSON(res, 200, { success: true, id: data.id, amount, currency });
   } catch (err) {
     console.error('[paypal] create-order threw:', err);
     return sendJSON(res, 500, { success: false, error: err.message || 'Internal error' });

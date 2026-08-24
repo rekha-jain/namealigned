@@ -18,10 +18,28 @@ const CORS_HEADERS = {
   'Access-Control-Allow-Headers': 'Content-Type',
 };
 
-// New pricing: ₹499 full, ₹249 (50% off). Legacy ₹499/₹99 kept temporarily
+// New pricing: ₹499 full, ₹249 (50% off). Legacy ₹199/₹99 kept temporarily
 // so any in-flight pre-price-change orders still validate; remove once
 // confirmed no traffic on the old amounts.
-const ALLOWED_AMOUNTS_PAISE = [49900, 24900, 19900, 9900];
+const FULL_AMOUNT_PAISE = 49900;
+const SALE_AMOUNT_PAISE = 24900;
+const ALLOWED_AMOUNTS_PAISE = [FULL_AMOUNT_PAISE, SALE_AMOUNT_PAISE, 19900, 9900];
+
+function resolveAmount(body) {
+  const promo = Number(body && body.promo_discount) || 0;
+  // Server is authoritative for sale pricing — never trust a full-price
+  // amount when the client says the 50% promo is active.
+  if (promo === 50) return SALE_AMOUNT_PAISE;
+
+  const amount = Number(body && body.amount);
+  if (ALLOWED_AMOUNTS_PAISE.includes(amount)) return amount;
+
+  // Default launch checkout to the sale price when amount is omitted.
+  if (body && (body.amount === undefined || body.amount === null || body.amount === '')) {
+    return SALE_AMOUNT_PAISE;
+  }
+  return null;
+}
 
 export default async function handler(req, res) {
   Object.entries(CORS_HEADERS).forEach(([k, v]) => res.setHeader(k, v));
@@ -32,9 +50,9 @@ export default async function handler(req, res) {
   }
 
   try {
-    const { amount } = req.body || {};
+    const amount = resolveAmount(req.body || {});
 
-    if (!ALLOWED_AMOUNTS_PAISE.includes(amount)) {
+    if (amount === null) {
       return res.status(400).json({ success: false, error: 'Invalid amount' });
     }
 
@@ -53,6 +71,9 @@ export default async function handler(req, res) {
         currency: 'INR',
         receipt: `rcpt_${Date.now()}`,
         payment_capture: 1,
+        notes: {
+          promo_discount: String((req.body && req.body.promo_discount) || 0),
+        },
       }),
     });
 
@@ -63,6 +84,7 @@ export default async function handler(req, res) {
     }
 
     const order = await response.json();
+    console.log(`[razorpay] order created id=${order.id} amount=${order.amount} paise`);
 
     return res.status(200).json({
       success: true,

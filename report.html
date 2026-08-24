@@ -548,9 +548,12 @@
 <script src="https://www.paypal.com/sdk/js?client-id=BAAWs0dH18k4D7hGanUHedSnbtRecC85TWthWwtpSClAunkfgYsH-_1hK8FJePclJcPfublloB4A3sKRvU&amp;currency=USD&amp;intent=capture" data-namespace="paypal_sdk"></script>
 <script>
 // ── State ──────────────────────────────────────────────────────
-let promoDiscount  = 0;      // 0 | 50 | 100
+// Launch default: PROMO50 is pre-filled and auto-applied, so checkout
+// starts at the sale price. If the user clears/invalidates the code,
+// applyPromo() resets these to full price.
+let promoDiscount  = 50;     // 0 | 50 | 100
 let promoToken100  = '';     // signed token for 100%-off redemptions
-let promoApplied   = false;
+let promoApplied   = true;
 
 // ── Geo/locale detection: re-order payment blocks for non-India ─
 (function localizePayment(){
@@ -757,20 +760,25 @@ async function initiateReportPayment(){
   const fields = validateForm();
   if(!fields) return;
   const { name, dob, email, mobile } = fields;
-  const amount = promoDiscount===50 ? 24900 : 49900; // paise
-  const label  = promoDiscount===50 ? '5-Year Destiny Report (50% off)' : '5-Year Destiny Report';
+  const amount = promoDiscount === 50 ? 24900 : (promoDiscount === 100 ? 0 : 49900); // paise
+  const label  = promoDiscount === 50
+    ? '5-Year Destiny Report (50% off · ₹249)'
+    : '5-Year Destiny Report';
 
   // Disable button while creating order
   const payBtn = document.getElementById('payBtn');
   payBtn.disabled = true;
   payBtn.textContent = 'Preparing payment…';
 
-  let orderId, razorpayKey;
+  let orderId, razorpayKey, chargedAmount = amount;
   try {
     const orderRes = await fetch('/api/create-order', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ amount })
+      body: JSON.stringify({
+        amount,
+        promo_discount: promoDiscount || 0,
+      })
     });
     const orderData = await orderRes.json();
     if (!orderData.success || !orderData.orderId) {
@@ -778,12 +786,13 @@ async function initiateReportPayment(){
     }
     orderId     = orderData.orderId;
     razorpayKey = orderData.keyId;   // always use the key the server used
+    if (orderData.amount) chargedAmount = orderData.amount;
   } catch(e) {
     const err = document.getElementById('rErrBox');
     err.style.display = 'block';
     err.textContent = 'Could not initialise payment. Please try again.';
     payBtn.disabled = false;
-    payBtn.textContent = '✦ Pay, Generate my report';
+    payBtn.textContent = '✦ Read the rest of myself, $2.50';
     return;
   }
 
@@ -796,13 +805,13 @@ async function initiateReportPayment(){
     window._naEmailCapturedFired = true;
   }
   if (window.naTrack) window.naTrack('Payment Started', {
-    amount: amount, currency: 'INR', order_id: orderId, label: label,
+    amount: chargedAmount, currency: 'INR', order_id: orderId, label: label,
     promo_discount: promoDiscount || 0,
   });
 
   const options = {
     key:         razorpayKey,
-    amount, currency: 'INR',
+    amount: chargedAmount, currency: 'INR',
     order_id:    orderId,
     name:        'NameAligned.com',
     description: label,
@@ -824,11 +833,15 @@ async function initiateReportPayment(){
     err.style.display = 'block';
     err.textContent = 'Payment failed: ' + (resp.error.description || 'Please try again.');
     payBtn.disabled = false;
-    payBtn.textContent = '✦ Pay, Generate my report';
+    payBtn.textContent = promoDiscount === 50
+      ? '✦ Read the rest of myself, $2.50'
+      : '✦ Read the rest of myself, $5';
   });
   rzp.on('payment.cancel', () => {
     payBtn.disabled = false;
-    payBtn.textContent = '✦ Pay, Generate my report';
+    payBtn.textContent = promoDiscount === 50
+      ? '✦ Read the rest of myself, $2.50'
+      : '✦ Read the rest of myself, $5';
   });
   rzp.open();
 }
@@ -925,8 +938,14 @@ function initPayPalButton(){
         window.naTrack('Email Captured', { name: fields.name, location: 'report_form_paypal' });
         window._naEmailCapturedFired = true;
       }
-      if (window.naTrack) window.naTrack('Payment Started', { provider:'paypal' });
+      if (window.naTrack) window.naTrack('Payment Started', {
+        provider: 'paypal',
+        amount: promoDiscount === 50 ? 2.5 : 5,
+        currency: 'USD',
+        promo_discount: promoDiscount || 0,
+      });
 
+      // Sale price when PROMO50 is active (default on this page).
       const usdAmount = promoDiscount === 50 ? '2.50' : '5.00';
       const r = await fetch('/api/paypal-create-order', {
         method:'POST', headers:{'Content-Type':'application/json'},

@@ -63,15 +63,13 @@ export async function getAccessToken() {
 }
 
 /** Default order amount + currency.
-   Hardcoded ($5.00 USD) so it stays in sync with the rest of the codebase
-   even if a stale Vercel env var exists. The frontend (report.html) now
-   always sends amount explicitly in createOrder ($5 full, $2.50 with the
-   50%-off promo) — this default only kicks in if a future caller forgets
-   to pass amount, in which case we want the canonical price, not whatever
-   was in env from the old ₹499/$2.99 era. */
+   Hardcoded ($2.50 USD sale price) so it stays in sync with the launch
+   PROMO50 default even if a stale Vercel env var exists. The frontend
+   (report.html) sends amount + promo_discount explicitly; this default
+   only kicks in if a future caller forgets to pass amount. */
 export function getDefaultAmount() {
   return {
-    value:    '5.00',
+    value:    '2.50',
     currency: 'USD',
   };
 }
