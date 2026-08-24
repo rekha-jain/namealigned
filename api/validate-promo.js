@@ -67,6 +67,8 @@ export default async function handler(req, res) {
 
   const normalised = code.trim().toUpperCase();
   const codes50    = parseCodes(process.env.PROMO_50_CODES);
+  // Always-on public launch discount (also listed in PROMO_50_CODES when set).
+  codes50.add('PROMO50');
   const codes100   = parseCodes(process.env.PROMO_100_CODES);
   const secret     = process.env.PROMO_SECRET || 'changeme-set-PROMO_SECRET-in-vercel';
 

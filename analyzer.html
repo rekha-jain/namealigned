@@ -315,13 +315,13 @@
       <li><a href="/emotional-archetypes">Archetypes</a></li>
       <li><a href="/ask-aura" class="nav-aura" style="background:linear-gradient(135deg,rgba(124,58,237,.12),rgba(245,196,81,.10));border:1px solid rgba(157,127,255,.45);padding:5px 12px;border-radius:18px;font-weight:700;">✦ Ask Aura</a></li>
       <li><a href="/blog">Blog</a></li>
-      <li><a href="/report" class="nav-cta">Full Report ₹499 / $5</a></li>
+      <li><a href="/report" class="nav-cta">Full Report $2.50 / ₹249 · 50% off</a></li>
     </ul>
     <div class="nav-hamburger" id="navHamburger"><span></span><span></span><span></span></div>
   </div>
   <div class="nav-mobile" id="navMobile">
     <a href="/">Home</a>
-    <a href="/report">Full Report ₹499 / $5</a>
+    <a href="/report">Full Report $2.50 / ₹249 · 50% off</a>
     <a href="/blog">Blog</a>
   </div>
 </nav>
@@ -636,10 +636,13 @@
       <h3>Read the rest of what your chart is saying</h3>
       <p class="cta-sub">Four deeper readings, written in plain English. The patterns under your patterns, career rhythm, relationship friction, name correction, the years coming.</p>
       <div class="cta-pricing">
-        <span class="cta-price">₹499</span>
-        <span class="cta-save">or $5 USD</span>
+        <span class="cta-price">$2.50</span>
+        <span class="cta-save" style="display:inline-flex;flex-direction:column;align-items:flex-start;gap:2px;">
+          <span style="text-decoration:line-through;opacity:.55;">$5 / ₹499</span>
+          <span style="color:#16a34a;font-weight:700;">50% off today · ₹249</span>
+        </span>
       </div>
-      <a href="/report" id="upgradeBtn" class="cta-btn" onclick="trackEvent('cta_clicked',{location:'main'})">Read the deeper patterns →</a>
+      <a href="/report" id="upgradeBtn" class="cta-btn" onclick="trackEvent('cta_clicked',{location:'main'})">Read the deeper patterns · $2.50 / ₹249 →</a>
       <div class="cta-bullets">
         <span>✓ One-time · Instant PDF</span>
         <span>✓ Yours forever</span>
@@ -1346,10 +1349,12 @@ async function captureEmail(){
       body:JSON.stringify({name:S.name,dob:S.dob,email,birthNum:S.birthNum,destNum:S.destNum,nameNum:S.nameNum,pct:compatPct(S.nameNum,S.nameRaw,S.birthNum,S.destNum)})
     });
     const data = await res.json().catch(()=>({}));
-    if(!res.ok || !data.success) throw new Error(data.error || 'Lead capture failed');
+    if(!res.ok || !data.success || data.emailSent === false){
+      throw new Error(data.error || 'Email could not be sent');
+    }
   }catch(e){
-    alert('Could not save your email right now. Please try again.');
-    btn.disabled=false; btn.textContent='Email me my analysis';
+    alert(e.message || 'Could not send your email right now. Please try again.');
+    btn.disabled=false; btn.textContent='Send it to me →';
     return;
   }
   // Mixpanel: identify the user against this email and fire Email Captured
@@ -2214,7 +2219,7 @@ function showShareHint(msg){
           <li><a href="/business-name-numerology">Business Name Check</a></li>
           
           <li><a href="/love-compatibility-numerology">Relationship Compatibility</a></li>
-          <li><a href="/report">Full Destiny Report INR 499 · $5 USD</a></li>
+          <li><a href="/report">Full Destiny Report $2.50 / ₹249 · 50% off</a></li>
           
         </ul>
       </div>

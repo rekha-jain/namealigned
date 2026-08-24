@@ -219,7 +219,7 @@ async function sendLeadEmail({ name, dob, email, birthNum, destNum, nameNum }) {
                         background:linear-gradient(135deg,#f0b429,#f5d060);
                         color:#1a0533;text-decoration:none;border-radius:8px;
                         font-size:16px;font-weight:700;letter-spacing:0.5px;">
-                Get Your 5-Year Destiny Report, ₹499 →
+                Get Your 5-Year Destiny Report, $2.50 →
               </a>
             </td>
           </tr>
@@ -232,7 +232,7 @@ async function sendLeadEmail({ name, dob, email, birthNum, destNum, nameNum }) {
                 ✦ 5-year personalised forecast<br>
                 ✦ Year-by-year career, love, wealth &amp; health &nbsp;·&nbsp;
                 ✦ Mobile number analysis<br>
-                ✦ Downloadable PDF, One-time ₹499, instant delivery
+                ✦ Downloadable PDF, One-time $2.50 / ₹249, instant delivery
               </p>
             </td>
           </tr>
@@ -344,7 +344,17 @@ export default async function handler(req, res) {
     if (!emailResult.ok && !savedRow) {
       return sendJSON(res, 500, {
         success: false,
+        emailSent: false,
         error: 'Could not email your analysis right now. Please try again in a minute.',
+      });
+    }
+
+    if (!emailResult.ok) {
+      return sendJSON(res, 502, {
+        success: false,
+        emailSent: false,
+        saved: true,
+        error: 'We saved your details but the email could not be sent. Please try again shortly.',
       });
     }
 
