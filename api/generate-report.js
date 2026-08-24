@@ -405,7 +405,7 @@ export default async function handler(req, res) {
         // New pricing: ₹499 full / ₹249 (50% off). Legacy ₹499/₹99 kept
         // temporarily so any in-flight pre-price-change orders still
         // validate; remove once confirmed no traffic on the old amounts.
-        const ALLOWED_AMOUNTS = [EXPECTED_AMOUNT_PAISE, 24900, 19900, 9900];
+        const ALLOWED_AMOUNTS = [EXPECTED_AMOUNT_PAISE, 24900, 2500, 19900, 9900];
         if (!ALLOWED_AMOUNTS.includes(payment.amount)) {
           console.warn(`Payment ${cleanPaymentId} amount mismatch: got ${payment.amount}`);
           return sendJSON(res, 402, {

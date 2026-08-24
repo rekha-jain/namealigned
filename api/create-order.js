@@ -23,12 +23,13 @@ const CORS_HEADERS = {
 // confirmed no traffic on the old amounts.
 const FULL_AMOUNT_PAISE = 49900;
 const SALE_AMOUNT_PAISE = 24900;
-const ALLOWED_AMOUNTS_PAISE = [FULL_AMOUNT_PAISE, SALE_AMOUNT_PAISE, 19900, 9900];
+const TEST95_AMOUNT_PAISE = 2500; // ₹25 = 95% off ₹499
+const ALLOWED_AMOUNTS_PAISE = [FULL_AMOUNT_PAISE, SALE_AMOUNT_PAISE, TEST95_AMOUNT_PAISE, 19900, 9900];
 
 function resolveAmount(body) {
   const promo = Number(body && body.promo_discount) || 0;
-  // Server is authoritative for sale pricing — never trust a full-price
-  // amount when the client says the 50% promo is active.
+  // Server is authoritative for promo pricing.
+  if (promo === 95) return TEST95_AMOUNT_PAISE;
   if (promo === 50) return SALE_AMOUNT_PAISE;
 
   const amount = Number(body && body.amount);

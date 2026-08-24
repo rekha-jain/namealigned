@@ -621,6 +621,13 @@ async function applyPromo(){
       document.getElementById('payBtn').style.display='block';
       document.getElementById('freeBtn').style.display='none';
 
+    } else if(data.valid && data.discount===95){
+      promoDiscount=95; promoApplied=true; promoToken100='';
+      updatePriceDisplay();
+      showPromoMsg('✓ 95% off test code applied, you pay $0.25 USD (or ₹25) today!','var(--green)');
+      document.getElementById('payBtn').style.display='block';
+      document.getElementById('freeBtn').style.display='none';
+
     } else if(data.valid && data.discount===100 && data.needEmail){
       showPromoMsg('Valid 100%-off code! Please enter your email first, then click Apply again.','var(--gold)');
 
@@ -675,6 +682,18 @@ function updatePriceDisplay(){
     if(heroInr) heroInr.innerHTML = 'FREE<span style="font-size:16px;font-weight:400;color:#cbb8e8;text-decoration:line-through;margin-left:8px;">₹499</span>';
     if(stickyIn) stickyIn.textContent = '⚡ FREE today · Instant';
     if(stickyUs) stickyUs.textContent = '⚡ FREE today · Instant';
+  } else if(promoDiscount===95){
+    if(pl)  pl.innerHTML  = '<del style="color:var(--text3);font-size:16px;">$5 / ₹499</del> $0.25 / ₹25';
+    if(upl) upl.innerHTML = '<del style="opacity:.55;font-size:16px;">$5 USD</del> $0.25 USD';
+    if(pay) pay.textContent = '✦ Read the rest of myself, $0.25';
+    if(orderUsdMain) orderUsdMain.textContent = '$0.25';
+    if(orderStrike) orderStrike.textContent = '$5';
+    if(orderInr) orderInr.textContent = '· ₹25';
+    if(orderUsd) orderUsd.innerHTML = '<strong style="color:#7c3aed;"><del style="opacity:.55;font-weight:500;">$5</del> $0.25</strong> via PayPal · or <strong style="color:var(--gold);"><del style="opacity:.55;font-weight:500;">₹499</del> ₹25</strong> via Razorpay · Test checkout';
+    if(heroUsd) heroUsd.innerHTML = '<span style="text-decoration:line-through;opacity:.55;font-size:16px;margin-right:6px;">$5</span>$0.25 USD';
+    if(heroInr) heroInr.innerHTML = 'INR 25<span style="font-size:16px;font-weight:400;color:#cbb8e8;text-decoration:line-through;margin-left:8px;">INR 499</span>';
+    if(stickyIn) stickyIn.textContent = '⚡ 95% test · $0.25 / ₹25 · Instant';
+    if(stickyUs) stickyUs.textContent = '⚡ 95% test · $0.25 USD · Instant';
   } else if(promoDiscount===50){
     if(pl)  pl.innerHTML  = '<del style="color:var(--text3);font-size:16px;">$5 / ₹499</del> $2.50 / ₹249';
     if(upl) upl.innerHTML = '<del style="opacity:.55;font-size:16px;">$5 USD</del> $2.50 USD';
@@ -760,8 +779,12 @@ async function initiateReportPayment(){
   const fields = validateForm();
   if(!fields) return;
   const { name, dob, email, mobile } = fields;
-  const amount = promoDiscount === 50 ? 24900 : (promoDiscount === 100 ? 0 : 49900); // paise
-  const label  = promoDiscount === 50
+  const amount = promoDiscount === 95 ? 2500
+    : promoDiscount === 50 ? 24900
+    : (promoDiscount === 100 ? 0 : 49900); // paise
+  const label  = promoDiscount === 95
+    ? '5-Year Destiny Report (95% off test · ₹25)'
+    : promoDiscount === 50
     ? '5-Year Destiny Report (50% off · ₹249)'
     : '5-Year Destiny Report';
 
@@ -792,7 +815,11 @@ async function initiateReportPayment(){
     err.style.display = 'block';
     err.textContent = 'Could not initialise payment. Please try again.';
     payBtn.disabled = false;
-    payBtn.textContent = '✦ Read the rest of myself, $2.50';
+    payBtn.textContent = promoDiscount === 95
+      ? '✦ Read the rest of myself, $0.25'
+      : promoDiscount === 50
+      ? '✦ Read the rest of myself, $2.50'
+      : '✦ Read the rest of myself, $5';
     return;
   }
 
@@ -833,13 +860,17 @@ async function initiateReportPayment(){
     err.style.display = 'block';
     err.textContent = 'Payment failed: ' + (resp.error.description || 'Please try again.');
     payBtn.disabled = false;
-    payBtn.textContent = promoDiscount === 50
+    payBtn.textContent = promoDiscount === 95
+      ? '✦ Read the rest of myself, $0.25'
+      : promoDiscount === 50
       ? '✦ Read the rest of myself, $2.50'
       : '✦ Read the rest of myself, $5';
   });
   rzp.on('payment.cancel', () => {
     payBtn.disabled = false;
-    payBtn.textContent = promoDiscount === 50
+    payBtn.textContent = promoDiscount === 95
+      ? '✦ Read the rest of myself, $0.25'
+      : promoDiscount === 50
       ? '✦ Read the rest of myself, $2.50'
       : '✦ Read the rest of myself, $5';
   });
@@ -940,13 +971,15 @@ function initPayPalButton(){
       }
       if (window.naTrack) window.naTrack('Payment Started', {
         provider: 'paypal',
-        amount: promoDiscount === 50 ? 2.5 : 5,
+        amount: promoDiscount === 95 ? 0.25 : (promoDiscount === 50 ? 2.5 : 5),
         currency: 'USD',
         promo_discount: promoDiscount || 0,
       });
 
-      // Sale price when PROMO50 is active (default on this page).
-      const usdAmount = promoDiscount === 50 ? '2.50' : '5.00';
+      // Sale / test prices when promo is active (PROMO50 default, or 95% test).
+      const usdAmount = promoDiscount === 95 ? '0.25'
+        : promoDiscount === 50 ? '2.50'
+        : '5.00';
       const r = await fetch('/api/paypal-create-order', {
         method:'POST', headers:{'Content-Type':'application/json'},
         body: JSON.stringify({

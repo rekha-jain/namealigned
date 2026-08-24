@@ -22,13 +22,15 @@ const CORS_HEADERS = {
 
 const FULL_AMOUNT_USD = '5.00';
 const SALE_AMOUNT_USD = '2.50';
-const ALLOWED_AMOUNTS_USD = new Set([FULL_AMOUNT_USD, SALE_AMOUNT_USD]);
+const TEST95_AMOUNT_USD = '0.25'; // $0.25 = 95% off $5
+const ALLOWED_AMOUNTS_USD = new Set([FULL_AMOUNT_USD, SALE_AMOUNT_USD, TEST95_AMOUNT_USD]);
 
 function sendJSON(res, status, payload) { res.status(status).json(payload); }
 
 function resolveAmount(body) {
   const promo = Number(body && body.promo_discount) || 0;
-  // Server is authoritative for sale pricing.
+  // Server is authoritative for promo pricing.
+  if (promo === 95) return TEST95_AMOUNT_USD;
   if (promo === 50) return SALE_AMOUNT_USD;
 
   const raw = body && body.amount != null ? String(body.amount).trim() : '';
@@ -61,7 +63,9 @@ export default async function handler(req, res) {
       intent: 'CAPTURE',
       purchase_units: [{
         amount: { currency_code: currency, value: String(amount) },
-        description: Number(promo_discount) === 50
+        description: Number(promo_discount) === 95
+          ? '5-Year Chaldean Destiny Report (95% off test)'
+          : Number(promo_discount) === 50
           ? '5-Year Chaldean Destiny Report (50% off)'
           : '5-Year Chaldean Destiny Report',
         // We stash buyer info into custom_id so it's available on capture

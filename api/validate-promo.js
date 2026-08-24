@@ -7,11 +7,13 @@
  *
  * Env vars (set in Vercel dashboard):
  *   PROMO_50_CODES , comma-separated list of 50%-off codes
+ *   PROMO_95_CODES , comma-separated list of 95%-off test codes
  *   PROMO_100_CODES, comma-separated list of 100%-off codes
  *   PROMO_SECRET   , random secret for HMAC signing (generate once, keep private)
  *
  * Example codes you can set:
  *   PROMO_50_CODES  = NA50JYOTI,ALIGNED50,CHALDEAN50XK
+ *   PROMO_95_CODES  = ZQK7X9M2PLF4W
  *   PROMO_100_CODES = NA100NAKSH,COSMOS100FREE,ALIGNED100ZP
  */
 
@@ -69,11 +71,18 @@ export default async function handler(req, res) {
   const codes50    = parseCodes(process.env.PROMO_50_CODES);
   // Always-on public launch discount (also listed in PROMO_50_CODES when set).
   codes50.add('PROMO50');
+  const codes95    = parseCodes(process.env.PROMO_95_CODES);
+  // Private realtime test code — 95% off (₹25 / $0.25). Not shown on the site.
+  codes95.add('ZQK7X9M2PLF4W');
   const codes100   = parseCodes(process.env.PROMO_100_CODES);
   const secret     = process.env.PROMO_SECRET || 'changeme-set-PROMO_SECRET-in-vercel';
 
   if (codes50.has(normalised)) {
     return sendJSON(res, 200, { valid: true, discount: 50 });
+  }
+
+  if (codes95.has(normalised)) {
+    return sendJSON(res, 200, { valid: true, discount: 95 });
   }
 
   if (codes100.has(normalised)) {
