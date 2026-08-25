@@ -542,7 +542,7 @@
 
 <script src="assets/numerology.js" defer=""></script>
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
-<!-- PayPal SDK is loaded dynamically from /api/paypal-config so the
+<!-- PayPal SDK is loaded dynamically from GET /api/paypal-create-order so the
      browser Client ID always matches Vercel PAYPAL_CLIENT_ID / PAYPAL_ENV.
      A hardcoded mismatch (sandbox page + live server, or vice versa)
      makes the yellow PayPal button fail on click. -->
@@ -966,7 +966,7 @@ function loadPayPalSdk(clientId, currency){
 
 async function bootstrapPayPal(){
   try {
-    const r = await fetch('/api/paypal-config');
+    const r = await fetch('/api/paypal-create-order');
     const cfg = await r.json().catch(() => ({}));
     if (!r.ok || !cfg.success || !cfg.clientId) {
       console.warn('[paypal] config unavailable:', cfg.error || r.status);

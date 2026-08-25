@@ -16,7 +16,7 @@ import { getPaypalConfig, getAccessToken, getDefaultAmount } from './_paypal.js'
 
 const CORS_HEADERS = {
   'Access-Control-Allow-Origin':  '*',
-  'Access-Control-Allow-Methods': 'POST, OPTIONS',
+  'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
   'Access-Control-Allow-Headers': 'Content-Type',
 };
 
@@ -44,6 +44,25 @@ function resolveAmount(body) {
 export default async function handler(req, res) {
   Object.entries(CORS_HEADERS).forEach(([k, v]) => res.setHeader(k, v));
   if (req.method === 'OPTIONS') return res.status(204).end();
+
+  // GET returns the public Client ID so report.html can load the PayPal SDK
+  // with the exact same credentials used by create/capture (no extra function).
+  if (req.method === 'GET') {
+    try {
+      const { env, clientId } = getPaypalConfig();
+      const def = getDefaultAmount();
+      return sendJSON(res, 200, {
+        success: true,
+        env,
+        clientId,
+        currency: def.currency || 'USD',
+      });
+    } catch (err) {
+      console.error('[paypal] config GET failed:', err.message || err);
+      return sendJSON(res, 503, { success: false, error: err.message || 'PayPal not configured' });
+    }
+  }
+
   if (req.method !== 'POST') return sendJSON(res, 405, { success: false, error: 'Method not allowed' });
 
   try {
