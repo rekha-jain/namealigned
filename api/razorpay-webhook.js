@@ -20,7 +20,7 @@
 'use strict';
 
 import crypto from 'crypto';
-import { insertSupabaseRow, findLeadIdByEmail } from './_supabase.js';
+import { insertSupabaseRow, findLeadIdByEmail, findOrderByRazorpayPaymentId } from './_supabase.js';
 import { sendBrevoEmail as deliverViaBrevo } from './_brevo.js';
 import { mpTrack } from './_mixpanel.js';
 import { normaliseIndianMobile } from './_phone.js';
@@ -46,6 +46,12 @@ function verifyWebhookSignature(rawBody, signature, secret) {
 // Save order to Supabase (same logic as generate-report.js)
 // ---------------------------------------------------------------------------
 async function saveOrderToSupabase({ paymentId, name, email, dob, mobile, amount }) {
+  const existing = await findOrderByRazorpayPaymentId(paymentId);
+  if (existing) {
+    console.log(`[orders/webhook] ${paymentId} already existed id=${existing.id}`);
+    return null;
+  }
+
   let lead_id = null;
   try {
     lead_id = await findLeadIdByEmail(email);

@@ -1185,8 +1185,15 @@ hr.divider{display:none;}
   // Primary save+email happens from report.html after Razorpay success.
   // This retry covers cases where that call failed. The API only emails
   // on a fresh order insert, so this will not send a second email.
+  // Also gate client-side: one attempt per paymentId per browser tab,
+  // so reloads don't hammer the API while the unique-constraint fix rolls out.
   (function saveAndEmail(){
-    if(!email) return; // can't email without an address
+    if(!email || !paymentId) return;
+    try {
+      var guardKey = 'na_order_posted_' + paymentId;
+      if(sessionStorage.getItem(guardKey)) return;
+      sessionStorage.setItem(guardKey, '1');
+    } catch(e){ /* private mode — still call API; server dedupes */ }
     fetch('/api/generate-report', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },

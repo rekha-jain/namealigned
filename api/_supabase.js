@@ -65,3 +65,35 @@ export async function findLeadIdByEmail(email) {
   const rows = await res.json();
   return Array.isArray(rows) && rows[0] ? rows[0].id : null;
 }
+
+// Order lookups used to dedupe delivery emails when the DB unique
+// constraint on payment ids is missing or a race slipped through.
+export async function findOrderByRazorpayPaymentId(paymentId) {
+  if (!paymentId) return null;
+  const { url, key } = getSupabaseConfig();
+  const res = await fetch(
+    `${url}/rest/v1/orders?razorpay_payment_id=eq.${encodeURIComponent(paymentId)}&select=id,email,created_at&order=created_at.asc&limit=1`,
+    { headers: buildSupabaseHeaders(key) }
+  );
+  if (!res.ok) {
+    console.error(`[supabase] order lookup by razorpay id failed status=${res.status} body=${await res.text()}`);
+    return null;
+  }
+  const rows = await res.json();
+  return Array.isArray(rows) && rows[0] ? rows[0] : null;
+}
+
+export async function findOrderByPaypalOrderId(paypalOrderId) {
+  if (!paypalOrderId) return null;
+  const { url, key } = getSupabaseConfig();
+  const res = await fetch(
+    `${url}/rest/v1/orders?paypal_order_id=eq.${encodeURIComponent(paypalOrderId)}&select=id,email,created_at&order=created_at.asc&limit=1`,
+    { headers: buildSupabaseHeaders(key) }
+  );
+  if (!res.ok) {
+    console.error(`[supabase] order lookup by paypal id failed status=${res.status} body=${await res.text()}`);
+    return null;
+  }
+  const rows = await res.json();
+  return Array.isArray(rows) && rows[0] ? rows[0] : null;
+}

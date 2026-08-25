@@ -15,7 +15,7 @@
 'use strict';
 
 import crypto from 'crypto';
-import { insertSupabaseRow, findLeadIdByEmail } from './_supabase.js';
+import { insertSupabaseRow, findLeadIdByEmail, findOrderByRazorpayPaymentId } from './_supabase.js';
 import { sendBrevoEmail as deliverViaBrevo } from './_brevo.js';
 import { mpTrack } from './_mixpanel.js';
 import { normaliseIndianMobile } from './_phone.js';
@@ -104,6 +104,15 @@ async function fetchRazorpayPayment(paymentId) {
 async function saveOrderToSupabase({
   paymentId, name, email, dob, mobile, birthNum, destNum, nameNum,
 }) {
+  // Dedup BEFORE insert. The live orders table historically lacked a
+  // unique constraint on razorpay_payment_id, so every report page reload
+  // inserted a new row and re-emailed the buyer. Lookup first.
+  const existing = await findOrderByRazorpayPaymentId(paymentId);
+  if (existing) {
+    console.log(`[orders] ${paymentId} already exists id=${existing.id} (skip insert)`);
+    return null;
+  }
+
   // Resolve lead_id from the leads table by email (best-effort, null is OK).
   let lead_id = null;
   try {

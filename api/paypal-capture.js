@@ -15,7 +15,7 @@
 'use strict';
 
 import { getPaypalConfig, getAccessToken } from './_paypal.js';
-import { insertSupabaseRow, findLeadIdByEmail } from './_supabase.js';
+import { insertSupabaseRow, findLeadIdByEmail, findOrderByPaypalOrderId } from './_supabase.js';
 import { sendBrevoEmail as deliverViaBrevo } from './_brevo.js';
 import { mpTrack } from './_mixpanel.js';
 import { normaliseIndianMobile } from './_phone.js';
@@ -35,6 +35,12 @@ function escapeHtml(s) {
 }
 
 async function saveOrderToSupabase({ paypalOrderId, paypalCaptureId, name, email, dob, mobile, birthNum, destNum, nameNum, amount, currency }) {
+  const existing = await findOrderByPaypalOrderId(paypalOrderId);
+  if (existing) {
+    console.log(`[orders/paypal] ${paypalOrderId} already exists id=${existing.id} (skip insert)`);
+    return null;
+  }
+
   let lead_id = null;
   try { lead_id = await findLeadIdByEmail(email); }
   catch (e) { console.error('[orders/paypal] lead_id lookup error (continuing with null):', e); }
