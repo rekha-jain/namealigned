@@ -1021,7 +1021,9 @@ hr.divider{display:none;}
 
 </div><!-- /reportWrap -->
 
-<script src="assets/numerology.js" defer></script>
+<!-- Must NOT use defer: the inline report builder below calls getNameNum/getBirthNum
+     immediately. Deferring numerology.js races the IIFE and leaves the loader stuck. -->
+<script src="assets/numerology.js"></script>
 <script>
 (function(){
   'use strict';
@@ -1029,6 +1031,16 @@ hr.divider{display:none;}
   // ── HELPERS ───────────────────────────────────────────────────
   function qs(id){return document.getElementById(id);}
   function el(tag,cls,html){var e=document.createElement(tag);if(cls)e.className=cls;if(html!=null)e.innerHTML=html;return e;}
+
+  if (typeof getNameNum !== 'function' || typeof getBirthNum !== 'function') {
+    console.error('[generate-report] numerology engine failed to load');
+    var ov = qs('loaderOverlay');
+    if (ov) {
+      var st = qs('loaderStatus');
+      if (st) st.textContent = 'Could not load the report engine. Please refresh this page.';
+    }
+    return;
+  }
 
   // ── TOOLTIP DICTIONARY (educational hover/tap explanations) ──
   // Beginner-friendly, 2-4 lines, emotionally neutral. Each entry
