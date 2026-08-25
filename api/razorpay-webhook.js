@@ -23,6 +23,7 @@ import crypto from 'crypto';
 import { insertSupabaseRow, findLeadIdByEmail } from './_supabase.js';
 import { sendBrevoEmail as deliverViaBrevo } from './_brevo.js';
 import { mpTrack } from './_mixpanel.js';
+import { normaliseIndianMobile } from './_phone.js';
 
 // ---------------------------------------------------------------------------
 // Verify Razorpay webhook signature
@@ -52,8 +53,6 @@ async function saveOrderToSupabase({ paymentId, name, email, dob, mobile, amount
     console.error('[orders/webhook] lead_id lookup error (continuing with null):', e);
   }
 
-  // Same shape as generate-report.js, payment_status was the missing column
-  // that made every prior insert fail.
   const saved = await insertSupabaseRow('orders', {
     lead_id,
     name:                name || null,
@@ -63,10 +62,10 @@ async function saveOrderToSupabase({ paymentId, name, email, dob, mobile, amount
     email:               email || null,
     phone:               mobile || null,
     created_at:          new Date().toISOString(),
-  }, { duplicateOk: true, prefer: 'return=minimal' });
+  }, { duplicateOk: true });
 
   if (saved === null) {
-    console.log(`[orders/webhook] ${paymentId} duplicate or return=minimal`);
+    console.log(`[orders/webhook] ${paymentId} already existed (duplicate)`);
   } else {
     console.log(`[orders/webhook] saved ${paymentId} email=${email}`);
   }
@@ -197,7 +196,9 @@ export default async function handler(req, res) {
   const email     = payment.email || payment.notes?.email || '';
   const name      = payment.notes?.customer_name || '';
   const dob       = payment.notes?.dob || '';
-  const mobile    = payment.contact?.replace(/\D/g, '').slice(0, 10) || payment.notes?.mobile || '';
+  // Prefer checkout notes (exact 10-digit form value). Razorpay contact is
+  // often "+91XXXXXXXXXX" and must not be naively sliced to 10 from the front.
+  const mobile    = normaliseIndianMobile(payment.notes?.mobile || payment.contact || '');
   const amount    = payment.amount;
 
   console.log(`Webhook: payment.captured ${paymentId}, ${email}`);
@@ -208,7 +209,7 @@ export default async function handler(req, res) {
     savedRow = await saveOrderToSupabase({ paymentId, name, email, dob, mobile, amount });
   } catch (err) {
     console.error('Webhook Supabase error:', err);
-    // Don't return error, still try to send the email
+    // Don't return error, still try to send the email only if this is first insert
   }
 
   // Mixpanel: fire server-side events only when this webhook actually
@@ -231,13 +232,16 @@ export default async function handler(req, res) {
     }
   }
 
-  // Send delivery email if we have an address
-  if (email) {
+  // Email ONLY when this webhook created the order row. Otherwise the
+  // browser /api/generate-report path already emailed (or will).
+  if (savedRow !== null && email) {
     try {
       await sendDeliveryEmail({ paymentId, name, email, dob, mobile });
     } catch (err) {
       console.error('Webhook email error:', err);
     }
+  } else if (email) {
+    console.log(`[orders/webhook] skip duplicate delivery email payment=${paymentId}`);
   }
 
   return res.status(200).json({ received: true, handled: true });

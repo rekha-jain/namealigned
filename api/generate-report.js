@@ -18,6 +18,7 @@ import crypto from 'crypto';
 import { insertSupabaseRow, findLeadIdByEmail } from './_supabase.js';
 import { sendBrevoEmail as deliverViaBrevo } from './_brevo.js';
 import { mpTrack } from './_mixpanel.js';
+import { normaliseIndianMobile } from './_phone.js';
 
 const CORS_HEADERS = {
   'Access-Control-Allow-Origin': '*',
@@ -350,6 +351,7 @@ export default async function handler(req, res) {
     const cleanPaymentId = paymentId.trim();
     const cleanEmail = email.trim().toLowerCase();
     const cleanName = (name || '').trim();
+    const cleanMobile = normaliseIndianMobile(mobile);
 
     // --- Verify payment OR promo token ---
     const isPromo = cleanPaymentId.startsWith('PROMO100_');
@@ -427,7 +429,7 @@ export default async function handler(req, res) {
         name: cleanName,
         email: cleanEmail,
         dob: dob || null,
-        mobile: mobile || null,
+        mobile: cleanMobile || null,
         birthNum: birthNum ?? null,
         destNum: destNum ?? null,
         nameNum: nameNum ?? null,
@@ -449,7 +451,7 @@ export default async function handler(req, res) {
             order_id:    orderId || null,
             name:        cleanName,
             dob:         dob || null,
-            mobile:      mobile || null,
+            mobile:      cleanMobile || null,
             moolank:     birthNum ?? null,
             bhagyank:    destNum ?? null,
             name_number: nameNum ?? null,
@@ -472,15 +474,17 @@ export default async function handler(req, res) {
       });
     }
 
-    // --- Send delivery email (best-effort; send even on duplicate insert) ---
-    if (orderSaved) {
+    // --- Send delivery email ONLY on the first successful insert ---
+    // Checkout page, generate-report page, and Razorpay webhook can all
+    // hit this endpoint; duplicates must not re-email the buyer.
+    if (orderInserted) {
       try {
         await sendReportEmail({
           paymentId: cleanPaymentId,
           name: cleanName,
           email: cleanEmail,
           dob: dob || '',
-          mobile: mobile || '',
+          mobile: cleanMobile || '',
           birthNum,
           destNum,
           nameNum,
@@ -488,6 +492,8 @@ export default async function handler(req, res) {
       } catch (emailErr) {
         console.error('Brevo unexpected error in generate-report:', emailErr);
       }
+    } else if (orderSaved) {
+      console.log(`[orders] skip duplicate delivery email payment=${cleanPaymentId}`);
     }
 
     return sendJSON(res, 200, { success: true, verified: true, orderSaved, orderInserted });

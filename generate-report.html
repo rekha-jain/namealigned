@@ -1115,7 +1115,7 @@ hr.divider{display:none;}
   var pDestNum   = parseInt(params.get('destNum'))||0;
   var pNameNum   = parseInt(params.get('nameNum'))||0;
   var pPct       = parseInt(params.get('pct'))||0;
-  var mobile     = (params.get('mobile')||'').replace(/\D/g,'').slice(0,10);
+  var mobile     = (params.get('mobile')||'').replace(/\D/g,'').slice(-10);
 
   // Validate session
   if(!paymentId){
@@ -1181,9 +1181,10 @@ hr.divider{display:none;}
     }
   }, interval);
 
-  // ── SAVE ORDER + SEND EMAIL (fire-and-forget) ─────────────────
-  // Calls the API to verify payment, persist to DB and trigger delivery email.
-  // We do this after the report renders so the user never waits on the API call.
+  // ── SAVE ORDER + SEND EMAIL (fire-and-forget backup) ─────────
+  // Primary save+email happens from report.html after Razorpay success.
+  // This retry covers cases where that call failed. The API only emails
+  // on a fresh order insert, so this will not send a second email.
   (function saveAndEmail(){
     if(!email) return; // can't email without an address
     fetch('/api/generate-report', {

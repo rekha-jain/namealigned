@@ -18,6 +18,7 @@ import { getPaypalConfig, getAccessToken } from './_paypal.js';
 import { insertSupabaseRow, findLeadIdByEmail } from './_supabase.js';
 import { sendBrevoEmail as deliverViaBrevo } from './_brevo.js';
 import { mpTrack } from './_mixpanel.js';
+import { normaliseIndianMobile } from './_phone.js';
 
 const CORS_HEADERS = {
   'Access-Control-Allow-Origin':  '*',
@@ -114,6 +115,7 @@ export default async function handler(req, res) {
 
     const cleanEmail = email.trim().toLowerCase();
     const cleanName  = (name || '').trim();
+    const cleanMobile = normaliseIndianMobile(mobile);
 
     const { baseUrl } = getPaypalConfig();
     const token = await getAccessToken();
@@ -145,7 +147,7 @@ export default async function handler(req, res) {
         name:     cleanName,
         email:    cleanEmail,
         dob:      dob || null,
-        mobile:   mobile || null,
+        mobile:   cleanMobile || null,
         birthNum: birthNum ?? null,
         destNum:  destNum  ?? null,
         nameNum:  nameNum  ?? null,
@@ -170,7 +172,7 @@ export default async function handler(req, res) {
           paypal_capture: captureId,
           name:          cleanName,
           dob:           dob || null,
-          mobile:        mobile || null,
+          mobile:        cleanMobile || null,
           moolank:       birthNum ?? null,
           bhagyank:      destNum  ?? null,
           name_number:   nameNum  ?? null,
@@ -185,18 +187,22 @@ export default async function handler(req, res) {
       }
     }
 
-    // 4. Email delivery (best-effort)
-    try {
-      await sendDeliveryEmail({
-        paypalOrderId: orderID,
-        name:     cleanName,
-        email:    cleanEmail,
-        dob:      dob || '',
-        mobile:   mobile || '',
-        birthNum, destNum, nameNum,
-      });
-    } catch (emailErr) {
-      console.error('[paypal/brevo] unexpected error:', emailErr);
+    // 4. Email only on first insert (avoid duplicates on retries)
+    if (orderInserted) {
+      try {
+        await sendDeliveryEmail({
+          paypalOrderId: orderID,
+          name:     cleanName,
+          email:    cleanEmail,
+          dob:      dob || '',
+          mobile:   cleanMobile || '',
+          birthNum, destNum, nameNum,
+        });
+      } catch (emailErr) {
+        console.error('[paypal/brevo] unexpected error:', emailErr);
+      }
+    } else {
+      console.log(`[orders/paypal] skip duplicate delivery email order=${orderID}`);
     }
 
     return sendJSON(res, 200, { success: true, verified: true, paymentId: 'PP-' + orderID });
