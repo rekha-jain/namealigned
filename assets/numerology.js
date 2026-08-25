@@ -373,8 +373,10 @@ function naturalnessScore(name){
   // (kh, sh, ch, th, ph are fine; bh, dh, gh are also OK in Indian names).
   if (/[lmnr]h/.test(lc)) score -= 12;
 
-  // Doubled hard consonants at start (bb-, dd-, gg-) read awkward
-  if (/^(bb|dd|gg|kk|pp|tt|ff)/.test(lc)) score -= 18;
+  // Doubled hard consonants at start (bb-, dd-, gg-, rr-) read awkward
+  if (/^(bb|dd|gg|kk|pp|tt|ff|rr|nn|mm|ll|ss|cc|jj|vv|ww|xx|zz)/.test(lc)) score -= 35;
+  // Any doubled letter at the very start is rarely adoptable
+  if (/^(.)\1/.test(lc)) score -= 20;
 
   // Doubled H mid-name ("hh") is almost always awkward
   if (/hh/.test(lc)) score -= 18;
@@ -388,6 +390,14 @@ function naturalnessScore(name){
   // Soft, vowel-final endings get a small bonus (most natural)
   if (/[aeiouy]$/.test(lc)) score += 4;
   if (/(ya|ia|ja|ah|ai|ee|aa)$/.test(lc)) score += 2;
+
+  // Hard consonant bolted onto a vowel ending (Purnimak, Jiyaal) —
+  // changes pronunciation; users rarely adopt these.
+  if (/[aeiou][klrs]$/.test(lc)) score -= 30;
+
+  // Bonus: one doubled letter already in the spelling (Purrnima, Purnimaa)
+  // reads as the same name with a soft elongation.
+  if (/(.)\1/.test(lc) && !/(.)\1{2,}/.test(lc)) score += 8;
 
   return Math.max(20, Math.min(100, score));
 }
@@ -436,51 +446,77 @@ function generateAlignedCorrectedNames(fullName, moolank, destNum){
   // Phonetic operation pool, ordered by naturalness for Indian
   // names. Each op takes a lowercase string and returns a candidate
   // string (or null if the op cannot apply to this stem).
+  // Prefer same-sound tweaks (double a letter already present, soft
+  // vowel endings). Hard consonant appends (k/l/r/s) are last-resort
+  // only — they change pronunciation and users rarely adopt them.
   var OPS=[
     function(n){ return n+'a'; },                                                    // 0  append A
     function(n){ return /[aeiou]$/i.test(n) ? n+n.slice(-1) : null; },               // 1  double final vowel
     function(n){ return n+'h'; },                                                    // 2  append H
     function(n){ return n+'i'; },                                                    // 3  append I
     function(n){ return n+'y'; },                                                    // 4  append Y
-    function(n){                                                                     // 5  H after first vowel
+    function(n){ return n+'ya'; },                                                   // 5  soft ...ya (Purnimaya)
+    function(n){ return n+'ia'; },                                                   // 6  soft ...ia
+    function(n){                                                                     // 7  H after first vowel
       var m=n.match(/[aeiou]/i);
       return m ? n.slice(0,m.index+1)+'h'+n.slice(m.index+1) : null;
     },
-    function(n){                                                                     // 6  Y before final vowel
+    function(n){                                                                     // 8  Y before final vowel
       var m=n.match(/([^aeiou])([aeiou]+)$/i);
       return m ? n.slice(0,m.index+1)+'y'+n.slice(m.index+1) : null;
     },
-    function(n){                                                                     // 7  I before final vowel
+    function(n){                                                                     // 9  I before final vowel
       var m=n.match(/([^aeiou])([aeiou]+)$/i);
       return m ? n.slice(0,m.index+1)+'i'+n.slice(m.index+1) : null;
     },
-    function(n){ return /[aeiou]$/i.test(n) ? n.slice(0,-1)+'ah' : n+'ah'; },        // 8  ...AH ending
-    function(n){ return n+'aa'; },                                                   // 9  append AA
-    function(n){ return n+'k'; },                                                    // 10 append K
-    function(n){ return n+'l'; },                                                    // 11 append L
-    function(n){ return n+'r'; },                                                    // 12 append R
-    function(n){ return n+'s'; },                                                    // 13 append S
-    function(n){ return n+'n'; },                                                    // 14 append N
-    function(n){                                                                     // 15 double final consonant
+    function(n){ return /[aeiou]$/i.test(n) ? n.slice(0,-1)+'ah' : n+'ah'; },        // 10 ...AH ending
+    function(n){ return n+'aa'; },                                                   // 11 append AA
+    function(n){ return n+'n'; },                                                    // 12 append N (nasal, often soft)
+    function(n){                                                                     // 13 double final consonant
       var m=n.match(/([^aeiou])$/i);
       return m ? n+m[1] : null;
     },
-    function(n){                                                                     // 16 prepend A (vowel-safe)
+    function(n){                                                                     // 14 prepend A (vowel-safe)
       return /^[aeiou]/i.test(n) ? null : 'a'+n;
     },
-    function(n){ return n+'aaa'; },                                                  // 17 append AAA
-    function(n){ return n+'aha'; },                                                  // 18 append AHA
-    function(n){ return n+'ee'; },                                                   // 19 append EE
+    function(n){ return n+'ee'; },                                                   // 15 append EE
+  ];
+  // Last-resort ops: change the spoken ending. Only used if the soft
+  // pool cannot fill 3 adoptible options.
+  var HARD_OPS=[
+    function(n){ return n+'k'; },
+    function(n){ return n+'l'; },
+    function(n){ return n+'r'; },
+    function(n){ return n+'s'; },
+    function(n){ return n+'aaa'; },
+    function(n){ return n+'aha'; },
   ];
 
   var lower=firstName.toLowerCase();
   var seen=new Set([lower]);
   var pool=[];
 
+  // True when variant is the base with exactly one existing letter
+  // doubled (Purnima → Purrnima / Purnimaa). Highest adoptability.
+  function isSameSoundDouble(base, variant){
+    if(!variant || variant.length !== base.length + 1) return false;
+    for(var i=0;i<variant.length;i++){
+      if(variant.slice(0,i)+variant.slice(i+1) === base){
+        var ch = variant[i];
+        return (i>0 && variant[i-1]===ch) || (i<variant.length-1 && variant[i+1]===ch);
+      }
+    }
+    return false;
+  }
+
   function consider(variant){
     if(!variant) return;
     var lc=variant.toLowerCase();
     if(seen.has(lc)) return;
+    // Keep changes small — users adopt +1–2 letters, not long stacks
+    if(lc.length > lower.length + 2) return;
+    // Block stacked soft endings (Priyayaya, Nehaiaia)
+    if(/(ya){2,}|(ia){2,}|yaya|iaia|aayaa/.test(lc)) return;
     var capped=lc.charAt(0).toUpperCase()+lc.slice(1);
     var nf=chalSum(capped);
     var nt=nf+restSum;
@@ -494,6 +530,7 @@ function generateAlignedCorrectedNames(fullName, moolank, destNum){
     // sound awkward (Aaravhl, Mohanhk, Jiyaaaa-class). Still keep
     // some headroom so we always have a pool to pick from.
     var nat = naturalnessScore(capped);
+    if(isSameSoundDouble(lower, lc)) nat = Math.min(100, nat + 12);
     if(nat < 55) return;
     seen.add(lc);
     pool.push({
@@ -505,13 +542,23 @@ function generateAlignedCorrectedNames(fullName, moolank, destNum){
       nameNum: reduced,
       alignmentPct: pct,
       naturalness: nat,
+      sameSound: isSameSoundDouble(lower, lc),
       // Combined ranking: alignment matters most (paid promise) but
       // a beautiful name beats a slightly higher-aligned ugly one.
-      combinedScore: Math.round(pct*0.65 + nat*0.35)
+      // Same-sound doubles get a further nudge so Purrnima beats Purnimak.
+      combinedScore: Math.round(pct*0.55 + nat*0.45) + (isSameSoundDouble(lower, lc) ? 8 : 0)
     });
   }
 
-  // Pass 1, single op (most natural)
+  // Pass 0 — same-sound letter doublings (highest priority for users).
+  // Purnima → Purrnima, Purnimaa, Purnnima, Puurnima, etc.
+  for(var di=0; di<lower.length; di++){
+    if(di>0 && lower[di-1]===lower[di]) continue;
+    if(di<lower.length-1 && lower[di+1]===lower[di]) continue;
+    consider(lower.slice(0,di+1)+lower[di]+lower.slice(di+1));
+  }
+
+  // Pass 1, single soft op (most natural)
   for(var i=0;i<OPS.length;i++){ consider(OPS[i](lower)); }
   // Pass 2, two-op composition
   for(var i2=0;i2<OPS.length;i2++){
@@ -531,21 +578,43 @@ function generateAlignedCorrectedNames(fullName, moolank, destNum){
     }
   }
 
-  // Rank: combinedScore desc (alignment-weighted naturalness),
-  // then alignmentPct desc, then shortest name (most natural).
+  // Rank: alignment first (paid promise), then same-sound doubles,
+  // then combinedScore, then shorter name.
   pool.sort(function(a,b){
-    if(b.combinedScore !== a.combinedScore) return b.combinedScore - a.combinedScore;
     if(b.alignmentPct !== a.alignmentPct) return b.alignmentPct - a.alignmentPct;
+    if(!!b.sameSound !== !!a.sameSound) return b.sameSound ? 1 : -1;
+    if(b.combinedScore !== a.combinedScore) return b.combinedScore - a.combinedScore;
     return a.firstName.length - b.firstName.length;
   });
 
-  // If the strict naturalness gate left us with fewer than 3
-  // candidates, fall back to a relaxed pass so we still meet the
-  // "always 3 options" contract. This is rare in practice.
+  // Prefer a diverse top-3: if we already picked a same-sound double at
+  // 100%, still surface soft endings (…ya / …aa) as option 2/3 rather
+  // than three near-identical doubles that miss perfect alignment.
+  function pickTop3(list){
+    var out = [], seenRoots = new Set();
+    // Pass A: perfect alignment first
+    for(var i=0;i<list.length && out.length<3;i++){
+      if(list[i].alignmentPct < 100) continue;
+      var root = list[i].firstName.toLowerCase().replace(/(.)\1+/g,'$1');
+      if(out.length>0 && seenRoots.has(root) && list[i].sameSound) continue;
+      seenRoots.add(root);
+      out.push(list[i]);
+    }
+    // Pass B: fill remaining with best remaining
+    for(var j=0;j<list.length && out.length<3;j++){
+      if(out.indexOf(list[j])>=0) continue;
+      out.push(list[j]);
+    }
+    return out;
+  }
+
+  // If the soft pool left fewer than 3 candidates, fall back to hard
+  // consonant / stretch ops so we still meet the "always 3 options"
+  // contract. These change pronunciation and rank last.
   if (pool.length < 3) {
-    var relaxed = [];
-    for (var ri = 0; ri < OPS.length && relaxed.length + pool.length < 6; ri++){
-      var v = OPS[ri](lower); if (!v) continue;
+    var hardPool = OPS.concat(HARD_OPS);
+    for (var ri = 0; ri < hardPool.length && pool.length < 6; ri++){
+      var v = hardPool[ri](lower); if (!v) continue;
       var lc2 = v.toLowerCase();
       if (seen.has(lc2)) continue;
       var cap2 = lc2.charAt(0).toUpperCase() + lc2.slice(1);
@@ -555,7 +624,7 @@ function generateAlignedCorrectedNames(fullName, moolank, destNum){
       var pc2 = (rd2 === moolank) ? 100 : compatPct(rd2, nt2, moolank, destNum);
       if (pc2 < 70) continue;
       seen.add(lc2);
-      relaxed.push({
+      pool.push({
         firstName: cap2,
         fullName: restStr ? cap2+' '+restStr : cap2,
         newFirstSum: nf2,
@@ -564,12 +633,18 @@ function generateAlignedCorrectedNames(fullName, moolank, destNum){
         nameNum: rd2,
         alignmentPct: pc2,
         naturalness: naturalnessScore(cap2),
-        combinedScore: Math.round(pc2*0.65 + naturalnessScore(cap2)*0.35)
+        sameSound: false,
+        combinedScore: Math.round(pc2*0.55 + naturalnessScore(cap2)*0.45)
       });
     }
-    pool = pool.concat(relaxed);
+    pool.sort(function(a,b){
+      if(b.alignmentPct !== a.alignmentPct) return b.alignmentPct - a.alignmentPct;
+      if(!!b.sameSound !== !!a.sameSound) return b.sameSound ? 1 : -1;
+      if(b.combinedScore !== a.combinedScore) return b.combinedScore - a.combinedScore;
+      return a.firstName.length - b.firstName.length;
+    });
   }
 
-  var top3 = pool.slice(0, 3);
+  var top3 = pickTop3(pool);
   return {corrections: top3, delta: target-total, target: target, currentSum: total};
 }
