@@ -542,10 +542,10 @@
 
 <script src="assets/numerology.js" defer=""></script>
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
-<!-- PayPal JS SDK. Replace AdFemDmanJoRwb8AgNStloN15rdzIABDP9_3XWipjeOBGuzRV5XVYz_fmLFYRVDCIc1k5VPXHPCds4G2 with the value from
-     PayPal Dashboard > Apps & Credentials > Sandbox > Default App.
-     Keep the &currency=USD param in sync with PAYPAL_CURRENCY env. -->
-<script src="https://www.paypal.com/sdk/js?client-id=BAAWs0dH18k4D7hGanUHedSnbtRecC85TWthWwtpSClAunkfgYsH-_1hK8FJePclJcPfublloB4A3sKRvU&amp;currency=USD&amp;intent=capture" data-namespace="paypal_sdk"></script>
+<!-- PayPal SDK is loaded dynamically from /api/paypal-config so the
+     browser Client ID always matches Vercel PAYPAL_CLIENT_ID / PAYPAL_ENV.
+     A hardcoded mismatch (sandbox page + live server, or vice versa)
+     makes the yellow PayPal button fail on click. -->
 <script>
 // ── State ──────────────────────────────────────────────────────
 // Launch default: PROMO50 is pre-filled and auto-applied, so checkout
@@ -926,42 +926,82 @@ async function onSuccess(paymentId, orderId, signature, name, dob, email, mobile
   window.location.href = `generate-report?${params}`;
 }
 
-// ── PayPal button (renders if SDK loaded with a real client id) ──
-function initPayPalButton(){
-  // 1. Guard against an unconfigured SDK script. The placeholder string we
-  //    look for ("__" + "PAYPAL_CLIENT_ID" + "__") is split here so the
-  //    sentinel itself never appears verbatim in the file, which means
-  //    future search-and-replaces on the placeholder can't accidentally
-  //    clobber this guard (the bug that hid the button last time).
-  const sdkSrc = document.querySelector('script[src*="paypal.com/sdk"]')?.src || '';
-  const sentinel = '__' + 'PAYPAL_CLIENT' + '_ID__';
-  if (!sdkSrc || sdkSrc.includes(sentinel)) {
-    const row = document.getElementById('paypalRow');
-    if (row) row.style.display = 'none';
-    console.warn('[paypal] Client ID not configured. Hiding PayPal row.');
-    return;
-  }
-  // 2. Now check the SDK actually loaded.
-  if (!window.paypal_sdk || !paypal_sdk.Buttons) {
-    const errEl = document.getElementById('paypalErr');
-    if (errEl) {
-      errEl.style.display = 'block';
-      errEl.textContent = 'PayPal SDK could not load (ad-blocker, browser extension, or network block). Use the Razorpay button above.';
+// ── PayPal button (SDK Client ID loaded from server config) ────
+function showPaypalError(msg){
+  const e = document.getElementById('paypalErr');
+  if (!e) return;
+  e.textContent = msg;
+  e.style.display = 'block';
+}
+
+function hidePaypalRow(){
+  const row = document.getElementById('paypalRow');
+  if (row) row.style.display = 'none';
+}
+
+function loadPayPalSdk(clientId, currency){
+  return new Promise((resolve, reject) => {
+    if (window.paypal_sdk && window.paypal_sdk.Buttons) {
+      resolve(window.paypal_sdk);
+      return;
     }
+    const existing = document.querySelector('script[data-na-paypal-sdk]');
+    if (existing) {
+      existing.addEventListener('load', () => resolve(window.paypal_sdk));
+      existing.addEventListener('error', reject);
+      return;
+    }
+    const s = document.createElement('script');
+    s.src = 'https://www.paypal.com/sdk/js?client-id=' + encodeURIComponent(clientId)
+      + '&currency=' + encodeURIComponent(currency || 'USD')
+      + '&intent=capture';
+    s.dataset.namespace = 'paypal_sdk';
+    s.dataset.naPaypalSdk = '1';
+    s.async = true;
+    s.onload = () => resolve(window.paypal_sdk);
+    s.onerror = () => reject(new Error('PayPal SDK script failed to load'));
+    document.head.appendChild(s);
+  });
+}
+
+async function bootstrapPayPal(){
+  try {
+    const r = await fetch('/api/paypal-config');
+    const cfg = await r.json().catch(() => ({}));
+    if (!r.ok || !cfg.success || !cfg.clientId) {
+      console.warn('[paypal] config unavailable:', cfg.error || r.status);
+      hidePaypalRow();
+      return;
+    }
+    console.log('[paypal] using server config env=' + cfg.env + ' clientId=' + String(cfg.clientId).slice(0, 8) + '…');
+    await loadPayPalSdk(cfg.clientId, cfg.currency || 'USD');
+    initPayPalButton();
+  } catch (err) {
+    console.error('[paypal] bootstrap failed:', err);
+    showPaypalError('PayPal could not load. Please use the Razorpay button above, or try again.');
+  }
+}
+
+function initPayPalButton(){
+  if (!window.paypal_sdk || !paypal_sdk.Buttons) {
+    showPaypalError('PayPal SDK could not load (ad-blocker, browser extension, or network block). Use the Razorpay button above.');
     console.warn('[paypal] SDK failed to load. paypal_sdk =', window.paypal_sdk);
     return;
   }
   const container = document.getElementById('paypal-button-container');
   if (!container) return;
+  // Avoid double-render on soft navigations / re-init.
+  if (container.dataset.naPaypalRendered === '1') return;
+  container.dataset.naPaypalRendered = '1';
 
   paypal_sdk.Buttons({
     style: { layout:'horizontal', color:'gold', shape:'rect', label:'pay', height:42, tagline:false },
 
     createOrder: async function(){
       const fields = validateForm();
-      if (!fields) throw new Error('form invalid');
+      if (!fields) throw new Error('Please fill name, date of birth and email first.');
       const errEl = document.getElementById('paypalErr');
-      errEl.style.display = 'none';
+      if (errEl) errEl.style.display = 'none';
 
       // Identify user in Mixpanel before payment starts (mirrors Razorpay path)
       if (window.naIdentify) window.naIdentify(fields.email, { name: fields.name });
@@ -989,7 +1029,7 @@ function initPayPalButton(){
         })
       });
       const data = await r.json().catch(()=>({}));
-      if (!r.ok || !data.success || !data.id) throw new Error(data.error || 'create-order failed');
+      if (!r.ok || !data.success || !data.id) throw new Error(data.error || 'Could not create PayPal order');
       return data.id;
     },
 
@@ -1009,8 +1049,7 @@ function initPayPalButton(){
       });
       const result = await r.json().catch(()=>({}));
       if (!r.ok || !result.success) {
-        document.getElementById('paypalErr').textContent = result.error || 'Payment captured but report could not be generated. Please contact support.';
-        document.getElementById('paypalErr').style.display = 'block';
+        showPaypalError(result.error || 'Payment captured but report could not be generated. Please contact support.');
         return;
       }
 
@@ -1028,20 +1067,26 @@ function initPayPalButton(){
 
     onError: function(err){
       console.error('[paypal] button error:', err);
-      const e = document.getElementById('paypalErr');
-      e.textContent = 'PayPal could not start. Please try again or use the $2.50 / ₹249 · 50% off button above.';
-      e.style.display = 'block';
+      const detail = (err && (err.message || err.toString())) || '';
+      showPaypalError(
+        detail && detail !== '[object Object]'
+          ? ('PayPal error: ' + detail)
+          : 'PayPal could not start. Please try again or use the $2.50 / ₹249 · 50% off button above.'
+      );
     },
 
     onCancel: function(){
       // No-op. User cancelled at PayPal, no charge happened.
     }
-  }).render('#paypal-button-container');
+  }).render('#paypal-button-container').catch(function(err){
+    console.error('[paypal] render failed:', err);
+    showPaypalError('PayPal button failed to render. Please refresh or use Razorpay.');
+  });
 }
 
-// SDK loads async; wait for it.
-if (document.readyState === 'complete') initPayPalButton();
-else window.addEventListener('load', initPayPalButton);
+// Load PayPal Client ID from the same Vercel env the create/capture APIs use.
+if (document.readyState === 'complete') bootstrapPayPal();
+else window.addEventListener('load', bootstrapPayPal);
 </script>
 <script>
 // ── Live social-proof rotating toast (bottom-left) ─────────────

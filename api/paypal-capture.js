@@ -139,7 +139,8 @@ export default async function handler(req, res) {
     console.log(`[paypal] captured order=${orderID} capture=${captureId} amount=${captureAmount} ${captureCurrency}`);
 
     // 2. Save to Supabase
-    let orderInserted = true;
+    // 'inserted' | 'duplicate' | 'failed'
+    let orderSaveStatus = 'failed';
     try {
       const saved = await saveOrderToSupabase({
         paypalOrderId:   orderID,
@@ -154,17 +155,17 @@ export default async function handler(req, res) {
         amount:   captureAmount,
         currency: captureCurrency,
       });
-      orderInserted = saved !== null;
-      console.log(`[orders/paypal] saved order=${orderID} email=${cleanEmail} inserted=${orderInserted}`);
+      orderSaveStatus = saved !== null ? 'inserted' : 'duplicate';
+      console.log(`[orders/paypal] saved order=${orderID} email=${cleanEmail} status=${orderSaveStatus}`);
     } catch (dbErr) {
       // Payment is already captured at PayPal — never fail the user response
       // for a DB hiccup. Log loudly so we can reconcile from PayPal logs.
       console.error('[orders/paypal] CRITICAL save failed (continuing to deliver report):', dbErr);
-      orderInserted = false;
+      orderSaveStatus = 'failed';
     }
 
     // 3. Mixpanel events (only on a fresh insert, dedup with Razorpay path)
-    if (orderInserted) {
+    if (orderSaveStatus === 'inserted') {
       try {
         const eventProps = {
           payment_id:    'PP-' + orderID,
@@ -187,8 +188,9 @@ export default async function handler(req, res) {
       }
     }
 
-    // 4. Email only on first insert (avoid duplicates on retries)
-    if (orderInserted) {
+    // 4. Email on first success. Skip only clean duplicates (retries).
+    // If DB failed after PayPal capture, still email — buyer already paid.
+    if (orderSaveStatus !== 'duplicate') {
       try {
         await sendDeliveryEmail({
           paypalOrderId: orderID,

@@ -23,6 +23,7 @@
     { "source": "/api/razorpay-webhook",      "destination": "/api/razorpay-webhook.js" },
     { "source": "/api/paypal-create-order",   "destination": "/api/paypal-create-order.js" },
     { "source": "/api/paypal-capture",        "destination": "/api/paypal-capture.js" },
+    { "source": "/api/paypal-config",         "destination": "/api/paypal-config.js" },
     { "source": "/api/aura",                  "destination": "/api/aura.js" },
     { "source": "/api/health-supabase",       "destination": "/api/health-supabase.js" },
     { "source": "/api/aura/v2/message",       "destination": "/api/aura/v2/message.js" },
