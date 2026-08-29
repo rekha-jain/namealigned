@@ -12,7 +12,11 @@
     { "source": "/share", "has": [{"type":"query","key":"m","value":"7"}], "destination": "/share/7", "permanent": false },
     { "source": "/share", "has": [{"type":"query","key":"m","value":"8"}], "destination": "/share/8", "permanent": false },
     { "source": "/share", "has": [{"type":"query","key":"m","value":"9"}], "destination": "/share/9", "permanent": false },
-    { "source": "/baby-name-numerology", "destination": "/name-numerology-calculator", "permanent": true }
+    { "source": "/baby-name-numerology", "destination": "/name-numerology-calculator", "permanent": true },
+
+    { "source": "/lucky-attributes-number-:n(\\d)", "destination": "/lucky-attributes#number-:n", "permanent": true },
+    { "source": "/why-number-:n(\\d)-overthinks", "destination": "/numerology-and-overthinking#number-:n", "permanent": true },
+    { "source": "/number-:n(\\d)-in-love", "destination": "/numerology-love-styles#number-:n", "permanent": true }
   ],
 
   "rewrites": [
