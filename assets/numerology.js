@@ -11,7 +11,53 @@ function getDestinyNum(dob){let s=0;for(let c of dob.replace(/-/g,''))s+=+c;retu
 function getNameNum(name){const raw=chalSum(name.replace(/\s/g,''));return{raw,reduced:reduce(raw)};}
 function getPlanet(n){return['','Sun','Moon','Jupiter','Rahu','Mercury','Venus','Ketu','Saturn','Mars'][n]||'Sun';}
 function getPersonalYear(dob,year){let s=0;const p=dob.split('-');for(let c of(p[1]+p[2]+String(year)))s+=+c;return reduce(s);}
-function getLoshuNums(dob){const p=new Set();for(let c of dob.replace(/-/g,''))if(c!=='0')p.add(+c);return p;}
+// ── LO SHU GRID ───────────────────────────────────────────────
+// Repetition carries meaning in Lo Shu, so counts are the primary result and
+// the presence Set is derived from them. getLoshuNums used to build the Set
+// directly, which silently discarded repeats; it is kept for callers that only
+// need present-vs-missing.
+function getLoshuCounts(dob){const c={1:0,2:0,3:0,4:0,5:0,6:0,7:0,8:0,9:0};for(let ch of dob.replace(/-/g,''))if(ch!=='0'&&c[ch]!==undefined)c[ch]++;return c;}
+function getLoshuNums(dob){const c=getLoshuCounts(dob),p=new Set();for(let n=1;n<=9;n++)if(c[n])p.add(n);return p;}
+function getLoshuMissing(dob){const c=getLoshuCounts(dob),m=[];for(let n=1;n<=9;n++)if(!c[n])m.push(n);return m;}
+
+const LOSHU_GRID=[[4,9,2],[3,5,7],[8,1,6]];
+
+// The eight straight lines the 4|9|2 / 3|5|7 / 8|1|6 layout actually contains.
+// A line fully present is an arrow of strength; the same line fully absent is
+// the corresponding arrow of weakness.
+const LOSHU_LINES=[
+  {cells:[4,9,2],axis:'Top row',    strength:['Arrow of the Mind','Planning, memory and imagination work together.'],            weakness:['Arrow of Poor Memory','Thoughts scatter before they finish forming.']},
+  {cells:[3,5,7],axis:'Middle row', strength:['Arrow of Emotional Balance','Feeling, centre and reflection are all available.'], weakness:['Arrow of Scepticism','Learns by trial and error rather than trust.']},
+  {cells:[8,1,6],axis:'Bottom row', strength:['Arrow of Practicality','Ideas reliably become finished things.'],                 weakness:['Arrow of Disorder','Follow-through needs external structure.']},
+  {cells:[4,3,8],axis:'Left column',strength:['Arrow of Planning','Naturally organises work into steps.'],                       weakness:['Arrow of Confusion','Order has to be imposed deliberately.']},
+  {cells:[9,5,1],axis:'Middle column',strength:['Arrow of Determination','Decides and holds the decision.'],                     weakness:['Arrow of Hesitation','Choices get revisited long after they are made.']},
+  {cells:[2,7,6],axis:'Right column',strength:['Arrow of Activity','Emotion converts into visible output.'],                     weakness:['Arrow of Passivity','Waits for momentum instead of starting it.']},
+  {cells:[4,5,6],axis:'Diagonal',   strength:['Arrow of Compassion','Reads other people generously and accurately.'],            weakness:['Arrow of Hypersensitivity','Takes correction harder than it is meant.']},
+  {cells:[2,5,8],axis:'Diagonal',   strength:['Arrow of Spiritual Insight','Comfortable with what cannot be proven.'],           weakness:['Arrow of Frustration','Effort and reward feel chronically out of step.']},
+];
+
+const LOSHU_PLANES=[
+  {cells:[4,9,2],name:'Mental plane',   note:'How the person thinks, plans and imagines.'},
+  {cells:[3,5,7],name:'Emotional plane',note:'Emotional sensitivity, balance and inner life.'},
+  {cells:[8,1,6],name:'Physical plane', note:'How effectively the person acts in the material world.'},
+];
+
+function getLoshuArrows(counts){
+  const strength=[],weakness=[];
+  for(const L of LOSHU_LINES){
+    const present=L.cells.filter(n=>counts[n]>0).length;
+    if(present===3)      strength.push({cells:L.cells,axis:L.axis,name:L.strength[0],note:L.strength[1]});
+    else if(present===0) weakness.push({cells:L.cells,axis:L.axis,name:L.weakness[0],note:L.weakness[1]});
+  }
+  return {strength,weakness};
+}
+
+function getLoshuPlanes(counts){
+  return LOSHU_PLANES.map(p=>{
+    const filled=p.cells.filter(n=>counts[n]>0).length;
+    return {...p,filled,state:filled===3?'complete':filled===0?'empty':'partial'};
+  });
+}
 
 const FRIENDLY={1:[1,2,3,4,9],2:[1,2,4,7,8],3:[1,3,6,9],4:[1,2,4,6,8],5:[1,3,5,6,9],6:[3,4,5,6,9],7:[1,2,7],8:[2,4,6,8],9:[1,3,5,6,9]};
 const PREFERRED=[1,3,5,6,9];

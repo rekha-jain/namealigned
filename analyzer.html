@@ -1209,10 +1209,15 @@ function renderAnalysis(){
     // Lo Shu Grid: 3x3 grid showing present (gold) vs missing (faded)
     // Standard Lo Shu placement: 4|9|2 / 3|5|7 / 8|1|6
     const placement = [4,9,2,3,5,7,8,1,6];
-    const present = loshu instanceof Set ? loshu : new Set();
+    // Repetition carries meaning in Lo Shu, so show the count rather than
+    // collapsing a digit that appears three times into a single mark.
+    const counts = (typeof getLoshuCounts === 'function' && dob)
+      ? getLoshuCounts(dob)
+      : placement.reduce((a,n) => (a[n] = (loshu instanceof Set && loshu.has(n)) ? 1 : 0, a), {});
     const cells = placement.map(n => {
-      const has = present.has(n);
-      return `<div style="aspect-ratio:1;display:flex;align-items:center;justify-content:center;background:${has?'linear-gradient(135deg,rgba(245,196,81,.18),rgba(245,196,81,.05))':'rgba(124,58,237,.04)'};border:1px solid ${has?'var(--gold-b)':'rgba(124,58,237,.12)'};border-radius:6px;font-family:'Playfair Display',Georgia,serif;font-size:16px;font-weight:700;color:${has?'var(--gold-d)':'rgba(124,58,237,.35)'};">${n}</div>`;
+      const c = counts[n] || 0, has = c > 0;
+      const badge = c > 1 ? `<span style="font-size:9px;font-weight:700;color:var(--gold-d);line-height:1">&times;${c}</span>` : '';
+      return `<div style="aspect-ratio:1;display:flex;flex-direction:column;gap:1px;align-items:center;justify-content:center;background:${has?'linear-gradient(135deg,rgba(245,196,81,.18),rgba(245,196,81,.05))':'rgba(124,58,237,.04)'};border:1px solid ${has?'var(--gold-b)':'rgba(124,58,237,.12)'};border-radius:6px;font-family:'Playfair Display',Georgia,serif;font-size:16px;font-weight:700;color:${has?'var(--gold-d)':'rgba(124,58,237,.35)'};">${n}${badge}</div>`;
     }).join('');
     document.getElementById('loshuGrid').innerHTML = cells;
     const missingTxt = (Array.isArray(missing) && missing.length) ? missing.join(', ') : 'None, you carry all 9 energies.';
@@ -2217,6 +2222,7 @@ function showShareHint(msg){
                     <li><a href="/name-numerology-calculator">Name Numerology Calculator</a></li>
           <li><a href="/name-correction-numerology">Name Correction Check</a></li>
           <li><a href="/business-name-numerology">Business Name Check</a></li>
+          <li><a href="/lo-shu-grid-calculator">Lo Shu Grid Calculator</a></li>
           
           <li><a href="/love-compatibility-numerology">Relationship Compatibility</a></li>
           <li><a href="/report">Full Destiny Report $2.50 / ₹249 · 50% off</a></li>
