@@ -4,7 +4,7 @@ import { JSDOM } from 'jsdom';
 
 const ROOT = path.resolve(new URL('..', import.meta.url).pathname);
 const BASE = 'https://www.namealigned.com';
-const LASTMOD = '2026-05-29';
+const LASTMOD = new Date().toISOString().slice(0, 10);
 
 function walk(dir) {
   return fs.readdirSync(dir, { withFileTypes: true }).flatMap((entry) => {
@@ -23,6 +23,7 @@ function routeFor(file) {
 function priorityFor(route) {
   if (route === '/') return '1.0';
   if (route === '/number') return '0.95';
+  if (route === '/numerology-spiritual-meaning') return '0.9';
   if (['/analyzer', '/name-numerology-calculator', '/name-alignment', '/love-compatibility-numerology', '/ask-aura'].includes(route)) return '0.9';
   if (/^\/number\/[1-9]-(personality|career)$/.test(route)) return '0.88';
   if (/^\/(name-number|life-path-number)-[1-9]-meaning$/.test(route)) return '0.88';
