@@ -23,7 +23,7 @@ function routeFor(file) {
 function priorityFor(route) {
   if (route === '/') return '1.0';
   if (route === '/number') return '0.95';
-  if (['/analyzer', '/name-numerology-calculator', '/name-alignment', '/love-compatibility-numerology', '/ask-aura', '/numerology-spiritual-meaning', '/numerology-and-overthinking', '/numerology-love-styles', '/lucky-attributes'].includes(route)) return '0.9';
+  if (['/analyzer', '/name-numerology-calculator', '/name-alignment', '/love-compatibility-numerology', '/ask-aura', '/numerology-spiritual-meaning', '/numerology-and-overthinking', '/numerology-love-styles', '/lucky-attributes', '/lo-shu-grid-calculator', '/link-to-us'].includes(route)) return '0.9';
   if (/^\/number\/[1-9]-(personality|career)$/.test(route)) return '0.88';
   if (/^\/(name-number|life-path-number)-[1-9]-meaning$/.test(route)) return '0.88';
   if (/^\/number-[1-9]-and-[1-9]-compatibility$/.test(route)) return '0.84';

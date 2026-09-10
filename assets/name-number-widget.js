@@ -110,7 +110,7 @@
       '<div class="na-widget__breakdown" data-breakdown></div>',
       '</div>',
       '</div>',
-      '<div class="na-widget__credit">Powered by <a href="https://www.namealigned.com/name-numerology-calculator" target="_blank" rel="noopener">NameAligned.com</a></div>'
+      '<div class="na-widget__credit">Powered by <a href="https://www.namealigned.com/name-numerology-calculator?utm_source=embed-widget&utm_medium=referral&utm_campaign=name-number-widget" target="_blank" rel="noopener">NameAligned.com</a></div>'
     ].join('');
 
     var input = widget.querySelector('.na-widget__input');
