@@ -5,3 +5,6 @@ timestamp_utc,site,to_email,subject,mode,result,message
 2026-06-08T10:19:55+00:00,Name Echo,office@nameecho.com,Chaldean name-number chart for Name Echo readers,send,ok,
 2026-06-08T10:26:05+00:00,Name Numerology Calculator,support@namenumerologycalculator.in,Chaldean letter-values reference for your readers,send,ok,
 2026-06-08T10:28:08+00:00,Meditation Bro,contact@meditationbro.com,Astrology guest post idea with practical numerology tool,send,ok,
+2026-09-10T17:59:43+00:00,Numerologist.com,support@numerologist.com,Free Lo Shu grid calculator for your readers,dry-run,ok,
+2026-09-10T17:59:43+00:00,Naked Numerology,team@nakednumerology.com,Lo Shu grid tool for newsletter readers,dry-run,ok,
+2026-09-10T17:59:43+00:00,Felicia Bender,support@feliciabender.com,Supplementary Lo Shu grid calculator,dry-run,ok,
