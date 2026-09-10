@@ -16,7 +16,8 @@
 
     { "source": "/lucky-attributes-number-:n(\\d)", "destination": "/lucky-attributes#number-:n", "permanent": true },
     { "source": "/why-number-:n(\\d)-overthinks", "destination": "/numerology-and-overthinking#number-:n", "permanent": true },
-    { "source": "/number-:n(\\d)-in-love", "destination": "/numerology-love-styles#number-:n", "permanent": true }
+    { "source": "/number-:n(\\d)-in-love", "destination": "/numerology-love-styles#number-:n", "permanent": true },
+    { "source": "/number-:n(\\d)-spiritual-meaning", "destination": "/numerology-spiritual-meaning#number-:n", "permanent": true }
   ],
 
   "rewrites": [

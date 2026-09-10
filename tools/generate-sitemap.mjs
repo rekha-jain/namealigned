@@ -4,7 +4,7 @@ import { JSDOM } from 'jsdom';
 
 const ROOT = path.resolve(new URL('..', import.meta.url).pathname);
 const BASE = 'https://www.namealigned.com';
-const LASTMOD = '2026-05-29';
+const LASTMOD = new Date().toISOString().slice(0, 10);
 
 function walk(dir) {
   return fs.readdirSync(dir, { withFileTypes: true }).flatMap((entry) => {
@@ -23,10 +23,9 @@ function routeFor(file) {
 function priorityFor(route) {
   if (route === '/') return '1.0';
   if (route === '/number') return '0.95';
-  if (['/analyzer', '/name-numerology-calculator', '/name-alignment', '/love-compatibility-numerology', '/ask-aura'].includes(route)) return '0.9';
+  if (['/analyzer', '/name-numerology-calculator', '/name-alignment', '/love-compatibility-numerology', '/ask-aura', '/numerology-spiritual-meaning', '/numerology-and-overthinking', '/numerology-love-styles', '/lucky-attributes'].includes(route)) return '0.9';
   if (/^\/number\/[1-9]-(personality|career)$/.test(route)) return '0.88';
   if (/^\/(name-number|life-path-number)-[1-9]-meaning$/.test(route)) return '0.88';
-  if (/^\/(number-[1-9]-in-love|why-number-[1-9]-overthinks|number-[1-9]-spiritual-meaning|lucky-attributes-number-[1-9])$/.test(route)) return '0.84';
   if (/^\/number-[1-9]-and-[1-9]-compatibility$/.test(route)) return '0.84';
   if (route.startsWith('/blog/')) return '0.72';
   if (route === '/blog') return '0.8';
