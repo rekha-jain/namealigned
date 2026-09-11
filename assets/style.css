@@ -144,13 +144,19 @@ strong{font-weight:600}
   height: var(--nav-h);
   box-shadow: 0 1px 12px rgba(6,182,212,.08);
 }
-.nav-inner{display:flex;align-items:center;justify-content:space-between;height:100%}
+.nav-inner{
+  display:flex;align-items:center;justify-content:space-between;
+  height:100%;gap:1rem;min-width:0;
+}
 .nav-logo{
   display:flex;align-items:center;
   line-height:1;
+  flex-shrink:0;
+  max-width:min(260px,42vw);
+  position:relative;z-index:2;
 }
 .nav-logo img{
-  height:68px;width:auto;max-width:260px;
+  height:68px;width:auto;max-width:100%;
   display:block;
   overflow:visible;
 }
@@ -158,28 +164,45 @@ strong{font-weight:600}
 .nav-logo .logo-icon{color:var(--teal);font-size:16px}
 .nav-logo .logo-text{color:var(--text);letter-spacing:.02em;font-family:var(--font-serif);font-size:18px;}
 .nav-logo .logo-text em{color:var(--gold);font-style:normal}
-.nav-links{display:flex;align-items:center;gap:1.75rem;list-style:none}
+.nav-links{
+  display:flex;align-items:center;gap:1rem;list-style:none;
+  flex-wrap:nowrap;flex-shrink:0;margin-left:auto;
+}
+.nav-links > li{flex-shrink:0}
 .nav-links a{
   font-size:13px;font-family:var(--font-sans);
   letter-spacing:.06em;color:var(--text2);
   text-transform:uppercase;font-weight:500;
   transition:color .2s;
+  white-space:nowrap;
+  display:inline-flex;align-items:center;
 }
 .nav-links a:hover{color:var(--gold)}
+.nav-aura{
+  display:inline-flex !important;
+  align-items:center;
+  white-space:nowrap !important;
+  flex-shrink:0;
+}
 .nav-cta{
   background: var(--gold) !important;
   color: #0f1c26 !important;
-  padding:8px 20px;border-radius:20px;
+  padding:8px 16px;border-radius:20px;
   font-weight:600;letter-spacing:.04em;
   box-shadow: 0 0 12px var(--gold-glow);
   transition: all .25s ease !important;
+  white-space:nowrap !important;
+  flex-shrink:0;
+  line-height:1.2;
+  display:inline-flex !important;
+  align-items:center;
 }
 .nav-cta:hover{
   background: var(--gold-d) !important;
   box-shadow: 0 4px 22px var(--gold-glow) !important;
   transform: translateY(-1px);
 }
-.nav-hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:4px}
+.nav-hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:4px;flex-shrink:0}
 .nav-hamburger span{width:22px;height:2px;background:var(--text);border-radius:2px;transition:all .3s}
 .nav-mobile{
   display:none;position:absolute;top:var(--nav-h);left:0;right:0;
@@ -189,9 +212,15 @@ strong{font-weight:600}
   backdrop-filter:blur(16px);
   box-shadow: 0 8px 24px rgba(6,182,212,.10);
 }
-.nav-mobile a{font-size:14px;color:var(--text2);padding:.4rem 0;border-bottom:1px solid var(--border)}
+.nav-mobile a{font-size:14px;color:var(--text2);padding:.4rem 0;border-bottom:1px solid var(--border);white-space:nowrap}
 .nav-mobile.open{display:flex}
-@media(max-width:700px){.nav-links{display:none}.nav-hamburger{display:flex}}
+/* Collapse before crowded mid-widths — long report CTA + Ask Aura need ~1180px */
+@media(max-width:1180px){.nav-links{display:none}.nav-hamburger{display:flex}}
+@media(min-width:1181px) and (max-width:1360px){
+  .nav-links{gap:.65rem}
+  .nav-links a{font-size:12px;letter-spacing:.04em}
+  .nav-cta{padding:7px 12px;font-size:11.5px}
+}
 
 /* ── BUTTONS ─────────────────────────────────────────────────
    Research:

@@ -29,7 +29,7 @@
      fallback visible until the file loads. -->
 <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&amp;family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&amp;display=swap">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&amp;family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&amp;display=swap" media="print" onload="this.media='all';this.onload=null">
-<link rel="preload" href="assets/style.css" as="style">
+<link rel="preload" href="assets/style.css?v=navfix1" as="style">
 <link rel="preload" href="assets/theme-cosmic-light.css" as="style">
 <!-- Open Graph -->
 <meta property="og:title" content="Free Chaldean Numerology Calculator | NameAligned">
@@ -66,10 +66,10 @@
 ]}
 </script>
 <!-- CSS loaded non-blocking via media trick; falls back to blocking on no-JS -->
-<link rel="stylesheet" href="assets/style.css" media="print" onload="this.media='all';this.onload=null">
+<link rel="stylesheet" href="assets/style.css?v=navfix1" media="print" onload="this.media='all';this.onload=null">
 <link rel="stylesheet" href="assets/theme-cosmic-light.css" media="print" onload="this.media='all';this.onload=null">
 <noscript>
-  <link rel="stylesheet" href="assets/style.css">
+  <link rel="stylesheet" href="assets/style.css?v=navfix1">
   <link rel="stylesheet" href="assets/theme-cosmic-light.css">
 </noscript>
 <style>
@@ -100,17 +100,18 @@ ul{list-style:none;margin:0;padding:0}
 .container-sm{max-width:760px;margin:0 auto;padding:0 1.5rem}
 /* Nav */
 .nav{position:sticky;top:0;z-index:200;background:rgba(255,255,255,.92);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-bottom:1px solid var(--teal-b);height:var(--nav-h);box-shadow:0 1px 12px rgba(109,78,209,.08)}
-.nav-inner{display:flex;align-items:center;justify-content:space-between;height:100%}
-.nav-logo{display:flex;align-items:center;line-height:1}
-.nav-links{display:flex;align-items:center;gap:1.75rem;list-style:none;margin:0;padding:0}
-.nav-links a{font-size:13px;font-family:var(--font-sans);letter-spacing:.06em;color:var(--text2);text-transform:uppercase;font-weight:500;transition:color .2s}
+.nav-inner{display:flex;align-items:center;justify-content:space-between;height:100%;gap:1rem;min-width:0}
+.nav-logo{display:flex;align-items:center;line-height:1;flex-shrink:0;position:relative;z-index:2}
+.nav-links{display:flex;align-items:center;gap:1rem;list-style:none;margin:0;padding:0;flex-wrap:nowrap;flex-shrink:0;margin-left:auto}
+.nav-links > li{flex-shrink:0}
+.nav-links a{font-size:13px;font-family:var(--font-sans);letter-spacing:.06em;color:var(--text2);text-transform:uppercase;font-weight:500;transition:color .2s;white-space:nowrap;display:inline-flex;align-items:center}
 .nav-links a:hover{color:var(--gold)}
-.nav-cta{background:var(--gold) !important;color:#0f1c26 !important;padding:8px 20px;border-radius:20px;font-weight:600;letter-spacing:.04em;box-shadow:0 0 12px var(--gold-glow);transition:all .25s ease !important}
-.nav-hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:4px}
+.nav-cta{background:var(--gold) !important;color:#0f1c26 !important;padding:8px 20px;border-radius:20px;font-weight:600;letter-spacing:.04em;box-shadow:0 0 12px var(--gold-glow);transition:all .25s ease !important;white-space:nowrap !important;flex-shrink:0;display:inline-flex !important;align-items:center}
+.nav-hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:4px;flex-shrink:0}
 .nav-hamburger span{width:22px;height:2px;background:var(--text);border-radius:2px;transition:all .3s}
 .nav-mobile{display:none;position:absolute;top:var(--nav-h);left:0;right:0;background:rgba(255,255,255,.97);border-bottom:1px solid var(--teal-b);padding:1rem 1.5rem;flex-direction:column;gap:.75rem;backdrop-filter:blur(16px)}
 .nav-mobile.open{display:flex}
-@media(max-width:700px){.nav-links{display:none}.nav-hamburger{display:flex}}
+@media(max-width:1180px){.nav-links{display:none}.nav-hamburger{display:flex}}
 /* Buttons (hero CTA) */
 .btn{display:inline-block;padding:13px 32px;border-radius:var(--r);font-size:15px;font-family:var(--font-sans);font-weight:600;letter-spacing:.04em;cursor:pointer;border:none;text-align:center;transition:all .25s ease;text-decoration:none !important}
 .btn-gold{background:linear-gradient(135deg,var(--gold),#f5d060);color:#03090f;box-shadow:0 2px 12px var(--gold-glow)}
