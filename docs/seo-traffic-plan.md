@@ -54,8 +54,8 @@ page and dilute topical focus in a YMYL-adjacent niche. Not worth the trust cost
 - Thin compatibility pages (401-455 words) need depth, not more siblings.
 
 ### Phase 2 — tools that earn links
-1. Lo Shu Grid calculator
-2. Mobile number numerology checker
+1. Lo Shu Grid calculator — shipped
+2. Mobile number numerology checker — shipped (`/mobile-number-numerology`)
 3. Marriage / compatibility matching by date of birth
 4. House number numerology
 

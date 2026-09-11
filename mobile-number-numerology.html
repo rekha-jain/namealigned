@@ -1,0 +1,343 @@
+<!DOCTYPE html><html lang="en"><head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-70GFTN27M6"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-70GFTN27M6');
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<link rel="icon" type="image/svg+xml" href="/assets/namealigned-favicon.svg">
+<title>Mobile Number Numerology Calculator: Check Your Number Free</title>
+<meta name="description" content="Free Chaldean mobile number numerology check. Add your digits, see the root number and planet, and compare it with your Birth Number and Life Path.">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://www.namealigned.com/mobile-number-numerology">
+<link rel="alternate" hreflang="en-IN" href="https://www.namealigned.com/mobile-number-numerology">
+<meta property="og:title" content="Mobile Number Numerology Calculator: Check Your Number Free">
+<meta property="og:description" content="See your mobile root number, ruling planet, and whether it aligns with your Moolank and Bhagyank. Free, instant, no signup.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://www.namealigned.com/mobile-number-numerology">
+<meta property="og:image" content="https://www.namealigned.com/assets/og/moolank-5.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Mobile Number Numerology Calculator">
+<meta name="twitter:description" content="Free Chaldean check for your mobile root number, planet, and alignment with birth numbers.">
+<link rel="stylesheet" href="/assets/style.css">
+<link rel="stylesheet" href="/assets/theme-cosmic-light.css">
+<link rel="stylesheet" href="/assets/mini-analyzers.css">
+<link rel="stylesheet" href="/assets/internal-linking.css">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"Mobile Number Numerology Calculator","url":"https://www.namealigned.com/mobile-number-numerology","description":"Free Chaldean mobile number numerology check with root number, planet, and optional birth-number harmony.","applicationCategory":"LifestyleApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"INR"},"publisher":{"@type":"Organization","name":"NameAligned.com","url":"https://www.namealigned.com/"}}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"How do you calculate mobile number numerology?","acceptedAnswer":{"@type":"Answer","text":"Add every digit of the 10-digit mobile number, then keep reducing the total until you reach a single digit from 1 to 9. That digit is the mobile root number. Country codes are stripped first."}},{"@type":"Question","name":"What is a lucky mobile number in Chaldean numerology?","acceptedAnswer":{"@type":"Answer","text":"A number whose root matches your Birth Number (Moolank), Life Path Number (Bhagyank), or a friendly number from the Chaldean partner matrix. The last digit also matters: endings that match your lucky roots are preferred when choosing a SIM."}},{"@type":"Question","name":"Should I change my mobile number if it is misaligned?","acceptedAnswer":{"@type":"Answer","text":"Not automatically. Misalignment means the vibration differs from your birth chart, not that the number is cursed. Many people keep a working number and choose a luckier ending only when they next change SIMs."}},{"@type":"Question","name":"Does this tool store my phone number?","acceptedAnswer":{"@type":"Answer","text":"No. The calculation runs in your browser. Your number is not uploaded to NameAligned servers for this free check."}},{"@type":"Question","name":"Is mobile number numerology the same as name numerology?","acceptedAnswer":{"@type":"Answer","text":"No. Name numerology uses Chaldean letter values. Mobile numerology reduces digits only. Both can be read against your Moolank and Bhagyank for harmony."}}]}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[
+{"@type":"ListItem","position":1,"name":"Home","item":"https://www.namealigned.com/"},
+{"@type":"ListItem","position":2,"name":"Mobile Number Numerology","item":"https://www.namealigned.com/mobile-number-numerology"}
+]}
+</script>
+<style>
+  .mob-wrap{max-width:760px;margin:0 auto}
+  .mob-form{display:flex;flex-wrap:wrap;gap:12px;align-items:flex-end;justify-content:center;margin:1.4rem 0}
+  .mob-form label{display:flex;flex-direction:column;gap:6px;font-size:13px;font-weight:600;color:#4a3f6b;text-align:left}
+  .mob-form input{font:inherit;font-size:16px;padding:11px 14px;border:1px solid rgba(124,58,237,.28);border-radius:10px;background:#fff;color:#19142d;min-width:220px}
+  .mob-form input:focus{outline:0;border-color:#f0b429}
+  #mobOut{display:none;margin-top:1.6rem}
+  #mobOut.show{display:block}
+  .mob-card{background:linear-gradient(160deg,#1a1340 0%,#2a1a5c 100%);border:1px solid rgba(201,162,39,.25);border-radius:14px;padding:1.15rem 1.25rem;color:#f0ece0;margin-bottom:1rem;display:flex;gap:1.2rem;flex-wrap:wrap;align-items:center}
+  .mob-card .meta{flex:1;min-width:180px}
+  .mob-card .kicker{font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:rgba(200,220,235,.55);font-family:sans-serif;margin-bottom:.35rem}
+  .mob-card .num{font-family:Georgia,serif;font-size:24px;font-weight:700;letter-spacing:.04em;margin-bottom:.45rem}
+  .mob-card .steps{font-family:sans-serif;font-size:12.5px;line-height:1.7;color:rgba(240,236,224,.8)}
+  .mob-root{text-align:center;background:rgba(240,180,41,.15);border:1px solid rgba(240,180,41,.4);border-radius:12px;padding:.7rem 1.1rem;flex-shrink:0}
+  .mob-root .n{color:#f0b429;font-size:40px;font-weight:700;line-height:1;font-family:sans-serif}
+  .mob-root .p{color:rgba(240,180,41,.75);font-size:10px;letter-spacing:.1em;text-transform:uppercase;margin-top:3px;font-family:sans-serif}
+  .mob-status{border-radius:12px;padding:1rem 1.15rem;margin-bottom:1rem;display:flex;gap:.85rem;align-items:flex-start;border:1.5px solid}
+  .mob-status.aligned{background:rgba(46,160,110,.08);border-color:#b0d48a;color:#1f7a52}
+  .mob-status.neutral{background:rgba(240,180,41,.08);border-color:#e8c77a;color:#9a6d12}
+  .mob-status.misaligned{background:rgba(214,109,32,.08);border-color:#f0c0a0;color:#a1521a}
+  .mob-status h3{margin:0 0 .25rem;font-family:Georgia,serif;font-size:16px}
+  .mob-status p{margin:0;font-family:sans-serif;font-size:13.5px;line-height:1.65;color:#4a3f6b}
+  .mob-grid{display:grid;grid-template-columns:1fr 1fr;gap:.75rem;margin-bottom:1rem}
+  @media(max-width:560px){.mob-grid{grid-template-columns:1fr}}
+  .mob-tile{background:rgba(124,58,237,.04);border:1px solid rgba(124,58,237,.14);border-radius:12px;padding:.85rem 1rem}
+  .mob-tile .lb{font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:#6b5f86;font-weight:700;font-family:sans-serif;margin-bottom:.3rem}
+  .mob-tile .v{font-family:Georgia,serif;font-size:20px;color:#2d2450;font-weight:700}
+  .mob-tile .s{font-family:sans-serif;font-size:12px;color:#6b5f86;margin-top:4px;line-height:1.5}
+  .mob-pill{display:inline-block;font-size:12px;font-weight:700;border-radius:999px;padding:4px 12px;margin:2px 4px 2px 0;background:rgba(240,180,41,.2);color:#9a6d12;font-family:sans-serif}
+  .mob-faq{border-bottom:1px solid rgba(124,58,237,.12);padding:11px 0}
+  .mob-faq summary{cursor:pointer;font-weight:600;color:#2d2450;font-size:15px}
+  .mob-faq p{margin:.6rem 0 0;color:#4a3f6b;font-size:14.5px;line-height:1.65}
+  .mob-note{font-size:12.5px;color:#6b5f86;text-align:center;margin-top:1rem;line-height:1.55}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="container nav-inner">
+    <a href="/" class="nav-logo" aria-label="NameAligned.com" style="font-family:'Playfair Display',Georgia,serif;text-decoration:none;display:inline-flex;flex-direction:column;align-items:stretch;gap:0;line-height:1;"><span style="font-size:26px;font-weight:700;color:#0a0820;letter-spacing:-.01em;line-height:1;white-space:nowrap;">Name<span style="color:#6d4ed1;">Aligned</span><span style="color:#6d4ed1;font-weight:600;">.com</span></span><span style="font-family:'Inter','Helvetica Neue',Arial,sans-serif;font-size:9.5px;font-weight:600;color:#8a7ba8;text-transform:uppercase;margin-top:5px;display:flex;justify-content:space-between;width:100%;"><span>C</span><span>H</span><span>A</span><span>L</span><span>D</span><span>E</span><span>A</span><span>N</span><span>&nbsp;</span><span>N</span><span>U</span><span>M</span><span>E</span><span>R</span><span>O</span><span>L</span><span>O</span><span>G</span><span>Y</span></span></a>
+    <ul class="nav-links">
+      <li><a href="/analyzer">Free Analysis</a></li>
+      <li><a href="/number">Numbers</a></li>
+      <li><a href="/love-compatibility-numerology">Compatibility</a></li>
+      <li><a href="/ask-aura" class="nav-aura" style="background:linear-gradient(135deg,rgba(124,58,237,.12),rgba(245,196,81,.10));border:1px solid rgba(157,127,255,.45);padding:5px 12px;border-radius:18px;font-weight:700;">✦ Ask Aura</a></li>
+      <li><a href="/blog">Blog</a></li>
+      <li><a href="/about">About</a></li>
+      <li><a href="/report" class="nav-cta">Full Report $2.50 / ₹249 · 50% off</a></li>
+    </ul>
+    <div class="nav-hamburger" id="navHamburger"><span></span><span></span><span></span></div>
+  </div>
+  <div class="nav-mobile" id="navMobile">
+    <a href="/">Home</a>
+    <a href="/analyzer">Free Analysis</a>
+    <a href="/number">Numbers</a>
+    <a href="/love-compatibility-numerology">Compatibility</a>
+    <a href="/report">Full Report $2.50 / ₹249 · 50% off</a>
+    <a href="/blog">Blog</a>
+  </div>
+</nav>
+
+<nav class="na-breadcrumb" aria-label="Breadcrumb">
+  <a href="/">Home</a><span>/</span><a href="/sitemap-pages">Site Map</a><span>/</span><span>Mobile Number Numerology</span>
+</nav>
+
+<main>
+
+<section class="tool-hero">
+  <div class="eyebrow">&#10022; Free &bull; Instant &bull; Runs in your browser</div>
+  <h1>Mobile Number Numerology Calculator <em>check your root number and planet</em></h1>
+  <p>Enter a 10-digit Indian mobile number to see its Chaldean root, ruling planet, and what that vibration tends to bring. Add your date of birth optionally to check harmony with your Birth Number and Life Path.</p>
+</section>
+
+<section class="section mob-wrap" style="padding-top:1rem">
+  <form class="mob-form" id="mobForm" autocomplete="off">
+    <label>Mobile number
+      <input type="tel" id="mobPhone" inputmode="numeric" placeholder="e.g. 9876543210" required maxlength="14" aria-describedby="mobHint">
+    </label>
+    <label>Date of birth <span style="font-weight:500;color:#8a7ba8">(optional)</span>
+      <input type="date" id="mobDob">
+    </label>
+    <button type="submit" class="btn btn-gold">Check my number</button>
+  </form>
+  <p id="mobHint" class="mob-note">We strip +91 or a leading 0 automatically. Calculation stays on your device.</p>
+
+  <div id="mobOut" aria-live="polite"></div>
+</section>
+
+<section class="section mob-wrap">
+  <h2>How mobile number numerology works</h2>
+  <p>Every digit carries a planetary value in the same 1–9 Chaldean scale used for Birth Number and Life Path. Add the ten digits of the mobile, then reduce until one digit remains. That single digit is the <strong>mobile root number</strong>.</p>
+  <p>Worked example: <code>9+8+7+6+5+4+3+2+1+0 = 45</code>, then <code>4+5 = 9</code>. Root 9 is Mars: action, courage, and intensity on the line.</p>
+  <p>Many people in India also watch the <strong>last digit</strong> when buying a new SIM. An ending that matches your Moolank, Bhagyank, or a friendly number is treated as the easiest practical upgrade if you are already changing numbers.</p>
+</section>
+
+<section class="section mob-wrap">
+  <h2>What each mobile root tends to bring</h2>
+  <ul>
+    <li><strong>1 · Sun</strong> — visibility and leadership on calls; strong for founders.</li>
+    <li><strong>2 · Moon</strong> — soft, relational tone; suits caregiving and creative work.</li>
+    <li><strong>3 · Jupiter</strong> — opportunity and expansion; one of the most requested roots.</li>
+    <li><strong>4 · Rahu</strong> — unconventional, sudden turns; better for innovators than for routine roles.</li>
+    <li><strong>5 · Mercury</strong> — talk, sales, and movement; excellent for communicators.</li>
+    <li><strong>6 · Venus</strong> — harmony and aesthetic pull; strong for creative and social fields.</li>
+    <li><strong>7 · Ketu</strong> — quiet, research-heavy energy; suits healers and analysts.</li>
+    <li><strong>8 · Saturn</strong> — serious, long-arc discipline; can feel heavy for casual social use.</li>
+    <li><strong>9 · Mars</strong> — drive and protection; suits leaders, athletes, and high-tempo work.</li>
+  </ul>
+</section>
+
+<section class="section mob-wrap">
+  <h2>Common questions</h2>
+  <details class="mob-faq"><summary>How do you calculate mobile number numerology?</summary><p>Add every digit of the 10-digit mobile number, then keep reducing the total until you reach a single digit from 1 to 9. Country codes are stripped first.</p></details>
+  <details class="mob-faq"><summary>What is a lucky mobile number in Chaldean numerology?</summary><p>A number whose root matches your Birth Number (Moolank), Life Path Number (Bhagyank), or a friendly number from the Chaldean partner matrix. Lucky last-digit endings are a practical second filter when choosing a SIM.</p></details>
+  <details class="mob-faq"><summary>Should I change my mobile number if it is misaligned?</summary><p>Not automatically. Misalignment means the vibration differs from your birth chart, not that the number is cursed. Many people keep a working number and choose a luckier ending only when they next change SIMs.</p></details>
+  <details class="mob-faq"><summary>Does this tool store my phone number?</summary><p>No. The calculation runs in your browser. Your number is not uploaded to NameAligned servers for this free check.</p></details>
+  <details class="mob-faq"><summary>Is mobile number numerology the same as name numerology?</summary><p>No. Name numerology uses Chaldean letter values. Mobile numerology reduces digits only. Both can be read against your Moolank and Bhagyank for harmony.</p></details>
+</section>
+
+<section class="section mob-wrap">
+  <h2>Keep going</h2>
+  <ul>
+    <li><a href="/analyzer">Free Chaldean analysis</a> — full chart including name alignment.</li>
+    <li><a href="/name-numerology-calculator">Name Numerology Calculator</a> — letter-by-letter name number.</li>
+    <li><a href="/lo-shu-grid-calculator">Lo Shu Grid Calculator</a> — missing numbers from date of birth.</li>
+    <li><a href="/blog/lucky-numbers-india">Lucky Numbers in India</a> — dates, prices, phones, and plates.</li>
+    <li><a href="/report">Full Destiny Report</a> — deeper mobile analysis inside the paid PDF.</li>
+    <li><a href="/link-to-us">Link or embed our free tools</a> on your site.</li>
+  </ul>
+</section>
+
+</main>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <div class="footer-brand"><span class="logo-moon">☽</span> NameAligned.com</div>
+        <p class="footer-tagline">Free Chaldean numerology analysis for everyone. Based on Cheiro's Book of Numbers.</p>
+      </div>
+      <div>
+        <div class="footer-col-title">Free Tools</div>
+        <ul class="footer-links">
+          <li><a href="/name-numerology-calculator">Name Numerology Calculator</a></li>
+          <li><a href="/mobile-number-numerology">Mobile Number Check</a></li>
+          <li><a href="/lo-shu-grid-calculator">Lo Shu Grid Calculator</a></li>
+          <li><a href="/love-compatibility-numerology">Relationship Compatibility</a></li>
+          <li><a href="/report">Full Destiny Report $2.50 / ₹249 · 50% off</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="footer-col-title">Guides</div>
+        <ul class="footer-links">
+          <li><a href="/blog/lucky-numbers-india">Lucky Numbers India</a></li>
+          <li><a href="/blog/moolank-meanings">Birth Number Meanings</a></li>
+          <li><a href="/blog/chaldean-numerology-guide">Chaldean Guide</a></li>
+          <li><a href="/resources/chaldean-letter-values">Letter Values Chart</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="footer-col-title">More</div>
+        <ul class="footer-links">
+          <li><a href="/blog">All Articles</a></li>
+          <li><a href="/about">About</a></li>
+          <li><a href="/link-to-us">Link to us</a></li>
+          <li><a href="/sitemap-pages">Site Map</a></li>
+          <li><a href="/privacy">Privacy</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 NameAligned.com · For entertainment &amp; self-reflection purposes</span>
+      <span>Made with <span style="color:#e8526b;">❤</span> in India</span>
+    </div>
+  </div>
+</footer>
+
+<script src="/assets/numerology.js" defer></script>
+<script src="/assets/mixpanel.js" defer></script>
+<script src="/assets/analytics.js" defer></script>
+<script src="/assets/aura-fab.js" defer></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  var DESC = {
+    1: 'Your mobile root number 1 (Sun) brings leadership energy and visibility to every call. Ideal for entrepreneurs and leaders.',
+    2: 'Mobile root 2 (Moon) is excellent for relationship-based professions, counsellors, caregivers and creative workers.',
+    3: 'Mobile root 3 (Jupiter) is one of the luckiest numbers for a mobile. Attracts opportunities, connections and good fortune.',
+    4: 'Mobile root 4 (Rahu) brings unconventional energy. Can attract unpredictable situations; works best for innovators.',
+    5: 'Mobile root 5 (Mercury) is outstanding for communicators, salespeople and anyone whose business runs on conversations.',
+    6: 'Mobile root 6 (Venus) attracts harmony, love and creative connections. Excellent for those in creative or social fields.',
+    7: 'Mobile root 7 (Ketu) brings spiritual depth and intuitive energy. Works well for researchers, healers and spiritual teachers.',
+    8: 'Mobile root 8 (Saturn) brings disciplined, serious energy. Good for business executives but can slow casual socialising.',
+    9: 'Mobile root 9 (Mars) brings courageous, action-oriented energy. Excellent for leaders, athletes and driven entrepreneurs.'
+  };
+
+  function normalizeMobile(raw) {
+    var digits = String(raw || '').replace(/\D/g, '');
+    if (digits.length === 12 && digits.slice(0, 2) === '91') digits = digits.slice(2);
+    if (digits.length === 11 && digits[0] === '0') digits = digits.slice(1);
+    return digits;
+  }
+
+  function reduceMobile(digits) {
+    var s = digits.split('').reduce(function (a, b) { return a + parseInt(b, 10); }, 0);
+    while (s > 9) {
+      s = String(s).split('').reduce(function (a, b) { return a + parseInt(b, 10); }, 0);
+    }
+    return s;
+  }
+
+  function breakdown(digits) {
+    var steps = [];
+    var sum = digits.split('').reduce(function (a, b) { return a + parseInt(b, 10); }, 0);
+    steps.push(digits.split('').join('+') + ' = ' + sum);
+    while (sum > 9) {
+      var str = String(sum);
+      var next = str.split('').reduce(function (a, b) { return a + parseInt(b, 10); }, 0);
+      steps.push(str.split('').join('+') + ' = ' + next);
+      sum = next;
+    }
+    return steps;
+  }
+
+  function formatMobile(digits) {
+    return digits.length === 10 ? digits.slice(0, 5) + ' ' + digits.slice(5) : digits;
+  }
+
+  function harmonyStatus(mRoot, moolank, bhagyank) {
+    var bc = COMPAT_PARTNERS[moolank] || { best: [], good: [], avoid: [] };
+    var dc = COMPAT_PARTNERS[bhagyank] || { best: [], good: [], avoid: [] };
+    var inBest = bc.best.indexOf(mRoot) >= 0 || dc.best.indexOf(mRoot) >= 0 || mRoot === moolank || mRoot === bhagyank;
+    var inAvoid = bc.avoid.indexOf(mRoot) >= 0 && dc.avoid.indexOf(mRoot) >= 0;
+    if (inBest) return 'aligned';
+    if (inAvoid) return 'misaligned';
+    return 'neutral';
+  }
+
+  function luckyEnds(moolank, bhagyank) {
+    var bc = COMPAT_PARTNERS[moolank] || { best: [], good: [] };
+    var dc = COMPAT_PARTNERS[bhagyank] || { best: [], good: [] };
+    var best = bc.best.filter(function (n) { return dc.best.indexOf(n) >= 0 || dc.good.indexOf(n) >= 0; });
+    if (!best.length) best = bc.best.concat(dc.best).filter(function (n, i, a) { return a.indexOf(n) === i; });
+    best.sort();
+    return best.length ? best : [moolank, bhagyank].filter(function (n, i, a) { return a.indexOf(n) === i; });
+  }
+
+  document.getElementById('mobForm').addEventListener('submit', function (ev) {
+    ev.preventDefault();
+    var digits = normalizeMobile(document.getElementById('mobPhone').value);
+    var out = document.getElementById('mobOut');
+    if (digits.length !== 10) {
+      out.className = 'show';
+      out.innerHTML = '<div class="mob-status misaligned"><div>◇</div><div><h3>Need a 10-digit mobile number</h3><p>Enter an Indian mobile without spaces. +91 and a leading 0 are removed automatically.</p></div></div>';
+      return;
+    }
+
+    var root = reduceMobile(digits);
+    var planet = getPlanet(root);
+    var steps = breakdown(digits);
+    var dob = document.getElementById('mobDob').value;
+    var html = '';
+
+    html += '<div class="mob-card"><div class="meta"><div class="kicker">Your mobile number</div><div class="num">' + formatMobile(digits) + '</div><div class="kicker">Reduction</div><div class="steps">' +
+      steps.map(function (s, i) { return (i ? '<span style="color:rgba(240,180,41,.7)">→ </span>' : '') + s; }).join('<br>') +
+      '</div></div><div class="mob-root"><div class="n">' + root + '</div><div class="p">' + planet + '</div></div></div>';
+
+    html += '<div class="mob-grid"><div class="mob-tile"><div class="lb">Mobile root</div><div class="v">' + root + ' · ' + planet + '</div><div class="s">Sum of all digits reduced to one digit</div></div>' +
+      '<div class="mob-tile"><div class="lb">Last digit</div><div class="v">' + digits[digits.length - 1] + '</div><div class="s">Often used when choosing a new SIM ending</div></div></div>';
+
+    html += '<div class="mob-status neutral"><div>✦</div><div><h3 style="color:inherit">What this root tends to bring</h3><p>' + DESC[root] + '</p></div></div>';
+
+    if (dob) {
+      var moolank = getBirthNum(dob);
+      var bhagyank = getDestinyNum(dob);
+      var status = harmonyStatus(root, moolank, bhagyank);
+      var labels = {
+        aligned: 'Well aligned with your birth numbers',
+        neutral: 'Moderately aligned',
+        misaligned: 'Different vibration — a more supportive number is available'
+      };
+      var ends = luckyEnds(moolank, bhagyank);
+      var last = parseInt(digits[digits.length - 1], 10);
+      var luckyLast = ends.indexOf(last) >= 0;
+
+      html += '<div class="mob-status ' + status + '"><div>' + (status === 'aligned' ? '✦' : status === 'neutral' ? '◈' : '◇') + '</div><div><h3 style="color:inherit">' + labels[status] + '</h3><p>Compared with Birth Number ' + moolank + ' (' + getPlanet(moolank) + ') and Life Path ' + bhagyank + ' (' + getPlanet(bhagyank) + ').</p></div></div>';
+
+      html += '<div class="mob-tile" style="margin-bottom:1rem"><div class="lb">Lucky endings for your chart</div><div style="margin:.45rem 0">' +
+        ends.map(function (n) { return '<span class="mob-pill">Ends in ' + n + '</span>'; }).join('') +
+        '</div><div class="s">Your last digit is ' + last + (luckyLast ? ' — already a lucky ending.' : '. When you next change SIMs, prefer one of the endings above.') + '</div></div>';
+    } else {
+      html += '<p class="mob-note">Add your date of birth above to check harmony with your Moolank and Bhagyank, plus lucky SIM endings.</p>';
+    }
+
+    html += '<p class="mob-note">Want the full chart with name alignment and remedies? Run the <a href="/analyzer">free analysis</a> or get the <a href="/report">Destiny Report</a>.</p>';
+
+    out.innerHTML = html;
+    out.className = 'show';
+    if (typeof gtag === 'function') gtag('event', 'mobile_number_checked', { root: root, has_dob: !!dob });
+  });
+});
+</script>
+</body></html>
