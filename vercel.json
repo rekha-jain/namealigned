@@ -3,6 +3,18 @@
   "trailingSlash": false,
 
   "redirects": [
+    {
+      "source": "/:path*",
+      "has": [{ "type": "host", "value": "namealigned.com" }],
+      "destination": "https://www.namealigned.com/:path*",
+      "permanent": true
+    },
+    { "source": "/marriage-numerology", "destination": "/marriage-numerology-calculator", "permanent": true },
+    { "source": "/marriage-compatibility", "destination": "/marriage-numerology-calculator", "permanent": true },
+    { "source": "/house-numerology", "destination": "/house-number-numerology", "permanent": true },
+    { "source": "/flat-number-numerology", "destination": "/house-number-numerology", "permanent": true },
+    { "source": "/master-numbers", "destination": "/blog/master-numbers-11-22-33", "permanent": true },
+
     { "source": "/share", "has": [{"type":"query","key":"m","value":"1"}], "destination": "/share/1", "permanent": false },
     { "source": "/share", "has": [{"type":"query","key":"m","value":"2"}], "destination": "/share/2", "permanent": false },
     { "source": "/share", "has": [{"type":"query","key":"m","value":"3"}], "destination": "/share/3", "permanent": false },
