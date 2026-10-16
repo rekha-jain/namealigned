@@ -15,7 +15,7 @@
 'use strict';
 
 import { getPaypalConfig, getAccessToken } from './_paypal.js';
-import { insertSupabaseRow, findLeadIdByEmail, findOrderByPaypalOrderId } from './_supabase.js';
+import { insertSupabaseRow, findLeadIdByEmail, findOrderByPaypalOrderId, markReportSent } from './_supabase.js';
 import { sendBrevoEmail as deliverViaBrevo } from './_brevo.js';
 import { mpTrack } from './_mixpanel.js';
 import { normaliseIndianMobile } from './_phone.js';
@@ -65,7 +65,7 @@ async function saveOrderToSupabase({ paypalOrderId, paypalCaptureId, name, email
   }, { duplicateOk: true });
 }
 
-async function sendDeliveryEmail({ paypalOrderId, name, email, dob, mobile, birthNum, destNum, nameNum }) {
+export async function sendDeliveryEmail({ paypalOrderId, name, email, dob, mobile, birthNum, destNum, nameNum }) {
   const reportUrl =
     `https://namealigned.com/generate-report` +
     `?paymentId=${encodeURIComponent('PP-' + paypalOrderId)}` +
@@ -105,6 +105,7 @@ Questions? <a href="mailto:hello@namealigned.com" style="color:#0e7490;">hello@n
     tags: ['report-delivery', 'paypal'],
   });
   if (!result.ok) console.error('[paypal/brevo] email failed:', result.error);
+  return result.ok;
 }
 
 export default async function handler(req, res) {
@@ -147,6 +148,7 @@ export default async function handler(req, res) {
     // 2. Save to Supabase
     // 'inserted' | 'duplicate' | 'failed'
     let orderSaveStatus = 'failed';
+    let savedOrderId = null;
     try {
       const saved = await saveOrderToSupabase({
         paypalOrderId:   orderID,
@@ -162,6 +164,7 @@ export default async function handler(req, res) {
         currency: captureCurrency,
       });
       orderSaveStatus = saved !== null ? 'inserted' : 'duplicate';
+      savedOrderId = saved?.id || null;
       console.log(`[orders/paypal] saved order=${orderID} email=${cleanEmail} status=${orderSaveStatus}`);
     } catch (dbErr) {
       // Payment is already captured at PayPal — never fail the user response
@@ -198,7 +201,7 @@ export default async function handler(req, res) {
     // If DB failed after PayPal capture, still email — buyer already paid.
     if (orderSaveStatus !== 'duplicate') {
       try {
-        await sendDeliveryEmail({
+        const sent = await sendDeliveryEmail({
           paypalOrderId: orderID,
           name:     cleanName,
           email:    cleanEmail,
@@ -206,6 +209,7 @@ export default async function handler(req, res) {
           mobile:   cleanMobile || '',
           birthNum, destNum, nameNum,
         });
+        if (sent) await markReportSent(savedOrderId);
       } catch (emailErr) {
         console.error('[paypal/brevo] unexpected error:', emailErr);
       }
