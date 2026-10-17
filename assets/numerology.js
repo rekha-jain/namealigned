@@ -368,9 +368,13 @@ function getAlignmentTier(pct){
 
 // Nav toggle (shared)
 function initNav(){
+  if(window.naInitNav) return window.naInitNav();
   const ham=document.getElementById('navHamburger');
   const mob=document.getElementById('navMobile');
-  if(ham&&mob) ham.addEventListener('click',()=>mob.classList.toggle('open'));
+  if(ham&&mob&&!ham.dataset.navBound){
+    ham.dataset.navBound='1';
+    ham.addEventListener('click',()=>mob.classList.toggle('open'));
+  }
 }
 document.addEventListener('DOMContentLoaded',initNav);
 
