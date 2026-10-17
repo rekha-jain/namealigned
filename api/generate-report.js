@@ -19,10 +19,11 @@ import { insertSupabaseRow, findLeadIdByEmail, findOrderByRazorpayPaymentId } fr
 import { sendBrevoEmail as deliverViaBrevo } from './_brevo.js';
 import { mpTrack } from './_mixpanel.js';
 import { normaliseIndianMobile } from './_phone.js';
+import { handleReportData } from './_reportData.js';
 
 const CORS_HEADERS = {
   'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Methods': 'POST, OPTIONS',
+  'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
   'Access-Control-Allow-Headers': 'Content-Type',
 };
 
@@ -331,6 +332,9 @@ export default async function handler(req, res) {
   if (req.method === 'OPTIONS') {
     return res.status(204).end();
   }
+
+  // GET: load a paid order for the report page (see _reportData.js)
+  if (req.method === 'GET') return handleReportData(req, res);
 
   if (req.method !== 'POST') {
     return sendJSON(res, 405, { success: false, error: 'Method not allowed' });
