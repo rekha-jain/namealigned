@@ -483,10 +483,17 @@ function generateAlignedCorrectedNames(fullName, moolank, destNum){
   // entirely — there's nothing meaningful to improve. We use the
   // new compatPctBreakdown so the threshold is internally
   // consistent with the breakdown the user sees on the page.
+  // Score the current name on the SAME scale as candidates: name
+  // number === moolank is full resonance (100%). Without this, a name
+  // already matching the Birth Number scored ~84% and got "improved"
+  // into a different, weaker number.
   var currentNameNum = reduce(total);
-  var currentScore = compatPctBreakdown(currentNameNum, total, moolank, destNum).overall;
+  var currentScore = (currentNameNum === moolank)
+    ? 100
+    : compatPctBreakdown(currentNameNum, total, moolank, destNum).overall;
   if (currentScore >= 95) {
-    return {corrections:[],delta:0,target:total,currentSum:total,alreadyAligned:true};
+    return {corrections:[],delta:0,target:total,currentSum:total,alreadyAligned:true,
+            matchesMoolank: currentNameNum === moolank};
   }
 
   // Phonetic operation pool, ordered by naturalness for Indian
@@ -541,6 +548,7 @@ function generateAlignedCorrectedNames(fullName, moolank, destNum){
   var lower=firstName.toLowerCase();
   var seen=new Set([lower]);
   var pool=[];
+  var maxGrow=2;
 
   // True when variant is the base with exactly one existing letter
   // doubled (Purnima → Purrnima / Purnimaa). Highest adoptability.
@@ -555,12 +563,36 @@ function generateAlignedCorrectedNames(fullName, moolank, destNum){
     return false;
   }
 
+  // How far a candidate drifts from the original spelling. Users
+  // adopt names that look and sound like their own: doubling a letter
+  // they already have is cheapest, adding letters at the end is next,
+  // and inserting a new letter mid-name (Noemie → Noemyie) costs most.
+  function levenshtein(a, b){
+    var prev=[], cur=[];
+    for(var j=0;j<=b.length;j++) prev[j]=j;
+    for(var i=1;i<=a.length;i++){
+      cur=[i];
+      for(var k=1;k<=b.length;k++){
+        cur[k]=Math.min(prev[k]+1, cur[k-1]+1, prev[k-1]+(a[i-1]===b[k-1]?0:1));
+      }
+      prev=cur;
+    }
+    return prev[b.length];
+  }
+  function editCost(base, variant){
+    var d=levenshtein(base, variant);
+    var cost=d*2;
+    if(isSameSoundDouble(base, variant)) cost-=1;
+    else if(variant.indexOf(base)!==0) cost+=1;   // change is not a simple ending
+    return cost;
+  }
+
   function consider(variant){
     if(!variant) return;
     var lc=variant.toLowerCase();
     if(seen.has(lc)) return;
     // Keep changes small — users adopt +1–2 letters, not long stacks
-    if(lc.length > lower.length + 2) return;
+    if(lc.length > lower.length + maxGrow) return;
     // Block stacked soft endings (Priyayaya, Nehaiaia)
     if(/(ya){2,}|(ia){2,}|yaya|iaia|aayaa/.test(lc)) return;
     var capped=lc.charAt(0).toUpperCase()+lc.slice(1);
@@ -571,10 +603,12 @@ function generateAlignedCorrectedNames(fullName, moolank, destNum){
     // Otherwise use the same compatPct scorer used for the user's
     // current name so the numbers are directly comparable.
     var pct = (reduced===moolank) ? 100 : compatPct(reduced, nt, moolank, destNum);
-    if(pct < 70) return;
+    if(pct < 70 || pct <= currentScore) return;   // never suggest a downgrade
     // Naturalness gate (phase 2). Reject candidates that look or
     // sound awkward (Aaravhl, Mohanhk, Jiyaaaa-class). Still keep
     // some headroom so we always have a pool to pick from.
+    var cost = editCost(lower, lc);
+    if(cost > 7) return;                          // more than ~3 letters changed
     var nat = naturalnessScore(capped);
     if(isSameSoundDouble(lower, lc)) nat = Math.min(100, nat + 12);
     if(nat < 55) return;
@@ -589,6 +623,7 @@ function generateAlignedCorrectedNames(fullName, moolank, destNum){
       alignmentPct: pct,
       naturalness: nat,
       sameSound: isSameSoundDouble(lower, lc),
+      editCost: cost,
       // Combined ranking: alignment matters most (paid promise) but
       // a beautiful name beats a slightly higher-aligned ugly one.
       // Same-sound doubles get a further nudge so Purrnima beats Purnimak.
@@ -624,35 +659,57 @@ function generateAlignedCorrectedNames(fullName, moolank, destNum){
     }
   }
 
-  // Rank: alignment first (paid promise), then same-sound doubles,
-  // then combinedScore, then shorter name.
-  pool.sort(function(a,b){
+  // Pass 4, same-sound letter swaps (Priya → Preeya, Kavya → Kawya,
+  // Sunil → Sooneel). Only reached when the additive passes cannot
+  // produce 3 options that beat the current score, typically when
+  // the sum needed to reach the Birth Number cannot be built from
+  // soft endings alone.
+  if(pool.length < 3){
+    var SWAPS=[['i','ee'],['ee','i'],['y','i'],['i','y'],['u','oo'],['oo','u'],['o','oo'],
+               ['s','z'],['z','s'],['c','k'],['k','c'],['ck','k'],['k','kh'],['v','w'],['w','v'],
+               ['f','ph'],['ph','f'],['j','jh'],['t','th'],['d','dh'],['g','gh'],['b','bh'],
+               ['a','aa'],['e','ae'],['sh','shh'],['x','ks']];
+    var swapped=[];
+    SWAPS.forEach(function(sw){
+      var from=sw[0], to=sw[1], idx=lower.indexOf(from);
+      while(idx>=0){
+        swapped.push(lower.slice(0,idx)+to+lower.slice(idx+from.length));
+        idx=lower.indexOf(from, idx+1);
+      }
+    });
+    maxGrow=3;
+    swapped.forEach(function(sv){
+      consider(sv);
+      for(var si=0;si<OPS.length;si++) consider(OPS[si](sv));
+    });
+    // Two swaps (Priya → Preeyaa-class) as a final soft attempt
+    if(pool.length < 3){
+      swapped.forEach(function(sv){
+        SWAPS.forEach(function(sw){
+          var idx=sv.indexOf(sw[0]);
+          if(idx>=0) consider(sv.slice(0,idx)+sw[1]+sv.slice(idx+sw[0].length));
+        });
+      });
+    }
+    maxGrow=2;
+  }
+
+  // Rank: fully aligned (100%) first, then the smallest spelling change
+  // (closest to the original sound), then score, then naturalness.
+  function rankCandidates(a,b){
+    var af=a.alignmentPct>=100, bf=b.alignmentPct>=100;
+    if(af !== bf) return bf ? 1 : -1;
+    if(a.editCost !== b.editCost) return a.editCost - b.editCost;
     if(b.alignmentPct !== a.alignmentPct) return b.alignmentPct - a.alignmentPct;
-    if(!!b.sameSound !== !!a.sameSound) return b.sameSound ? 1 : -1;
     if(b.combinedScore !== a.combinedScore) return b.combinedScore - a.combinedScore;
     return a.firstName.length - b.firstName.length;
-  });
-
-  // Prefer a diverse top-3: if we already picked a same-sound double at
-  // 100%, still surface soft endings (…ya / …aa) as option 2/3 rather
-  // than three near-identical doubles that miss perfect alignment.
-  function pickTop3(list){
-    var out = [], seenRoots = new Set();
-    // Pass A: perfect alignment first
-    for(var i=0;i<list.length && out.length<3;i++){
-      if(list[i].alignmentPct < 100) continue;
-      var root = list[i].firstName.toLowerCase().replace(/(.)\1+/g,'$1');
-      if(out.length>0 && seenRoots.has(root) && list[i].sameSound) continue;
-      seenRoots.add(root);
-      out.push(list[i]);
-    }
-    // Pass B: fill remaining with best remaining
-    for(var j=0;j<list.length && out.length<3;j++){
-      if(out.indexOf(list[j])>=0) continue;
-      out.push(list[j]);
-    }
-    return out;
   }
+
+  pool.sort(rankCandidates);
+
+  // Smallest same-sound changes win; the ranking already puts letter
+  // doublings and simple endings ahead of mid-name insertions.
+  function pickTop3(list){ return list.slice(0,3); }
 
   // If the soft pool left fewer than 3 candidates, fall back to hard
   // consonant / stretch ops so we still meet the "always 3 options"
@@ -668,7 +725,7 @@ function generateAlignedCorrectedNames(fullName, moolank, destNum){
       var nt2 = nf2 + restSum;
       var rd2 = reduce(nt2);
       var pc2 = (rd2 === moolank) ? 100 : compatPct(rd2, nt2, moolank, destNum);
-      if (pc2 < 70) continue;
+      if (pc2 < 70 || pc2 <= currentScore) continue;
       seen.add(lc2);
       pool.push({
         firstName: cap2,
@@ -680,17 +737,13 @@ function generateAlignedCorrectedNames(fullName, moolank, destNum){
         alignmentPct: pc2,
         naturalness: naturalnessScore(cap2),
         sameSound: false,
+        editCost: editCost(lower, lc2),
         combinedScore: Math.round(pc2*0.55 + naturalnessScore(cap2)*0.45)
       });
     }
-    pool.sort(function(a,b){
-      if(b.alignmentPct !== a.alignmentPct) return b.alignmentPct - a.alignmentPct;
-      if(!!b.sameSound !== !!a.sameSound) return b.sameSound ? 1 : -1;
-      if(b.combinedScore !== a.combinedScore) return b.combinedScore - a.combinedScore;
-      return a.firstName.length - b.firstName.length;
-    });
+    pool.sort(rankCandidates);
   }
 
   var top3 = pickTop3(pool);
-  return {corrections: top3, delta: target-total, target: target, currentSum: total};
+  return {corrections: top3, delta: target-total, target: target, currentSum: total, currentScore: currentScore};
 }
