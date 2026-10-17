@@ -669,7 +669,7 @@ hr.divider{display:none;}
   <div class="rpt-eyebrow">Chaldean Numerology · Personal Destiny Report</div>
   <h1>Your Complete Numerology Report<br><em id="heroName"></em></h1>
   <div class="rpt-line"></div>
-  <p class="rpt-hero-meta">Generated on <span id="heroDate"></span> &nbsp;·&nbsp; Payment ID: <span id="heroPayId"></span></p>
+  <p class="rpt-hero-meta">Generated on <span id="heroDate"></span></p>
 </div>
 
 <!-- ── BODY ─────────────────────────────────────────────────── -->
@@ -1233,7 +1233,6 @@ hr.divider{display:none;}
     var displayName = name || 'Your';
     qs('heroName').textContent = displayName;
     qs('heroDate').textContent = TODAY.toLocaleDateString('en-IN',{day:'numeric',month:'long',year:'numeric'});
-    qs('heroPayId').textContent = paymentId;
     qs('emailConfirm').textContent = email || 'your registered email';
 
     buildChaldeanSummary();   // top-of-report authority statement
