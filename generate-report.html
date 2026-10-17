@@ -28,8 +28,8 @@
 <!-- Private user-specific page, exclude from search indexing -->
 <meta name="robots" content="noindex, nofollow, noarchive, nosnippet"/>
 <meta name="googlebot" content="noindex, nofollow"/>
-<link rel="stylesheet" href="assets/style.css"/>
-<link rel="stylesheet" href="assets/theme-cosmic-light.css"/>
+<link rel="stylesheet" href="assets/style.css?v=20261017"/>
+<link rel="stylesheet" href="assets/theme-cosmic-light.css?v=20261017"/>
 <style>
 /* ── LOADER OVERLAY ─────────────────────────────────────────── */
 #loaderOverlay{
@@ -590,8 +590,8 @@ hr.divider{display:none;}
 @media (max-width:560px){ .tt-pop{min-width:200px;max-width:240px;font-size:11px;} }
 </style>
 <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
-<script src="/assets/mixpanel.js" defer></script>
-<script src="/assets/analytics.js" defer></script>
+<script src="/assets/mixpanel.js?v=20261017" defer></script>
+<script src="/assets/analytics.js?v=20261017" defer></script>
 </head>
 <body>
 
@@ -1023,7 +1023,7 @@ hr.divider{display:none;}
 
 <!-- Must NOT use defer: the inline report builder below calls getNameNum/getBirthNum
      immediately. Deferring numerology.js races the IIFE and leaves the loader stuck. -->
-<script src="assets/numerology.js"></script>
+<script src="assets/numerology.js?v=20261017"></script>
 <script>
 (function(){
   'use strict';
