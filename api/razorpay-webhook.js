@@ -20,7 +20,7 @@
 'use strict';
 
 import crypto from 'crypto';
-import { insertSupabaseRow, findLeadIdByEmail, findOrderByRazorpayPaymentId } from './_supabase.js';
+import { insertSupabaseRow, findLeadIdByEmail, findOrderByRazorpayPaymentId, markReportSent } from './_supabase.js';
 import { sendBrevoEmail as deliverViaBrevo } from './_brevo.js';
 import { mpTrack } from './_mixpanel.js';
 import { normaliseIndianMobile } from './_phone.js';
@@ -146,6 +146,7 @@ async function sendDeliveryEmail({ paymentId, name, email, dob, mobile }) {
   });
 
   if (!result.ok) console.error('[razorpay/brevo] webhook email failed:', result.error);
+  return result.ok;
 }
 
 // ---------------------------------------------------------------------------
@@ -238,7 +239,8 @@ export default async function handler(req, res) {
   // browser /api/generate-report path already emailed (or will).
   if (savedRow !== null && email) {
     try {
-      await sendDeliveryEmail({ paymentId, name, email, dob, mobile });
+      const sent = await sendDeliveryEmail({ paymentId, name, email, dob, mobile });
+      if (sent) await markReportSent(savedRow?.id);
     } catch (err) {
       console.error('Webhook email error:', err);
     }

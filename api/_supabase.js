@@ -97,3 +97,21 @@ export async function findOrderByPaypalOrderId(paypalOrderId) {
   const rows = await res.json();
   return Array.isArray(rows) && rows[0] ? rows[0] : null;
 }
+
+// Stamp report_sent_at once Brevo accepts the delivery email, so delivery
+// can be audited from the orders table instead of expired Vercel logs.
+export async function markReportSent(orderId) {
+  if (!orderId) return;
+  const { url, key } = getSupabaseConfig();
+  const res = await fetch(`${url}/rest/v1/orders?id=eq.${encodeURIComponent(orderId)}`, {
+    method: 'PATCH',
+    headers: buildSupabaseHeaders(key, {
+      'Content-Type': 'application/json',
+      Prefer: 'return=minimal',
+    }),
+    body: JSON.stringify({ report_sent_at: new Date().toISOString() }),
+  });
+  if (!res.ok) {
+    console.error(`[supabase] markReportSent failed id=${orderId} status=${res.status} body=${await res.text()}`);
+  }
+}

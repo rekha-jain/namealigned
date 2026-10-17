@@ -15,7 +15,7 @@
 'use strict';
 
 import crypto from 'crypto';
-import { insertSupabaseRow, findLeadIdByEmail, findOrderByRazorpayPaymentId } from './_supabase.js';
+import { insertSupabaseRow, findLeadIdByEmail, findOrderByRazorpayPaymentId, markReportSent } from './_supabase.js';
 import { sendBrevoEmail as deliverViaBrevo } from './_brevo.js';
 import { mpTrack } from './_mixpanel.js';
 import { normaliseIndianMobile } from './_phone.js';
@@ -305,8 +305,11 @@ async function sendReportEmail({ paymentId, name, email, dob, mobile, birthNum, 
     tags: ['report-delivery'],
   });
 
-  if (!result.ok) return null;
-  return result.data;
+  if (!result.ok) {
+    console.error('[brevo] report email failed:', result.error);
+    return null;
+  }
+  return result.data || true;
 }
 
 // ---------------------------------------------------------------------------
@@ -427,6 +430,7 @@ export default async function handler(req, res) {
 
     let orderSaved = false;
     let orderInserted = false;
+    let savedOrderId = null;
 
     // --- Save order to Supabase (LOUD, surface DB errors instead of hiding) ---
     try {
@@ -443,6 +447,7 @@ export default async function handler(req, res) {
       // savedOrder===null only on duplicate (409); both cases mean a row exists.
       orderSaved = true;
       orderInserted = savedOrder !== null;
+      savedOrderId = savedOrder?.id || null;
       console.log(
         `[orders] saved payment=${cleanPaymentId} email=${cleanEmail} inserted=${orderInserted}`
       );
@@ -485,7 +490,7 @@ export default async function handler(req, res) {
     // hit this endpoint; duplicates must not re-email the buyer.
     if (orderInserted) {
       try {
-        await sendReportEmail({
+        const sent = await sendReportEmail({
           paymentId: cleanPaymentId,
           name: cleanName,
           email: cleanEmail,
@@ -495,6 +500,7 @@ export default async function handler(req, res) {
           destNum,
           nameNum,
         });
+        if (sent) await markReportSent(savedOrderId);
       } catch (emailErr) {
         console.error('Brevo unexpected error in generate-report:', emailErr);
       }
