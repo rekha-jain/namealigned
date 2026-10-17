@@ -1111,7 +1111,10 @@ function startReport(RD){
   var rawName    = RD.name||'';
   var dob        = RD.dob||'';
   var email      = RD.email||'';
-  var pBirthNum  = 0, pDestNum = 0, pNameNum = 0, pPct = 0;
+  // SNAP: what the buyer saw on first open (date, score, suggestions),
+  // frozen in Supabase so later logic changes never alter their report.
+  var SNAP       = RD.snapshot || null;
+  var pBirthNum  = 0, pDestNum = 0, pNameNum = 0, pPct = SNAP ? SNAP.pct : 0;
   var mobile     = (RD.mobile||'').replace(/\D/g,'').slice(-10);
 
   // Validate session
@@ -1134,7 +1137,7 @@ function startReport(RD){
   var destPlanet  = getPlanet(destNum);
   var namePlanet  = getPlanet(nameNum);
 
-  var TODAY = new Date();
+  var TODAY = (SNAP && SNAP.generatedAt) ? new Date(SNAP.generatedAt) : new Date();
   var CURRENT_YEAR = TODAY.getFullYear();
 
   // ── LOADER SEQUENCE ──────────────────────────────────────────
@@ -1233,6 +1236,22 @@ function startReport(RD){
     window.addEventListener('orientationchange', function(){ setTimeout(safeBuildShareCard, 250); });
     buildShareButtons();
     window._reportReady = true;
+    saveSnapshot();
+  }
+
+  // First open of a paid report: freeze date, score and name suggestions.
+  var builtCorrResult = null;
+  function saveSnapshot(){
+    if(SNAP || !builtCorrResult || !paymentId || paymentId.indexOf('STAGING-') === 0) return;
+    fetch('/api/generate-report', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        action: 'snapshot',
+        paymentId: paymentId,
+        snapshot: { generatedAt: TODAY.toISOString(), pct: pct, corrResult: builtCorrResult }
+      })
+    }).catch(function(){});
   }
 
   // ── 8c. SHARE-YOUR-CARD (PDF + screen) ────────────────────────
@@ -2618,7 +2637,8 @@ function startReport(RD){
     var cdEntry = CD[nameRaw];
 
     // ── CORRECTION ENGINE ─────────────────────────────────────────
-    var corrResult = generateAlignedCorrectedNames(name, birthNum, destNum);
+    var corrResult = (SNAP && SNAP.corrResult) || generateAlignedCorrectedNames(name, birthNum, destNum);
+    builtCorrResult = corrResult;
     var corrections = corrResult.corrections;
 
     // ── CURRENT NAME CARD ─────────────────────────────────────────

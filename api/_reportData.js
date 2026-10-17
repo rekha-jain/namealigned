@@ -16,6 +16,12 @@
 import { getSupabaseConfig } from './_supabase.js';
 import { buildSupabaseHeaders } from './_supabaseHeaders.js';
 
+function orderFilter(paymentId) {
+  return paymentId.startsWith('PP-')
+    ? `paypal_order_id=eq.${encodeURIComponent(paymentId.slice(3))}`
+    : `razorpay_payment_id=eq.${encodeURIComponent(paymentId)}`;
+}
+
 export async function handleReportData(req, res) {
   res.setHeader('Cache-Control', 'no-store');
 
@@ -24,14 +30,12 @@ export async function handleReportData(req, res) {
     return res.status(400).json({ success: false, error: 'paymentId is required' });
   }
 
-  const filter = paymentId.startsWith('PP-')
-    ? `paypal_order_id=eq.${encodeURIComponent(paymentId.slice(3))}`
-    : `razorpay_payment_id=eq.${encodeURIComponent(paymentId)}`;
+  const filter = orderFilter(paymentId);
 
   try {
     const { url, key } = getSupabaseConfig();
     const r = await fetch(
-      `${url}/rest/v1/orders?${filter}&payment_status=eq.paid&select=name,dob,email,phone&order=created_at.asc&limit=1`,
+      `${url}/rest/v1/orders?${filter}&payment_status=eq.paid&select=name,dob,email,phone,report_snapshot&order=created_at.asc&limit=1`,
       { headers: buildSupabaseHeaders(key) }
     );
     if (!r.ok) {
@@ -49,9 +53,54 @@ export async function handleReportData(req, res) {
       dob:    order.dob || '',
       email:  order.email || '',
       mobile: order.phone || '',
+      snapshot: order.report_snapshot || null,
     });
   } catch (err) {
     console.error('[report-data] error:', err);
+    return res.status(500).json({ success: false, error: 'Internal error' });
+  }
+}
+
+/**
+ * POST /api/generate-report { action:'snapshot', paymentId, snapshot }
+ *
+ * Freezes what the buyer saw the first time the report opened (date,
+ * score, name suggestions) so later logic changes never alter a report
+ * a customer already has. Only writes when no snapshot exists yet.
+ */
+export async function handleSnapshotSave(req, res) {
+  const { paymentId: rawId, snapshot } = req.body || {};
+  const paymentId = String(rawId || '').trim();
+  if (!paymentId || paymentId.length > 300) {
+    return res.status(400).json({ success: false, error: 'paymentId is required' });
+  }
+
+  const corr = snapshot && snapshot.corrResult;
+  const valid =
+    snapshot && typeof snapshot === 'object' &&
+    !isNaN(Date.parse(snapshot.generatedAt)) &&
+    Number.isFinite(snapshot.pct) && snapshot.pct >= 0 && snapshot.pct <= 100 &&
+    corr && Array.isArray(corr.corrections) && corr.corrections.length <= 3 &&
+    JSON.stringify(snapshot).length < 20000;
+  if (!valid) return res.status(400).json({ success: false, error: 'Invalid snapshot' });
+
+  try {
+    const { url, key } = getSupabaseConfig();
+    const r = await fetch(
+      `${url}/rest/v1/orders?${orderFilter(paymentId)}&payment_status=eq.paid&report_snapshot=is.null`,
+      {
+        method: 'PATCH',
+        headers: buildSupabaseHeaders(key, { 'Content-Type': 'application/json', Prefer: 'return=minimal' }),
+        body: JSON.stringify({ report_snapshot: snapshot }),
+      }
+    );
+    if (!r.ok) {
+      console.error(`[report-snapshot] save failed status=${r.status} body=${await r.text()}`);
+      return res.status(502).json({ success: false, error: 'Save failed' });
+    }
+    return res.status(200).json({ success: true });
+  } catch (err) {
+    console.error('[report-snapshot] error:', err);
     return res.status(500).json({ success: false, error: 'Internal error' });
   }
 }
