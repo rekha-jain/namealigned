@@ -91,11 +91,7 @@ function escapeHtml(str) {
 async function sendDeliveryEmail({ paymentId, name, email, dob, mobile }) {
   const reportUrl =
     `https://namealigned.com/generate-report` +
-    `?paymentId=${encodeURIComponent(paymentId)}` +
-    `&name=${encodeURIComponent(name || '')}` +
-    `&dob=${encodeURIComponent(dob || '')}` +
-    `&email=${encodeURIComponent(email || '')}` +
-    (mobile ? `&mobile=${encodeURIComponent(mobile)}` : '');
+    `?paymentId=${encodeURIComponent(paymentId)}`;
 
   const htmlContent = `
 <!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"/></head>

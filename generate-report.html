@@ -1025,7 +1025,7 @@ hr.divider{display:none;}
      immediately. Deferring numerology.js races the IIFE and leaves the loader stuck. -->
 <script src="assets/numerology.js?v=20261017"></script>
 <script>
-(function(){
+function startReport(RD){
   'use strict';
 
   // ── HELPERS ───────────────────────────────────────────────────
@@ -1103,19 +1103,16 @@ hr.divider{display:none;}
     hydrateStaticTooltips();
   }
 
-  // ── PARSE URL PARAMS ──────────────────────────────────────────
-  var params=new URLSearchParams(window.location.search);
-  var paymentId  = params.get('paymentId')||'';
-  var orderId    = params.get('orderId')||'';
-  var signature  = params.get('signature')||'';
-  var rawName    = params.get('name')||'';
-  var dob        = params.get('dob')||'';
-  var email      = params.get('email')||'';
-  var pBirthNum  = parseInt(params.get('birthNum'))||0;
-  var pDestNum   = parseInt(params.get('destNum'))||0;
-  var pNameNum   = parseInt(params.get('nameNum'))||0;
-  var pPct       = parseInt(params.get('pct'))||0;
-  var mobile     = (params.get('mobile')||'').replace(/\D/g,'').slice(-10);
+  // ── ORDER DATA ────────────────────────────────────────────────
+  // RD comes from /api/report-data (the paid order in Supabase), never
+  // from the link, so editing name/dob in the URL cannot change the report.
+  RD = RD || {};
+  var paymentId  = RD.paymentId||'';
+  var rawName    = RD.name||'';
+  var dob        = RD.dob||'';
+  var email      = RD.email||'';
+  var pBirthNum  = 0, pDestNum = 0, pNameNum = 0, pPct = 0;
+  var mobile     = (RD.mobile||'').replace(/\D/g,'').slice(-10);
 
   // Validate session
   if(!paymentId){
@@ -1125,7 +1122,7 @@ hr.divider{display:none;}
   }
 
   // Compute missing values from JS engine
-  var name = decodeURIComponent(rawName);
+  var name = rawName;
   var birthNum = pBirthNum || (dob ? getBirthNum(dob) : 1);
   var destNum  = pDestNum  || (dob ? getDestinyNum(dob) : 1);
   var nameInfo = getNameNum(name);
@@ -1180,37 +1177,6 @@ hr.divider{display:none;}
       },600);
     }
   }, interval);
-
-  // ── SAVE ORDER + SEND EMAIL (fire-and-forget backup) ─────────
-  // Primary save+email happens from report.html after Razorpay success.
-  // This retry covers cases where that call failed. The API only emails
-  // on a fresh order insert, so this will not send a second email.
-  // Also gate client-side: one attempt per paymentId per browser tab,
-  // so reloads don't hammer the API while the unique-constraint fix rolls out.
-  (function saveAndEmail(){
-    if(!email || !paymentId) return;
-    try {
-      var guardKey = 'na_order_posted_' + paymentId;
-      if(sessionStorage.getItem(guardKey)) return;
-      sessionStorage.setItem(guardKey, '1');
-    } catch(e){ /* private mode — still call API; server dedupes */ }
-    fetch('/api/generate-report', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        paymentId: paymentId,
-        orderId:   orderId   || undefined,
-        signature: signature || undefined,
-        name:      decodeURIComponent(rawName),
-        dob:       dob,
-        email:     email,
-        mobile:    mobile || undefined,
-        birthNum:  birthNum,
-        destNum:   destNum,
-        nameNum:   nameNum,
-      })
-    }).catch(function(e){ console.warn('generate-report API call failed:', e); });
-  })();
 
   // ── PRINT HELPER (waits for report to be fully built) ─────────
   window._reportReady = false;
@@ -3063,6 +3029,54 @@ hr.divider{display:none;}
   var mob2=document.getElementById('navMobileInvalid');
   if(ham2&&mob2) ham2.addEventListener('click',function(){mob2.classList.toggle('open');});
 
+}
+
+// ── VERIFY ORDER, THEN BUILD ────────────────────────────────────
+// The link only needs ?paymentId=. The report is built from the paid
+// order stored in Supabase; an unknown id shows the invalid-link screen.
+(function(){
+  var params = new URLSearchParams(window.location.search);
+  var paymentId = params.get('paymentId') || '';
+
+  function invalid(){ startReport(null); }
+  function fetchOrder(){
+    return fetch('/api/report-data?paymentId=' + encodeURIComponent(paymentId), { cache: 'no-store' })
+      .then(function(r){ return r.ok ? r.json() : null; })
+      .catch(function(){ return null; });
+  }
+
+  if(!paymentId) return invalid();
+
+  // Internal staging tests (staging-report.html) only, never on the live domain.
+  if(paymentId.indexOf('STAGING-') === 0 && !/(^|\.)namealigned\.com$/.test(window.location.hostname)){
+    return startReport({ paymentId: paymentId, name: params.get('name')||'', dob: params.get('dob')||'',
+                         email: '', mobile: params.get('mobile')||'' });
+  }
+
+  fetchOrder().then(function(order){
+    if(order && order.success) return startReport(order);
+
+    // Just paid via Razorpay but the order save before redirect failed:
+    // the server verifies the payment with Razorpay, saves the order and
+    // emails the buyer, then we load it from the database as usual.
+    var orderId = params.get('orderId') || '', signature = params.get('signature') || '';
+    if(paymentId.indexOf('pay_') !== 0 || !params.get('email')) return invalid();
+    fetch('/api/generate-report', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        paymentId: paymentId,
+        orderId:   orderId   || undefined,
+        signature: signature || undefined,
+        name:      params.get('name') || '',
+        dob:       params.get('dob') || '',
+        email:     params.get('email') || '',
+        mobile:    params.get('mobile') || undefined,
+      })
+    }).catch(function(){})
+      .then(fetchOrder)
+      .then(function(o){ return (o && o.success) ? startReport(o) : invalid(); });
+  });
 })();
 </script>
 </body>
