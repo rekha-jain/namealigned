@@ -164,6 +164,7 @@ strong{font-weight:600}
   letter-spacing:.06em;color:var(--text2);
   text-transform:uppercase;font-weight:500;
   transition:color .2s;
+  white-space:nowrap;
 }
 .nav-links a:hover{color:var(--gold)}
 .nav-cta{
@@ -191,6 +192,11 @@ strong{font-weight:600}
 }
 .nav-mobile a{font-size:14px;color:var(--text2);padding:.4rem 0;border-bottom:1px solid var(--border)}
 .nav-mobile.open{display:flex}
+/* Keep a gap after the logo, tighten the menu before it runs out of room, then switch
+   to the hamburger while there is still space for the logo. */
+.nav-inner{gap:1.5rem}
+@media(max-width:1320px){.nav-links{gap:1.1rem}.nav-links a{font-size:12px;letter-spacing:.04em}.nav-cta{padding:7px 14px}}
+@media(max-width:960px){.nav-inner:has(.nav-hamburger) .nav-links{display:none}.nav-hamburger{display:flex}.nav-links{gap:.8rem}}
 @media(max-width:700px){.nav-links{display:none}.nav-hamburger{display:flex}}
 
 /* ── BUTTONS ─────────────────────────────────────────────────
