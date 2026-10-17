@@ -50,10 +50,11 @@
 <link rel="stylesheet" href="assets/style.css?v=20261017">
 <link rel="stylesheet" href="assets/theme-cosmic-light.css?v=20261017">
 <style>
-.report-hero{background:linear-gradient(160deg,#1a1340 0%,#2a1a5c 100%);color:#f0ece0;padding:4rem 1.5rem 3rem;text-align:center;position:relative;overflow:hidden}
+.report-hero{background:linear-gradient(160deg,#1a1340 0%,#2a1a5c 100%);color:#f0ece0;padding:2.5rem 1.5rem 2rem;text-align:center;position:relative;overflow:hidden}
 .report-hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 0%,rgba(240,180,41,.2) 0%,transparent 65%)}
 .report-grid{display:grid;grid-template-columns:1fr 380px;gap:2.5rem;align-items:start}
-@media(max-width:900px){.report-grid{grid-template-columns:1fr;gap:1.5rem}.order-card{position:static!important}}
+@media(max-width:900px){.report-grid{grid-template-columns:1fr;gap:1.5rem}.report-grid>div:last-child{order:-1}.order-card{position:static!important}}
+.prefill-note{display:none;font-family:sans-serif;font-size:12.5px;color:#15803d;background:rgba(34,197,94,.08);border:1px solid rgba(34,197,94,.3);border-radius:8px;padding:.5rem .7rem;margin-bottom:.75rem}
 
 /* Compact value checklist (replaces big icon cards) */
 .r-includes{background:var(--card);border:1px solid var(--border);border-radius:var(--rl);padding:1.25rem 1.4rem;margin-bottom:1.25rem}
@@ -167,22 +168,13 @@
 <!-- Hero, emotional hook, social proof, single CTA -->
 <div class="report-hero">
   <h1 style="font-size:clamp(28px,4.5vw,46px);color:#f0ece0;margin:8px 0 14px;position:relative;line-height:1.2;">The patterns you've felt for years,<br>finally named out loud.</h1>
-  <p style="color:#cbb8e8;font-size:16px;max-width:600px;margin:0 auto 1.5rem;position:relative;line-height:1.6;">A 30-page reading of the recurring loops in your career, relationships, money and inner life, written in plain English from your Chaldean numbers. The kind of document you read once and re-read in five years.</p>
+  <p style="color:#cbb8e8;font-size:16px;max-width:600px;margin:0 auto 1.1rem;position:relative;line-height:1.6;">A 30-page reading of the recurring loops in your career, relationships, money and inner life, written in plain English from your Chaldean numbers. The kind of document you read once and re-read in five years.</p>
   <div style="display:flex;justify-content:center;margin-bottom:.85rem;position:relative;">
     <span class="promo-flash-badge" style="display:inline-flex;align-items:center;gap:8px;background:linear-gradient(135deg,#f0b429,#f5d060);color:#0a0820;font-family:sans-serif;font-size:13px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;padding:8px 16px;border-radius:999px;box-shadow:0 0 0 0 rgba(240,180,41,.55);animation:promoPulse 1.6s ease-in-out infinite;">
       ⚡ 50% off today · Code PROMO50 auto-applied
     </span>
   </div>
-  <div style="display:flex;justify-content:center;align-items:center;gap:14px;flex-wrap:wrap;position:relative;margin-bottom:.6rem;">
-    <div class="hero-price-block" style="display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;justify-content:center;">
-      <div class="hero-price-usd" id="heroPriceUsd" style="font-size:32px;color:var(--gold);font-weight:700;"><span style="text-decoration:line-through;opacity:.55;font-size:16px;margin-right:6px;">$5</span>$2.50 USD</div>
-      <span style="color:#cbb8e8;font-size:14px;font-family:sans-serif;">or</span>
-      <div class="hero-price-inr" id="heroPriceInr" style="font-size:26px;color:#9d7fff;font-weight:700;">INR 249<span style="font-size:16px;font-weight:400;color:#cbb8e8;text-decoration:line-through;margin-left:8px;">INR 499</span></div>
-    </div>
-    <a href="#order" onclick="document.querySelector('.order-card').scrollIntoView({behavior:'smooth',block:'start'});return false;" style="background:#f0b429;color:#0a0820;padding:14px 28px;border-radius:30px;font-weight:700;text-decoration:none;font-size:16px;letter-spacing:.02em;box-shadow:0 6px 20px rgba(240,180,41,.4);">Read the rest of myself · $2.50 →</a>
-  </div>
   <style>@keyframes promoPulse{0%,100%{box-shadow:0 0 0 0 rgba(240,180,41,.55)}50%{box-shadow:0 0 0 10px rgba(240,180,41,0)}}</style>
-  <div style="font-size:12.5px;color:#cbb8e8;font-family:sans-serif;position:relative;letter-spacing:.04em;margin-bottom:.5rem;">🇮🇳 India: Razorpay (UPI / Cards / Wallets) &nbsp;·&nbsp; 🌍 International: PayPal</div>
   <div style="font-size:12.5px;color:#cbb8e8;font-family:sans-serif;position:relative;letter-spacing:.04em;">⚡ Instant delivery · 🔒 Secure payment · 📄 PDF + email</div>
 </div>
 
@@ -363,6 +355,7 @@
 
         <div class="input-section">
           <div class="card-title">Your details</div>
+          <div class="prefill-note" id="prefillNote">✓ We've filled in your details from your free analysis. Just add your email to receive the report.</div>
           <div style="display:flex;flex-direction:column;gap:10px">
             <div class="fg">
               <label>Full name</label>
@@ -410,9 +403,9 @@
             <span style="font-size:11px;font-family:sans-serif;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--gold);">🇮🇳 India</span>
             <span style="flex:1;height:1px;background:var(--gold-b);"></span>
           </div>
-          <div id="priceLine" style="text-align:center;margin-bottom:4px;font-family:sans-serif;font-size:22px;font-weight:700;color:var(--gold);"><del style="color:var(--text3);font-size:16px;">$5 / ₹499</del> $2.50 / ₹249</div>
+          <div id="priceLine" style="text-align:center;margin-bottom:4px;font-family:sans-serif;font-size:22px;font-weight:700;color:var(--gold);"><del style="color:var(--text3);font-size:16px;">₹499</del> ₹249</div>
           <button id="payBtn" class="btn btn-gold btn-full" onclick="initiateReportPayment()">
-            ✦ Read the rest of myself, $2.50
+            Pay ₹249 · UPI / Card / Netbanking
           </button>
           <!-- Free button (shown only for 100% promo) -->
           <button id="freeBtn" class="btn btn-gold btn-full" onclick="redeemFreeReport()" style="display:none;">
@@ -603,6 +596,29 @@ window.addEventListener('DOMContentLoaded',()=>{
   if(p.get('name')) document.getElementById('rName').value = p.get('name');
   if(p.get('dob'))  document.getElementById('rDob').value  = p.get('dob');
 
+  // Details saved by the free analysis (/analyzer) in this browser tab.
+  let saved = null;
+  try { saved = JSON.parse(sessionStorage.getItem('na_prefill') || 'null'); } catch(e){}
+  if(saved){
+    const fill = (id, v) => { const el = document.getElementById(id); if(el && v && !el.value) el.value = v; };
+    fill('rName', saved.name); fill('rDob', saved.dob); fill('rEmail', saved.email);
+    if(saved.name && saved.dob){
+      const note = document.getElementById('prefillNote');
+      if(note){
+        if(saved.email) note.textContent = '✓ We\'ve filled in your details from your free analysis. Choose how to pay below.';
+        note.style.display = 'block';
+      }
+      // Arrived from the free analysis: take them straight to the form.
+      setTimeout(() => {
+        const form = document.querySelector('.input-section');
+        const navH = (document.querySelector('.nav') || {}).offsetHeight || 0;
+        if(form) window.scrollTo({ top: form.getBoundingClientRect().top + window.scrollY - navH - 12, behavior: 'smooth' });
+        const email = document.getElementById('rEmail');
+        if(email && !email.value) setTimeout(() => email.focus({ preventScroll: true }), 500);
+      }, 350);
+    }
+  }
+
   const promoInput = document.getElementById('rPromo');
   if(promoInput && !promoInput.value.trim()) promoInput.value = 'PROMO50';
   // Apply launch discount automatically so checkout starts at 50% off.
@@ -668,6 +684,12 @@ function showPromoMsg(text, color){
   el.textContent=text;
 }
 
+// India (Razorpay) is charged in rupees, so its button shows rupees only.
+function indiaPayLabel(){
+  const inr = promoDiscount === 95 ? '₹25' : promoDiscount === 50 ? '₹249' : '₹499';
+  return 'Pay ' + inr + ' · UPI / Card / Netbanking';
+}
+
 function updatePriceDisplay(){
   const pl  = document.getElementById('priceLine');
   const upl = document.getElementById('usdPriceLine');
@@ -682,7 +704,7 @@ function updatePriceDisplay(){
   const stickyUs = document.querySelector('.sticky-price-intl');
 
   if(promoDiscount===100){
-    if(pl)  pl.innerHTML  = '<del style="color:var(--text3);font-size:16px;">$5 / ₹499</del> <span style="color:var(--green);">FREE</span>';
+    if(pl)  pl.innerHTML  = '<del style="color:var(--text3);font-size:16px;">₹499</del> <span style="color:var(--green);">FREE</span>';
     if(upl) upl.innerHTML = '<del style="opacity:.55;font-size:16px;">$5 USD</del> <span style="color:var(--green);">FREE</span>';
     if(pay) pay.textContent = '✦ Claim free reading';
     if(orderUsdMain) orderUsdMain.textContent = 'FREE';
@@ -694,9 +716,9 @@ function updatePriceDisplay(){
     if(stickyIn) stickyIn.textContent = '⚡ FREE today · Instant';
     if(stickyUs) stickyUs.textContent = '⚡ FREE today · Instant';
   } else if(promoDiscount===95){
-    if(pl)  pl.innerHTML  = '<del style="color:var(--text3);font-size:16px;">$5 / ₹499</del> $0.25 / ₹25';
+    if(pl)  pl.innerHTML  = '<del style="color:var(--text3);font-size:16px;">₹499</del> ₹25';
     if(upl) upl.innerHTML = '<del style="opacity:.55;font-size:16px;">$5 USD</del> $0.25 USD';
-    if(pay) pay.textContent = '✦ Read the rest of myself, $0.25';
+    if(pay) pay.textContent = indiaPayLabel();
     if(orderUsdMain) orderUsdMain.textContent = '$0.25';
     if(orderStrike) orderStrike.textContent = '$5';
     if(orderInr) orderInr.textContent = '· ₹25';
@@ -706,9 +728,9 @@ function updatePriceDisplay(){
     if(stickyIn) stickyIn.textContent = '⚡ 95% test · $0.25 / ₹25 · Instant';
     if(stickyUs) stickyUs.textContent = '⚡ 95% test · $0.25 USD · Instant';
   } else if(promoDiscount===50){
-    if(pl)  pl.innerHTML  = '<del style="color:var(--text3);font-size:16px;">$5 / ₹499</del> $2.50 / ₹249';
+    if(pl)  pl.innerHTML  = '<del style="color:var(--text3);font-size:16px;">₹499</del> ₹249';
     if(upl) upl.innerHTML = '<del style="opacity:.55;font-size:16px;">$5 USD</del> $2.50 USD';
-    if(pay) pay.textContent = '✦ Read the rest of myself, $2.50';
+    if(pay) pay.textContent = indiaPayLabel();
     if(orderUsdMain) orderUsdMain.textContent = '$2.50';
     if(orderStrike) orderStrike.textContent = '$5';
     if(orderInr) orderInr.textContent = '· ₹249';
@@ -718,9 +740,9 @@ function updatePriceDisplay(){
     if(stickyIn) stickyIn.textContent = '⚡ 50% off · $2.50 / ₹249 · Instant';
     if(stickyUs) stickyUs.textContent = '⚡ 50% off · $2.50 USD · Instant';
   } else {
-    if(pl)  pl.innerHTML  = '$5 / ₹499';
+    if(pl)  pl.innerHTML  = '₹499';
     if(upl) upl.innerHTML = '$5 USD';
-    if(pay) pay.textContent = '✦ Read the rest of myself, $5';
+    if(pay) pay.textContent = indiaPayLabel();
     if(orderUsdMain) orderUsdMain.textContent = '$5';
     if(orderStrike) orderStrike.textContent = '';
     if(orderInr) orderInr.textContent = '· ₹499';
@@ -802,7 +824,7 @@ async function initiateReportPayment(){
   // Disable button while creating order
   const payBtn = document.getElementById('payBtn');
   payBtn.disabled = true;
-  payBtn.textContent = 'Preparing payment…';
+  payBtn.textContent = 'Opening secure payment…';
 
   let orderId, razorpayKey, chargedAmount = amount;
   try {
@@ -826,11 +848,7 @@ async function initiateReportPayment(){
     err.style.display = 'block';
     err.textContent = 'Could not initialise payment. Please try again.';
     payBtn.disabled = false;
-    payBtn.textContent = promoDiscount === 95
-      ? '✦ Read the rest of myself, $0.25'
-      : promoDiscount === 50
-      ? '✦ Read the rest of myself, $2.50'
-      : '✦ Read the rest of myself, $5';
+    payBtn.textContent = indiaPayLabel();
     return;
   }
 
@@ -856,6 +874,14 @@ async function initiateReportPayment(){
     prefill:     { name, email, contact: mobile||'' },
     notes:       { customer_name: name, dob, email, mobile: mobile||'', promo_discount: promoDiscount||0 },
     theme:       { color: '#f0b429' },
+    // Razorpay reports a closed checkout through modal.ondismiss (there is
+    // no 'payment.cancel' event), so the button must be reset here.
+    modal: {
+      ondismiss: function(){
+        payBtn.disabled = false;
+        payBtn.textContent = indiaPayLabel();
+      }
+    },
     handler: function(resp){
       onSuccess(
         resp.razorpay_payment_id,
@@ -865,25 +891,22 @@ async function initiateReportPayment(){
       );
     }
   };
+  if (typeof Razorpay !== 'function') {
+    // checkout.js blocked (ad blocker / privacy extension) or failed to load.
+    const err = document.getElementById('rErrBox');
+    err.style.display = 'block';
+    err.textContent = 'The payment window could not load. Please turn off any ad blocker for this site, or try another browser.';
+    payBtn.disabled = false;
+    payBtn.textContent = indiaPayLabel();
+    return;
+  }
   const rzp = new Razorpay(options);
   rzp.on('payment.failed', resp => {
     const err = document.getElementById('rErrBox');
     err.style.display = 'block';
     err.textContent = 'Payment failed: ' + (resp.error.description || 'Please try again.');
     payBtn.disabled = false;
-    payBtn.textContent = promoDiscount === 95
-      ? '✦ Read the rest of myself, $0.25'
-      : promoDiscount === 50
-      ? '✦ Read the rest of myself, $2.50'
-      : '✦ Read the rest of myself, $5';
-  });
-  rzp.on('payment.cancel', () => {
-    payBtn.disabled = false;
-    payBtn.textContent = promoDiscount === 95
-      ? '✦ Read the rest of myself, $0.25'
-      : promoDiscount === 50
-      ? '✦ Read the rest of myself, $2.50'
-      : '✦ Read the rest of myself, $5';
+    payBtn.textContent = indiaPayLabel();
   });
   rzp.open();
 }
@@ -1155,4 +1178,5 @@ else window.addEventListener('load', bootstrapPayPal);
 <script src="/assets/aura-fab.js?v=20261017" defer=""></script>
 
 
+<script src="/assets/nav-mobile.js?v=20261017" defer></script>
 </body></html>

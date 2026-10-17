@@ -59,5 +59,6 @@ export async function sendBrevoEmail({ to, toName, subject, htmlContent, tags })
   }
 
   const data = await response.json().catch(() => null);
+  console.log(`[brevo] sent to=${payload.to[0].email} messageId=${data?.messageId || 'n/a'}`);
   return { ok: true, data };
 }

@@ -123,7 +123,7 @@
       <li><a href="/love-compatibility-numerology">Compatibility</a></li><li><a href="/ask-aura" class="nav-aura" style="background:linear-gradient(135deg,rgba(124,58,237,.12),rgba(245,196,81,.10));border:1px solid rgba(157,127,255,.45);padding:5px 12px;border-radius:18px;font-weight:700;">✦ Ask Aura</a></li>
       <li><a href="/blog">Blog</a></li>
       <li><a href="/about">About</a></li>
-      <li><a href="/report" class="nav-cta">Full Report $2.50 / ₹249 · 50% off</a></li>
+      <li><a href="/report" class="nav-cta">Full Report · 50% off</a></li>
     </ul>
     <div class="nav-hamburger" id="navHamburger"><span></span><span></span><span></span></div>
   </div>
@@ -444,8 +444,6 @@ function copyShareLink_nameCorrection(){
 </footer>
 
 <script>
-const navHam=document.getElementById('navHamburger'), navMob=document.getElementById('navMobile');
-if(navHam&&navMob) navHam.addEventListener('click',()=>navMob.classList.toggle('open'));
 function runCorrection(){
   const errEl = document.getElementById('ncErr');
   const showErr = msg => { errEl.textContent = msg; errEl.style.display = 'block'; };
@@ -460,4 +458,6 @@ function runCorrection(){
 <script src="/assets/aura-fab.js?v=20261017" defer=""></script>
 
 
+<script src="/assets/sticky-ad.js?v=20261017" defer></script>
+<script src="/assets/nav-mobile.js?v=20261017" defer></script>
 </body></html>
