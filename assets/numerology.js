@@ -563,6 +563,30 @@ function generateAlignedCorrectedNames(fullName, moolank, destNum){
     return false;
   }
 
+  // How far a candidate drifts from the original spelling. Users
+  // adopt names that look and sound like their own: doubling a letter
+  // they already have is cheapest, adding letters at the end is next,
+  // and inserting a new letter mid-name (Noemie → Noemyie) costs most.
+  function levenshtein(a, b){
+    var prev=[], cur=[];
+    for(var j=0;j<=b.length;j++) prev[j]=j;
+    for(var i=1;i<=a.length;i++){
+      cur=[i];
+      for(var k=1;k<=b.length;k++){
+        cur[k]=Math.min(prev[k]+1, cur[k-1]+1, prev[k-1]+(a[i-1]===b[k-1]?0:1));
+      }
+      prev=cur;
+    }
+    return prev[b.length];
+  }
+  function editCost(base, variant){
+    var d=levenshtein(base, variant);
+    var cost=d*2;
+    if(isSameSoundDouble(base, variant)) cost-=1;
+    else if(variant.indexOf(base)!==0) cost+=1;   // change is not a simple ending
+    return cost;
+  }
+
   function consider(variant){
     if(!variant) return;
     var lc=variant.toLowerCase();
@@ -583,6 +607,8 @@ function generateAlignedCorrectedNames(fullName, moolank, destNum){
     // Naturalness gate (phase 2). Reject candidates that look or
     // sound awkward (Aaravhl, Mohanhk, Jiyaaaa-class). Still keep
     // some headroom so we always have a pool to pick from.
+    var cost = editCost(lower, lc);
+    if(cost > 7) return;                          // more than ~3 letters changed
     var nat = naturalnessScore(capped);
     if(isSameSoundDouble(lower, lc)) nat = Math.min(100, nat + 12);
     if(nat < 55) return;
@@ -597,6 +623,7 @@ function generateAlignedCorrectedNames(fullName, moolank, destNum){
       alignmentPct: pct,
       naturalness: nat,
       sameSound: isSameSoundDouble(lower, lc),
+      editCost: cost,
       // Combined ranking: alignment matters most (paid promise) but
       // a beautiful name beats a slightly higher-aligned ugly one.
       // Same-sound doubles get a further nudge so Purrnima beats Purnimak.
@@ -667,35 +694,22 @@ function generateAlignedCorrectedNames(fullName, moolank, destNum){
     maxGrow=2;
   }
 
-  // Rank: alignment first (paid promise), then same-sound doubles,
-  // then combinedScore, then shorter name.
-  pool.sort(function(a,b){
+  // Rank: fully aligned (100%) first, then the smallest spelling change
+  // (closest to the original sound), then score, then naturalness.
+  function rankCandidates(a,b){
+    var af=a.alignmentPct>=100, bf=b.alignmentPct>=100;
+    if(af !== bf) return bf ? 1 : -1;
+    if(a.editCost !== b.editCost) return a.editCost - b.editCost;
     if(b.alignmentPct !== a.alignmentPct) return b.alignmentPct - a.alignmentPct;
-    if(!!b.sameSound !== !!a.sameSound) return b.sameSound ? 1 : -1;
     if(b.combinedScore !== a.combinedScore) return b.combinedScore - a.combinedScore;
     return a.firstName.length - b.firstName.length;
-  });
-
-  // Prefer a diverse top-3: if we already picked a same-sound double at
-  // 100%, still surface soft endings (…ya / …aa) as option 2/3 rather
-  // than three near-identical doubles that miss perfect alignment.
-  function pickTop3(list){
-    var out = [], seenRoots = new Set();
-    // Pass A: perfect alignment first
-    for(var i=0;i<list.length && out.length<3;i++){
-      if(list[i].alignmentPct < 100) continue;
-      var root = list[i].firstName.toLowerCase().replace(/(.)\1+/g,'$1');
-      if(out.length>0 && seenRoots.has(root) && list[i].sameSound) continue;
-      seenRoots.add(root);
-      out.push(list[i]);
-    }
-    // Pass B: fill remaining with best remaining
-    for(var j=0;j<list.length && out.length<3;j++){
-      if(out.indexOf(list[j])>=0) continue;
-      out.push(list[j]);
-    }
-    return out;
   }
+
+  pool.sort(rankCandidates);
+
+  // Smallest same-sound changes win; the ranking already puts letter
+  // doublings and simple endings ahead of mid-name insertions.
+  function pickTop3(list){ return list.slice(0,3); }
 
   // If the soft pool left fewer than 3 candidates, fall back to hard
   // consonant / stretch ops so we still meet the "always 3 options"
@@ -723,15 +737,11 @@ function generateAlignedCorrectedNames(fullName, moolank, destNum){
         alignmentPct: pc2,
         naturalness: naturalnessScore(cap2),
         sameSound: false,
+        editCost: editCost(lower, lc2),
         combinedScore: Math.round(pc2*0.55 + naturalnessScore(cap2)*0.45)
       });
     }
-    pool.sort(function(a,b){
-      if(b.alignmentPct !== a.alignmentPct) return b.alignmentPct - a.alignmentPct;
-      if(!!b.sameSound !== !!a.sameSound) return b.sameSound ? 1 : -1;
-      if(b.combinedScore !== a.combinedScore) return b.combinedScore - a.combinedScore;
-      return a.firstName.length - b.firstName.length;
-    });
+    pool.sort(rankCandidates);
   }
 
   var top3 = pickTop3(pool);
