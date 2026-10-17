@@ -2687,7 +2687,7 @@ hr.divider{display:none;}
     // ── BUILD SECTION HTML ─────────────────────────────────────────
     var html = '';
 
-    if(pct >= 97 || corrResult.alreadyAligned){
+    if(corrResult.alreadyAligned){
       // Already perfectly aligned
       html =
         '<div style="background:linear-gradient(160deg,#1a1340 0%,#2a1a5c 100%);border-radius:16px;padding:2rem;text-align:center;border:1px solid rgba(201,162,39,.3);">'+
@@ -2705,7 +2705,9 @@ hr.divider{display:none;}
         '<div class="name-align-card" style="background:linear-gradient(160deg,#1a1340 0%,#2a1a5c 100%);border-radius:16px;padding:1.75rem;margin-bottom:1rem;border:1px solid rgba(201,162,39,.2);">'+
           '<div style="text-align:center;margin-bottom:1.25rem;">'+
             '<div style="color:#c9a227;font-size:10px;letter-spacing:.2em;text-transform:uppercase;font-family:sans-serif;margin-bottom:.4rem;">✦ Name Optimization · Chaldean Phonetic Enhancement ✦</div>'+
-            '<div style="color:#f0ece0;font-size:clamp(17px,2.8vw,22px);font-family:serif;font-weight:700;margin-bottom:.35rem;">Your name already works. These options enhance alignment further.</div>'+
+            '<div style="color:#f0ece0;font-size:clamp(17px,2.8vw,22px);font-family:serif;font-weight:700;margin-bottom:.35rem;">'+(corrResult.matchesMoolank
+              ? 'Your name already matches your Birth Number. These spellings keep that alignment with a minimal change.'
+              : 'Your name already works. These options enhance alignment further.')+'</div>'+
             '<div style="color:rgba(200,220,235,.6);font-size:13px;font-family:sans-serif;">First name only · Same sound · Each option shows number, planet &amp; benefit</div>'+
           '</div>'+
           currentCard;
@@ -2726,8 +2728,8 @@ hr.divider{display:none;}
               topBadge+
               '<div style="margin-top:.85rem;color:#ffffff;font-size:clamp(17px,2.5vw,22px);font-family:serif;font-weight:700;letter-spacing:.03em;margin-bottom:.6rem;">'+c.fullName+'</div>'+
               '<div style="color:rgba(255,255,255,.5);font-size:11px;font-family:sans-serif;margin-bottom:.5rem;line-height:1.7;">'+
-                '<span style="color:rgba(255,255,255,.75);">'+c.firstName+'</span> ('+c.newFirstSum+') + '+
-                (corrResult.delta > 0 ? '<span style="color:rgba(255,255,255,.55);">rest</span> ('+c.restSum+') = ' : '')+
+                '<span style="color:rgba(255,255,255,.75);">'+c.firstName+'</span> ('+c.newFirstSum+') '+
+                (c.restSum > 0 ? '+ <span style="color:rgba(255,255,255,.55);">rest</span> ('+c.restSum+') = ' : '= ')+
                 '<strong style="color:#f0b429;">'+c.newTotal+'</strong> → <strong style="color:#f0b429;">'+c.nameNum+'</strong> ('+getPlanet(c.nameNum)+')'+
                 (cde?'<br><span style="color:rgba(240,180,41,.5);">Compound: '+cpdLabel.slice(3)+'</span>':'')+
               '</div>'+

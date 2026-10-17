@@ -488,13 +488,15 @@ function generateAlignedCorrectedNames(fullName, moolank, destNum){
   // already matching the Birth Number scored ~84% and got "improved"
   // into a different, weaker number.
   var currentNameNum = reduce(total);
-  var currentScore = (currentNameNum === moolank)
+  var matchesMoolank = currentNameNum === moolank;
+  var currentScore = matchesMoolank
     ? 100
     : compatPctBreakdown(currentNameNum, total, moolank, destNum).overall;
-  if (currentScore >= 95) {
-    return {corrections:[],delta:0,target:total,currentSum:total,alreadyAligned:true,
-            matchesMoolank: currentNameNum === moolank};
-  }
+  // Every paid report must show 3 options. When the name already
+  // matches the Birth Number, offer minimal alternative spellings that
+  // KEEP that number (also 100%); otherwise options must beat the
+  // current score. Never suggest a downgrade.
+  var beatScore = matchesMoolank ? 99 : currentScore;
 
   // Phonetic operation pool, ordered by naturalness for Indian
   // names. Each op takes a lowercase string and returns a candidate
@@ -548,7 +550,7 @@ function generateAlignedCorrectedNames(fullName, moolank, destNum){
   var lower=firstName.toLowerCase();
   var seen=new Set([lower]);
   var pool=[];
-  var maxGrow=2;
+  var maxGrow=2, maxCost=7, minNat=55;
 
   // True when variant is the base with exactly one existing letter
   // doubled (Purnima → Purrnima / Purnimaa). Highest adoptability.
@@ -603,15 +605,15 @@ function generateAlignedCorrectedNames(fullName, moolank, destNum){
     // Otherwise use the same compatPct scorer used for the user's
     // current name so the numbers are directly comparable.
     var pct = (reduced===moolank) ? 100 : compatPct(reduced, nt, moolank, destNum);
-    if(pct < 70 || pct <= currentScore) return;   // never suggest a downgrade
+    if(pct < 70 || pct <= beatScore) return;      // never suggest a downgrade
     // Naturalness gate (phase 2). Reject candidates that look or
     // sound awkward (Aaravhl, Mohanhk, Jiyaaaa-class). Still keep
     // some headroom so we always have a pool to pick from.
     var cost = editCost(lower, lc);
-    if(cost > 7) return;                          // more than ~3 letters changed
+    if(cost > maxCost) return;                    // too far from the original spelling
     var nat = naturalnessScore(capped);
     if(isSameSoundDouble(lower, lc)) nat = Math.min(100, nat + 12);
-    if(nat < 55) return;
+    if(nat < minNat) return;
     seen.add(lc);
     pool.push({
       firstName: capped,
@@ -631,6 +633,7 @@ function generateAlignedCorrectedNames(fullName, moolank, destNum){
     });
   }
 
+  function runPasses(){
   // Pass 0 — same-sound letter doublings (highest priority for users).
   // Purnima → Purrnima, Purnimaa, Purnnima, Puurnima, etc.
   for(var di=0; di<lower.length; di++){
@@ -668,7 +671,10 @@ function generateAlignedCorrectedNames(fullName, moolank, destNum){
     var SWAPS=[['i','ee'],['ee','i'],['y','i'],['i','y'],['u','oo'],['oo','u'],['o','oo'],
                ['s','z'],['z','s'],['c','k'],['k','c'],['ck','k'],['k','kh'],['v','w'],['w','v'],
                ['f','ph'],['ph','f'],['j','jh'],['t','th'],['d','dh'],['g','gh'],['b','bh'],
-               ['a','aa'],['e','ae'],['sh','shh'],['x','ks']];
+               ['a','aa'],['e','ae'],['sh','shh'],['x','ks'],
+               ['a','e'],['e','a'],['a','ah'],['e','eh'],['i','ie'],['y','yy'],['n','nn'],
+               ['m','mm'],['r','rr'],['l','ll'],['t','tt'],['h','hh'],['a','ee'],['ee','ea'],
+               ['ai','ae'],['au','ow'],['ou','ow'],['q','k'],['c','s'],['ch','chh']];
     var swapped=[];
     SWAPS.forEach(function(sw){
       var from=sw[0], to=sw[1], idx=lower.indexOf(from);
@@ -677,7 +683,8 @@ function generateAlignedCorrectedNames(fullName, moolank, destNum){
         idx=lower.indexOf(from, idx+1);
       }
     });
-    maxGrow=3;
+    var prevGrow=maxGrow;
+    maxGrow=Math.max(maxGrow,3);
     swapped.forEach(function(sv){
       consider(sv);
       for(var si=0;si<OPS.length;si++) consider(OPS[si](sv));
@@ -691,8 +698,15 @@ function generateAlignedCorrectedNames(fullName, moolank, destNum){
         });
       });
     }
-    maxGrow=2;
+    maxGrow=prevGrow;
   }
+  }
+
+  runPasses();
+  // Still short of 3? Widen step by step (slightly longer changes,
+  // then a looser naturalness gate) rather than ship fewer options.
+  if(pool.length < 3){ maxGrow=3; maxCost=9;  runPasses(); }
+  if(pool.length < 3){ maxGrow=4; maxCost=11; minNat=40; runPasses(); }
 
   // Rank: fully aligned (100%) first, then the smallest spelling change
   // (closest to the original sound), then score, then naturalness.
@@ -725,7 +739,7 @@ function generateAlignedCorrectedNames(fullName, moolank, destNum){
       var nt2 = nf2 + restSum;
       var rd2 = reduce(nt2);
       var pc2 = (rd2 === moolank) ? 100 : compatPct(rd2, nt2, moolank, destNum);
-      if (pc2 < 70 || pc2 <= currentScore) continue;
+      if (pc2 < 70 || pc2 <= beatScore) continue;
       seen.add(lc2);
       pool.push({
         firstName: cap2,
@@ -745,5 +759,7 @@ function generateAlignedCorrectedNames(fullName, moolank, destNum){
   }
 
   var top3 = pickTop3(pool);
-  return {corrections: top3, delta: target-total, target: target, currentSum: total, currentScore: currentScore};
+  return {corrections: top3, delta: target-total, target: target, currentSum: total,
+          currentScore: currentScore, matchesMoolank: matchesMoolank,
+          alreadyAligned: top3.length === 0 && currentScore >= 95};
 }
