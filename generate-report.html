@@ -2694,7 +2694,9 @@ hr.divider{display:none;}
           '<div style="font-size:40px;margin-bottom:.5rem;">★</div>'+
           '<div style="color:#f0b429;font-size:20px;font-family:serif;margin-bottom:.6rem;font-weight:700;">Rare Natural Resonance · Your Name Already Carries It</div>'+
           '<div style="color:rgba(255,255,255,.7);font-size:13px;font-family:sans-serif;max-width:480px;margin:0 auto;line-height:1.75;">'+
-            '<strong style="color:#f0b429;">'+name+'</strong> scores <strong style="color:#f0b429;">'+pct+'%</strong>, your name vibration sits in rare harmony with your Birth Number. No optimisation is needed; the rest of this report shows how to make the most of what you already have.'+
+            (corrResult.matchesMoolank
+              ? '<strong style="color:#f0b429;">'+name+'</strong> reduces to Name Number <strong style="color:#f0b429;">'+nameNum+'</strong> ('+namePlanet+'), the same as your Birth Number. In Chaldean numerology this is the strongest name alignment possible, so no spelling change is recommended; the rest of this report shows how to make the most of what you already have.'
+              : '<strong style="color:#f0b429;">'+name+'</strong> scores <strong style="color:#f0b429;">'+pct+'%</strong>, your name vibration sits in rare harmony with your Birth Number. No optimisation is needed; the rest of this report shows how to make the most of what you already have.')+
           '</div>'+
         '</div>';
     } else {
@@ -2738,6 +2740,18 @@ hr.divider{display:none;}
             '</div>';
         });
         html += '</div>';
+        if(corrections.length < 3){
+          html +=
+            '<div style="margin-top:.9rem;background:rgba(240,180,41,.08);border:1px solid rgba(240,180,41,.3);border-radius:10px;padding:.85rem 1rem;font-family:sans-serif;font-size:12.5px;color:rgba(255,255,255,.75);line-height:1.65;">'+
+              '✦ Your current name already scores <strong style="color:#f0b429;">'+pct+'%</strong>. Only '+(corrections.length>1?'the options above improve':'the option above improves')+' on it with a small, same-sound change; we do not suggest spellings that would lower your alignment.'+
+            '</div>';
+        }
+      } else if((corrResult.currentScore||0) >= 70){
+        // Strong name, no small same-sound change improves it
+        html +=
+          '<div style="background:rgba(240,180,41,.1);border:1.5px solid rgba(240,180,41,.35);border-radius:12px;padding:1.25rem;font-family:sans-serif;font-size:13px;color:rgba(255,255,255,.75);line-height:1.7;">'+
+            '✦ <strong style="color:#f0b429;">Your name is already strongly aligned at '+pct+'%.</strong> We checked every small, same-sound spelling change to your first name and none improves on your current alignment, so we recommend keeping your name as it is.'+
+          '</div>';
       } else {
         // Fallback if algorithm finds no phonetic options
         html +=

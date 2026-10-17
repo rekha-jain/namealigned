@@ -483,10 +483,17 @@ function generateAlignedCorrectedNames(fullName, moolank, destNum){
   // entirely — there's nothing meaningful to improve. We use the
   // new compatPctBreakdown so the threshold is internally
   // consistent with the breakdown the user sees on the page.
+  // Score the current name on the SAME scale as candidates: name
+  // number === moolank is full resonance (100%). Without this, a name
+  // already matching the Birth Number scored ~84% and got "improved"
+  // into a different, weaker number.
   var currentNameNum = reduce(total);
-  var currentScore = compatPctBreakdown(currentNameNum, total, moolank, destNum).overall;
+  var currentScore = (currentNameNum === moolank)
+    ? 100
+    : compatPctBreakdown(currentNameNum, total, moolank, destNum).overall;
   if (currentScore >= 95) {
-    return {corrections:[],delta:0,target:total,currentSum:total,alreadyAligned:true};
+    return {corrections:[],delta:0,target:total,currentSum:total,alreadyAligned:true,
+            matchesMoolank: currentNameNum === moolank};
   }
 
   // Phonetic operation pool, ordered by naturalness for Indian
@@ -541,6 +548,7 @@ function generateAlignedCorrectedNames(fullName, moolank, destNum){
   var lower=firstName.toLowerCase();
   var seen=new Set([lower]);
   var pool=[];
+  var maxGrow=2;
 
   // True when variant is the base with exactly one existing letter
   // doubled (Purnima → Purrnima / Purnimaa). Highest adoptability.
@@ -560,7 +568,7 @@ function generateAlignedCorrectedNames(fullName, moolank, destNum){
     var lc=variant.toLowerCase();
     if(seen.has(lc)) return;
     // Keep changes small — users adopt +1–2 letters, not long stacks
-    if(lc.length > lower.length + 2) return;
+    if(lc.length > lower.length + maxGrow) return;
     // Block stacked soft endings (Priyayaya, Nehaiaia)
     if(/(ya){2,}|(ia){2,}|yaya|iaia|aayaa/.test(lc)) return;
     var capped=lc.charAt(0).toUpperCase()+lc.slice(1);
@@ -571,7 +579,7 @@ function generateAlignedCorrectedNames(fullName, moolank, destNum){
     // Otherwise use the same compatPct scorer used for the user's
     // current name so the numbers are directly comparable.
     var pct = (reduced===moolank) ? 100 : compatPct(reduced, nt, moolank, destNum);
-    if(pct < 70) return;
+    if(pct < 70 || pct <= currentScore) return;   // never suggest a downgrade
     // Naturalness gate (phase 2). Reject candidates that look or
     // sound awkward (Aaravhl, Mohanhk, Jiyaaaa-class). Still keep
     // some headroom so we always have a pool to pick from.
@@ -624,6 +632,41 @@ function generateAlignedCorrectedNames(fullName, moolank, destNum){
     }
   }
 
+  // Pass 4, same-sound letter swaps (Priya → Preeya, Kavya → Kawya,
+  // Sunil → Sooneel). Only reached when the additive passes cannot
+  // produce 3 options that beat the current score, typically when
+  // the sum needed to reach the Birth Number cannot be built from
+  // soft endings alone.
+  if(pool.length < 3){
+    var SWAPS=[['i','ee'],['ee','i'],['y','i'],['i','y'],['u','oo'],['oo','u'],['o','oo'],
+               ['s','z'],['z','s'],['c','k'],['k','c'],['ck','k'],['k','kh'],['v','w'],['w','v'],
+               ['f','ph'],['ph','f'],['j','jh'],['t','th'],['d','dh'],['g','gh'],['b','bh'],
+               ['a','aa'],['e','ae'],['sh','shh'],['x','ks']];
+    var swapped=[];
+    SWAPS.forEach(function(sw){
+      var from=sw[0], to=sw[1], idx=lower.indexOf(from);
+      while(idx>=0){
+        swapped.push(lower.slice(0,idx)+to+lower.slice(idx+from.length));
+        idx=lower.indexOf(from, idx+1);
+      }
+    });
+    maxGrow=3;
+    swapped.forEach(function(sv){
+      consider(sv);
+      for(var si=0;si<OPS.length;si++) consider(OPS[si](sv));
+    });
+    // Two swaps (Priya → Preeyaa-class) as a final soft attempt
+    if(pool.length < 3){
+      swapped.forEach(function(sv){
+        SWAPS.forEach(function(sw){
+          var idx=sv.indexOf(sw[0]);
+          if(idx>=0) consider(sv.slice(0,idx)+sw[1]+sv.slice(idx+sw[0].length));
+        });
+      });
+    }
+    maxGrow=2;
+  }
+
   // Rank: alignment first (paid promise), then same-sound doubles,
   // then combinedScore, then shorter name.
   pool.sort(function(a,b){
@@ -668,7 +711,7 @@ function generateAlignedCorrectedNames(fullName, moolank, destNum){
       var nt2 = nf2 + restSum;
       var rd2 = reduce(nt2);
       var pc2 = (rd2 === moolank) ? 100 : compatPct(rd2, nt2, moolank, destNum);
-      if (pc2 < 70) continue;
+      if (pc2 < 70 || pc2 <= currentScore) continue;
       seen.add(lc2);
       pool.push({
         firstName: cap2,
@@ -692,5 +735,5 @@ function generateAlignedCorrectedNames(fullName, moolank, destNum){
   }
 
   var top3 = pickTop3(pool);
-  return {corrections: top3, delta: target-total, target: target, currentSum: total};
+  return {corrections: top3, delta: target-total, target: target, currentSum: total, currentScore: currentScore};
 }
