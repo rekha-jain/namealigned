@@ -260,10 +260,14 @@
 .cta-pro{background:linear-gradient(135deg,#1a0e52 0%,#3a1d80 60%,#0c3347 100%);border-radius:var(--rl);padding:2rem 1.5rem;color:#f0ece0;text-align:center;margin-top:1rem;border:1.5px solid rgba(201,162,39,.5);box-shadow:0 6px 30px rgba(26,14,82,.3)}
 .cta-pro h3{font-family:'Playfair Display',Georgia,serif;font-size:24px;font-weight:700;margin:0 0 .35rem;color:#f5d060}
 .cta-pro .cta-sub{font-family:sans-serif;font-size:14px;color:#cbb8e8;margin:0 0 1.1rem}
-.cta-pricing{display:flex;align-items:baseline;justify-content:center;gap:10px;margin:1rem 0 .5rem}
+.cta-pricing{display:flex;align-items:center;justify-content:center;gap:14px;margin:1.1rem 0 .7rem;flex-wrap:wrap}
 .cta-strike{font-family:Georgia,serif;font-size:18px;color:#9a8db8;text-decoration:line-through;text-decoration-color:#c9a227;text-decoration-thickness:2px}
 .cta-price{font-family:'Playfair Display',Georgia,serif;font-size:38px;font-weight:700;color:#f5d060;line-height:1}
-.cta-save{display:inline-block;background:#dc2626;color:#fff;font-family:sans-serif;font-size:11px;font-weight:700;letter-spacing:.05em;padding:3px 10px;border-radius:20px;text-transform:uppercase;margin-left:6px;vertical-align:middle}
+.cta-price-inr{font-family:'Playfair Display',Georgia,serif;font-size:24px;font-weight:700;color:#f5d060;opacity:.85;margin-left:4px}
+.cta-save{display:inline-flex;flex-direction:column;align-items:flex-start;gap:5px;text-align:left}
+.cta-was{font-family:sans-serif;font-size:13px;color:rgba(240,236,224,.55);text-decoration:line-through;text-decoration-color:rgba(245,208,96,.7)}
+.cta-off{display:inline-block;font-family:sans-serif;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#f5d060;background:rgba(245,208,96,.12);border:1px solid rgba(245,208,96,.55);padding:4px 11px;border-radius:999px}
+@media(max-width:560px){.cta-pricing{gap:8px}.cta-save{flex-direction:row;align-items:center;gap:10px}}
 .cta-pro .cta-btn{display:inline-block;background:linear-gradient(135deg,#c9a227,#f5d060);color:#03090f;font-family:sans-serif;font-size:15px;font-weight:700;letter-spacing:.05em;padding:14px 36px;border-radius:50px;text-decoration:none;margin-top:.5rem;box-shadow:0 4px 20px rgba(245,208,96,.4);transition:transform .15s,box-shadow .2s}
 .cta-pro .cta-btn:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(245,208,96,.55)}
 .cta-bullets{display:flex;justify-content:center;flex-wrap:wrap;gap:14px;margin-top:1rem;font-family:sans-serif;font-size:12px;color:#cbb8e8}
@@ -636,10 +640,10 @@
       <h3>Read the rest of what your chart is saying</h3>
       <p class="cta-sub">Four deeper readings, written in plain English. The patterns under your patterns, career rhythm, relationship friction, name correction, the years coming.</p>
       <div class="cta-pricing">
-        <span class="cta-price">$2.50</span>
-        <span class="cta-save" style="display:inline-flex;flex-direction:column;align-items:flex-start;gap:2px;">
-          <span style="text-decoration:line-through;opacity:.55;">$5 / ₹499</span>
-          <span style="color:#16a34a;font-weight:700;">50% off today · ₹249</span>
+        <span class="cta-price">$2.50<span class="cta-price-inr">/ ₹249</span></span>
+        <span class="cta-save">
+          <span class="cta-was">$5 / ₹499</span>
+          <span class="cta-off">✦ 50% off today</span>
         </span>
       </div>
       <a href="/report" id="upgradeBtn" class="cta-btn" onclick="trackEvent('cta_clicked',{location:'main'})">Read the deeper patterns · $2.50 / ₹249 →</a>
