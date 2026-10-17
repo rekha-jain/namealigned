@@ -1,5 +1,6 @@
 /**
- * Vercel Serverless Function, GET /api/report-data?paymentId=...
+ * GET /api/generate-report?paymentId=... (routed from generate-report.js;
+ * kept out of its own function to stay within Vercel's 12-function limit)
  *
  * The report page builds the report ONLY from what this returns, never
  * from name/dob in the link. A paymentId that is not a paid order in
@@ -15,9 +16,8 @@
 import { getSupabaseConfig } from './_supabase.js';
 import { buildSupabaseHeaders } from './_supabaseHeaders.js';
 
-export default async function handler(req, res) {
+export async function handleReportData(req, res) {
   res.setHeader('Cache-Control', 'no-store');
-  if (req.method !== 'GET') return res.status(405).json({ success: false, error: 'Method not allowed' });
 
   const paymentId = String(req.query?.paymentId || '').trim();
   if (!paymentId || paymentId.length > 300) {

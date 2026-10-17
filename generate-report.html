@@ -1104,7 +1104,7 @@ function startReport(RD){
   }
 
   // ── ORDER DATA ────────────────────────────────────────────────
-  // RD comes from /api/report-data (the paid order in Supabase), never
+  // RD comes from GET /api/generate-report (the paid order in Supabase), never
   // from the link, so editing name/dob in the URL cannot change the report.
   RD = RD || {};
   var paymentId  = RD.paymentId||'';
@@ -3040,7 +3040,7 @@ function startReport(RD){
 
   function invalid(){ startReport(null); }
   function fetchOrder(){
-    return fetch('/api/report-data?paymentId=' + encodeURIComponent(paymentId), { cache: 'no-store' })
+    return fetch('/api/generate-report?paymentId=' + encodeURIComponent(paymentId), { cache: 'no-store' })
       .then(function(r){ return r.ok ? r.json() : null; })
       .catch(function(){ return null; });
   }
