@@ -410,9 +410,9 @@
             <span style="font-size:11px;font-family:sans-serif;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--gold);">🇮🇳 India</span>
             <span style="flex:1;height:1px;background:var(--gold-b);"></span>
           </div>
-          <div id="priceLine" style="text-align:center;margin-bottom:4px;font-family:sans-serif;font-size:22px;font-weight:700;color:var(--gold);"><del style="color:var(--text3);font-size:16px;">$5 / ₹499</del> $2.50 / ₹249</div>
+          <div id="priceLine" style="text-align:center;margin-bottom:4px;font-family:sans-serif;font-size:22px;font-weight:700;color:var(--gold);"><del style="color:var(--text3);font-size:16px;">₹499</del> ₹249</div>
           <button id="payBtn" class="btn btn-gold btn-full" onclick="initiateReportPayment()">
-            ✦ Read the rest of myself, $2.50
+            Pay ₹249 · UPI / Card / Netbanking
           </button>
           <!-- Free button (shown only for 100% promo) -->
           <button id="freeBtn" class="btn btn-gold btn-full" onclick="redeemFreeReport()" style="display:none;">
@@ -668,6 +668,12 @@ function showPromoMsg(text, color){
   el.textContent=text;
 }
 
+// India (Razorpay) is charged in rupees, so its button shows rupees only.
+function indiaPayLabel(){
+  const inr = promoDiscount === 95 ? '₹25' : promoDiscount === 50 ? '₹249' : '₹499';
+  return 'Pay ' + inr + ' · UPI / Card / Netbanking';
+}
+
 function updatePriceDisplay(){
   const pl  = document.getElementById('priceLine');
   const upl = document.getElementById('usdPriceLine');
@@ -682,7 +688,7 @@ function updatePriceDisplay(){
   const stickyUs = document.querySelector('.sticky-price-intl');
 
   if(promoDiscount===100){
-    if(pl)  pl.innerHTML  = '<del style="color:var(--text3);font-size:16px;">$5 / ₹499</del> <span style="color:var(--green);">FREE</span>';
+    if(pl)  pl.innerHTML  = '<del style="color:var(--text3);font-size:16px;">₹499</del> <span style="color:var(--green);">FREE</span>';
     if(upl) upl.innerHTML = '<del style="opacity:.55;font-size:16px;">$5 USD</del> <span style="color:var(--green);">FREE</span>';
     if(pay) pay.textContent = '✦ Claim free reading';
     if(orderUsdMain) orderUsdMain.textContent = 'FREE';
@@ -694,9 +700,9 @@ function updatePriceDisplay(){
     if(stickyIn) stickyIn.textContent = '⚡ FREE today · Instant';
     if(stickyUs) stickyUs.textContent = '⚡ FREE today · Instant';
   } else if(promoDiscount===95){
-    if(pl)  pl.innerHTML  = '<del style="color:var(--text3);font-size:16px;">$5 / ₹499</del> $0.25 / ₹25';
+    if(pl)  pl.innerHTML  = '<del style="color:var(--text3);font-size:16px;">₹499</del> ₹25';
     if(upl) upl.innerHTML = '<del style="opacity:.55;font-size:16px;">$5 USD</del> $0.25 USD';
-    if(pay) pay.textContent = '✦ Read the rest of myself, $0.25';
+    if(pay) pay.textContent = indiaPayLabel();
     if(orderUsdMain) orderUsdMain.textContent = '$0.25';
     if(orderStrike) orderStrike.textContent = '$5';
     if(orderInr) orderInr.textContent = '· ₹25';
@@ -706,9 +712,9 @@ function updatePriceDisplay(){
     if(stickyIn) stickyIn.textContent = '⚡ 95% test · $0.25 / ₹25 · Instant';
     if(stickyUs) stickyUs.textContent = '⚡ 95% test · $0.25 USD · Instant';
   } else if(promoDiscount===50){
-    if(pl)  pl.innerHTML  = '<del style="color:var(--text3);font-size:16px;">$5 / ₹499</del> $2.50 / ₹249';
+    if(pl)  pl.innerHTML  = '<del style="color:var(--text3);font-size:16px;">₹499</del> ₹249';
     if(upl) upl.innerHTML = '<del style="opacity:.55;font-size:16px;">$5 USD</del> $2.50 USD';
-    if(pay) pay.textContent = '✦ Read the rest of myself, $2.50';
+    if(pay) pay.textContent = indiaPayLabel();
     if(orderUsdMain) orderUsdMain.textContent = '$2.50';
     if(orderStrike) orderStrike.textContent = '$5';
     if(orderInr) orderInr.textContent = '· ₹249';
@@ -718,9 +724,9 @@ function updatePriceDisplay(){
     if(stickyIn) stickyIn.textContent = '⚡ 50% off · $2.50 / ₹249 · Instant';
     if(stickyUs) stickyUs.textContent = '⚡ 50% off · $2.50 USD · Instant';
   } else {
-    if(pl)  pl.innerHTML  = '$5 / ₹499';
+    if(pl)  pl.innerHTML  = '₹499';
     if(upl) upl.innerHTML = '$5 USD';
-    if(pay) pay.textContent = '✦ Read the rest of myself, $5';
+    if(pay) pay.textContent = indiaPayLabel();
     if(orderUsdMain) orderUsdMain.textContent = '$5';
     if(orderStrike) orderStrike.textContent = '';
     if(orderInr) orderInr.textContent = '· ₹499';
@@ -802,7 +808,7 @@ async function initiateReportPayment(){
   // Disable button while creating order
   const payBtn = document.getElementById('payBtn');
   payBtn.disabled = true;
-  payBtn.textContent = 'Preparing payment…';
+  payBtn.textContent = 'Opening secure payment…';
 
   let orderId, razorpayKey, chargedAmount = amount;
   try {
@@ -826,11 +832,7 @@ async function initiateReportPayment(){
     err.style.display = 'block';
     err.textContent = 'Could not initialise payment. Please try again.';
     payBtn.disabled = false;
-    payBtn.textContent = promoDiscount === 95
-      ? '✦ Read the rest of myself, $0.25'
-      : promoDiscount === 50
-      ? '✦ Read the rest of myself, $2.50'
-      : '✦ Read the rest of myself, $5';
+    payBtn.textContent = indiaPayLabel();
     return;
   }
 
@@ -856,6 +858,14 @@ async function initiateReportPayment(){
     prefill:     { name, email, contact: mobile||'' },
     notes:       { customer_name: name, dob, email, mobile: mobile||'', promo_discount: promoDiscount||0 },
     theme:       { color: '#f0b429' },
+    // Razorpay reports a closed checkout through modal.ondismiss (there is
+    // no 'payment.cancel' event), so the button must be reset here.
+    modal: {
+      ondismiss: function(){
+        payBtn.disabled = false;
+        payBtn.textContent = indiaPayLabel();
+      }
+    },
     handler: function(resp){
       onSuccess(
         resp.razorpay_payment_id,
@@ -865,25 +875,22 @@ async function initiateReportPayment(){
       );
     }
   };
+  if (typeof Razorpay !== 'function') {
+    // checkout.js blocked (ad blocker / privacy extension) or failed to load.
+    const err = document.getElementById('rErrBox');
+    err.style.display = 'block';
+    err.textContent = 'The payment window could not load. Please turn off any ad blocker for this site, or try another browser.';
+    payBtn.disabled = false;
+    payBtn.textContent = indiaPayLabel();
+    return;
+  }
   const rzp = new Razorpay(options);
   rzp.on('payment.failed', resp => {
     const err = document.getElementById('rErrBox');
     err.style.display = 'block';
     err.textContent = 'Payment failed: ' + (resp.error.description || 'Please try again.');
     payBtn.disabled = false;
-    payBtn.textContent = promoDiscount === 95
-      ? '✦ Read the rest of myself, $0.25'
-      : promoDiscount === 50
-      ? '✦ Read the rest of myself, $2.50'
-      : '✦ Read the rest of myself, $5';
-  });
-  rzp.on('payment.cancel', () => {
-    payBtn.disabled = false;
-    payBtn.textContent = promoDiscount === 95
-      ? '✦ Read the rest of myself, $0.25'
-      : promoDiscount === 50
-      ? '✦ Read the rest of myself, $2.50'
-      : '✦ Read the rest of myself, $5';
+    payBtn.textContent = indiaPayLabel();
   });
   rzp.open();
 }
