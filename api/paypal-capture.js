@@ -68,14 +68,7 @@ async function saveOrderToSupabase({ paypalOrderId, paypalCaptureId, name, email
 async function sendDeliveryEmail({ paypalOrderId, name, email, dob, mobile, birthNum, destNum, nameNum }) {
   const reportUrl =
     `https://namealigned.com/generate-report` +
-    `?paymentId=${encodeURIComponent('PP-' + paypalOrderId)}` +
-    `&name=${encodeURIComponent(name || '')}` +
-    `&dob=${encodeURIComponent(dob || '')}` +
-    `&email=${encodeURIComponent(email || '')}` +
-    (mobile ? `&mobile=${encodeURIComponent(mobile)}` : '') +
-    `&birthNum=${encodeURIComponent(birthNum ?? '')}` +
-    `&destNum=${encodeURIComponent(destNum ?? '')}` +
-    `&nameNum=${encodeURIComponent(nameNum ?? '')}`;
+    `?paymentId=${encodeURIComponent('PP-' + paypalOrderId)}`;
 
   const html = `<!DOCTYPE html><html><body style="margin:0;padding:0;background:#f5f0eb;font-family:Georgia,serif;">
 <table width="100%" cellpadding="0" cellspacing="0" style="background:#f5f0eb;padding:40px 0;"><tr><td align="center">

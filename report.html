@@ -1065,15 +1065,8 @@ function initPayPalButton(){
       }
 
       // Reuse the same redirect that Razorpay uses, so the success page is identical.
-      const params = new URLSearchParams({
-        paymentId: result.paymentId, // already prefixed 'PP-'
-        orderId: '', signature: '',
-        name: fields.name, dob: fields.dob, email: fields.email,
-        birthNum: nums.birthNum || '', destNum: nums.destNum || '',
-        nameNum: nums.nameNum || '', pct: nums.pct || ''
-      });
-      if (fields.mobile) params.set('mobile', fields.mobile);
-      window.location.href = `generate-report?${params}`;
+      // The report page loads the order from the database by paymentId.
+      window.location.href = `generate-report?paymentId=${encodeURIComponent(result.paymentId)}`;
     },
 
     onError: function(err){

@@ -30,6 +30,7 @@
     { "source": "/api/paypal-capture",        "destination": "/api/paypal-capture.js" },
     { "source": "/api/aura",                  "destination": "/api/aura.js" },
     { "source": "/api/health-supabase",       "destination": "/api/health-supabase.js" },
+    { "source": "/api/report-data",           "destination": "/api/report-data.js" },
     { "source": "/api/aura/v2/message",       "destination": "/api/aura/v2/message.js" },
     { "source": "/api/aura/v2/me",            "destination": "/api/aura/v2/me.js" },
     { "source": "/api/aura/v2/auth/anonymous", "destination": "/api/aura/v2/auth/anonymous.js" }
