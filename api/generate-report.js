@@ -19,7 +19,7 @@ import { insertSupabaseRow, findLeadIdByEmail, findOrderByRazorpayPaymentId, mar
 import { sendBrevoEmail as deliverViaBrevo } from './_brevo.js';
 import { mpTrack } from './_mixpanel.js';
 import { normaliseIndianMobile } from './_phone.js';
-import { handleReportData } from './_reportData.js';
+import { handleReportData, handleSnapshotSave } from './_reportData.js';
 
 const CORS_HEADERS = {
   'Access-Control-Allow-Origin': '*',
@@ -342,6 +342,8 @@ export default async function handler(req, res) {
   if (req.method !== 'POST') {
     return sendJSON(res, 405, { success: false, error: 'Method not allowed' });
   }
+
+  if (req.body && req.body.action === 'snapshot') return handleSnapshotSave(req, res);
 
   try {
     const {
