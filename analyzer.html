@@ -996,6 +996,15 @@ function showPage(n){
   window.scrollTo({top:0,behavior:'smooth'});
 }
 
+// Remember details for this tab so the paid checkout (/report) opens
+// pre-filled, whichever button the visitor uses to get there.
+function savePrefill(data){
+  try {
+    const cur = JSON.parse(sessionStorage.getItem('na_prefill') || '{}');
+    sessionStorage.setItem('na_prefill', JSON.stringify(Object.assign(cur, data)));
+  } catch(e){}
+}
+
 function goToStep2(){
   const name = document.getElementById('currentName').value.trim();
   const dob  = document.getElementById('dob').value;
@@ -1005,6 +1014,7 @@ function goToStep2(){
   err.style.display='none';
   S.name    = name;
   S.dob     = dob;
+  savePrefill({ name: name, dob: dob });
   S.gender  = '';
   S.focus   = 'overall';
   S.context = '';
@@ -1366,6 +1376,7 @@ async function captureEmail(){
     btn.disabled=false; btn.textContent='Send it to me →';
     return;
   }
+  savePrefill({ email: email });
   // Mixpanel: identify the user against this email and fire Email Captured
   if (window.naIdentify) window.naIdentify(email, { name: S.name });
   if (window.naTrack)    window.naTrack('Email Captured', {
