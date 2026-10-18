@@ -103,12 +103,12 @@ const LEAD_SUBJECTS = {
 
 async function sendLeadEmail({ name, dob, email, birthNum, destNum, nameNum, source }) {
   const analyserUrl =
-    `https://namealigned.com/analyzer.html` +
+    `https://www.namealigned.com/analyzer` +
     `?name=${encodeURIComponent(name || '')}` +
     `&dob=${encodeURIComponent(dob || '')}`;
 
   const paidReportUrl =
-    `https://namealigned.com/report.html` +
+    `https://www.namealigned.com/report` +
     `?name=${encodeURIComponent(name || '')}` +
     `&dob=${encodeURIComponent(dob || '')}`;
 
@@ -254,7 +254,7 @@ async function sendLeadEmail({ name, dob, email, birthNum, destNum, nameNum, sou
                        border-top:1px solid #e5e7eb;">
               <p style="margin:0;font-size:12px;color:#9ca3af;line-height:1.6;">
                 You're receiving this because you requested a free numerology reading at
-                <a href="https://namealigned.com" style="color:#7c3aed;text-decoration:none;">
+                <a href="https://www.namealigned.com/" style="color:#7c3aed;text-decoration:none;">
                   namealigned.com</a>.<br>
                 © ${new Date().getFullYear()} NameAligned.com, All rights reserved.
               </p>

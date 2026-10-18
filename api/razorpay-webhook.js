@@ -90,7 +90,7 @@ function escapeHtml(str) {
 
 async function sendDeliveryEmail({ paymentId, name, email, dob, mobile }) {
   const reportUrl =
-    `https://namealigned.com/generate-report` +
+    `https://www.namealigned.com/generate-report` +
     `?paymentId=${encodeURIComponent(paymentId)}`;
 
   const htmlContent = `

@@ -67,7 +67,7 @@ async function saveOrderToSupabase({ paypalOrderId, paypalCaptureId, name, email
 
 export async function sendDeliveryEmail({ paypalOrderId, name, email, dob, mobile, birthNum, destNum, nameNum }) {
   const reportUrl =
-    `https://namealigned.com/generate-report` +
+    `https://www.namealigned.com/generate-report` +
     `?paymentId=${encodeURIComponent('PP-' + paypalOrderId)}`;
 
   const html = `<!DOCTYPE html><html><body style="margin:0;padding:0;background:#f5f0eb;font-family:Georgia,serif;">
