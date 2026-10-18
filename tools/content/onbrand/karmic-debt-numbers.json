@@ -1,0 +1,94 @@
+{
+ "slug": "karmic-debt-numbers",
+ "title": "Karmic Debt Numbers 13, 14, 16, 19: The Chaldean View",
+ "description": "What are karmic debt numbers 13, 14, 16 and 19? Check if you have one, and see how Chaldean numerology reads each as a growth pattern rather than a burden.",
+ "keywords": "karmic debt numbers, karmic debt number, karmic debt 13 14 16 19, do i have karmic debt numerology, karmic debt calculator",
+ "badge": "Chaldean Numerology · Karmic Debt",
+ "glyph": "∞",
+ "h1": "Karmic Debt Numbers 13, 14, 16 and 19 · A Growth Reading",
+ "tag": "Change · Freedom · Resilience · Light",
+ "crumb": "Karmic Debt Numbers",
+ "og_image": "https://www.namealigned.com/assets/og/moolank-4.jpg",
+ "intro": "<p>In Western numerology, <strong>karmic debt numbers</strong> are 13, 14, 16 and 19: compounds said to carry lessons from the past. Chaldean numerology, the older system NameAligned uses, reads the same four numbers as compounds with their own character, and one of them, 19, is among the most fortunate numbers in the whole tradition. Use the checker below, then read the number that applies to you.</p>",
+ "stats": [
+  {
+   "lbl": "The numbers",
+   "val": "13 · 14 · 16 · 19"
+  },
+  {
+   "lbl": "Reduce to",
+   "val": "4 · 5 · 7 · 1"
+  },
+  {
+   "lbl": "Reading",
+   "val": "Growth, not burden"
+  }
+ ],
+ "calculator": "<div class=\"nn-calc\"><label for=\"kdDate\">Your date of birth</label><div class=\"row\"><input type=\"date\" id=\"kdDate\"><button type=\"button\" onclick=\"naKdGo()\">Check my numbers →</button></div><div class=\"out\" id=\"kdOut\"></div></div>",
+ "script": "<script>function naKdGo(){var v=document.getElementById(\"kdDate\").value,o=document.getElementById(\"kdOut\");if(!v){o.textContent=\"Please choose your date of birth.\";return;}var K=[13,14,16,19],day=parseInt(v.split(\"-\")[2],10),s=0;v.replace(/-/g,\"\").split(\"\").forEach(function(c){s+=+c;});var hits=[];if(K.indexOf(day)>=0)hits.push(\"your birth day (\"+day+\")\");var t=s;while(t>9){if(K.indexOf(t)>=0){hits.push(\"your life path total (\"+t+\")\");break;}t=String(t).split(\"\").reduce(function(a,c){return a+(+c);},0);}if(!hits.length){o.innerHTML=\"No karmic debt compound in your birth day or life path. Your name can still total 13, 14, 16 or 19: <a href=\\\"/analyzer\\\">check it in the free analysis →</a>\";return;}var n=day&&K.indexOf(day)>=0?day:t;o.innerHTML=\"Found in \"+hits.join(\" and \")+\". <a href=\\\"/karmic-debt-number-\"+n+\"-meaning\\\">Read the meaning of \"+n+\" →</a>\";}</script>",
+ "sections": [
+  {
+   "h2": "The four numbers",
+   "html": "<div class=\"nn-hub-grid\"><a href=\"/karmic-debt-number-13-meaning\"><strong>13</strong>Transformational change · Rahu</a><a href=\"/karmic-debt-number-14-meaning\"><strong>14</strong>Magnetic movement · Mercury</a><a href=\"/karmic-debt-number-16-meaning\"><strong>16</strong>Sudden shifts · Ketu</a><a href=\"/karmic-debt-number-19-meaning\"><strong>19</strong>The Sun · Most fortunate</a></div>"
+  },
+  {
+   "h2": "Karmic debt in Chaldean numerology",
+   "html": "<p>The term karmic debt belongs to modern Western numerology. Chaldean numerology does not use it, but it does read 13, 14, 16 and 19 as meaningful compounds. 13 speaks of renewal through change, 14 of movement and connection, 16 of resilience built through sudden shifts, and 19, called the Prince of Heaven in Cheiro's tradition, of success and recognition. We present each one as a pattern you can work with, not a debt you owe.</p>"
+  },
+  {
+   "h2": "Where these numbers appear",
+   "html": "<ul><li>You were born on the 13th, 14th, 16th or 19th.</li><li>Your full date of birth passes through 13, 14, 16 or 19 on its way to a single digit.</li><li>Your name totals one of these compounds in Chaldean letter values (check in the <a href=\"/analyzer\">free analysis</a>).</li></ul>"
+  }
+ ],
+ "faq": [
+  {
+   "q": "Do I have a karmic debt number?",
+   "a": "You have one if your birth day, your life path total or your name total passes through 13, 14, 16 or 19. The checker above tests your birth day and life path."
+  },
+  {
+   "q": "Is karmic debt bad?",
+   "a": "No. In the Chaldean reading these are growth patterns. 19 in particular is considered one of the most fortunate compounds in the tradition."
+  },
+  {
+   "q": "Does Chaldean numerology use karmic debt?",
+   "a": "Not by that name. Chaldean numerology reads 13, 14, 16 and 19 as compound numbers with their own meanings, which we explain on each page."
+  },
+  {
+   "q": "Can a name change affect karmic debt numbers?",
+   "a": "Your birth numbers are fixed, but your name total can be adjusted. The NameAligned report suggests small spelling changes that move your name to a more supportive compound."
+  }
+ ],
+ "related_title": "Related reading",
+ "related": [
+  {
+   "href": "/master-numbers",
+   "eb": "Master Numbers",
+   "ti": "11, 22 and 33"
+  },
+  {
+   "href": "/birthday-numbers",
+   "eb": "Birthday Numbers",
+   "ti": "Meanings 1st to 31st"
+  },
+  {
+   "href": "/blog/compound-numbers-cheiro",
+   "eb": "Guide",
+   "ti": "Chaldean compound numbers"
+  },
+  {
+   "href": "/personal-year-calculator",
+   "eb": "Personal Year",
+   "ti": "Free calculator"
+  },
+  {
+   "href": "/name-numerology-calculator",
+   "eb": "Free tool",
+   "ti": "Name number calculator"
+  },
+  {
+   "href": "/analyzer",
+   "eb": "Free tool",
+   "ti": "Full Chaldean analysis"
+  }
+ ]
+}
