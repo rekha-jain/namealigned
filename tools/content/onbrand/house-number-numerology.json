@@ -1,0 +1,90 @@
+{
+ "slug": "house-number-numerology",
+ "title": "House Number Numerology Calculator: Chaldean Meaning of Your Home",
+ "description": "Free house number numerology calculator. Enter your house or flat number, including letters like 12B, to find its Chaldean number and what it means for your home.",
+ "keywords": "house number numerology, house number calculator, house number meaning, flat number numerology, home numerology, chaldean house number",
+ "badge": "Chaldean Numerology · House Numbers",
+ "glyph": "⌂",
+ "h1": "House Number Numerology · What Your Home's Number Supports",
+ "tag": "Free calculator · Letters included · 1 to 9",
+ "crumb": "House Number Numerology",
+ "og_image": "https://www.namealigned.com/assets/og/moolank-6.jpg",
+ "intro": "<p>In numerology, a home carries the vibration of its number. A <strong>house number</strong> reduced to a single digit describes the kind of life a home tends to support: busy and social, quiet and restorative, ambitious, creative or family-centred. Enter your house or flat number below, including any letter, to find yours in Chaldean numerology.</p>",
+ "stats": [
+  {
+   "lbl": "Result",
+   "val": "1 to 9"
+  },
+  {
+   "lbl": "Letters",
+   "val": "Chaldean values"
+  },
+  {
+   "lbl": "For flats",
+   "val": "Use the flat number"
+  }
+ ],
+ "calculator": "<div class=\"nn-calc\"><label for=\"hnIn\">House or flat number (for example 27, 4B or 1203)</label><div class=\"row\"><input type=\"text\" id=\"hnIn\" placeholder=\"e.g. 12B\"><button type=\"button\" onclick=\"naHnGo()\">Find my house number →</button></div><div class=\"out\" id=\"hnOut\"></div></div>",
+ "script": "<script>function naHnGo(){var v=(document.getElementById(\"hnIn\").value||\"\").toUpperCase().replace(/[^0-9A-Z]/g,\"\"),o=document.getElementById(\"hnOut\");if(!v){o.textContent=\"Please enter your house or flat number.\";return;}var s=0;v.split(\"\").forEach(function(c){s+=/[0-9]/.test(c)?+c:(CHALDEAN[c]||0);});var r=reduce(s);if(!r){o.textContent=\"That number reduces to 0. Please check the number you entered.\";return;}o.innerHTML=\"<strong>\"+v+\"</strong> adds to \"+s+\", which reduces to House Number <strong>\"+r+\"</strong> (\"+getPlanet(r)+\"). <a href=\\\"/house-number-\"+r+\"-meaning\\\">Read House Number \"+r+\" →</a>\";}</script>",
+ "sections": [
+  {
+   "h2": "House numbers 1 to 9",
+   "html": "<div class=\"nn-hub-grid\"><a href=\"/house-number-1-meaning\"><strong>House 1</strong>Sun</a><a href=\"/house-number-2-meaning\"><strong>House 2</strong>Moon</a><a href=\"/house-number-3-meaning\"><strong>House 3</strong>Jupiter</a><a href=\"/house-number-4-meaning\"><strong>House 4</strong>Rahu</a><a href=\"/house-number-5-meaning\"><strong>House 5</strong>Mercury</a><a href=\"/house-number-6-meaning\"><strong>House 6</strong>Venus</a><a href=\"/house-number-7-meaning\"><strong>House 7</strong>Ketu</a><a href=\"/house-number-8-meaning\"><strong>House 8</strong>Saturn</a><a href=\"/house-number-9-meaning\"><strong>House 9</strong>Mars</a></div>"
+  },
+  {
+   "h2": "How to find your house number",
+   "html": "<p>Add the digits of the number on your door and reduce to one digit: 247 is 2 + 4 + 7 = 13, and 1 + 3 = 4. If there is a letter, add its Chaldean value (A 1, B 2, C 3 and so on as used on this site): 12B is 1 + 2 + 2 = 5. In an apartment, numerologists usually read the flat number rather than the building number, because that is the door you live behind.</p><p>A house number works best when it supports the people in it. Compare it with your <a href=\"/birthday-numbers\">Birth Number</a>: harmonious pairs feel easy, others simply ask for a little more conscious balance.</p>"
+  }
+ ],
+ "faq": [
+  {
+   "q": "How do I calculate my house number in numerology?",
+   "a": "Add the digits on your door and reduce to a single digit. If there is a letter, add its Chaldean value. The calculator above does this automatically."
+  },
+  {
+   "q": "Do I use the flat number or the building number?",
+   "a": "Most numerologists read the flat or apartment number, since that is your own front door. The building number describes the shared building."
+  },
+  {
+   "q": "Which house number is best?",
+   "a": "There is no single best number. The right number depends on what you want the home to support and on your own Birth Number."
+  },
+  {
+   "q": "Can I change my house number energy?",
+   "a": "Tradition suggests small adjustments such as adding a supportive number or letter beside the door. The house number pages explain options for each number."
+  }
+ ],
+ "related_title": "Related tools",
+ "related": [
+  {
+   "href": "/mobile-number-numerology",
+   "eb": "Free tool",
+   "ti": "Mobile number numerology"
+  },
+  {
+   "href": "/lo-shu-grid-calculator",
+   "eb": "Free tool",
+   "ti": "Lo Shu grid calculator"
+  },
+  {
+   "href": "/birthday-numbers",
+   "eb": "Birthday Numbers",
+   "ti": "Meanings 1st to 31st"
+  },
+  {
+   "href": "/business-name-numerology",
+   "eb": "Free tool",
+   "ti": "Business name check"
+  },
+  {
+   "href": "/personal-year-calculator",
+   "eb": "Free tool",
+   "ti": "Personal year calculator"
+  },
+  {
+   "href": "/analyzer",
+   "eb": "Free tool",
+   "ti": "Full Chaldean analysis"
+  }
+ ]
+}

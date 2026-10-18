@@ -1,0 +1,94 @@
+{
+ "slug": "birthday-numbers",
+ "title": "Birthday Number Meanings 1 to 31: What Your Birth Day Says",
+ "description": "Find the numerology meaning of the day you were born, 1st to 31st. Each Chaldean Birthday Number page covers personality, love, career and lucky days.",
+ "keywords": "birthday number, birthday number meaning, born on the numerology, birth day number, moolank, chaldean birthday number",
+ "badge": "Chaldean Numerology · Birthday Numbers",
+ "glyph": "✦",
+ "h1": "Birthday Number Meanings · The Day You Were Born, 1st to 31st",
+ "tag": "Birth Number · Moolank · Compound meanings",
+ "crumb": "Birthday Numbers",
+ "og_image": "https://www.namealigned.com/assets/og/moolank-1.jpg",
+ "intro": "<p>The day of the month you were born on is one of the most personal numbers in numerology. In Chaldean numerology it gives your <strong>Birth Number</strong>, called <em>Moolank</em> in the Indian tradition: the instinctive way you meet the world before you have thought about it. Pick your birth day below to read its full meaning.</p>",
+ "stats": [
+  {
+   "lbl": "Days covered",
+   "val": "1st to 31st"
+  },
+  {
+   "lbl": "Reduces to",
+   "val": "Birth Numbers 1 to 9"
+  },
+  {
+   "lbl": "Also called",
+   "val": "Moolank"
+  }
+ ],
+ "calculator": "<div class=\"nn-calc\"><label for=\"bdDate\">Your date of birth</label><div class=\"row\"><input type=\"date\" id=\"bdDate\"><button type=\"button\" onclick=\"naBirthdayGo()\">Show my birthday number →</button></div><div class=\"out\" id=\"bdOut\"></div></div>",
+ "script": "<script>function naBirthdayGo(){var v=document.getElementById(\"bdDate\").value,o=document.getElementById(\"bdOut\");if(!v){o.textContent=\"Please choose your date of birth.\";return;}var d=parseInt(v.split(\"-\")[2],10);var r=getBirthNum(v);o.innerHTML=\"You were born on day <strong>\"+d+\"</strong>, so your Birth Number is <strong>\"+r+\"</strong> (\"+getPlanet(r)+\"). <a href=\\\"/birthday-number-\"+d+\"-meaning\\\">Read the meaning of being born on day \"+d+\" →</a>\";}</script>",
+ "sections": [
+  {
+   "h2": "All 31 birthday numbers",
+   "html": "<div class=\"nn-hub-grid\"><a href=\"/birthday-number-1-meaning\"><strong>1st</strong>Birth Number 1 · Sun</a><a href=\"/birthday-number-2-meaning\"><strong>2nd</strong>Birth Number 2 · Moon</a><a href=\"/birthday-number-3-meaning\"><strong>3rd</strong>Birth Number 3 · Jupiter</a><a href=\"/birthday-number-4-meaning\"><strong>4th</strong>Birth Number 4 · Rahu</a><a href=\"/birthday-number-5-meaning\"><strong>5th</strong>Birth Number 5 · Mercury</a><a href=\"/birthday-number-6-meaning\"><strong>6th</strong>Birth Number 6 · Venus</a><a href=\"/birthday-number-7-meaning\"><strong>7th</strong>Birth Number 7 · Ketu</a><a href=\"/birthday-number-8-meaning\"><strong>8th</strong>Birth Number 8 · Saturn</a><a href=\"/birthday-number-9-meaning\"><strong>9th</strong>Birth Number 9 · Mars</a><a href=\"/birthday-number-10-meaning\"><strong>10th</strong>Birth Number 1 · Sun</a><a href=\"/birthday-number-11-meaning\"><strong>11th</strong>Birth Number 2 · Moon</a><a href=\"/birthday-number-12-meaning\"><strong>12th</strong>Birth Number 3 · Jupiter</a><a href=\"/birthday-number-13-meaning\"><strong>13th</strong>Birth Number 4 · Rahu</a><a href=\"/birthday-number-14-meaning\"><strong>14th</strong>Birth Number 5 · Mercury</a><a href=\"/birthday-number-15-meaning\"><strong>15th</strong>Birth Number 6 · Venus</a><a href=\"/birthday-number-16-meaning\"><strong>16th</strong>Birth Number 7 · Ketu</a><a href=\"/birthday-number-17-meaning\"><strong>17th</strong>Birth Number 8 · Saturn</a><a href=\"/birthday-number-18-meaning\"><strong>18th</strong>Birth Number 9 · Mars</a><a href=\"/birthday-number-19-meaning\"><strong>19th</strong>Birth Number 1 · Sun</a><a href=\"/birthday-number-20-meaning\"><strong>20th</strong>Birth Number 2 · Moon</a><a href=\"/birthday-number-21-meaning\"><strong>21st</strong>Birth Number 3 · Jupiter</a><a href=\"/birthday-number-22-meaning\"><strong>22nd</strong>Birth Number 4 · Rahu</a><a href=\"/birthday-number-23-meaning\"><strong>23rd</strong>Birth Number 5 · Mercury</a><a href=\"/birthday-number-24-meaning\"><strong>24th</strong>Birth Number 6 · Venus</a><a href=\"/birthday-number-25-meaning\"><strong>25th</strong>Birth Number 7 · Ketu</a><a href=\"/birthday-number-26-meaning\"><strong>26th</strong>Birth Number 8 · Saturn</a><a href=\"/birthday-number-27-meaning\"><strong>27th</strong>Birth Number 9 · Mars</a><a href=\"/birthday-number-28-meaning\"><strong>28th</strong>Birth Number 1 · Sun</a><a href=\"/birthday-number-29-meaning\"><strong>29th</strong>Birth Number 2 · Moon</a><a href=\"/birthday-number-30-meaning\"><strong>30th</strong>Birth Number 3 · Jupiter</a><a href=\"/birthday-number-31-meaning\"><strong>31st</strong>Birth Number 4 · Rahu</a></div>"
+  },
+  {
+   "h2": "How birthday numbers work in Chaldean numerology",
+   "html": "<p>Days 1 to 9 are pure single numbers. Days 10 to 31 are compound numbers: they keep their own meaning and also reduce to a single digit. Someone born on the 19th and someone born on the 28th both have Birth Number 1, ruled by the Sun, but they reach it through very different compounds, and that difference shows in how they lead and what they find easy.</p><p>Your Birth Number describes instinct and first reactions. Your <a href=\"/life-path-number-1-meaning\">Life Path Number</a>, from your full date of birth, describes the long arc of your life. Your Name Number describes how people receive you. The <a href=\"/analyzer\">free Chaldean analysis</a> shows all three together.</p>"
+  },
+  {
+   "h2": "Birth Numbers and their planets",
+   "html": "<ul><li><strong>1</strong> Sun: born on the 1st, 10th, 19th, 28th</li><li><strong>2</strong> Moon: 2nd, 11th, 20th, 29th</li><li><strong>3</strong> Jupiter: 3rd, 12th, 21st, 30th</li><li><strong>4</strong> Rahu: 4th, 13th, 22nd, 31st</li><li><strong>5</strong> Mercury: 5th, 14th, 23rd</li><li><strong>6</strong> Venus: 6th, 15th, 24th</li><li><strong>7</strong> Ketu: 7th, 16th, 25th</li><li><strong>8</strong> Saturn: 8th, 17th, 26th</li><li><strong>9</strong> Mars: 9th, 18th, 27th</li></ul>"
+  }
+ ],
+ "faq": [
+  {
+   "q": "What is my birthday number?",
+   "a": "It is the day of the month you were born on. In Chaldean numerology days 10 to 31 are read as compound numbers and also reduced to a single Birth Number from 1 to 9."
+  },
+  {
+   "q": "Is the birthday number the same as the life path number?",
+   "a": "No. The birthday number uses only the day you were born. The life path number adds every digit of your full date of birth."
+  },
+  {
+   "q": "What is Moolank?",
+   "a": "Moolank is the Indian name for the Birth Number in Chaldean numerology, the single digit your birth day reduces to."
+  },
+  {
+   "q": "Which birthday number is luckiest?",
+   "a": "Every birthday has its own strengths. In Chaldean tradition the compounds 19, 21, 23 and 27 are considered especially fortunate, but alignment between your name and numbers matters more than any single day."
+  }
+ ],
+ "related_title": "Related reading",
+ "related": [
+  {
+   "href": "/master-numbers",
+   "eb": "Master Numbers",
+   "ti": "11, 22 and 33 explained"
+  },
+  {
+   "href": "/karmic-debt-numbers",
+   "eb": "Karmic Debt",
+   "ti": "13, 14, 16 and 19"
+  },
+  {
+   "href": "/personal-year-calculator",
+   "eb": "Personal Year",
+   "ti": "Your year in the 9-year cycle"
+  },
+  {
+   "href": "/blog/moolank-meanings",
+   "eb": "Guide",
+   "ti": "Birth Number meanings"
+  },
+  {
+   "href": "/life-path-number-1-meaning",
+   "eb": "Life Path",
+   "ti": "Life Path Numbers 1 to 9"
+  },
+  {
+   "href": "/blog/compound-numbers-cheiro",
+   "eb": "Guide",
+   "ti": "Chaldean compound numbers"
+  }
+ ]
+}

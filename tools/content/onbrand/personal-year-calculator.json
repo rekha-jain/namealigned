@@ -1,0 +1,94 @@
+{
+ "slug": "personal-year-calculator",
+ "title": "Personal Year Calculator: Find Your Numerology Year",
+ "description": "Free personal year calculator. Enter your birth date to see your numerology Personal Year right now and from your next birthday, and what each year brings.",
+ "keywords": "personal year calculator, personal year number, what is my personal year, numerology personal year, personal year 2026, 9 year cycle numerology",
+ "badge": "Chaldean Numerology · Personal Year",
+ "glyph": "◷",
+ "h1": "Personal Year Calculator · Where You Are in the 9-Year Cycle",
+ "tag": "Free · Instant · Now and next birthday",
+ "crumb": "Personal Year Calculator",
+ "og_image": "https://www.namealigned.com/assets/og/moolank-5.jpg",
+ "intro": "<p>Your <strong>Personal Year Number</strong> tells you which chapter of numerology's 9-year cycle you are living through: a year for starting, building, harvesting or letting go. It changes every year, so it is one of the most practical numbers for planning. Enter your date of birth to see yours.</p>",
+ "stats": [
+  {
+   "lbl": "Cycle length",
+   "val": "9 years"
+  },
+  {
+   "lbl": "Changes",
+   "val": "On your birthday"
+  },
+  {
+   "lbl": "Uses",
+   "val": "Birth month + day + year"
+  }
+ ],
+ "calculator": "<div class=\"nn-calc\"><label for=\"pyDate\">Your date of birth</label><div class=\"row\"><input type=\"date\" id=\"pyDate\"><button type=\"button\" onclick=\"naPyGo()\">Calculate my personal year →</button></div><div class=\"out\" id=\"pyOut\"></div></div>",
+ "script": "<script>function naPyGo(){var v=document.getElementById(\"pyDate\").value,o=document.getElementById(\"pyOut\");if(!v){o.textContent=\"Please choose your date of birth.\";return;}var p=v.split(\"-\"),now=new Date(),y=now.getFullYear();var bd=new Date(y,+p[1]-1,+p[2]);var cy=now<bd?y-1:y;var a=getPersonalYear(v,cy),b=getPersonalYear(v,cy+1);var nb=new Date(cy+1,+p[1]-1,+p[2]).toLocaleDateString(\"en-GB\",{day:\"numeric\",month:\"long\",year:\"numeric\"});o.innerHTML=\"<strong>Right now:</strong> Personal Year \"+a+\" (\"+YEAR_THEMES[a]+\"). <a href=\\\"/personal-year-number-\"+a+\"-meaning\\\">Read Personal Year \"+a+\" →</a><br><strong>From your birthday on \"+nb+\":</strong> Personal Year \"+b+\". <a href=\\\"/personal-year-number-\"+b+\"-meaning\\\">Read Personal Year \"+b+\" →</a>\";}</script>",
+ "sections": [
+  {
+   "h2": "The nine personal years",
+   "html": "<div class=\"nn-hub-grid\"><a href=\"/personal-year-number-1-meaning\"><strong>Year 1</strong>Sun</a><a href=\"/personal-year-number-2-meaning\"><strong>Year 2</strong>Moon</a><a href=\"/personal-year-number-3-meaning\"><strong>Year 3</strong>Jupiter</a><a href=\"/personal-year-number-4-meaning\"><strong>Year 4</strong>Rahu</a><a href=\"/personal-year-number-5-meaning\"><strong>Year 5</strong>Mercury</a><a href=\"/personal-year-number-6-meaning\"><strong>Year 6</strong>Venus</a><a href=\"/personal-year-number-7-meaning\"><strong>Year 7</strong>Ketu</a><a href=\"/personal-year-number-8-meaning\"><strong>Year 8</strong>Saturn</a><a href=\"/personal-year-number-9-meaning\"><strong>Year 9</strong>Mars</a></div>"
+  },
+  {
+   "h2": "How the personal year is calculated",
+   "html": "<p>Add the digits of your birth month, your birth day and the year your current personal year began, then reduce to a single digit. Your personal year changes on your birthday, not on 1 January. For someone born on 14 March, from their birthday in March 2026: 3 + 1 + 4 + 2 + 0 + 2 + 6 = 18, and 1 + 8 = 9, so they are in a Personal Year 9 until March 2027. The calculator above handles the birthday for you.</p><p>Read your personal year alongside your <a href=\"/birthday-numbers\">Birth Number</a> and Life Path: the year sets the weather, your core numbers describe how you tend to move through it. The <a href=\"/blog/personal-year-guide\">personal year guide</a> goes deeper.</p>"
+  },
+  {
+   "h2": "Using the cycle well",
+   "html": "<ul><li><strong>Years 1 to 3:</strong> start, partner, express. New projects and visibility.</li><li><strong>Years 4 to 6:</strong> build, adapt, commit. Structure, change and responsibility.</li><li><strong>Years 7 to 9:</strong> reflect, achieve, complete. Inner work, results and clearing space.</li></ul>"
+  }
+ ],
+ "faq": [
+  {
+   "q": "What is my personal year in numerology?",
+   "a": "Add your birth month, birth day and the current year, then reduce to one digit. The result from 1 to 9 is your Personal Year Number."
+  },
+  {
+   "q": "When does a personal year start?",
+   "a": "On NameAligned the personal year runs from one birthday to the next, so it changes on your birthday rather than on 1 January. The calculator takes this into account."
+  },
+  {
+   "q": "What is a Personal Year 9?",
+   "a": "It is the completion year of the cycle: finishing, releasing and making space before a new Personal Year 1 begins."
+  },
+  {
+   "q": "Is the personal year the same for everyone?",
+   "a": "No. It depends on your birth month and day, so people born on different dates are in different years of the cycle."
+  }
+ ],
+ "related_title": "Related reading",
+ "related": [
+  {
+   "href": "/blog/personal-year-guide",
+   "eb": "Guide",
+   "ti": "Personal year guide"
+  },
+  {
+   "href": "/birthday-numbers",
+   "eb": "Birthday Numbers",
+   "ti": "Meanings 1st to 31st"
+  },
+  {
+   "href": "/master-numbers",
+   "eb": "Master Numbers",
+   "ti": "11, 22 and 33"
+  },
+  {
+   "href": "/life-path-number-1-meaning",
+   "eb": "Life Path",
+   "ti": "Life Path Numbers 1 to 9"
+  },
+  {
+   "href": "/analyzer",
+   "eb": "Free tool",
+   "ti": "Full Chaldean analysis"
+  },
+  {
+   "href": "/lucky-attributes",
+   "eb": "Lucky attributes",
+   "ti": "Days, colours and stones"
+  }
+ ]
+}
