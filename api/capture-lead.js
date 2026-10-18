@@ -33,7 +33,7 @@ function sendJSON(res, statusCode, payload) {
 // ---------------------------------------------------------------------------
 // Helper: insert lead row into Supabase
 // ---------------------------------------------------------------------------
-async function saveLeadToSupabase({ name, dob, email, mobile, birthNum, destNum, nameNum, pct }) {
+async function saveLeadToSupabase({ name, dob, email, mobile, birthNum, destNum, nameNum, pct, source }) {
   const created_at = new Date().toISOString();
   const fullRow = {
     name,
@@ -47,7 +47,10 @@ async function saveLeadToSupabase({ name, dob, email, mobile, birthNum, destNum,
     created_at,
   };
 
+  // Try with `source` first (which tool the lead came from); older schemas
+  // without that column fall through to the rows below.
   const attempts = [
+    { ...fullRow, source: source || 'analyzer' },
     fullRow,
     {
       name,
@@ -90,7 +93,15 @@ async function saveLeadToSupabase({ name, dob, email, mobile, birthNum, destNum,
 // ---------------------------------------------------------------------------
 // Helper: send Brevo transactional email
 // ---------------------------------------------------------------------------
-async function sendLeadEmail({ name, dob, email, birthNum, destNum, nameNum }) {
+const LEAD_SUBJECTS = {
+  analyzer:        'Your free Chaldean numerology analysis is ready',
+  'lo-shu-grid':   'Your Lo Shu grid and Chaldean numbers',
+  'mobile-number': 'Your mobile number reading and Chaldean numbers',
+  compatibility:   'Your Chaldean numbers and compatibility reading',
+  'business-name': 'Your Chaldean numbers from the business name check',
+};
+
+async function sendLeadEmail({ name, dob, email, birthNum, destNum, nameNum, source }) {
   const analyserUrl =
     `https://namealigned.com/analyzer.html` +
     `?name=${encodeURIComponent(name || '')}` +
@@ -260,7 +271,7 @@ async function sendLeadEmail({ name, dob, email, birthNum, destNum, nameNum }) {
   return deliverViaBrevo({
     to: email,
     toName: name,
-    subject: 'Your free Chaldean numerology analysis is ready',
+    subject: LEAD_SUBJECTS[source] || LEAD_SUBJECTS.analyzer,
     htmlContent,
     tags: ['lead-capture'],
   });
@@ -321,6 +332,7 @@ export default async function handler(req, res) {
         destNum: destNum ?? null,
         nameNum: nameNum ?? null,
         pct: pct ?? null,
+        source: typeof source === 'string' ? source.slice(0, 40) : null,
       });
     } catch (dbErr) {
       console.error('[capture-lead] Supabase error (continuing to email):', dbErr);
@@ -336,6 +348,7 @@ export default async function handler(req, res) {
         birthNum,
         destNum,
         nameNum,
+        source,
       });
     } catch (emailErr) {
       console.error('[capture-lead] Brevo unexpected error:', emailErr);
