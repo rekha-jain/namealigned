@@ -1,0 +1,101 @@
+{
+ "slug": "resources/free-numerology-widgets",
+ "title": "Free Numerology Widgets to Embed on Your Website",
+ "description": "Add free numerology calculators to your blog: name number, birthday number and personal year widgets. Copy one line of code, no signup, works anywhere.",
+ "keywords": "numerology widget, free numerology calculator embed, birthday number widget, personal year calculator widget, name number calculator embed, numerology tool for blog",
+ "badge": "Free Tools · For Bloggers & Creators",
+ "glyph": "⧉",
+ "h1": "Free Numerology Widgets · Embed a Calculator on Your Site",
+ "tag": "Name number · Birthday number · Personal year",
+ "crumb": "Free Numerology Widgets",
+ "og_image": "https://www.namealigned.com/assets/og/moolank-3.jpg",
+ "intro": "<p>Writing about names, birthdays, astrology, baby names or self-discovery? Give your readers something to try. These free calculators work on any website or blog: paste two lines of code where you want the widget to appear. They are lightweight, mobile friendly, collect no personal data and need no signup.</p>",
+ "stats": [
+  {
+   "lbl": "Price",
+   "val": "Free forever"
+  },
+  {
+   "lbl": "Setup",
+   "val": "Two lines of code"
+  },
+  {
+   "lbl": "Data collected",
+   "val": "None"
+  }
+ ],
+ "sections": [
+  {
+   "h2": "Name number calculator",
+   "html": "<p>Readers type any name and see its Chaldean compound total, single-digit name number and ruling planet, with a letter-by-letter breakdown.</p><pre style=\"white-space:pre-wrap;background:#fbfaf7;border:1px solid var(--gold-b);border-radius:10px;padding:.8rem;font-size:13px;overflow:auto\"><code>&lt;div data-namealigned-widget=&quot;name-number&quot;&gt;&lt;/div&gt;\n&lt;script async src=&quot;https://www.namealigned.com/assets/name-number-widget.js&quot;&gt;&lt;/script&gt;</code></pre><button type=\"button\" class=\"na-copy\" data-code=\"&lt;div data-namealigned-widget=&quot;name-number&quot;&gt;&lt;/div&gt;\n&lt;script async src=&quot;https://www.namealigned.com/assets/name-number-widget.js&quot;&gt;&lt;/script&gt;\" style=\"padding:.5rem 1rem;border:0;border-radius:999px;background:var(--gold);color:#0a0820;font-weight:700;cursor:pointer;margin-bottom:1rem\">Copy embed code</button><div data-namealigned-widget=\"name-number\" style=\"margin:0 0 1.5rem\"></div>"
+  },
+  {
+   "h2": "Birthday number calculator",
+   "html": "<p>Readers pick their date of birth and see the day they were born on, their Birth Number (Moolank) and its planet, with a link to the full meaning of their birth day.</p><pre style=\"white-space:pre-wrap;background:#fbfaf7;border:1px solid var(--gold-b);border-radius:10px;padding:.8rem;font-size:13px;overflow:auto\"><code>&lt;div data-namealigned-widget=&quot;birthday-number&quot;&gt;&lt;/div&gt;\n&lt;script async src=&quot;https://www.namealigned.com/assets/name-number-widget.js&quot;&gt;&lt;/script&gt;</code></pre><button type=\"button\" class=\"na-copy\" data-code=\"&lt;div data-namealigned-widget=&quot;birthday-number&quot;&gt;&lt;/div&gt;\n&lt;script async src=&quot;https://www.namealigned.com/assets/name-number-widget.js&quot;&gt;&lt;/script&gt;\" style=\"padding:.5rem 1rem;border:0;border-radius:999px;background:var(--gold);color:#0a0820;font-weight:700;cursor:pointer;margin-bottom:1rem\">Copy embed code</button><div data-namealigned-widget=\"birthday-number\" style=\"margin:0 0 1.5rem\"></div>"
+  },
+  {
+   "h2": "Personal year calculator",
+   "html": "<p>Readers see which year of the 9-year cycle they are in now and what changes on their next birthday. A good fit for new-year, birthday and forecast posts.</p><pre style=\"white-space:pre-wrap;background:#fbfaf7;border:1px solid var(--gold-b);border-radius:10px;padding:.8rem;font-size:13px;overflow:auto\"><code>&lt;div data-namealigned-widget=&quot;personal-year&quot;&gt;&lt;/div&gt;\n&lt;script async src=&quot;https://www.namealigned.com/assets/name-number-widget.js&quot;&gt;&lt;/script&gt;</code></pre><button type=\"button\" class=\"na-copy\" data-code=\"&lt;div data-namealigned-widget=&quot;personal-year&quot;&gt;&lt;/div&gt;\n&lt;script async src=&quot;https://www.namealigned.com/assets/name-number-widget.js&quot;&gt;&lt;/script&gt;\" style=\"padding:.5rem 1rem;border:0;border-radius:999px;background:var(--gold);color:#0a0820;font-weight:700;cursor:pointer;margin-bottom:1rem\">Copy embed code</button><div data-namealigned-widget=\"personal-year\" style=\"margin:0 0 1.5rem\"></div>"
+  },
+  {
+   "h2": "How to add a widget",
+   "html": "<ul><li><strong>WordPress:</strong> add a Custom HTML block and paste the code.</li><li><strong>Blogger, Wix, Squarespace, Ghost:</strong> use the HTML or embed block.</li><li><strong>Several widgets on one page:</strong> paste each div; the script line is needed only once.</li></ul><p>Each widget shows a small \"Powered by NameAligned.com\" credit. Please keep it in place so readers can find the full guides. Questions or a custom colour? Write to <a href=\"mailto:hello@namealigned.com\">hello@namealigned.com</a>.</p>"
+  },
+  {
+   "h2": "Prefer a reference chart?",
+   "html": "<p>For articles that explain the method, the <a href=\"/resources/chaldean-letter-values\">Chaldean letter values chart</a> is free to cite, with worked examples you can link to.</p>"
+  }
+ ],
+ "faq": [
+  {
+   "q": "Are the numerology widgets really free?",
+   "a": "Yes. They are free to use on any site, including commercial blogs. We only ask that you keep the small credit link."
+  },
+  {
+   "q": "Do the widgets collect my readers' data?",
+   "a": "No. All calculations happen in the reader's browser. Nothing they type is sent to NameAligned or stored."
+  },
+  {
+   "q": "Will a widget slow my page down?",
+   "a": "The script is small and loads asynchronously, so it does not block your page from rendering."
+  },
+  {
+   "q": "Which numerology system do the widgets use?",
+   "a": "Chaldean numerology, the sound-based system. Name numbers use Chaldean letter values; birthday and personal year numbers use date digits."
+  }
+ ],
+ "related_title": "Related resources",
+ "related": [
+  {
+   "href": "/resources/chaldean-letter-values",
+   "eb": "Reference",
+   "ti": "Chaldean letter values chart"
+  },
+  {
+   "href": "/birthday-numbers",
+   "eb": "Guides",
+   "ti": "Birthday numbers 1st to 31st"
+  },
+  {
+   "href": "/personal-year-calculator",
+   "eb": "Tool",
+   "ti": "Personal year calculator"
+  },
+  {
+   "href": "/name-numerology-calculator",
+   "eb": "Tool",
+   "ti": "Name numerology calculator"
+  },
+  {
+   "href": "/master-numbers",
+   "eb": "Guides",
+   "ti": "Master numbers 11, 22, 33"
+  },
+  {
+   "href": "/link-to-us",
+   "eb": "Partners",
+   "ti": "Link to NameAligned"
+  }
+ ],
+ "script": "<script src=\"/assets/name-number-widget.js?v=20261018\"></script><script>document.addEventListener(\"click\",function(e){var b=e.target.closest(\".na-copy\");if(!b)return;var t=document.createElement(\"textarea\");t.innerHTML=b.getAttribute(\"data-code\");var c=t.value;(navigator.clipboard?navigator.clipboard.writeText(c):Promise.reject()).then(function(){b.textContent=\"Copied ✓\";setTimeout(function(){b.textContent=\"Copy embed code\";},1800);}).catch(function(){window.prompt(\"Copy this code:\",c);});});</script>"
+}
