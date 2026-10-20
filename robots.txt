@@ -11,3 +11,4 @@ Disallow: /wordmark-preview
 Disallow: /samples/
 
 Sitemap: https://www.namealigned.com/sitemap.xml
+Sitemap: https://www.namealigned.com/sitemap-video.xml
