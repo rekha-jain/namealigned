@@ -1,10 +1,19 @@
 import fs from 'node:fs';
 import path from 'node:path';
+import { execFileSync } from 'node:child_process';
 import { JSDOM } from 'jsdom';
 
 const ROOT = path.resolve(new URL('..', import.meta.url).pathname);
 const BASE = 'https://www.namealigned.com';
-const LASTMOD = new Date().toISOString().slice(0, 10);
+const TODAY = new Date().toISOString().slice(0, 10);
+
+// lastmod = the file's last commit date, so Google sees real edits instead of
+// every URL changing together on each regeneration. Uncommitted files get today.
+function lastmodFor(file) {
+  if (execFileSync('git', ['status', '--porcelain', '--', file], { cwd: ROOT, encoding: 'utf8' }).trim()) return TODAY;
+  const date = execFileSync('git', ['log', '-1', '--format=%cs', '--', file], { cwd: ROOT, encoding: 'utf8' }).trim();
+  return date || TODAY;
+}
 
 function walk(dir) {
   return fs.readdirSync(dir, { withFileTypes: true }).flatMap((entry) => {
@@ -47,6 +56,7 @@ for (const file of files) {
   if (
     route.startsWith('/share') ||
     route.startsWith('/samples') ||
+    /^\/(tools|local-tools|docs|ingestion|api|node_modules)\//.test(route) ||
     /preview|staging-report|share-card|wordmark|google31/.test(route)
   ) continue;
 
@@ -57,7 +67,7 @@ for (const file of files) {
 
   const canonical = doc.querySelector('link[rel="canonical"]')?.getAttribute('href');
   const loc = canonical && canonical.startsWith(BASE) ? canonical : BASE + (route === '/' ? '/' : route);
-  urls.push({ loc, route, priority: priorityFor(route), changefreq: changefreqFor(route) });
+  urls.push({ loc, route, lastmod: lastmodFor(file), priority: priorityFor(route), changefreq: changefreqFor(route) });
 }
 
 urls.sort((a, b) => {
@@ -70,7 +80,7 @@ const xml = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 ${urls.map((url) => `  <url>
     <loc>${url.loc}</loc>
-    <lastmod>${LASTMOD}</lastmod>
+    <lastmod>${url.lastmod}</lastmod>
     <changefreq>${url.changefreq}</changefreq>
     <priority>${url.priority}</priority>
   </url>`).join('\n')}
@@ -78,4 +88,4 @@ ${urls.map((url) => `  <url>
 `;
 
 fs.writeFileSync(path.join(ROOT, 'sitemap.xml'), xml);
-console.log(JSON.stringify({ urls: urls.length, lastmod: LASTMOD }, null, 2));
+console.log(JSON.stringify({ urls: urls.length }, null, 2));
