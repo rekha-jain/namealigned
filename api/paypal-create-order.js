@@ -12,7 +12,7 @@
  */
 'use strict';
 
-import { getPaypalConfig, getAccessToken, getDefaultAmount } from './_paypal.js';
+import { getPaypalConfig, getAccessToken, getDefaultAmount, buildCustomId } from './_paypal.js';
 
 const CORS_HEADERS = {
   'Access-Control-Allow-Origin':  '*',
@@ -87,15 +87,9 @@ export default async function handler(req, res) {
           : Number(promo_discount) === 50
           ? '5-Year Chaldean Destiny Report (50% off)'
           : '5-Year Chaldean Destiny Report',
-        // We stash buyer info into custom_id so it's available on capture
-        // even if the browser dies between approve and capture.
-        custom_id: JSON.stringify({
-          name:   name   || '',
-          email:  email  || '',
-          dob:    dob    || '',
-          mobile: mobile || '',
-          promo_discount: Number(promo_discount) || 0,
-        }).slice(0, 127), // PayPal limit
+        // Buyer info rides on custom_id so the PayPal webhook can deliver
+        // the report even if the browser dies between approve and capture.
+        custom_id: buildCustomId({ name, email, dob, mobile, promo_discount }),
       }],
       application_context: {
         brand_name:  'NameAligned.com',

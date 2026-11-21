@@ -20,6 +20,7 @@ import { sendBrevoEmail as deliverViaBrevo } from './_brevo.js';
 import { mpTrack } from './_mixpanel.js';
 import { normaliseIndianMobile } from './_phone.js';
 import { handleReportData, handleSnapshotSave } from './_reportData.js';
+import { handleClientPaymentEvent } from './_paymentFailures.js';
 
 const CORS_HEADERS = {
   'Access-Control-Allow-Origin': '*',
@@ -344,6 +345,8 @@ export default async function handler(req, res) {
   }
 
   if (req.body && req.body.action === 'snapshot') return handleSnapshotSave(req, res);
+  // Browser-reported checkout failures / cancels (no new function: Vercel cap)
+  if (req.body && req.body.action === 'payment-event') return handleClientPaymentEvent(req, res);
 
   try {
     const {

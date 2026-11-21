@@ -14,7 +14,10 @@
  *
  * Register this URL in Razorpay Dashboard → Webhooks:
  *   https://namealigned.com/api/razorpay-webhook
- *   Event: payment.captured
+ *   Events: payment.captured, payment.failed
+ *
+ * payment.failed is stored in public.payment_failures with Razorpay's
+ * error_code / error_description / error_source / error_step / error_reason.
  */
 
 'use strict';
@@ -24,6 +27,7 @@ import { insertSupabaseRow, findLeadIdByEmail, findOrderByRazorpayPaymentId, mar
 import { sendBrevoEmail as deliverViaBrevo } from './_brevo.js';
 import { mpTrack } from './_mixpanel.js';
 import { normaliseIndianMobile } from './_phone.js';
+import { recordPaymentFailure } from './_paymentFailures.js';
 
 // ---------------------------------------------------------------------------
 // Verify Razorpay webhook signature
@@ -185,7 +189,38 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: 'Invalid JSON' });
   }
 
-  // We only care about payment.captured
+  if (event.event === 'payment.failed') {
+    const p = event.payload?.payment?.entity;
+    if (!p) return res.status(400).json({ error: 'Missing payment entity' });
+    await recordPaymentFailure({
+      provider:         'razorpay',
+      kind:             'failed',
+      referenceId:      p.id,
+      paymentId:        p.id,
+      orderId:          p.order_id,
+      email:            p.email || p.notes?.email,
+      name:             p.notes?.customer_name,
+      mobile:           normaliseIndianMobile(p.notes?.mobile || p.contact || ''),
+      amount:           typeof p.amount === 'number' ? p.amount / 100 : null,
+      currency:         p.currency,
+      errorCode:        p.error_code,
+      errorDescription: p.error_description,
+      errorSource:      p.error_source,
+      errorStep:        p.error_step,
+      errorReason:      p.error_reason,
+      reportedBy:       'webhook',
+      raw: {
+        method: p.method || null,
+        bank: p.bank || null,
+        wallet: p.wallet || null,
+        international: p.international ?? null,
+        status: p.status || null,
+      },
+    });
+    return res.status(200).json({ received: true, handled: true });
+  }
+
+  // Everything else besides payment.captured is acknowledged and ignored
   if (event.event !== 'payment.captured') {
     return res.status(200).json({ received: true, handled: false });
   }
