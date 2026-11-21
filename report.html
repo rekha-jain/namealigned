@@ -761,6 +761,12 @@ function validateForm(){
   return { name, dob, email, mobile };
 }
 
+// Read the form without touching the error box (for tracking calls).
+function readFormFields(){
+  const v = id => { const el = document.getElementById(id); return el ? el.value.trim() : ''; };
+  return { name: v('rName'), dob: v('rDob'), email: v('rEmail'), mobile: v('rMobile') };
+}
+
 // ── 100% free redemption ───────────────────────────────────────
 async function redeemFreeReport(){
   const fields = validateForm();
@@ -797,6 +803,21 @@ async function redeemFreeReport(){
     err.style.display='block'; err.textContent='Network error. Please try again.';
     btn.textContent='✦ Get My Free Report →'; btn.disabled=false;
   }
+}
+
+// ── Payment failure reporting ───────────────────────────────────
+// Sends failed / cancelled checkout attempts to the backend, which stores
+// them in Supabase (payment_failures) and tracks them in Mixpanel.
+// Fire-and-forget: never blocks or breaks checkout.
+function reportPaymentEvent(evt){
+  try {
+    fetch('/api/generate-report', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(Object.assign({ action: 'payment-event' }, evt)),
+      keepalive: true
+    }).catch(function(){});
+  } catch(e){}
 }
 
 // ── Paid flow ──────────────────────────────────────────────────
@@ -836,6 +857,12 @@ async function initiateReportPayment(){
     razorpayKey = orderData.keyId;   // always use the key the server used
     if (orderData.amount) chargedAmount = orderData.amount;
   } catch(e) {
+    reportPaymentEvent({
+      provider: 'razorpay', kind: 'failed',
+      email, name, mobile: mobile || '', amount: amount / 100, currency: 'INR',
+      errorCode: 'ORDER_CREATE_FAILED', errorDescription: (e && e.message) || '',
+      errorSource: 'client', errorStep: 'create_order'
+    });
     const err = document.getElementById('rErrBox');
     err.style.display = 'block';
     err.textContent = 'Could not initialise payment. Please try again.';
@@ -870,6 +897,12 @@ async function initiateReportPayment(){
     // no 'payment.cancel' event), so the button must be reset here.
     modal: {
       ondismiss: function(){
+        reportPaymentEvent({
+          provider: 'razorpay', kind: 'cancelled',
+          referenceId: orderId, orderId: orderId,
+          email, name, mobile: mobile || '', amount: chargedAmount / 100, currency: 'INR',
+          errorCode: 'CHECKOUT_DISMISSED', errorSource: 'customer', errorStep: 'checkout_modal'
+        });
         payBtn.disabled = false;
         payBtn.textContent = indiaPayLabel();
       }
@@ -885,6 +918,13 @@ async function initiateReportPayment(){
   };
   if (typeof Razorpay !== 'function') {
     // checkout.js blocked (ad blocker / privacy extension) or failed to load.
+    reportPaymentEvent({
+      provider: 'razorpay', kind: 'failed',
+      referenceId: orderId, orderId: orderId,
+      email, name, mobile: mobile || '', amount: chargedAmount / 100, currency: 'INR',
+      errorCode: 'CHECKOUT_LOAD_FAILED', errorDescription: 'Razorpay checkout.js not available',
+      errorSource: 'client', errorStep: 'load_checkout'
+    });
     const err = document.getElementById('rErrBox');
     err.style.display = 'block';
     err.textContent = 'The payment window could not load. Please turn off any ad blocker for this site, or try another browser.';
@@ -894,6 +934,16 @@ async function initiateReportPayment(){
   }
   const rzp = new Razorpay(options);
   rzp.on('payment.failed', resp => {
+    const e = (resp && resp.error) || {};
+    const meta = e.metadata || {};
+    reportPaymentEvent({
+      provider: 'razorpay', kind: 'failed',
+      referenceId: meta.payment_id || orderId,
+      paymentId: meta.payment_id || '', orderId: meta.order_id || orderId,
+      email, name, mobile: mobile || '', amount: chargedAmount / 100, currency: 'INR',
+      errorCode: e.code, errorDescription: e.description,
+      errorSource: e.source, errorStep: e.step, errorReason: e.reason
+    });
     const err = document.getElementById('rErrBox');
     err.style.display = 'block';
     err.textContent = 'Payment failed: ' + (resp.error.description || 'Please try again.');
@@ -1025,7 +1075,10 @@ function initPayPalButton(){
 
     createOrder: async function(){
       const fields = validateForm();
-      if (!fields) throw new Error('Please fill name, date of birth and email first.');
+      if (!fields) {
+        window._naPaypalValidationFail = true;
+        throw new Error('Please fill name, date of birth and email first.');
+      }
       const errEl = document.getElementById('paypalErr');
       if (errEl) errEl.style.display = 'none';
 
@@ -1059,7 +1112,7 @@ function initPayPalButton(){
       return data.id;
     },
 
-    onApprove: async function(data){
+    onApprove: async function(data, actions){
       const fields = validateForm();
       if (!fields) return;
       const nums = getReportNumbers(fields.name, fields.dob);
@@ -1075,6 +1128,12 @@ function initPayPalButton(){
       });
       const result = await r.json().catch(()=>({}));
       if (!r.ok || !result.success) {
+        // Server already logged this capture failure with PayPal's issue code.
+        // A declined card can be retried in the same order with another
+        // funding source (PayPal's recommended handling).
+        if (result.issue === 'INSTRUMENT_DECLINED' && actions && actions.restart) {
+          return actions.restart();
+        }
         showPaypalError(result.error || 'Payment captured but report could not be generated. Please contact support.');
         return;
       }
@@ -1087,6 +1146,17 @@ function initPayPalButton(){
     onError: function(err){
       console.error('[paypal] button error:', err);
       const detail = (err && (err.message || err.toString())) || '';
+      if (window._naPaypalValidationFail) {
+        window._naPaypalValidationFail = false; // form error, not a payment failure
+      } else {
+        const f = readFormFields();
+        reportPaymentEvent({
+          provider: 'paypal', kind: 'failed',
+          email: f.email || '', name: f.name || '', mobile: f.mobile || '', currency: 'USD',
+          errorCode: 'PAYPAL_SDK_ERROR', errorDescription: detail,
+          errorSource: 'client', errorStep: 'paypal_button'
+        });
+      }
       showPaypalError(
         detail && detail !== '[object Object]'
           ? ('PayPal error: ' + detail)
@@ -1094,8 +1164,15 @@ function initPayPalButton(){
       );
     },
 
-    onCancel: function(){
-      // No-op. User cancelled at PayPal, no charge happened.
+    onCancel: function(data){
+      // User closed the PayPal window, no charge happened.
+      const f = readFormFields();
+      reportPaymentEvent({
+        provider: 'paypal', kind: 'cancelled',
+        referenceId: data && data.orderID, orderId: data && data.orderID,
+        email: f.email || '', name: f.name || '', mobile: f.mobile || '', currency: 'USD',
+        errorCode: 'CHECKOUT_CANCELLED', errorSource: 'customer', errorStep: 'paypal_approval'
+      });
     }
   }).render('#paypal-button-container').catch(function(err){
     console.error('[paypal] render failed:', err);
